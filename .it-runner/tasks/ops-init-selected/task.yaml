@@ -1,0 +1,13 @@
+version: "1"
+name: ops-init-selected
+description: Initialize remote quickstart deployment directories
+tags: [ops, deploy, remote]
+workspace:
+  workdir: ${PROJECT_ROOT}
+watch:
+  stateFile: ${PROJECT_ROOT}/.it-runner/states/ops-init-selected.STATE
+logs:
+  rootDir: .it-runner/logs
+run:
+  cmds:
+    - make ops-init-selected

@@ -1,0 +1,11 @@
+version: "1"
+name: test-ops
+description: Validate quickstart ops scripts and .it-runner task files
+tags: [ops, test]
+workspace:
+  workdir: ${PROJECT_ROOT}
+logs:
+  rootDir: .it-runner/logs
+run:
+  cmds:
+    - make test-ops

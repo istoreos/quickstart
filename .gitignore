@@ -26,6 +26,16 @@ go.work.sum
 
 # env file
 .env
+.it-runner/envs/010-local.env
+.it-runner/envs/080-secret-local.env
+
+# it-runner runtime state
+.it-runner/logs/
+.it-runner/states/
+.it-runner/cache/
+
+# Release artifacts
+bin/
 
 # Editor/IDE
 # .idea/

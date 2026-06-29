@@ -1,0 +1,13 @@
+version: "1"
+name: ops-verify-selected
+description: Verify quickstart service state on the selected target
+tags: [ops, verify, remote]
+workspace:
+  workdir: ${PROJECT_ROOT}
+watch:
+  stateFile: ${PROJECT_ROOT}/.it-runner/states/ops-verify-selected.STATE
+logs:
+  rootDir: .it-runner/logs
+run:
+  cmds:
+    - make ops-verify-selected

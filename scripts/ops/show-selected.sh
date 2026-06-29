@@ -1,0 +1,20 @@
+#!/bin/sh
+set -eu
+
+SCRIPT_DIR="$(CDPATH= cd -- "$(dirname "$0")" && pwd)"
+# shellcheck source=common.sh
+. "${SCRIPT_DIR}/common.sh"
+
+load_target_env
+
+cat <<EOF
+DEPLOY_TARGET=${DEPLOY_TARGET}
+SERVER_REF=${SERVER_REF}
+SSH_TARGET=${SSH_TARGET}
+SSH_PORT=${SSH_PORT}
+REMOTE_BINARY=${REMOTE_BINARY}
+REMOTE_TMP=${REMOTE_TMP}
+REMOTE_BACKUP_DIR=${REMOTE_BACKUP_DIR}
+REMOTE_SERVICE=${REMOTE_SERVICE}
+LOCAL_BINARY=${LOCAL_BINARY}
+EOF

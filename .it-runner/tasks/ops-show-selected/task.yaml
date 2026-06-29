@@ -1,0 +1,11 @@
+version: "1"
+name: ops-show-selected
+description: Show the resolved quickstart deployment target
+tags: [ops, deploy]
+workspace:
+  workdir: ${PROJECT_ROOT}
+logs:
+  rootDir: .it-runner/logs
+run:
+  cmds:
+    - make ops-show-selected

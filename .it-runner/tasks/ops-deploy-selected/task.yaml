@@ -1,0 +1,13 @@
+version: "1"
+name: ops-deploy-selected
+description: Build, upload, install, restart, and verify quickstart on the selected target
+tags: [ops, deploy, remote]
+workspace:
+  workdir: ${PROJECT_ROOT}
+watch:
+  stateFile: ${PROJECT_ROOT}/.it-runner/states/ops-deploy-selected.STATE
+logs:
+  rootDir: .it-runner/logs
+run:
+  cmds:
+    - make ops-deploy-selected

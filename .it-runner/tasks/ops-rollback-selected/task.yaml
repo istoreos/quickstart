@@ -1,0 +1,13 @@
+version: "1"
+name: ops-rollback-selected
+description: Roll back quickstart on the selected target; set ROLLBACK_RELEASE
+tags: [ops, rollback, remote]
+workspace:
+  workdir: ${PROJECT_ROOT}
+watch:
+  stateFile: ${PROJECT_ROOT}/.it-runner/states/ops-rollback-selected.STATE
+logs:
+  rootDir: .it-runner/logs
+run:
+  cmds:
+    - make ops-rollback-selected
