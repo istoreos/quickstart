@@ -1,0 +1,299 @@
+definitions:
+  LANDhcpGlobalConfig:
+    type: object
+    properties:
+      dhcpEnabled:
+        type: boolean
+      dhcpGateway:
+        type: string
+        description: "DHCP 网关"
+      gatewaySels:
+        type: array
+        items:
+          $ref: '#/definitions/LANDhcpGatewaySel'
+  LANDhcpGatewaySel:
+    type: object
+    properties:
+     title:
+       type: string
+       description: "显示标题。比如 default: 默认网关 parent: 上级路由 myself: 本设备 bypass: 旁路由 floatip: 浮动网关"
+     gateway:
+       type: string
+       description: "具体的网关IP"
+  LANCtrlSpeedLimitModule:
+    type: object
+    properties:
+      installed:
+        type: boolean
+      enabled:
+        type: boolean
+      uploadSpeed:
+        type: integer
+      downloadSpeed:
+        type: integer
+
+  LANCtrlDhcpTagInfo:
+    type: object
+    properties:
+      tagTitle:
+        type: string
+        description: "展示标题，需要在前段把英文翻译成中文"
+      tagName:
+        type: string
+        description: "标签值，提交的时候用这个值"
+      autoCreated:
+        type: boolean
+        description: "系统自动生成，不能删除"
+      gateway:
+        type: string
+        description: "如果是咱们自定义的设备，则返回网关信息"
+      lanName:
+        type: string
+        description: "比如 LAN, LAN2, LAN3 等局域网接口"
+      dhcpOption:
+        type: array
+        items:
+          type: string
+        description: "['3,192.168.100.3','6,192.168.100.3']"
+
+  LANCtrlFloatGatewayModule:
+    type: object
+    properties:
+      installed:
+        type: boolean
+      enabled:
+        type: boolean
+      role:
+        type: string
+      setIP:
+        type: string
+      checkIP:
+        type: string
+      checkUrl:
+        type: string
+      checkUrlTimeout:
+        type: integer
+
+  LANCtrlDhcpTags:
+    type: array
+    items:
+      $ref: "#/definitions/LANCtrlDhcpTagInfo"
+        
+  LANCtrlGlobalConfig:
+    type: object
+    properties:
+      dhcpGlobal:
+        $ref: "#/definitions/LANDhcpGlobalConfig"
+      dhcpTags:
+        $ref: "#/definitions/LANCtrlDhcpTags"
+      floatGateway:
+        $ref: "#/definitions/LANCtrlFloatGatewayModule"
+      speedLimit:
+        $ref: "#/definitions/LANCtrlSpeedLimitModule"
+  
+  LANCtrlGlobalConfigResponse:
+    type: object
+    allOf: 
+      - $ref: "common.yaml#/definitions/JsonResponse"
+    properties:
+      result:
+        $ref: "#/definitions/LANCtrlGlobalConfig"
+  
+  LANStaticAssigned:
+    type: object
+    properties:
+      hostname:
+        type: string
+      assignedIP:
+        type: string
+      assignedMac:
+        type: string
+      bindIP:
+        type: boolean
+        description: "请求数据的时候有用，是否启用 mac/ip 绑定"
+      tagTitle:
+        type: string
+        description: "标签名字，如果标签名字为空，则展示标签值。需要前端把标签英文名字变成中文"
+      tagName:
+        type: string
+        description: "标签名"
+      dhcpGateway:
+        type: string
+        description: "网关信息"
+      action:
+        type: string
+        description: "modify|delete|add"
+
+  LANCtrlDhcpTagConfigRequest:
+    type: object
+    properties:
+      action:
+        type: string
+        description: "modify|delete|add"
+      tagTitle:
+        type: string
+        description: "标签"
+      tagName:
+        type: string
+        description: "标签名"
+      dhcpOption:
+        type: array
+        items:
+          type: string
+        description: "['3,192.168.100.3','6,192.168.100.3']"
+
+  LANDevice:
+    type: object
+    properties:
+      hostname:
+        type: string
+        description: "设备名称"
+      hostImg:
+        type: string
+        description: "设备对应的图片"
+      ip:
+        type: string
+        description: "设备IP地址"
+      mac:
+        type: string
+        description: "设备MAC地址"
+      vendor:
+        type: string
+        description: "设备厂商"
+      intr:
+        type: string
+      uploadSpeed:
+        type: integer
+      downloadSpeed:
+        type: integer
+      uploadSpeedStr:
+        type: string
+        description: "上传速度的人类可读格式"
+      downloadSpeedStr:
+        type: string
+        description: "下载速度的人类可读格式"
+      staticAssigned:
+        $ref: "#/definitions/LANStaticAssigned"
+      speedLimit:
+        $ref: "#/definitions/LANCtrlSpeedLimitItem"
+      
+  LANDevices:
+    type: array
+    items:
+      $ref: "#/definitions/LANDevice"
+  
+  LANDeviceResponse:
+    type: object
+    allOf: 
+      - $ref: "common.yaml#/definitions/JsonResponse"
+    properties:
+      result:
+        type: object
+        properties:
+          devices:
+            $ref: "#/definitions/LANDevices"
+          dhcpTags:
+            $ref: "#/definitions/LANCtrlDhcpTags"
+
+  LANCtrlStaticAssignedResponse:
+    type: object
+    allOf: 
+      - $ref: "common.yaml#/definitions/JsonResponse"
+    properties:
+      result:
+        type: array
+        items:
+          $ref: "#/definitions/LANStaticAssigned"
+  
+  LANCtrlSpeedLimitItem:
+    type: object
+    properties:
+      ip:
+        type: string
+        description: "基于IP进行限速"
+      mac:
+        type: string
+        description: "基于MAC进行限速"
+      uploadSpeed:
+        type: integer
+      downloadSpeed:
+        type: integer
+      networkAccess:
+        type: boolean
+        description: "是否能访问网络"
+      comment:
+        type: string
+        description: "注解"
+      enabled:
+        type: boolean
+        description: "是否启用"
+      action:
+        type: string
+        description: "modify|delete|add"
+      hostname:
+        type: string
+        description: "设备名称"
+  
+  LANCtrlSpeedLimitResponse:
+    type: object
+    allOf: 
+      - $ref: "common.yaml#/definitions/JsonResponse"
+    properties:
+      result:
+        type: array
+        items:
+          $ref: "#/definitions/LANCtrlSpeedLimitItem" 
+  
+  LANCtrlSpeedLimitRequest:
+    type: object
+    properties:
+      ip:
+        type: string
+        description: "基于IP进行限速"
+      mac:
+        type: string
+        description: "基于MAC进行限速"
+
+  SpeedsForOneDeviceRequest:
+    type: object
+    properties:
+      ip:
+        type: string
+        description: "设备的IP地址"
+
+  LANCtrlDhcpGatewayConfigRequest:
+    type: object
+    properties:
+      dhcpEnabled:
+        type: boolean
+        description: "是否启用 DHCP"
+      dhcpGateway:
+        type: string
+        description: "DHCP 网关地址"
+
+  DeviceSpeedStat:
+    type: object
+    properties:
+      ip:
+        type: string
+        description: "设备的IP地址"
+      uploadSpeed:
+        type: integer
+      downloadSpeed:
+        type: integer
+      uploadSpeedStr:
+        type: string
+        description: "上传速度的人类可读格式"
+      downloadSpeedStr:
+        type: string
+        description: "下载速度的人类可读格式"
+
+  DeviceSpeedStatsResponse:
+    type: object
+    allOf: 
+      - $ref: "common.yaml#/definitions/JsonResponse"
+    properties:
+      result:
+        type: array
+        items:
+          $ref: "#/definitions/DeviceSpeedStat" 

@@ -1,0 +1,78 @@
+definitions:
+  GuideDdnsRequest:
+    type: object
+    properties:
+      ipVersion:
+        type: string
+        description: "ipv4 or ipv6"
+      serviceName:
+        type: string
+        description: "服务提供商"
+        enum:
+          - "ali"
+          - "dnspod"
+          - "oray"
+      domain:
+        type: string
+        description: "域名"
+      userName:
+        type: string
+        description: "用户名"
+      password:
+        type: string
+        description: "密码"
+
+  GuideDdnstoRequest:
+    type: object
+    properties:
+      token:
+        type: string
+        description: "ddnsto token"
+
+  GuideDdnstoAddressRequest:
+      type: object
+      properties:
+        address:
+          type: string
+          description: "ddnsto address"
+
+  GuideDdnstoConfigResponse:
+    type: object
+    properties:
+      success:
+        $ref: "common.yaml#/definitions/responseSuccess"
+      error:
+        $ref: "common.yaml#/definitions/responseError"
+      scope:
+        $ref: "common.yaml#/definitions/responseScope"
+      result:
+        type: object
+        properties:
+          deviceId:
+            type: string
+            description: "ddnsto_deviceId" 
+          netAddr:
+            type: string
+            description: "net_addr"
+
+  GuideDdnsResponse:
+    type: object
+    properties:
+      success:
+        $ref: "common.yaml#/definitions/responseSuccess"
+      error:
+        $ref: "common.yaml#/definitions/responseError"
+      scope:
+        $ref: "common.yaml#/definitions/responseScope"
+      result:
+        type: object
+        properties:
+          ipv4Domain:
+            type: string
+            description: "ipv4配置的域名" 
+          ipv6Domain:
+            type: string
+            description: "ipv6配置的域名" 
+          ddnstoDomain:
+            type: string
+            description: "ddnsto配置的域名" 

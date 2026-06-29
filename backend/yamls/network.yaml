@@ -1,0 +1,464 @@
+definitions:
+  NetworkStatisticsResponse:
+    type: object
+    properties:
+      success:
+        $ref: "common.yaml#/definitions/responseSuccess"
+      error:
+        $ref: "common.yaml#/definitions/responseError"
+      scope:
+        $ref: "common.yaml#/definitions/responseScope"
+      result:
+        type: object
+        properties:
+          slots:
+            type: integer
+          items:
+            type: array
+            items:
+              $ref: "#/definitions/NetworkStatisticsItem"
+
+  NetworkStatisticsItem:
+    type: object
+    properties:
+      startTime:
+        type: integer
+        description: "统计开始时间"
+      endTime:
+        type: integer
+        description: "统计结束时间"
+      uploadSpeed:
+        type: integer
+        description: "该时段上传平均网速，单位Byte"
+      downloadSpeed:
+        type: integer
+        description: "该时段下载平均网速，单位Byte"
+
+  DeviceInfo:
+    type: object
+    properties:
+      name:
+        type: string
+        description: "设备名称"
+      type:
+        type: string
+        description: "设备类型"
+        enum:
+          - "mobile"
+          - "pc"
+          - "other"
+      ipv4addr:
+        type: string
+        description: "IPv4 地址" 
+      ipv6addr:
+        type: string
+        description: "IPv6 地址" 
+      mac:
+        type: string
+        description: "MAC 地址" 
+
+  DeviceListResponse:
+    type: object
+    properties:
+      success:
+        $ref: "common.yaml#/definitions/responseSuccess"
+      error:
+        $ref: "common.yaml#/definitions/responseError"
+      scope:
+        $ref: "common.yaml#/definitions/responseScope"
+      result:
+        type: object
+        properties:
+          devices:
+            type: array
+            items:
+              $ref: "#/definitions/DeviceInfo" 
+
+  NetworkStatusResponse:
+    type: object
+    properties:
+      success:
+        $ref: "common.yaml#/definitions/responseSuccess"
+      error:
+        $ref: "common.yaml#/definitions/responseError"
+      scope:
+        $ref: "common.yaml#/definitions/responseScope"
+      result:
+        type: object
+        properties:
+          proto:
+            type: string
+            description: "工作模式"  
+            enum:
+              - "pppoe"
+              - "static"
+              - "dhcp"
+          networkInfo:
+            type: string
+            description: "网络状态"  
+            enum:
+              - "netDetecting"
+              - "netSuccess"
+              - "dnsFailed"
+              - "netFailed"
+              - "softSourceFailed"
+          ipv4addr:
+            type: string
+            description: "ipv4 地址"
+          ipv4mask:
+            type: integer
+            format: int32
+            description: "ipv4 掩码长度"
+          ipv6addr:
+            type: string
+            description: "ipv6 地址"
+          gateway:
+            type: string
+            description: "网关 地址"
+          defaultInterface:
+            type: string
+          dnsList:
+            type: array
+            items:
+              type: string 
+          dnsProto:
+            type: string
+            description: "DNS 配置方式"
+            enum:
+              - "manual"
+              - "auto"  
+          uptime:
+            type: string
+            description: "在线时间，eg 5h24m33s" 
+          uptimeStamp:
+            type: integer
+            description: "在线时间, 毫秒"
+
+  NetworkInterfaceStatusResponse:
+    type: object
+    properties:
+      success:
+        $ref: "common.yaml#/definitions/responseSuccess"
+      error:
+        $ref: "common.yaml#/definitions/responseError"
+      scope:
+        $ref: "common.yaml#/definitions/responseScope"
+      result:
+        type: object
+        properties:
+          interfaces:
+            type: array
+            items:
+              $ref: "#/definitions/NetworkInterfaceInfo" 
+
+  NetworkPortListResponse:
+    type: object
+    properties:
+      success:
+        $ref: "common.yaml#/definitions/responseSuccess"
+      error:
+        $ref: "common.yaml#/definitions/responseError"
+      scope:
+        $ref: "common.yaml#/definitions/responseScope"
+      result:
+        type: object
+        properties:
+          ports:
+            type: array
+            items:
+              $ref: "#/definitions/NetworkPortInfo" 
+
+  NetworkInterfaceInfo:
+    type: object
+    properties:
+      name:
+        type: string
+        example: "lan,wan,wan6"
+      proto:
+        type: string
+        description: "协议"
+        example: "dhcp,static"
+      ipv4Addr:
+        type: string
+        description: "ipv4地址"
+      ipv6Addr:
+        type: string
+        description: "ipv6地址"
+      portName:
+        type: string
+        description: "使用的接口"
+        example: "eth0,eth1"
+      ports:
+        type: array
+        items:
+          $ref: "#/definitions/NetworkPortInfo" 
+      deviceNames:
+        type: array
+        description: "接口数组"
+        items:
+          type: string
+          example: "eth0,eth1"
+      firewallType:
+        type: string
+        description: "防火墙区域"
+        example: "lan,wan"
+
+  NetworkPortInfo:
+    type: object
+    properties:
+      name:
+        type: string
+        example: "eth0,eth1"
+      macAddress:
+        type: string
+        example: "02:44:CD:B0:1E:20"
+      linkSpeed:
+        type: string
+        description: "链路状态"
+        example: "1000 Mbit/s"
+      duplex:
+        type: string
+        example: "full half"
+      linkState:
+        type: string
+        description: "是否插入网线"
+      rx_packets:
+        type: string
+        description: "接收"
+        example: "2.60 GiB (3715623 pkts.)"
+      tx_packets:
+        type: string
+        description: "发送"
+        example: "2.60 GiB (3715623 pkts.)"
+      interfaceNames:
+        type: array
+        description: "接口数组"
+        items:
+          type: string
+          example: "LAN,LAN6"
+      master:
+        type: string
+        description: "like: the slave of br-lan"
+
+  NetworkHomeBoxEnableResponse:
+    type: object
+    properties:
+      success:
+        $ref: "common.yaml#/definitions/responseSuccess"
+      error:
+        $ref: "common.yaml#/definitions/responseError"
+      scope:
+        $ref: "common.yaml#/definitions/responseScope"
+      result:
+        type: object
+        properties:
+          port:
+            type: string
+            description: "homebox端口" 
+
+  GuideLanSettingRequest:
+    type: object 
+    properties:
+      lanIp:
+        type: string
+        description: "内网地址"
+      netMask:
+        type: string
+        description: "子网掩码"
+      enableDhcp:
+        type: boolean
+        description: "是否修改dhcp服务器设置"
+      dhcpStart:
+        type: string
+        description: "起始地址"
+      dhcpEnd:
+        type: string
+        description: "结束地址"
+
+  GuideLanSettingResponse:
+    type: object
+    properties:
+      success:
+        $ref: "common.yaml#/definitions/responseSuccess"
+      error:
+        $ref: "common.yaml#/definitions/responseError"
+      scope:
+        $ref: "common.yaml#/definitions/responseScope"
+      result:
+        type: object
+        properties:
+          lanIp:
+            type: string
+            description: "内网地址"
+          netMask:
+            type: string
+            description: "子网掩码"
+          enableDhcp:
+            type: boolean
+            description: "dhcp服务已启用"
+          dhcpStart:
+            type: string
+            description: "起始地址"
+          dhcpEnd:
+            type: string
+            description: "结束地址"      
+
+  GuideClientModeRequest:
+    type: object     
+    properties:
+      wanProto:
+        type: string
+        description: "WAN 接口配置方式"
+        enum:
+          - "static"
+          - "dhcp"
+      dnsProto:
+        type: string
+        description: "DNS 配置方式"
+        enum:
+          - "manual"
+          - "auto"   
+      staticIp:
+        type: string
+        description: "静态IP地址" 
+      subnetMask:
+        type: string
+        description: "子网掩码" 
+      gateway:
+        type: string
+      manualDnsIp:
+        type: array
+        items:
+          type: string
+      enableLanDhcp:
+        type: boolean
+        description: "启用LAN口的DHCP服务，用于从旁路由模式恢复"
+
+  GuideClientModeResponse:
+    type: object
+    properties:
+      success:
+        $ref: "common.yaml#/definitions/responseSuccess"
+      error:
+        $ref: "common.yaml#/definitions/responseError"
+      scope:
+        $ref: "common.yaml#/definitions/responseScope"
+      result:
+        type: object
+        properties:
+          wanProto:
+            type: string
+            description: "WAN 接口配置方式"
+            enum:
+              - "static"
+              - "dhcp"
+          dnsProto:
+            type: string
+            description: "DNS 配置方式"
+            enum:
+              - "static"
+              - "dhcp"    
+          staticIp:
+            type: string
+            description: "静态IP地址" 
+          subnetMask:
+            type: string
+            description: "子网掩码" 
+          gateway:
+            type: string
+          manualDnsIp:
+            type: array
+            items:
+              type: string 
+
+  GuideGatewayRouterRequest:
+    type: object     
+    properties:  
+      staticLanIp:
+        type: string
+        description: "静态IP地址" 
+      subnetMask:
+        type: string
+        description: "子网掩码" 
+      staticDnsIp:
+        type: string
+        description: "DNS服务器IP" 
+      gateway: 
+        type: string
+        description: "网关地址" 
+      enableDhcp:
+        type: boolean
+        description: "是否开启dhcp"
+      dhcp6c:
+        type: boolean
+        description: "DHCPv6客户端"
+      enableNat:
+        type: boolean
+        description: "是否开启NAT"
+
+  GuideDnsConfigRequest:
+    type: object     
+    properties:
+      interfaceName:
+        type: string
+      dnsProto:
+        type: string
+        description: "DNS 配置方式"
+        enum:
+          - "manual"
+          - "auto"     
+      manualDnsIp:
+            type: array
+            items:
+              type: string
+
+  GuideDnsConfigResponse:
+    type: object
+    properties:
+      success:
+        $ref: "common.yaml#/definitions/responseSuccess"
+      error:
+        $ref: "common.yaml#/definitions/responseError"
+      scope:
+        $ref: "common.yaml#/definitions/responseScope"
+      result:
+        type: object
+        properties:
+          interfaceName:
+            type: string
+          dnsProto:
+            type: string
+            description: "DNS 配置方式"
+            enum:
+              - "manual"
+              - "auto"     
+          manualDnsIp:
+            type: array
+            items:
+              type: string 
+
+  NetworkCheckPublicNetResponse:
+    type: object
+    properties:
+      success:
+        $ref: "common.yaml#/definitions/responseSuccess"
+      error:
+        $ref: "common.yaml#/definitions/responseError"
+      scope:
+        $ref: "common.yaml#/definitions/responseScope"
+      result:
+        type: object
+        properties:
+          address:
+            type: string
+            description: "公网地址"
+
+  NetworkCheckPublicNetRequest:
+    type: object     
+    properties:
+      ipVersion:
+        type: string
+        description: "ip版本类型" 
+        enum:
+          - "ipv4"
+          - "ipv6"

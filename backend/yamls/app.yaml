@@ -1,0 +1,145 @@
+definitions:
+  GuideSoftSourceListResponse:
+    type: object
+    properties:
+      success:
+        $ref: "common.yaml#/definitions/responseSuccess"
+      error:
+        $ref: "common.yaml#/definitions/responseError"
+      scope:
+        $ref: "common.yaml#/definitions/responseScope"
+      result:
+        type: object
+        properties:
+          softSourceList:
+            type: array
+            description: "软件源列表"
+            items:
+              $ref: "#/definitions/GuideSoftSourceInfo" 
+  
+  GuideSoftSourceRequest:
+    type: object
+    properties:
+      softSourceIdentity:
+        type: string
+        description: "软件源id"
+
+  GuideSoftSourceResponse:
+    type: object
+    properties:
+      success:
+        $ref: "common.yaml#/definitions/responseSuccess"
+      error:
+        $ref: "common.yaml#/definitions/responseError"
+      scope:
+        $ref: "common.yaml#/definitions/responseScope"
+      result:
+        type: object
+        properties:
+          softSource:
+            $ref: "#/definitions/GuideSoftSourceInfo" 
+
+  AppCheckRequest:
+    type: object     
+    properties:
+      name:
+        type: string
+        description: "插件名称" 
+      checkRunning:
+        type: boolean
+        description: "显示是否运行" 
+
+  AppCheckResponse:
+    type: object
+    properties:
+      success:
+        $ref: "common.yaml#/definitions/responseSuccess"
+      error:
+        $ref: "common.yaml#/definitions/responseError"
+      scope:
+        $ref: "common.yaml#/definitions/responseScope"
+      result:
+        type: object
+        properties:
+          name:
+            type: string
+            description: "插件名称"
+          status:
+            type: string
+            description: "插件状态"
+            enum:
+              - "installed"
+              - "running"
+              - "stopped"
+              - "uninstalled" 
+              - "not found"     
+  
+  AppInstallRequest:
+    type: object     
+    properties:
+      name:
+        type: string
+        description: "插件名称" 
+
+  GuideSoftSourceInfo:
+    type: object
+    properties:
+          name:
+            type: string
+            description: "软件源名称"
+          url:
+            type: string
+            description: "软件源链接"
+          identity:
+            type: string
+            description: "软件源id"
+            enum:
+              - "OpenWrtHttp"
+              - "OpenWrtHttps" 
+              - "Tsinghua"
+              - "USTC"
+              - "Alibaba Cloud"
+              - "Tencent Cloud"
+
+  AppInstalled:
+    type: object
+    properties: 
+      arch: 
+        type: array
+        items:
+          type: string
+      author:
+        type: string
+      depends:
+        type: array
+        items:
+          type: string
+      description:
+        type: string
+      description_en:
+        type: string
+      entry:
+        type: string
+      name:
+        type: string
+      release:
+        type: integer
+      tags:
+        type: array
+        items:
+          type: string
+      time:
+        type: integer
+      title:
+        type: string
+      title_en:
+        type: string
+      version:
+        type: string
+      website:
+        type: string
+
+  AppInstalledListResponse:
+    type: array
+    items:
+      $ref: "#/definitions/AppInstalled"

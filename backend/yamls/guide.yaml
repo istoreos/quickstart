@@ -1,0 +1,175 @@
+definitions:
+  GuideDownloadServiceResponse:
+    type: object
+    properties:
+      success:
+        $ref: "common.yaml#/definitions/responseSuccess"
+      error:
+        $ref: "common.yaml#/definitions/responseError"
+      scope:
+        $ref: "common.yaml#/definitions/responseScope"
+      result:
+        type: object
+        properties: 
+          aria2:
+            $ref: "#/definitions/GuideDownloadAria2Info" 
+          qbittorrent:
+            $ref: "#/definitions/GuideDownloadQbittorrentInfo" 
+          transmission:
+            $ref: "#/definitions/GuideDownloadTransmissionInfo"
+
+  GuideDownloadAria2Info:
+    type: object
+    properties:
+          status:
+            type: string
+            description: "aria2运行状态"
+            enum:
+              - "running"
+              - "stopped" 
+              - "not installed"
+          configPath:
+            type: string
+            description: "配置目录"
+          downloadPath:
+            type: string
+            description: "下载目录"
+          rpcToken:
+            type: string
+            description: "rpc令牌"
+          rpcPort:
+            type: integer
+            format: uint32
+            description: "rpc端口"
+          webPath:
+            type: string
+            description: "webUI拼接，例如192.168.100.1+$webPath"
+
+  GuideDownloadQbittorrentInfo:
+    type: object
+    properties:
+          status:
+            type: string
+            description: "运行状态"
+            enum:
+              - "running"
+              - "stopped" 
+              - "not installed"
+          configPath:
+            type: string
+            description: "配置目录"
+          downloadPath:
+            type: string
+            description: "下载目录"
+          webPath:
+            type: string
+            description: "webUI拼接，例如192.168.100.1+$webPath"
+
+  GuideDownloadTransmissionInfo:
+    type: object
+    properties:
+          status:
+            type: string
+            description: "aria2运行状态"
+            enum:
+              - "running"
+              - "stopped" 
+              - "not installed"
+          configPath:
+            type: string
+            description: "配置目录"
+          downloadPath:
+            type: string
+            description: "下载目录"
+          webPath:
+            type: string
+            description: "webUI拼接,例如192.168.100.1+$webPath"
+
+  GuideNeedSetupInfo:
+    type: object
+    properties:
+      need:
+        type: boolean
+        description: "Need setup or not"
+      wifi:
+        type: boolean
+        description: "Have wifi setup dialog"
+
+  GuideNeedSetupResponse:
+    type: object
+    allOf: 
+      - $ref: "common.yaml#/definitions/JsonResponse"
+    properties:
+      result:
+        $ref: "#/definitions/GuideNeedSetupInfo"
+
+  GuidePppoeRequest:
+    type: object     
+    properties:
+      account:
+        type: string
+        description: "拨号账号"
+        example:  
+      password:
+        type: string
+        description: "拨号密码"
+      enableLanDhcp:
+        type: boolean
+        description: "启用LAN口的DHCP服务，用于从旁路由模式恢复"
+
+  GuidePppoeStatusResponse:
+    type: object
+    properties:
+      success:
+        $ref: "common.yaml#/definitions/responseSuccess"
+      error:
+        $ref: "common.yaml#/definitions/responseError"
+      scope:
+        $ref: "common.yaml#/definitions/responseScope"
+      result:
+        type: object
+        properties:
+          account:
+            type: string
+            description: "拨号账号"
+            example:  
+          password:
+            type: string
+            description: "拨号密码"
+
+  GuideAria2InitRequest:
+    type: object
+    properties:
+      configPath:
+        type: string
+        description: "配置目录"
+      downloadPath:
+        type: string
+        description: "aria2下载路径"
+      rpcToken:
+        type: string
+        description: "rpc密钥"
+      btTracker:
+        type: string
+        description: "bt服务器，为空则自动请求服务器去配置，用,分隔可以添加多个"
+        example: "http://1337.abcvg.info:80/announce,http://milanesitracker.tekcities.com:80/announce"
+
+  GuideQbittorrentInitRequest:
+    type: object
+    properties:
+      configPath:
+        type: string
+        description: "配置目录"
+      downloadPath:
+        type: string
+        description: "下载路径"
+      
+  GuideTransmissionInitRequest:
+    type: object
+    properties:
+      configPath:
+        type: string
+        description: "配置目录"
+      downloadPath:
+        type: string
+        description: "下载路径"

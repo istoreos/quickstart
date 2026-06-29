@@ -1,0 +1,45 @@
+definitions:
+  filePath:
+    type: string
+    description: "文件输入路径，第一段为 [deviceId]，第二段为 [rootName]，rootName 具体为 abs|share|private|sd|usb1|usb2 等" 
+
+  FileBasicListRequest:
+    type: object
+    properties:
+      path:
+        $ref: "#/definitions/filePath" 
+      showHidden:
+        type: boolean
+        description: "show the hidden files"
+      onlyDir:
+        type: boolean
+        description: "只显示文件夹"
+        
+  fileType:
+    type: string
+    description: "文件类型，目前只有 file|dir"
+    enum:
+      - file
+      - dir
+
+  FileBasicEntry:
+    type: object
+    properties:
+      fileType:
+        $ref: "#/definitions/fileType"
+        x-nullable: false
+      name:
+        type: string  
+  
+  FileBasicListResponse:
+    type: object
+    allOf: 
+      - $ref: "common.yaml#/definitions/JsonResponse"
+    properties:
+      result:
+        type: object
+        properties: 
+          services:
+            type: array
+            items:
+              $ref: "#/definitions/FileBasicEntry"

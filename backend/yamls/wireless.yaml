@@ -1,0 +1,100 @@
+definitions:
+  WirelessIfaceInfo:
+    type: object
+    properties:
+      ifaceName:
+        type: string
+        description: "wifi2g, wifi5g, guest2g, guest5g"
+      band:
+        type: string
+        description: "2g, 5g"
+      isGuest:
+        type: boolean
+        description: "is guest wifi"
+      ifaceIndex:
+        type: integer
+        description: "如果是0则不用写。如果 band=2g,ifaceIndex=2，isGuest=false, 则菜单标题是： 5G Wi-Fi [2] "
+      device:
+        type: string
+        description: "非显示，调用 set-device-power 的时候用到"
+      ssid:
+        type: string
+        description: "Wi-Fi 名称(SSID)"
+      ifname:
+        type: string
+        description: "ra1 rax2 and so on"
+      key:
+        type: string
+        description: "Wi-Fi 密码"
+      encryption:
+        type: string
+        description: "Wi-Fi 安全性 [none, psk2, psk-mixed, sae, sae-mixed] ==> [OPEN, WPA2-PSK, WPA/WPA2-PSK, WPA3-SAE, WPA2-PSK/WPA3-SEA]"
+      hidden:
+        type: boolean
+        description: "是否隐藏 SSID"
+      channel:
+        type: integer
+        description: "信道 2g: [0-1-13], 5g: [0,36,40,44,48,52(DFS),56(DFS),60(DFS),64(DFS),149,153,157,161]"
+      htmode:
+        type: string
+        description: "频宽 2g: [20, 40, auto] => [20 MHz, 40 MHz, 20/40 MHz], 5g: [20, 40, 80, 160] => [20 MHz, 40 MHz, 80MHz, 160 MHz]"
+      hwmode:
+        type: string
+        description: "无线模式选择，根据 hwmodeSelects 来选择"
+      hwmodeSelects:
+        type: array
+        items:
+          type: string
+        description: "无线模式 2g: [11n/ax 11g/n/ax 11b/g/b/ax 11b/g/n], 5g: [11ac/ax 11n/ac/ax 11a/n/ac/ax 11a/n/ac]"
+      encryptSelects:
+        type: array
+        items:
+          type: string
+        description: "加密方式: [OPEN WPA2-PSK WPA/WPA2-PSK WPA3-SAE WPA2-PSK/WPA3-SEA]"
+      txpower:
+        type: integer
+        description: "发射功率"
+      disabled:
+        type: boolean
+        description: "enable or not?"
+      network:
+        type: string
+        description: "网络接口名称"
+
+  WirelessListIfaceResponse:
+    type: object
+    allOf: 
+      - $ref: "common.yaml#/definitions/JsonResponse"
+    properties:
+      result:
+        type: object
+        properties: 
+          ifaces:
+            type: array
+            items:
+              $ref: "#/definitions/WirelessIfaceInfo"
+
+  WirelessEnableIfaceRequest:
+    type: object
+    properties:
+      ifaceName:
+        type: string
+      enable:
+        type: boolean
+
+  WirelessSetDevicePowerRequest:
+    type: object
+    properties:
+      device:
+        type: string
+      txpower:
+        type: integer
+        description: "发射功率 [100, 70, 50, 30] => [Max, High, Medium, Low]"
+
+  WirelessQuickSetupRequest:
+    type: object
+    properties:
+      wifi2g:
+        $ref: "#/definitions/WirelessIfaceInfo"
+      wifi5g:
+        $ref: "#/definitions/WirelessIfaceInfo"

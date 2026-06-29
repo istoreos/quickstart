@@ -1,0 +1,621 @@
+definitions:
+  NasDiskInfo:
+    type: object
+    properties:
+      name:
+        type: string
+        example: "sda"
+      venderModel:
+        type: string
+        description: "设备型号"
+        example: "WDC WD40EJRX-89T1XY0"
+      path: 
+        type: string
+        description: "路径"
+        example: "/dev/sda" 
+      total:
+        type: string
+        description: "设备已挂载分区容量，因为 uint64 结构 json 表达不好，转换成 string"
+      used:
+        type: string
+        description: "设备可用容量，因为 uint64 结构 json 表达不好，转换成 string"
+      usedInt:
+        type: string
+      usage:
+        type: integer
+        format: uint32
+        description: "使用百分比"
+        example: 57
+      size:
+        type: string
+        description: "设备容量 "
+      tranName:
+        type: string
+      partLabelType:
+        type: string
+        description: "设备分区表类型"
+      sizeInt:
+        type: string
+        description: "设备容量bytes"
+      childrens:
+        type: array
+        items:
+          $ref: "#/definitions/PartitionInfo"
+        description: "分区列表"
+      isSystemRoot:
+        type: boolean
+        description: "系统所在分区是否在该磁盘"
+      isDockerRoot:
+        type: boolean
+        description: "docker所在分区是否在该磁盘"
+      isExternalDisk:
+        type: boolean
+        description: "是否为外挂磁盘,包括sata和usb"
+      active:
+        type: string
+        description: "active"
+      level:
+        type: string
+        description: "级别"
+      members:
+        type: array
+        items:
+          type: string
+        description: "members"
+      rebuildStatus:
+        type: string
+        description: "状态"
+      smartWarning:
+        type: boolean
+        description: "smart错误"
+      status:
+        type: string
+        description: "状态"
+
+  PartitionInfo:
+    type: object
+    properties:
+      name: 
+        type: string
+        description: "分区名称"
+        example: "sda1" 
+      mountPoint: 
+        type: string
+        description: "挂载点"
+        example: "/mnt/sda1"
+      path:
+        type: string
+        description: "设备路径"
+        example: "/dev/sda1"
+      filesystem:
+        type: string
+        description: "文件系统类型"
+      number:
+        type: integer
+        format: uint64
+        description: "分区号，从1开始，内部使用"
+      uuid:
+        type: string
+      secStart:
+        type: integer
+        format: uint64
+        description: "起始扇区，内部使用"
+      secEnd:
+        type: integer
+        format: uint64
+        description: "结束扇区，内部使用"
+      sizeInt:
+        type: string
+        description: "设备容量bytes"
+      total:
+        type: string
+        description: "设备容量，因为 uint64 结构 json 表达不好，转换成 string"
+      used:
+        type: string
+        description: "设备可用容量，因为 uint64 结构 json 表达不好，转换成 string"
+      usage:
+        type: integer
+        format: uint32
+        description: "使用百分比"
+        example: 57
+      isReadOnly:
+        type: boolean
+        description: "是否只读"  
+      isSystemRoot:
+        type: boolean
+        description: "是否为系统所在分区"
+      isDockerRoot:
+        type: boolean
+        description: "是否为docker所在分区"
+      isRaidOn:
+        type: boolean
+        description: "是否设置了raid Flag"
+
+  NasServiceSambaInfo:
+    type: object
+    properties:
+      shareName: 
+        type: string
+      path:
+        type: string
+
+  NasServiceWebdavInfo:
+    type: object
+    properties: 
+      path:
+        type: string
+      username:
+        type: string
+      password:
+        type: string
+      port:
+        type: string
+
+  NasServiceLinkeaseInfo:
+    type: object
+    properties: 
+      enabel:
+        type: boolean
+      port:
+        type: string
+
+  NasDiskStatusResponse:
+    type: object
+    properties:
+      success:
+        $ref: "common.yaml#/definitions/responseSuccess"
+      error:
+        $ref: "common.yaml#/definitions/responseError"
+      scope:
+        $ref: "common.yaml#/definitions/responseScope"
+      result:
+        type: object
+        properties: 
+          disks:
+            type: array
+            items:
+              $ref: "#/definitions/NasDiskInfo"  
+
+  NasSandboxDisksResponse:
+    type: object
+    properties:
+      success:
+        $ref: "common.yaml#/definitions/responseSuccess"
+      error:
+        $ref: "common.yaml#/definitions/responseError"
+      scope:
+        $ref: "common.yaml#/definitions/responseScope"
+      result:
+        type: object
+        properties: 
+          disks:
+            type: array
+            items:
+              $ref: "#/definitions/NasDiskInfo"
+
+  NasSandboxStatusResponse:
+    type: object
+    properties:
+      success:
+        $ref: "common.yaml#/definitions/responseSuccess"
+      error:
+        $ref: "common.yaml#/definitions/responseError"
+      scope:
+        $ref: "common.yaml#/definitions/responseScope"
+      result:
+        type: object
+        properties: 
+          status:
+            type: string
+            description: "沙盒模式状态"
+            enum:
+              - "unsupport"
+              - "running"
+              - "stopped" 
+
+  NasServiceResponse:
+    type: object
+    properties:
+      success:
+        $ref: "common.yaml#/definitions/responseSuccess"
+      error:
+        $ref: "common.yaml#/definitions/responseError"
+      scope:
+        $ref: "common.yaml#/definitions/responseScope"
+      result:
+        type: object
+        properties: 
+          sambas:
+            type: array
+            items:
+              $ref: "#/definitions/NasServiceSambaInfo" 
+          webdav:
+            $ref: "#/definitions/NasServiceWebdavInfo" 
+          linkease:
+            $ref: "#/definitions/NasServiceLinkeaseInfo"
+
+  NasDiskInitDiskRequest:
+    type: object
+    properties: 
+      name:
+        type: string
+        example: "sda"
+      path:
+        type: string
+        description: "硬盘路径" 
+        example: "/dev/sda" 
+
+  NasDiskInitDiskResponse:
+    type: object
+    properties:
+      success:
+        $ref: "common.yaml#/definitions/responseSuccess"
+      error:
+        $ref: "common.yaml#/definitions/responseError"
+      scope:
+        $ref: "common.yaml#/definitions/responseScope"
+      result:
+        $ref: "#/definitions/NasDiskInfo"
+
+  NasDiskPartitionMountRequest:
+    type: object
+    properties: 
+      path:
+        type: string
+        description: "硬盘分区路径"
+      uuid:
+        type: string
+        description: "分区ID" 
+      mountPoint:
+        type: string
+        description: "目标挂载点"
+
+  NasDiskPartitionMountResponse:
+    type: object
+    properties:
+      success:
+        $ref: "common.yaml#/definitions/responseSuccess"
+      error:
+        $ref: "common.yaml#/definitions/responseError"
+      scope:
+        $ref: "common.yaml#/definitions/responseScope"
+      result:
+        $ref: "#/definitions/PartitionInfo"
+
+  NasDiskPartitionFormatRequest:
+    type: object
+    properties: 
+      path:
+        type: string
+        description: "硬盘分区路径"
+
+  NasDiskPartitionFormatResponse:
+    type: object
+    properties:
+      success:
+        $ref: "common.yaml#/definitions/responseSuccess"
+      error:
+        $ref: "common.yaml#/definitions/responseError"
+      scope:
+        $ref: "common.yaml#/definitions/responseScope"
+      result:
+        $ref: "#/definitions/PartitionInfo"
+
+  NasSambaCreateRequest:
+    type: object
+    properties:
+      shareName:
+        type: string
+        description: "共享名"
+      username:
+        type: string
+        description: "用户名"
+      password:
+        type: string
+        description: "密码" 
+      rootPath:
+        type: string
+        description: "服务根目录"
+      allowLegacy:
+        type: boolean
+        description: "允许旧协议" 
+
+  NasSambaCreateResponse:
+    type: object
+    properties:
+      success:
+        $ref: "common.yaml#/definitions/responseSuccess"
+      error:
+        $ref: "common.yaml#/definitions/responseError"
+      scope:
+        $ref: "common.yaml#/definitions/responseScope"
+      result:
+        type: object
+        properties:
+          sambaUrl:
+            type: string
+            description: "samba服务地址"
+            example:  
+          username:
+            type: string
+            description: "用户名"
+
+  NasWebdavCreateRequest:
+    type: object
+    properties:
+      username:
+        type: string
+        description: "用户名"
+      password:
+        type: string
+        description: "密码" 
+      rootPath:
+        type: string
+        description: "服务根目录"
+
+  NasWebdavCreateResponse:
+    type: object
+    properties:
+      success:
+        $ref: "common.yaml#/definitions/responseSuccess"
+      error:
+        $ref: "common.yaml#/definitions/responseError"
+      scope:
+        $ref: "common.yaml#/definitions/responseScope"
+      result:
+        type: object
+        properties:
+          webdavUrl:
+            type: string
+            description: "webdav服务地址"
+            example:  
+          username:
+            type: string
+            description: "用户名"
+          password:
+            type: string
+
+  NasWebdavStatusResponse:
+    type: object
+    properties:
+      success:
+        $ref: "common.yaml#/definitions/responseSuccess"
+      error:
+        $ref: "common.yaml#/definitions/responseError"
+      scope:
+        $ref: "common.yaml#/definitions/responseScope"
+      result:
+        type: object
+        properties:
+          webdavUrl:
+            type: string
+            description: "webdav服务地址"
+            example:  
+          path:
+            type: string
+          username:
+            type: string
+          password:
+            type: string
+          port:
+            type: string
+
+  NasLinkeaseEnableResponse:
+    type: object
+    properties:
+      success:
+        $ref: "common.yaml#/definitions/responseSuccess"
+      error:
+        $ref: "common.yaml#/definitions/responseError"
+      scope:
+        $ref: "common.yaml#/definitions/responseScope"
+      result:
+        type: object
+        properties:
+          port:
+            type: string
+            description: "linkease端口"
+
+  GuideDownloadPartitionListResponse:
+    type: object
+    properties:
+      success:
+        $ref: "common.yaml#/definitions/responseSuccess"
+      error:
+        $ref: "common.yaml#/definitions/responseError"
+      scope:
+        $ref: "common.yaml#/definitions/responseScope"
+      result:
+        type: object
+        properties:
+          partitionList:
+            type: array
+            description: "下载目录推荐安装路径"
+            items:
+              type: string   
+
+  NasSandboxRequest:
+    type: object
+    properties:
+      path:
+        type: string
+        description: "分区路径"
+        example: "/dev/sda1"
+
+  RaidCreateRequest:
+    type: object     
+    properties:
+      level:
+        type: string
+        description: "raid级别" 
+        enum:
+          - "linear"
+          - "raid0"
+          - "raid1"
+          - "raid5"
+          - "raid6"
+          - "raid10"
+      devicePaths:
+        type: array
+        description: "raid磁盘路径数组"
+        items:
+          type: string
+
+  RaidDeleteRequest:
+    type: object     
+    properties:
+      path:
+        type: string
+        description: "raid磁盘路径" 
+      mountPath:
+        type: string
+        description: "raid挂载路径" 
+      members:
+        type: array
+        description: "raid成员"
+        items:
+          type: string
+
+  RaidAddRequest:
+    type: object     
+    properties:
+      path:
+        type: string
+        description: "raid磁盘路径" 
+      memberPath:
+        type: string
+        description: "成员路径" 
+
+  RaidRemoveRequest:
+    type: object     
+    properties:
+      path:
+        type: string
+        description: "raid磁盘路径" 
+      memberPath:
+        type: string
+        description: "成员路径"
+
+  RaidRecoverRequest:
+    type: object     
+    properties:
+      path:
+        type: string
+        description: "raid磁盘路径" 
+      memberPath:
+        type: string
+        description: "成员路径"
+      checkRaidPartition:
+        type: boolean
+        description: "检查磁盘是否存在raid分区"
+
+  RaidDetailRequest:
+    type: object     
+    properties:
+      path:
+        type: string
+        description: "raid磁盘路径" 
+  
+  RaidDetailResponse:
+    type: object
+    properties:
+      success:
+        $ref: "common.yaml#/definitions/responseSuccess"
+      error:
+        $ref: "common.yaml#/definitions/responseError"
+      scope:
+        $ref: "common.yaml#/definitions/responseScope"
+      result:
+        type: object
+        properties: 
+          detail:
+            type: string
+
+  RaidListResponse:
+    type: object
+    properties:
+      success:
+        $ref: "common.yaml#/definitions/responseSuccess"
+      error:
+        $ref: "common.yaml#/definitions/responseError"
+      scope:
+        $ref: "common.yaml#/definitions/responseScope"
+      result:
+        type: object
+        properties: 
+          disks:
+            type: array
+            items:
+              $ref: "#/definitions/NasDiskInfo" 
+
+  RaidCreateListResponse:
+    type: object
+    properties:
+      success:
+        $ref: "common.yaml#/definitions/responseSuccess"
+      error:
+        $ref: "common.yaml#/definitions/responseError"
+      scope:
+        $ref: "common.yaml#/definitions/responseScope"
+      result:
+        type: object
+        properties: 
+          members:
+            type: array
+            items:
+              $ref: "#/definitions/RaidMemberInfo"
+
+  RaidMemberInfo:
+    type: object
+    properties:
+          name:
+            type: string
+          path:
+            type: string
+          model:
+            type: string
+          sizeStr:
+            type: string
+
+  GlobalFolders:
+    type: object
+    properties:
+      home:
+        type: string
+        description: "Home文件夹"
+        example: "/mnt/sata1-1"
+      configs:
+        type: string
+        description: "Configs文件夹，默认 $Home/Configs"
+        example: "/mnt/sata1-1/Configs"
+      caches:
+        type: string
+        description: "Caches文件夹，默认 $Home/Caches"
+        example: "/mnt/sata1-1/Caches"
+      public:
+        type: string
+        description: "Public文件夹，默认 $Home/Public"
+        example: "/mnt/sata1-1/Public"
+      downloads:
+        type: string
+        description: "Downloads文件夹，默认 $Public/Downloads"
+        example: "/mnt/sata1-1/Public/Downloads"
+
+  GlobalFoldersResponse:
+    type: object
+    properties:
+      success:
+        $ref: "common.yaml#/definitions/responseSuccess"
+      error:
+        $ref: "common.yaml#/definitions/responseError"
+      scope:
+        $ref: "common.yaml#/definitions/responseScope"
+      result:
+        $ref: "#/definitions/GlobalFolders"
+  
+  SystemAutoCheckUpdateRequest:
+    type: object
+    properties:
+        enable:
+          type: boolean
+          description: "启用自动检查更新" 

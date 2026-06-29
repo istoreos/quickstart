@@ -1,0 +1,11 @@
+package service
+
+import downloadservices "github.com/linkease/quick-start/istore-backend/modules/guidestorage/downloadservices"
+
+type GuideDownloadAria2Snapshot = downloadservices.Aria2Snapshot
+type GuideDownloadQbittorrentSnapshot = downloadservices.QbittorrentSnapshot
+type GuideDownloadTransmissionSnapshot = downloadservices.TransmissionSnapshot
+
+type GuideAria2InitInput = downloadservices.Aria2InitInput
+type GuideQbittorrentInitInput = downloadservices.QbittorrentInitInput
+type GuideTransmissionInitInput = downloadservices.TransmissionInitInput

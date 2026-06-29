@@ -1,0 +1,171 @@
+definitions:
+  SystemCheckUpdateResponse:
+    type: object
+    properties:
+      success:
+        $ref: "common.yaml#/definitions/responseSuccess"
+      error:
+        $ref: "common.yaml#/definitions/responseError"
+      scope:
+        $ref: "common.yaml#/definitions/responseScope"
+      result:
+        type: object
+        properties:
+          needUpdate:
+            type: boolean 
+          msg:
+            type: string
+
+  SystemCsrfTokenResponse:
+    type: object
+    properties:
+      success:
+        $ref: "common.yaml#/definitions/responseSuccess"
+      error:
+        $ref: "common.yaml#/definitions/responseError"
+      scope:
+        $ref: "common.yaml#/definitions/responseScope"
+      result:
+        type: object
+        properties:
+          token:
+            type: string
+
+  SystemTimeResponse:
+    type: object
+    properties:
+      success:
+        $ref: "common.yaml#/definitions/responseSuccess"
+      error:
+        $ref: "common.yaml#/definitions/responseError"
+      scope:
+        $ref: "common.yaml#/definitions/responseScope"
+      result:
+        type: object
+        properties:
+          uptime:
+            type: integer
+            description: "运行时间"
+          uptimeHuman:
+            type: string
+            description: "运行时间"
+          localtime:
+            type: string
+            description: "本地时间" 
+
+  SystemVersionResponse:
+    type: object
+    properties:
+      success:
+        $ref: "common.yaml#/definitions/responseSuccess"
+      error:
+        $ref: "common.yaml#/definitions/responseError"
+      scope:
+        $ref: "common.yaml#/definitions/responseScope"
+      result:
+        type: object
+        properties:
+          model:
+            type: string
+            description: "设备型号"
+          kernelVersion:
+            type: string
+            description: "内核版本"
+          firmwareVersion:
+            type: string
+            description: "固件版本"
+          quickstart:
+            type: string
+            description: "quickstart这个程序的版本号"
+
+  SystemCpuStatusResponse:       
+    type: object
+    properties:
+      success:
+        $ref: "common.yaml#/definitions/responseSuccess"
+      error:
+        $ref: "common.yaml#/definitions/responseError"
+      scope:
+        $ref: "common.yaml#/definitions/responseScope"
+      result:
+        type: object
+        properties: 
+          usage:
+                type: integer
+                description: "使用率" 
+
+  SystemCpuTemperatureResponse:       
+    type: object
+    properties:
+      success:
+        $ref: "common.yaml#/definitions/responseSuccess"
+      error:
+        $ref: "common.yaml#/definitions/responseError"
+      scope:
+        $ref: "common.yaml#/definitions/responseScope"
+      result:
+        type: object
+        properties: 
+          temperature:
+            type: integer
+            description: "温度" 
+
+  SystemMemeryStatusResponse:       
+    type: object
+    properties:
+      success:
+        $ref: "common.yaml#/definitions/responseSuccess"
+      error:
+        $ref: "common.yaml#/definitions/responseError"
+      scope:
+        $ref: "common.yaml#/definitions/responseScope"
+      result:
+        type: object
+        properties: 
+          total:
+            type: string
+          available:
+            type: string 
+          availablePercentage:
+            type: integer
+            description: "可用百分比"
+            example: 57
+
+  SystemAutoCheckUpdateRequest:
+    type: object
+    properties:
+        enable:
+          type: boolean
+          description: "启用自动检查更新" 
+
+  NasSystemSetPasswordRequest:
+    type: object
+    properties: 
+      password:
+        type: string
+        description: "密码" 
+
+  SystemModuleSettingsRequest:
+    type: object
+    properties:
+      diableDisplay:
+        type: array
+        items:
+          type: string
+
+  SystemModuleSettingsResponse:
+    type: object
+    properties:
+      success:
+        $ref: "common.yaml#/definitions/responseSuccess"
+      error:
+        $ref: "common.yaml#/definitions/responseError"
+      scope:
+        $ref: "common.yaml#/definitions/responseScope"
+      result:
+        type: object
+        properties: 
+          diableDisplay:
+            type: array
+            items:
+              type: string

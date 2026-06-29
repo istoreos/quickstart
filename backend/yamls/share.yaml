@@ -1,0 +1,209 @@
+definitions:
+  ShareUserListResponse:
+    type: object
+    properties:
+      success:
+        $ref: "common.yaml#/definitions/responseSuccess"
+      error:
+        $ref: "common.yaml#/definitions/responseError"
+      scope:
+        $ref: "common.yaml#/definitions/responseScope"
+      result:
+        type: object
+        properties: 
+          users:
+            type: array
+            items:
+              $ref: "#/definitions/ShareUserInfo"
+
+  ShareUserInfo:
+    type: object
+    properties:
+        userName:
+          type: string
+          description: "用户名"
+        password:
+          type: string
+          description: "密码" 
+
+  ShareUserCreateRequest:
+    type: object     
+    properties:
+      userName:
+        type: string
+        description: "用户名"
+      password:
+        type: string
+        description: "密码"
+  
+  ShareUserDeleteRequest:
+    type: object     
+    properties:
+      userName:
+        type: string
+        description: "用户名" 
+
+  ShareServiceListResponse:
+    type: object
+    properties:
+      success:
+        $ref: "common.yaml#/definitions/responseSuccess"
+      error:
+        $ref: "common.yaml#/definitions/responseError"
+      scope:
+        $ref: "common.yaml#/definitions/responseScope"
+      result:
+        type: object
+        properties: 
+          services:
+            type: array
+            items:
+              $ref: "#/definitions/ShareServiceInfo"
+
+  ShareServiceInfo:
+    type: object
+    properties:
+      name:
+        type: string
+        description: "用户名" 
+      path:
+        type: string
+        description: "目录路径" 
+      samba: 
+        type: boolean
+        description: "支持 samba" 
+      webdav: 
+        type: boolean
+        description: "支持 webdav" 
+      users:
+        type: array
+        items:
+          $ref: "#/definitions/ShareServiceUserPermission" 
+
+  ShareUserName:
+    type: string
+    description: "用户名称" 
+
+  ShareServiceUserPermission:
+    type: object
+    properties:
+        userName:
+          type: string
+          description: "用户名"
+        ro: 
+          type: boolean
+          description: "只读权限"
+        rw: 
+          type: boolean
+          description: "读写权限"
+
+  ShareServiceEveryonePermission:
+    type: object
+    properties: 
+        readOnly: 
+          type: boolean
+          description: "只读权限"
+        readwrite: 
+          type: boolean
+          description: "读写权限"
+  
+  ShareServiceCreateRequest:
+    type: object     
+    properties:
+      name:
+          type: string
+          description: "用户名" 
+      path:
+        type: string
+        description: "目录路径" 
+      samba: 
+        type: boolean
+        description: "支持 samba" 
+      webdav: 
+        type: boolean
+        description: "支持 webdav" 
+      users:
+          type: array
+          items:
+            $ref: "#/definitions/ShareServiceUserPermission" 
+
+  ShareServicDeleteRequest:
+    type: object     
+    properties:
+      name:
+        type: string
+        description: "用户名" 
+  
+  ShareProtocolWebdavResponse:
+    type: object
+    properties:
+      success:
+        $ref: "common.yaml#/definitions/responseSuccess"
+      error:
+        $ref: "common.yaml#/definitions/responseError"
+      scope:
+        $ref: "common.yaml#/definitions/responseScope"
+      result:
+        $ref: "#/definitions/ShareProtocolWebdavConfig"
+
+  ShareProtocolWebdavConfig:
+    type: object
+    properties:
+        port:
+          type: integer
+          description: "端口"  
+
+  ShareProtocolGlobalsConfig:
+    type: object
+    properties:
+        allowAnonymous:
+          type: integer
+          description: "端口"
+  
+  ShareProtocolGlobalsResponse:
+    type: object
+    properties:
+      success:
+        $ref: "common.yaml#/definitions/responseSuccess"
+      error:
+        $ref: "common.yaml#/definitions/responseError"
+      scope:
+        $ref: "common.yaml#/definitions/responseScope"
+      result:
+        type: object
+        properties: 
+          services:
+            type: array
+            items:
+              $ref: "#/definitions/ShareProtocolGlobalsConfig"
+
+  ShareProtocolSambaResponse:
+    type: object
+    properties:
+      success:
+        $ref: "common.yaml#/definitions/responseSuccess"
+      error:
+        $ref: "common.yaml#/definitions/responseError"
+      scope:
+        $ref: "common.yaml#/definitions/responseScope"
+      result:
+        $ref: "#/definitions/ShareProtocolSambaConfig"
+
+  ShareProtocolSambaConfig:
+    type: object
+    properties:
+        workgroup:
+          type: string
+          description: "工作组"  
+        description:
+          type: string
+          description: "描述"  
+        enableMacosCompatible: 
+          type: boolean
+          description: "启用 macOS 兼容共享" 
+        allowLegacy: 
+          type: boolean
+          description: "允许旧协议与身份验证(不安全)" 
+        disableNetbios: 
+          type: boolean
+          description: "禁用 Netbios" 

@@ -1,0 +1,53 @@
+definitions:
+  responseSuccess:
+    type: integer
+    description: "0 表示 OK,小于 0 表示错误。大于 0 得看接口具体说明"
+    example: -1
+
+  responseScope:
+    type: string
+    description: "错误码所属于范围，比如 network/dhcp/lan/disk 等"
+    enum:
+      - network
+      - dhcp
+      - lan
+      - disk
+
+  responseError:
+    type: string
+    description: "具体的错误码，翻译成具体语言的错误"
+    example: "登录错误，请重新登录"
+
+  JsonResponse:
+    type: object
+    properties:
+      success:
+        type: integer
+        description: "0 表示 OK，小于 0 表示错误。大于 0 得看接口具体说明"
+        example: -1
+      error:
+        type: string
+        description: "具体的错误码，由 SDK 来翻译成具体语言的错误"
+        example: "登录错误，请重新登录"
+      scope:
+        type: string
+        description: "错误码所属于范围，比如 system 等"
+        enum:
+          - system
+          - network
+          - fileshare
+          - raid
+
+  SDKNormalResponse:
+    type: object
+    required:
+      - success
+    properties:
+      success:
+        $ref: "#/definitions/responseSuccess"
+      error:
+        $ref: "#/definitions/responseError"
+      scope:
+        $ref: "#/definitions/responseScope"
+      detail:
+        type: string

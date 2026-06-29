@@ -1,0 +1,76 @@
+definitions:
+  GuideDockerStatusResponse:
+    type: object
+    properties:
+      success:
+        $ref: "common.yaml#/definitions/responseSuccess"
+      error:
+        $ref: "common.yaml#/definitions/responseError"
+      scope:
+        $ref: "common.yaml#/definitions/responseScope"
+      result:
+        type: object
+        properties:
+          status:
+            type: string
+            description: "docker运行状态"
+            enum:
+              - "running"
+              - "stopped" 
+              - "not installed"
+          path:
+            type: string
+            description: "docker根目录"
+          errorInfo:
+            type: string
+            description: "docker异常信息"
+
+  GuideDockerPartitionListResponse:
+    type: object
+    properties:
+      success:
+        $ref: "common.yaml#/definitions/responseSuccess"
+      error:
+        $ref: "common.yaml#/definitions/responseError"
+      scope:
+        $ref: "common.yaml#/definitions/responseScope"
+      result:
+        type: object
+        properties:
+          partitionList:
+            type: array
+            description: "docker推荐安装路径"
+            items:
+              type: string   
+
+  GuideDockerTransferRequest:
+    type: object
+    properties:
+      path:
+        type: string
+        description: "docker迁移路径"
+      force:
+        type: boolean
+        description: "忽略目录检查，直接覆盖"
+      overwriteDir:
+        type: boolean
+        description: "true则删除目录后覆盖迁移,false则不复制文件，只修改目录位置"
+
+  GuideDockerTransferResponse:
+    type: object
+    properties:
+      success:
+        $ref: "common.yaml#/definitions/responseSuccess"
+      error:
+        $ref: "common.yaml#/definitions/responseError"
+      scope:
+        $ref: "common.yaml#/definitions/responseScope"
+      result:
+        type: object
+        properties:
+          path:
+            type: string
+            description: "docker迁移路径"
+          emptyPathWarning:
+            type: boolean
+            description: "目标路径不为空，无法直接覆盖"

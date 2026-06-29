@@ -1,0 +1,1823 @@
+swagger: '2.0'
+info:
+  version: 2.0.0
+  title: "iStore QuickStart API"
+  description: "iStore QuickStart API"
+schemes:
+  - http
+host: 192.168.100.1
+tags:
+  - name: "network"
+    description: "网络相关接口"
+  - name: "system"
+    description: "系统相关接口"
+  - name: "nas"
+    description: "存储相关接口"
+  - name: "guide"
+    description: "向导相关接口"
+  - name: "app"
+    description: "插件相关接口"
+  - name: "share"
+    description: "文件共享相关接口"
+  - name: "filebasic"
+    description: "文件基础信息相关接口"
+  - name: "lanctrl"
+    description: "局域网设备管理"
+
+paths:
+  /cgi-bin/luci/istore/network/statistics/:
+    get:
+      tags:
+        - "network"
+      summary: "网速统计，单位KB"  
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "返回最近24小时网速统计"
+          schema:
+            $ref: "network.yaml#/definitions/NetworkStatisticsResponse"
+
+  /cgi-bin/luci/istore/network/status/:
+    get:
+      tags:
+        - "network"
+      summary: "当前网络状态"  
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "network.yaml#/definitions/NetworkStatusResponse"
+
+  /cgi-bin/luci/istore/network/interface/status/:
+    get:
+      tags:
+        - "network"
+      summary: "网络接口状态"  
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "network.yaml#/definitions/NetworkInterfaceStatusResponse"
+
+  /cgi-bin/luci/istore/network/device/list/:
+    get:
+      tags:
+        - "network"
+      summary: "查看所有已连接设备"  
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "fetch devices ok"
+          schema:
+            $ref: "network.yaml#/definitions/DeviceListResponse"
+
+  /cgi-bin/luci/istore/network/checkPublicNet/:
+    post:
+      tags:
+        - "network"
+      summary: "检查设备是否有公网ip"  
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "network.yaml#/definitions/NetworkCheckPublicNetRequest"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "network.yaml#/definitions/NetworkCheckPublicNetResponse"
+
+  /cgi-bin/luci/istore/network/port/list/:
+    get:
+      tags:
+        - "network"
+      summary: "查看网络接口状态"  
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "fetch devices ok"
+          schema:
+            $ref: "network.yaml#/definitions/NetworkPortListResponse"
+
+  /cgi-bin/luci/istore/network/homebox/enable:
+    post:
+      tags:
+        - "network"
+      summary: "打开homebox服务"
+      description: "打开homebox服务"
+      produces:
+        - "application/json" 
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "network.yaml#/definitions/NetworkHomeBoxEnableResponse"
+  
+  /cgi-bin/luci/istore/system/version/:
+    get:
+      tags:
+        - "system"
+      summary: "当前系统版本"  
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "system.yaml#/definitions/SystemVersionResponse"
+
+  /cgi-bin/luci/istore/system/time/:
+    get:
+      tags:
+        - "system"
+      summary: "当前系统时间"  
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "system.yaml#/definitions/SystemTimeResponse"
+
+  /cgi-bin/luci/istore/system/cpu/status/:
+    get:
+      tags:
+        - "system"
+      summary: "当前系统CPU状态"  
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "system.yaml#/definitions/SystemCpuStatusResponse"
+
+  /cgi-bin/luci/istore/system/cpu/temperature/:
+    get:
+      tags:
+        - "system"
+      summary: "当前系统CPU状态"  
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "system.yaml#/definitions/SystemCpuTemperatureResponse"
+
+  /cgi-bin/luci/istore/system/memery/status/:
+    get:
+      tags:
+        - "system"
+      summary: "当前系统内存状态"  
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "system.yaml#/definitions/SystemMemeryStatusResponse"
+
+  /cgi-bin/luci/istore/system/check-update/:
+    get:
+      tags:
+        - "system"
+      summary: "查询最新版本"  
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "system.yaml#/definitions/SystemCheckUpdateResponse"
+
+  /cgi-bin/luci/istore/system/auto-check-update/:
+    post:
+      tags:
+        - "system"
+      summary: "是否自动检查固件更新"  
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "system.yaml#/definitions/SystemAutoCheckUpdateRequest"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "common.yaml#/definitions/SDKNormalResponse"
+
+  /cgi-bin/luci/istore/system/reboot/:
+    post:
+      tags:
+        - "system"
+      summary: "重启系统"  
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "common.yaml#/definitions/SDKNormalResponse"
+  
+  /cgi-bin/luci/istore/system/setPassword/:
+    post:
+      tags:
+        - "system"
+      summary: "设置密码"  
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "system.yaml#/definitions/NasSystemSetPasswordRequest"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "common.yaml#/definitions/SDKNormalResponse"
+
+  /cgi-bin/luci/istore/system/getToken/:
+    get:
+      tags:
+        - "system"
+      summary: " 获取 csrftoken"  
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: ""
+          schema:
+            $ref: "system.yaml#/definitions/SystemCsrfTokenResponse"
+
+  /cgi-bin/luci/istore/system/check/:
+    get:
+      tags:
+        - "system"
+      summary: "检查是否指定 istoreOS 设备"  
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "common.yaml#/definitions/SDKNormalResponse"
+
+  /cgi-bin/luci/istore/nas/disk/status/:
+    get:
+      tags:
+        - "nas"
+      summary: "查看磁盘状态"  
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "nas.yaml#/definitions/NasDiskStatusResponse"
+
+  /cgi-bin/luci/istore/nas/service/status/:
+    get:
+      tags:
+        - "nas"
+      summary: "已开启的nas服务列表"  
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "nas.yaml#/definitions/NasServiceResponse"
+
+  /cgi-bin/luci/istore/nas/disk/init:
+    post:
+      tags:
+        - "nas"
+      summary: "初始化硬盘并挂载"
+      description: "初始化硬盘为一个ext4分区并挂载"
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "nas.yaml#/definitions/NasDiskInitDiskRequest"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "nas.yaml#/definitions/NasDiskInitDiskResponse"
+
+  /cgi-bin/luci/istore/nas/disk/initrest:
+    post:
+      tags:
+        - "nas"
+      summary: "初始化硬盘剩余空间并挂载"
+      description: "初始化硬盘剩余空间为一个ext4分区并挂载"
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "nas.yaml#/definitions/NasDiskInitDiskRequest"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "nas.yaml#/definitions/NasDiskInitDiskResponse"
+
+  /cgi-bin/luci/istore/nas/disk/partition/format:
+    post:
+      tags:
+        - "nas"
+      summary: "格式化分区"
+      description: "格式化分区"
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "nas.yaml#/definitions/NasDiskPartitionFormatRequest"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "nas.yaml#/definitions/NasDiskPartitionFormatResponse"
+  
+  /cgi-bin/luci/istore/nas/disk/partition/mount:
+    post:
+      tags:
+        - "nas"
+      summary: "挂载分区"
+      description: "挂载分区"
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "nas.yaml#/definitions/NasDiskPartitionMountRequest"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "nas.yaml#/definitions/NasDiskPartitionMountResponse"
+
+  /cgi-bin/luci/istore/nas/samba/create:
+    post:
+      tags:
+        - "nas"
+      summary: "创建samba服务"
+      description: "创建samba服务"
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "nas.yaml#/definitions/NasSambaCreateRequest"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "nas.yaml#/definitions/NasSambaCreateResponse"
+
+  /cgi-bin/luci/istore/nas/webdav/create:
+    post:
+      tags:
+        - "nas"
+      summary: "创建webdav服务"
+      description: "创建webdav服务"
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "nas.yaml#/definitions/NasWebdavCreateRequest"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "nas.yaml#/definitions/NasWebdavCreateResponse"
+  
+  /cgi-bin/luci/istore/nas/webdav/status:
+    post:
+      tags:
+        - "nas"
+      summary: "创建webdav服务"
+      description: "创建webdav服务"
+      produces:
+        - "application/json" 
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "nas.yaml#/definitions/NasWebdavStatusResponse"
+
+  /cgi-bin/luci/istore/nas/linkease/enable:
+    post:
+      tags:
+        - "nas"
+      summary: "打开linkease服务"
+      description: "打开linkease服务"
+      produces:
+        - "application/json" 
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "nas.yaml#/definitions/NasLinkeaseEnableResponse"
+
+  /cgi-bin/luci/istore/nas/sandbox/:
+    post:
+      tags:
+        - "nas"
+      summary: "沙箱向导"
+      description: "沙箱向导"
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "nas.yaml#/definitions/NasSandboxRequest"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "common.yaml#/definitions/SDKNormalResponse"
+    get:
+      tags:
+        - "nas"
+      summary: "沙箱向导获"
+      description: "沙箱向导获"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "nas.yaml#/definitions/NasSandboxStatusResponse"
+
+  /cgi-bin/luci/istore/nas/sandbox/disks/:
+    get:
+      tags:
+        - "nas"
+      summary: "沙箱向导获取磁盘列表"
+      description: "沙箱向导获取磁盘列表"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "nas.yaml#/definitions/NasSandboxDisksResponse"
+
+  /cgi-bin/luci/istore/nas/sandbox/commit/:
+    post:
+      tags:
+        - "nas"
+      summary: "沙箱向导提交更改"
+      description: "沙箱向导提交更改"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "common.yaml#/definitions/SDKNormalResponse"
+
+  /cgi-bin/luci/istore/nas/sandbox/reset/:
+    post:
+      tags:
+        - "nas"
+      summary: "沙箱向导重置更改"
+      description: "沙箱向导重置更改"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "common.yaml#/definitions/SDKNormalResponse"
+
+  /cgi-bin/luci/istore/guide/need/setup/:
+    get:
+      tags:
+        - "guide"
+      summary: "需要快速设置无线或者网络"
+      description: "需要快速设置无线或者网络"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "guide.yaml#/definitions/GuideNeedSetupResponse"
+
+  /cgi-bin/luci/istore/guide/pppoe/:
+    post:
+      tags:
+        - "guide"
+      summary: "配置pppoe拨号"
+      description: "网络配置向导 - pppoe拨号"
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "guide.yaml#/definitions/GuidePppoeRequest"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "common.yaml#/definitions/SDKNormalResponse"
+    get:
+      tags:
+        - "guide"
+      summary: "查看pppoe拨号配置"
+      description: "查看当前网络拨号配置" 
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "guide.yaml#/definitions/GuidePppoeStatusResponse"
+
+  /cgi-bin/luci/istore/guide/docker/status/:
+    get:
+      tags:
+        - "guide"
+      summary: "查看docker状态"
+      description: "查看docker状态" 
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "docker.yaml#/definitions/GuideDockerStatusResponse"
+            
+  /cgi-bin/luci/istore/guide/docker/partition/list/:
+    get:
+      tags:
+        - "guide"
+      summary: "docker推荐安装位置"
+      description: "查看docker推荐安装位置" 
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "docker.yaml#/definitions/GuideDockerPartitionListResponse"
+  
+  /cgi-bin/luci/istore/guide/docker/transfer/:
+    post:
+      tags:
+        - "guide"
+      summary: "迁移docker"
+      description: "迁移docker"
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "docker.yaml#/definitions/GuideDockerTransferRequest"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "docker.yaml#/definitions/GuideDockerTransferResponse"
+  
+  /cgi-bin/luci/istore/guide/download/partition/list/:
+    get:
+      tags:
+        - "guide"
+      summary: "下载目录推荐安装位置"
+      description: "下载目录推荐安装位置" 
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "nas.yaml#/definitions/GuideDownloadPartitionListResponse"         
+  
+  /cgi-bin/luci/istore/guide/aria2/init/:
+    post:
+      tags:
+        - "guide"
+      summary: "配置aria2"
+      description: "配置aria2"
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "guide.yaml#/definitions/GuideAria2InitRequest"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "common.yaml#/definitions/SDKNormalResponse"
+
+  /cgi-bin/luci/istore/guide/qbittorrent/init/:
+    post:
+      tags:
+        - "guide"
+      summary: "配置qbit"
+      description: "配置qbit"
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "guide.yaml#/definitions/GuideQbittorrentInitRequest"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "common.yaml#/definitions/SDKNormalResponse"
+
+  /cgi-bin/luci/istore/guide/transmission/init/:
+    post:
+      tags:
+        - "guide"
+      summary: "配置 transmission"
+      description: "配置 transmission"
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "guide.yaml#/definitions/GuideTransmissionInitRequest"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "common.yaml#/definitions/SDKNormalResponse"
+
+  /cgi-bin/luci/istore/guide/download-service/status/:
+    get:
+      tags:
+        - "guide"
+      summary: "下载服务状态"  
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "guide.yaml#/definitions/GuideDownloadServiceResponse"
+  
+  /cgi-bin/luci/istore/guide/lan/:
+    post:
+      tags:
+        - "guide"
+      summary: "更换内网地址"
+      description: "更换内网地址"
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "network.yaml#/definitions/GuideLanSettingRequest"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "common.yaml#/definitions/SDKNormalResponse"
+    get:
+      tags:
+        - "guide"
+      summary: "lan口网络信息"
+      description: "lan口网络信息"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "network.yaml#/definitions/GuideLanSettingResponse"
+
+  /cgi-bin/luci/istore/guide/client-mode/:
+    post:
+      tags:
+        - "guide"
+      summary: "配置为连接现有路由模式"
+      description: "网络配置向导 - 连接到上级路由局域网（ LAN ）接口"
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "network.yaml#/definitions/GuideClientModeRequest"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "common.yaml#/definitions/SDKNormalResponse"
+    get:
+      tags:
+        - "guide"
+      summary: "配置为连接现有路由模式"
+      description: "获取当前客户端模式的配置信息"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "network.yaml#/definitions/GuideClientModeResponse"
+
+  /cgi-bin/luci/istore/guide/gateway-router/:
+    post:
+      tags:
+        - "guide"
+      summary: "配置旁路由网络"
+      description: "网络配置向导 - 配置旁路由网络"
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "network.yaml#/definitions/GuideGatewayRouterRequest"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "common.yaml#/definitions/SDKNormalResponse"
+
+  /cgi-bin/luci/istore/guide/dns-config/:
+    post:
+      tags:
+        - "guide"
+      summary: "配置DNS"
+      description: "网络配置向导 - 配置DNS"
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "network.yaml#/definitions/GuideDnsConfigRequest"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "network.yaml#/definitions/GuideDnsConfigResponse"
+    get:
+      tags:
+        - "guide"
+      summary: "获取当前DNS配置"
+      description: "网络配置向导 - 获取当前DNS配置"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "network.yaml#/definitions/GuideDnsConfigResponse"
+
+  /cgi-bin/luci/istore/guide/soft-source/:
+    post:
+      tags:
+        - "guide"
+      summary: "配置软件源"
+      description: "配置软件源"
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "app.yaml#/definitions/GuideSoftSourceRequest"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "app.yaml#/definitions/GuideSoftSourceResponse"
+    get:
+      tags:
+        - "guide"
+      summary: "获取当前软件源配置"
+      description: "获取当前软件源配置"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "app.yaml#/definitions/GuideSoftSourceResponse"
+
+  /cgi-bin/luci/istore/guide/soft-source/list:
+    get:
+      tags:
+        - "guide"
+      summary: "获取软件源配置列表"
+      description: "获取软件源配置列表"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "app.yaml#/definitions/GuideSoftSourceListResponse"
+
+  /cgi-bin/luci/istore/guide/ddns/:
+    post:
+      tags:
+        - "guide"
+      summary: "ddns向导"
+      description: "ddns向导"
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "ddns.yaml#/definitions/GuideDdnsRequest"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "common.yaml#/definitions/SDKNormalResponse"
+    get:
+      tags:
+        - "guide"
+      summary: "ddns向导"
+      description: "ddns向导"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "ddns.yaml#/definitions/GuideDdnsResponse"
+
+  /cgi-bin/luci/istore/guide/ddnsto/:
+    post:
+      tags:
+        - "guide"
+      summary: "ddns向导配置ddnsto"
+      description: "ddns向导配置ddnsto"
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "ddns.yaml#/definitions/GuideDdnstoRequest"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "common.yaml#/definitions/SDKNormalResponse"
+
+  /cgi-bin/luci/istore/guide/ddnsto/config/:
+      get:
+        tags:
+          - "guide"
+        summary: "ddnsto配置参数"
+        description: "ddnsto配置参数"
+        produces:
+          - "application/json"
+        responses:
+          200:
+            description: "OK"
+            schema:
+              $ref: "ddns.yaml#/definitions/GuideDdnstoConfigResponse"
+
+  /cgi-bin/luci/istore/guide/ddnsto/address/:
+    post:
+      tags:
+        - "guide"
+      summary: "ddns向导配置ddnsto"
+      description: "ddns向导配置ddnsto"
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "ddns.yaml#/definitions/GuideDdnstoAddressRequest"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "common.yaml#/definitions/SDKNormalResponse"
+
+  /cgi-bin/luci/istore/guide/global-folders/:
+    post:
+      tags:
+        - "guide"
+      summary: "默认文件夹向导"
+      description: "默认文件夹向导"
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "nas.yaml#/definitions/GlobalFolders"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "common.yaml#/definitions/SDKNormalResponse"
+    get:
+      tags:
+        - "guide"
+      summary: "获取默认文件夹"
+      description: "获取默认文件夹"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "nas.yaml#/definitions/GlobalFoldersResponse"
+
+
+  /cgi-bin/luci/istore/app/check/:
+    post:
+      tags:
+        - "app"
+      summary: "查看插件状态"
+      description: "查看插件状态"
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "app.yaml#/definitions/AppCheckRequest"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "app.yaml#/definitions/AppCheckResponse" 
+
+  /cgi-bin/luci/istore/app/install/:
+    post:
+      tags:
+        - "app"
+      summary: "安装插件"
+      description: "安装插件"
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "app.yaml#/definitions/AppInstallRequest"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "common.yaml#/definitions/SDKNormalResponse"
+
+  /cgi-bin/luci/istore/app/install-list/:
+    get:
+      tags:
+        - "app"
+      summary: "获取插件列表"
+      description: "获取插件列表，完全兼容 /cgi-bin/luci/admin/store/installed"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "app.yaml#/definitions/AppInstalledListResponse"
+  
+  /cgi-bin/luci/istore/raid/create/:
+    post:
+      tags:
+        - "raid"
+      summary: "创建raid"
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "nas.yaml#/definitions/RaidCreateRequest"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "nas.yaml#/definitions/NasDiskPartitionFormatResponse"
+
+  /cgi-bin/luci/istore/raid/delete/:
+    post:
+      tags:
+        - "raid"
+      summary: "删除raid"
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "nas.yaml#/definitions/RaidDeleteRequest"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "common.yaml#/definitions/SDKNormalResponse" 
+
+  /cgi-bin/luci/istore/raid/add/:
+    post:
+      tags:
+        - "raid"
+      summary: "扩充raid成员，新加入盘，并且直接投入使用"
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "nas.yaml#/definitions/RaidAddRequest"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "common.yaml#/definitions/SDKNormalResponse" 
+
+  /cgi-bin/luci/istore/raid/remove/:
+    post:
+      tags:
+        - "raid"
+      summary: "删除raid成员"
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "nas.yaml#/definitions/RaidRemoveRequest"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "common.yaml#/definitions/SDKNormalResponse" 
+
+  /cgi-bin/luci/istore/raid/recover/:
+    post:
+      tags:
+        - "raid"
+      summary: "恢复raid成员，如果raid的成员盘满足最低数量，新增的盘则为预备盘"
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "nas.yaml#/definitions/RaidRecoverRequest"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "common.yaml#/definitions/SDKNormalResponse" 
+
+  /cgi-bin/luci/istore/raid/detail/:
+    post:
+      tags:
+        - "raid"
+      summary: "查看raid详细信息"
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "nas.yaml#/definitions/RaidDetailRequest"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "nas.yaml#/definitions/RaidDetailResponse"
+
+  /cgi-bin/luci/istore/raid/list/:
+    get:
+      tags:
+        - "raid"
+      summary: "获取raid列表数据"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "nas.yaml#/definitions/RaidListResponse" 
+
+  /cgi-bin/luci/istore/raid/create/list/:
+    get:
+      tags:
+        - "raid"
+      summary: "创建raid,获取可用raid成员"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "nas.yaml#/definitions/RaidCreateListResponse" 
+
+  /cgi-bin/luci/istore/share/user/list/:
+    get:
+        tags:
+          - "share"
+        summary: "获取共享成员列表"
+        produces:
+          - "application/json"
+        responses:
+          200:
+            description: "OK"
+            schema:
+              $ref: "share.yaml#/definitions/ShareUserListResponse" 
+
+  /cgi-bin/luci/istore/share/user/create/:
+    post:
+      tags:
+        - "share"
+      summary: "添加共享用户"
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "share.yaml#/definitions/ShareUserCreateRequest"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "common.yaml#/definitions/SDKNormalResponse" 
+
+  /cgi-bin/luci/istore/share/user/delete/:
+    post:
+      tags:
+        - "share"
+      summary: "删除共享用户"
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "share.yaml#/definitions/ShareUserDeleteRequest"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "common.yaml#/definitions/SDKNormalResponse" 
+
+  /cgi-bin/luci/istore/share/user/update/:
+    post:
+      tags:
+        - "share"
+      summary: "更新共享用户"
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "share.yaml#/definitions/ShareUserCreateRequest"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "common.yaml#/definitions/SDKNormalResponse"
+
+  /cgi-bin/luci/istore/share/service/list/:
+    get:
+        tags:
+          - "share"
+        summary: "获取共享服务列表"
+        produces:
+          - "application/json"
+        responses:
+          200:
+            description: "OK"
+            schema:
+              $ref: "share.yaml#/definitions/ShareServiceListResponse" 
+
+  /cgi-bin/luci/istore/share/service/create/:
+    post:
+      tags:
+        - "share"
+      summary: "添加共享服务"
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "share.yaml#/definitions/ShareServiceCreateRequest"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "common.yaml#/definitions/SDKNormalResponse"
+
+  /cgi-bin/luci/istore/share/service/delete/:
+    post:
+      tags:
+        - "share"
+      summary: "删除共享用户"
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "share.yaml#/definitions/ShareServicDeleteRequest"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "common.yaml#/definitions/SDKNormalResponse"
+
+  /cgi-bin/luci/istore/share/service/update/:
+    post:
+      tags:
+        - "share"
+      summary: "更新共享服务"
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "share.yaml#/definitions/ShareServiceCreateRequest"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "common.yaml#/definitions/SDKNormalResponse"
+
+  /cgi-bin/luci/istore/share/protocol/webdav/:
+    get:
+        tags:
+          - "share"
+        summary: "获取共享服务webdav配置"
+        produces:
+          - "application/json"
+        responses:
+          200:
+            description: "OK"
+            schema:
+              $ref: "share.yaml#/definitions/ShareProtocolWebdavResponse" 
+    post:
+      tags:
+        - "share"
+      summary: "更新共享服务"
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "share.yaml#/definitions/ShareProtocolWebdavConfig"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "share.yaml#/definitions/ShareProtocolWebdavResponse"
+
+  /cgi-bin/luci/istore/share/protocol/samba/:
+    get:
+        tags:
+          - "share"
+        summary: "获取共享服务 samba配置"
+        produces:
+          - "application/json"
+        responses:
+          200:
+            description: "OK"
+            schema:
+              $ref: "share.yaml#/definitions/ShareProtocolSambaResponse" 
+    post:
+      tags:
+        - "share"
+      summary: "更新共享服务"
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "share.yaml#/definitions/ShareProtocolSambaConfig"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "share.yaml#/definitions/ShareProtocolSambaResponse"
+  
+  /cgi-bin/luci/istore/share/protocol/globals/:
+    get:
+        tags:
+          - "share"
+        summary: "获取共享全局配置"
+        produces:
+          - "application/json"
+        responses:
+          200:
+            description: "OK"
+            schema:
+              $ref: "share.yaml#/definitions/ShareProtocolGlobalsResponse" 
+    post:
+      tags:
+        - "share"
+      summary: "更新共享全局配置"
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "share.yaml#/definitions/ShareProtocolGlobalsConfig"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "share.yaml#/definitions/ShareProtocolGlobalsResponse"
+
+  /cgi-bin/luci/istore/file/basic/list/:
+    post:
+      tags:
+        - "filebasic"
+      summary: "list dir"
+      description: "显示文件夹列表"
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "file.yaml#/definitions/FileBasicListRequest"
+      responses:
+        200:
+          description: "返回文件数组列表"
+          schema:
+            $ref: "file.yaml#/definitions/FileBasicListResponse"
+
+  /cgi-bin/luci/istore/wireless/list-iface/:
+    get:
+      tags:
+        - "wireless"
+      summary: "list iface of wireless"
+      description: "显示无线接口列表"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "返回无线接口列表信息"
+          schema:
+            $ref: "wireless.yaml#/definitions/WirelessListIfaceResponse"
+
+  /cgi-bin/luci/istore/wireless/enable-iface/:
+    post:
+      tags:
+        - "wireless"
+      summary: "enable iface"
+      description: "启用无线"
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "wireless.yaml#/definitions/WirelessEnableIfaceRequest"
+      responses:
+        200:
+          description: "启用成功或者失败"
+          schema:
+            $ref: "common.yaml#/definitions/SDKNormalResponse"
+
+  /cgi-bin/luci/istore/wireless/set-device-power/:
+    post:
+      tags:
+        - "wireless"
+      summary: "enable iface"
+      description: "启用无线"
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "wireless.yaml#/definitions/WirelessSetDevicePowerRequest"
+      responses:
+        200:
+          description: "启用成功或者失败"
+          schema:
+            $ref: "common.yaml#/definitions/SDKNormalResponse"
+
+  /cgi-bin/luci/istore/wireless/edit-iface/:
+    post:
+      tags:
+        - "wireless"
+      summary: "edit iface"
+      description: "修改无线配置"
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "wireless.yaml#/definitions/WirelessIfaceInfo"
+      responses:
+        200:
+          description: "启用成功或者失败"
+          schema:
+            $ref: "common.yaml#/definitions/SDKNormalResponse"
+
+  /cgi-bin/luci/istore/wireless/setup/:
+    post:
+      tags:
+        - "wireless"
+      summary: "wireless quick setup"
+      description: "初始化无线"
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "wireless.yaml#/definitions/WirelessQuickSetupRequest"
+      responses:
+        200:
+          description: "启用成功或者失败"
+          schema:
+            $ref: "common.yaml#/definitions/SDKNormalResponse"
+
+  /cgi-bin/luci/istore/lanctrl/globalConfigs/:
+    get:
+      tags:
+        - "lanctrl"
+      summary: "Get global config information"
+      description: "全局配置信息"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "全局配置详细信息，包含静态IP分配，限制速率等"
+          schema:
+            $ref: "lanctrl.yaml#/definitions/LANCtrlGlobalConfigResponse"
+
+  /cgi-bin/luci/istore/lanctrl/enableSpeedLimit/:
+    post:
+      tags:
+        - "lanctrl"
+      summary: "Install and enable speed limit module"
+      description: "开启与设置限速模块，如果没安装模块则动态安装"
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "lanctrl.yaml#/definitions/LANCtrlSpeedLimitModule"
+      responses:
+        200:
+          description: "启用成功或者失败"
+          schema:
+            $ref: "common.yaml#/definitions/SDKNormalResponse"
+
+  /cgi-bin/luci/istore/lanctrl/enableFloatGateway/:
+    post:
+      tags:
+        - "lanctrl"
+      summary: "Install and enable FloatGateway module"
+      description: "开启浮动网关模块，如果没安装模块则动态安装"
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "lanctrl.yaml#/definitions/LANCtrlFloatGatewayModule"
+      responses:
+        200:
+          description: "启用成功或者失败"
+          schema:
+            $ref: "common.yaml#/definitions/SDKNormalResponse"
+
+  /cgi-bin/luci/istore/lanctrl/listDevices/:
+    get:
+      tags:
+        - "lanctrl"
+      summary: "List all devices in LAN"
+      description: "获取局域网所有设备信息"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "获取局域网所有设备信息"
+          schema:
+            $ref: "lanctrl.yaml#/definitions/LANDeviceResponse"
+
+  /cgi-bin/luci/istore/lanctrl/listStaticDevices/:
+    get:
+      tags:
+        - "lanctrl"
+      summary: "List all static assigned devices in LAN"
+      description: "获取被静态地址分配的局域网设备信息"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "启用成功或者失败"
+          schema:
+            $ref: "lanctrl.yaml#/definitions/LANCtrlStaticAssignedResponse"
+
+  /cgi-bin/luci/istore/lanctrl/listSpeedLimitedDevices/:
+    get:
+      tags:
+        - "lanctrl"
+      summary: "List all speed limited devices in LAN"
+      description: "获取所有被禁止访问或者限速的设备"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "启用成功或者失败"
+          schema:
+            $ref: "lanctrl.yaml#/definitions/LANCtrlSpeedLimitResponse"
+
+  /cgi-bin/luci/istore/lanctrl/speedsForDevices/:
+    get:
+      tags:
+        - "lanctrl"
+      summary: "Get all device speeds"
+      description: "获取所有设备的速率"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "获取某个设备的详细速率信息"
+          schema:
+            $ref: "lanctrl.yaml#/definitions/DeviceSpeedStatsResponse"
+
+  /cgi-bin/luci/istore/lanctrl/speedsForOneDevice/:
+    post:
+      tags:
+        - "lanctrl"
+      summary: "Get device speeds"
+      description: "获取设备最近一段时间的速率"
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "lanctrl.yaml#/definitions/SpeedsForOneDeviceRequest"
+      responses:
+        200:
+          description: "获取某个设备的详细速率信息"
+          schema:
+            $ref: "network.yaml#/definitions/NetworkStatisticsResponse"
+
+  /cgi-bin/luci/istore/lanctrl/staticDeviceConfig/:
+    post:
+      tags:
+        - "lanctrl"
+      summary: "Assign static address to device"
+      description: "为设备分配静态地址"
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "lanctrl.yaml#/definitions/LANStaticAssigned"
+      responses:
+        200:
+          description: "成功或者失败"
+          schema:
+            $ref: "common.yaml#/definitions/SDKNormalResponse"
+
+  /cgi-bin/luci/istore/lanctrl/speedLimitConfig/:
+    post:
+      tags:
+        - "lanctrl"
+      summary: "Config the speed limit for device"
+      description: "配置设备的限速"
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "lanctrl.yaml#/definitions/LANCtrlSpeedLimitItem"
+      responses:
+        200:
+          description: "成功或者失败"
+          schema:
+            $ref: "common.yaml#/definitions/SDKNormalResponse"
+
+  /cgi-bin/luci/istore/lanctrl/dhcpTagsConfig/:
+    post:
+      tags:
+        - "lanctrl"
+      summary: "Config the speed limit for device"
+      description: "配置dhcp标签"
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "lanctrl.yaml#/definitions/LANCtrlDhcpTagConfigRequest"
+      responses:
+        200:
+          description: "成功或者失败"
+          schema:
+            $ref: "common.yaml#/definitions/SDKNormalResponse"
+
+  /cgi-bin/luci/istore/lanctrl/dhcpGatewayConfig/:
+    post:
+      tags:
+        - "lanctrl"
+      summary: "DHCP gateway config"
+      description: "启动 DHCP 并配置网关"
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "lanctrl.yaml#/definitions/LANCtrlDhcpGatewayConfigRequest"
+      responses:
+        200:
+          description: "成功或者失败"
+          schema:
+            $ref: "common.yaml#/definitions/SDKNormalResponse"
+
+  /cgi-bin/luci/istore/system/module-settings/:
+    post:
+      tags:
+        - "system"
+      summary: "配置模块显示设置"
+      description: "配置模块显示设置"
+      produces:
+        - "application/json"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "system.yaml#/definitions/SystemModuleSettingsRequest"
+      responses:
+        200:
+          description: "成功或者失败"
+          schema:
+            $ref: "common.yaml#/definitions/SDKNormalResponse"
+    get:
+      tags:
+        - "system"
+      summary: "获取当前模块显示设置"
+      description: "获取当前模块显示设置"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "成功或者失败"
+          schema:
+            $ref: "system.yaml#/definitions/SystemModuleSettingsResponse"

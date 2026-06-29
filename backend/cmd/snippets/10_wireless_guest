@@ -1,0 +1,99 @@
+#!/bin/sh
+
+wireType=`uci -q get wireless.mt798111.type`
+if [ "${wireType}" != "mtk" ]; then
+  echo "not mtk wireless"
+  exit 0
+fi
+
+guestDev=`uci -q get network.guest_dev.name`
+if [ "${guestDev}" != "br-guest" ]; then
+  uci -q delete network.guest_dev
+  uci set network.guest_dev="device"
+  uci set network.guest_dev.type="bridge"
+  uci set network.guest_dev.name="br-guest"
+  uci -q delete network.guest
+  uci set network.guest="interface"
+  uci set network.guest.proto="static"
+  uci set network.guest.device="br-guest"
+  uci set network.guest.ipaddr="192.168.102.1/24"
+  uci commit network
+  #echo "network guest_dev ok"
+fi
+
+guestDhcp=`uci -q get dhcp.guest`
+if [ "${guestDhcp}" != "dhcp" ]; then
+  uci -q delete dhcp.guest
+  uci set dhcp.guest="dhcp"
+  uci set dhcp.guest.interface="guest"
+  uci set dhcp.guest.start="100"
+  uci set dhcp.guest.limit="150"
+  uci set dhcp.guest.leasetime="1h"
+  uci commit dhcp
+  #echo "dhcp guest ok"
+fi
+
+guestFirewall=`uci -q get firewall.guest`
+if [ "${guestFirewall}" != "zone" ]; then
+  uci -q delete firewall.guest
+  uci set firewall.guest="zone"
+  uci set firewall.guest.name="guest"
+  uci set firewall.guest.network="guest"
+  uci set firewall.guest.input="REJECT"
+  uci set firewall.guest.output="ACCEPT"
+  uci set firewall.guest.forward="REJECT"
+  uci -q delete firewall.guest_wan
+  uci set firewall.guest_wan="forwarding"
+  uci set firewall.guest_wan.src="guest"
+  uci set firewall.guest_wan.dest="wan"
+  uci -q delete firewall.guest_dns
+  uci set firewall.guest_dns="rule"
+  uci set firewall.guest_dns.name="Allow-DNS-Guest"
+  uci set firewall.guest_dns.src="guest"
+  uci set firewall.guest_dns.dest_port="53"
+  uci set firewall.guest_dns.proto="tcp udp"
+  uci set firewall.guest_dns.target="ACCEPT"
+  uci -q delete firewall.guest_dhcp
+  uci set firewall.guest_dhcp="rule"
+  uci set firewall.guest_dhcp.name="Allow-DHCP-Guest"
+  uci set firewall.guest_dhcp.src="guest"
+  uci set firewall.guest_dhcp.dest_port="67"
+  uci set firewall.guest_dhcp.proto="udp"
+  uci set firewall.guest_dhcp.family="ipv4"
+  uci set firewall.guest_dhcp.target="ACCEPT"
+  uci commit firewall
+  #echo "firewall guest ok"
+fi
+
+WIFI_DEV=`uci -q get wireless.@wifi-iface[0].device`
+uci -q delete wireless.guest2g
+uci set wireless.guest2g="wifi-iface"
+uci set wireless.guest2g.device="${WIFI_DEV}"
+uci set wireless.guest2g.ifname="guest2g"
+uci set wireless.guest2g.mode="ap"
+uci set wireless.guest2g.network="guest"
+uci set wireless.guest2g.guest="1"
+uci set wireless.guest2g.ssid="iStoreOS-Guest"
+uci set wireless.guest2g.encryption="psk2"
+uci set wireless.guest2g.key="goodlife"
+uci set wireless.guest2g.disabled=1
+uci set wireless.guest2g.isolate=1
+uci set wireless.guest2g.wds=1
+#echo "wireless guest2g ok"
+
+WIFI_DEV=`uci -q get wireless.@wifi-iface[1].device`
+uci -q delete wireless.guest5g
+uci set wireless.guest5g="wifi-iface"
+uci set wireless.guest5g.device="${WIFI_DEV}"
+uci set wireless.guest5g.ifname="guest5g"
+uci set wireless.guest5g.mode="ap"
+uci set wireless.guest5g.network="guest"
+uci set wireless.guest5g.guest="1"
+uci set wireless.guest5g.ssid="iStoreOS-5G-Guest"
+uci set wireless.guest5g.encryption="psk2"
+uci set wireless.guest5g.key="goodlife"
+uci set wireless.guest5g.disabled=1
+uci set wireless.guest5g.isolate=1
+uci set wireless.guest5g.wds=1
+uci commit wireless
+#echo "wireless guest5g ok"
