@@ -1,0 +1,103 @@
+// 光亮模式
+@mixin light-variable {
+    --flow-bg-color: #fff;
+    --flow-span-color: rgba(0, 0, 0, 0.6);
+    --card-bg-color: #fff;
+    --card-box-shadow: 0 0 10px 1px #bfbfbf24;
+    --app-container_title-color: #1e1e1e;
+    --app-container_status-label_block: black;
+    --item-label_key-span-color: #333;
+    --item-label_value-span-color: #333;
+    --app-container_status-label_bg: #f3f3f3;
+    --item_btn-border: 1px solid #553afb;
+    --item_btn-color: #553afb;
+    --tit-color: #1e1e1e;
+    --popup-bg-color: #fff;
+    --tag-bg-color: #f5f5f5;
+    --gradient-bg-color:linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.8) 62%, rgba(255,255,255,1) 100%);
+    --breadcrumbs-tit-color:#d6dbf8;
+    --breadcrumbs-tit-color1:#f1f2f9;
+    --border-color: #e5e5e5;
+    --SystemUpdateBanner-bg-color: #eff6ff;
+    --SystemUpdateBanner-border-color: #bedbff;
+    --btn-border-color: #e5e5e5;
+    --card-txt-color: #32325d;
+    --SystemInfo-bg-color:#f9fafd;
+}
+
+// 暗黑模式
+@mixin dark-variable {
+    --flow-bg-color: transparent;
+    --flow-span-color: #cccccc;
+    --card-bg-color: #88888822;
+    --card-box-shadow: 0 0 0.5rem 0 rgba(0, 0, 0, 0.35);
+    --app-container_title-color: #cccccc;
+    --app-container_status-label_block: #727272;
+    --item-label_key-span-color: #cccccc;
+    --item-label_value-span-color: #cccccc;
+    --app-container_status-label_bg: #0000001a;
+    --item_btn-border: 1px solid #cccccc;
+    --item_btn-color: #cccccc;
+    --tit-color: #cccccc;
+    --popup-bg-color: #000;
+    --tag-bg-color: #1e1e1e;
+    --gradient-bg-color:linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 62%, rgba(0,0,0,1) 100%);
+    --breadcrumbs-tit-color:#d6dbf8;
+    --breadcrumbs-tit-color1:#f1f2f9;
+    --border-color: #0000001a;
+    --SystemUpdateBanner-bg-color: #2c2c2c;
+    --SystemUpdateBanner-border-color: #2c2c2c;
+    --btn-border-color: #727272;
+    --card-txt-color: #32325d;
+    --SystemInfo-bg-color:#2c2c2c;
+}
+
+:root {
+    @include light-variable;
+}
+
+// 光亮模式
+@media (prefers-color-scheme: light) {
+    :root {
+        @include light-variable;
+    }
+}
+
+// 暗黑模式
+@media (prefers-color-scheme: dark) {
+    :root {
+        @include dark-variable;
+    }
+
+    #app {
+        svg {
+            path {
+                color: rgb(102, 102, 102);
+            }
+
+            circle {
+                stroke: rgb(102, 102, 102);
+                ;
+            }
+        }
+    }
+}
+
+@media (prefers-color-scheme: no-preference) {
+    :root {
+        @include light-variable;
+    }
+}
+
+
+
+// 跟随系统
+body[theme="normal"] {}
+
+body[theme="dark"] {
+    @include dark-variable;
+}
+
+body[theme="light"] {
+    @include light-variable;
+}

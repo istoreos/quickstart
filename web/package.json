@@ -1,0 +1,31 @@
+{
+  "name": "web",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && npm run builds",
+    "builds": "vite build && npm run zip",
+    "preview": "vite preview",
+    "tsc": "vue-tsc --noEmit",
+    "gettext": "vue-gettext-extract && vue-gettext-compile",
+    "zip": "rm -f dist/quickstart_web.zip dist/luci-static/.DS_Store && (cd dist && zip -r quickstart_web.zip luci-static)"
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "echarts": "^5.2.2",
+    "ipaddr.js": "^2.0.1",
+    "pinia": "^2.0.9",
+    "sass": "^1.45.1",
+    "vue": "^3.2.25",
+    "vue-router": "^4.0.12",
+    "vue3-gettext": "^2.2.3",
+    "vuex": "^4.0.2"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.4",
+    "@vitejs/plugin-vue": "^2.0.0",
+    "typescript": "^4.5.4",
+    "vite": "^2.9.12",
+    "vue-tsc": "^0.29.8"
+  }
+}

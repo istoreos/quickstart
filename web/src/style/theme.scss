@@ -1,0 +1,142 @@
+$BG: radial-gradient(#0a2e38 0%, #000000 80%);
+$BorderPX: 6px;
+
+// 呼吸动画
+// *{
+//     @extend %BgAnimation;
+// }
+%BgAnimation {
+    // background-image: linear-gradient(125deg, #0a2e38, #000000, #9c27b0, #3f51b5, #2196f3) !important;
+    background-image: linear-gradient(to right, #02255f 0%, #0a2e38 50%, #101010 100%) !important;
+
+    background-size: 400% !important;
+    animation: bganimation 10s infinite !important;
+}
+
+%Animation1 {
+    background-image: linear-gradient(125deg, #0a2e38, #000000, #9c27b0, #3f51b5, #2196f3) !important;
+    background-size: 400% !important;
+    animation: bganimation 10s infinite !important;
+}
+
+%Animation2 {
+    background: linear-gradient(to right, #58a 33%, #fb3 0, #fb3 66%, #e45b5a 0) !important;
+    background-size: 400% !important;
+    animation: bganimation 10s infinite !important;
+}
+
+%Animation3 {
+    background: linear-gradient(to right, #02255f 0%, #0a2e38 50%, #101010 100%);
+    background-size: 400% !important;
+    animation: bganimation 10s infinite !important;
+}
+
+@keyframes bganimation {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+%borderbg {
+    background: linear-gradient(to right, #58a 33%, #fb3 0, #fb3 66%, #e45b5a 0);
+    background-size: 400% !important;
+    animation: bganimation 10s infinite !important;
+}
+
+// 3d翻转动画
+@keyframes rotateEnter {
+    0% {
+        transform: rotateY(180deg);
+    }
+
+    10% {
+        transform: rotateY(198deg);
+    }
+
+    20% {
+        transform: rotateY(216deg);
+    }
+
+    30% {
+        transform: rotateY(234deg);
+    }
+
+    40% {
+        transform: rotateY(252deg);
+    }
+
+    50% {
+        transform: rotateY(270deg);
+    }
+
+    60% {
+        transform: rotateY(288deg);
+    }
+
+    70% {
+        transform: rotateY(306deg);
+    }
+
+    80% {
+        transform: rotateY(324deg);
+    }
+
+    90% {
+        transform: rotateY(342deg);
+    }
+
+    100% {
+        transform: rotateY(360deg);
+    }
+}
+
+@keyframes turns {
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+
+    25% {
+        -webkit-transform: rotate(90deg);
+    }
+
+    50% {
+        -webkit-transform: rotate(180deg);
+    }
+
+    75% {
+        -webkit-transform: rotate(270deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+.rotate-enter-active {
+    animation: rotateEnter 0.7s;
+    position: relative;
+}
+
+.rotate-leave-active {
+    opacity: 0;
+    display: none;
+    position: relative;
+    z-index: -999;
+}
+
+.app-container {
+    width: 100%;
+    background-color: var(--card-bg-color);
+    box-shadow: var(--card-box-shadow);
+    padding: 10px 30px;
+    border-radius: 6px;
+    position: relative;
+}

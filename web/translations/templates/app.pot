@@ -1,0 +1,2584 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#: src/components/action-docker/index.vue:23
+#: src/components/editable-select/index.vue:10
+msgid "- -自定义- -"
+msgstr ""
+
+#: src/pages/network/gateway/index.vue:115
+msgid "（请先获取IPv4上游信息）"
+msgstr ""
+
+#: src/components/action-disk-part/item.vue:5
+#: src/components/action-disk-part/item.vue:6
+msgid "（未格式化）"
+msgstr ""
+
+#: src/components/action-disk-part/item.vue:5
+#: src/components/action-disk-part/item.vue:6
+msgid "（未挂载）"
+msgstr ""
+
+#: src/pages/network/gateway/index.vue:107
+#: src/pages/network/gateway/index.vue:108
+msgid "（无DNS服务器，请之后自行填写公共DNS服务器，例如 223.5.5.5）"
+msgstr ""
+
+#: src/components/action-disk-part/item.vue:7
+msgid "（系统分区）"
+msgstr ""
+
+#: src/components/action-disk-part/index.vue:4
+#: src/components/action-disk-part/index.vue:5
+msgid "（系统盘）"
+msgstr ""
+
+#: src/components/smart/add-task.vue:67
+msgid "* 表示每天"
+msgstr ""
+
+#: src/components/smart/add-task.vue:51
+msgid "* 表示每小时"
+msgstr ""
+
+#: src/components/smart/add-task.vue:83
+msgid "* 表示每月"
+msgstr ""
+
+#: src/components/action-netip/index.vue:83
+msgid "%{ countdown }s后 跳转新地址"
+msgstr ""
+
+#: src/utils/utils.ts:71
+msgid "%{ days }天"
+msgid_plural "%{ days }天"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/utils/utils.ts:72
+msgid "%{ hours }小时"
+msgid_plural "%{ hours }小时"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/utils/utils.ts:73
+msgid "%{ minutes }分"
+msgid_plural "%{ minutes }分"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/utils/utils.ts:74
+msgid "%{ seconds }秒"
+msgid_plural "%{ seconds }秒"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/components/action-download/index.vue:226
+msgid "%{status}下载服务配置向导"
+msgstr ""
+
+#: src/components/action-sandboxenvironment/index.vue:12
+msgid "1、点击“提交”可将变更合并到非沙箱环境"
+msgstr ""
+
+#: src/pages/network/gateway/index.vue:101
+msgid "1. 满足上述条件以后，点击“当前 IPv4 上游信息”以刷新当前连接信息，成功以后，“自动填写”按钮将被激活。(失败可再次点击)"
+msgstr ""
+
+#: src/components/action-sandboxenvironment/index.vue:13
+msgid "2、点击“重置”可将沙箱恢复到初始状态"
+msgstr ""
+
+#: src/pages/network/gateway/index.vue:112
+#: src/pages/network/gateway/index.vue:113
+msgid "2. 点击“自动填写”，将切换到参数页并自动填写。此时依然可以自行调整参数。"
+msgstr ""
+
+#: src/pages/network/gateway/index.vue:59
+msgid "223.5.5.5"
+msgstr ""
+
+#: src/components/action-sandboxenvironment/index.vue:14
+msgid "3、点击“退出”可退出沙箱环境，并放弃沙箱中的数据"
+msgstr ""
+
+#: src/components/action-domain/setup-ddns.vue:10
+#: src/components/action-domain/setup-index.vue:17
+msgid "阿里云"
+msgstr ""
+
+#: src/components/action-ddnsto/setup-ddnsto-install.vue:46
+msgid "安装失败"
+msgstr ""
+
+#: src/utils/app.ts:50
+msgid "安装失败，"
+msgstr ""
+
+#: src/utils/app.ts:76
+msgid "安装失败或超时，请检查软件源或稍候重试"
+msgstr ""
+
+#: src/components/action-ddnsto/setup-ddnsto-install.vue:39
+msgid "安装中..."
+msgstr ""
+
+#: src/components/tooltip/index.vue:38
+msgid "半双工"
+msgstr ""
+
+#: src/components/action-netip/index.vue:32
+msgid "保持DHCP服务设置"
+msgstr ""
+
+#: src/components/action-domain/setup-ddns.vue:96
+#: src/components/action-edit/index.vue:35
+#: src/components/action-raid/setup-edit.vue:45
+#: src/components/action-raid/setup-recover.vue:45
+#: src/components/action-raid/setup-remove.vue:33
+#: src/components/smart/add-task.vue:91
+#: src/components/smart/add-task.vue:92
+#: src/components/smart/edit-disk.vue:56
+#: src/components/smart/edit-disk.vue:57
+msgid "保存"
+msgstr ""
+
+#: src/pages/interfaceconfig/index.vue:90
+#: src/pages/smart/index/index.vue:130
+msgid "保存并应用"
+msgstr ""
+
+#: src/components/action-raid/setup-edit.vue:96
+#: src/components/action-raid/setup-recover.vue:96
+#: src/components/action-raid/setup-remove.vue:85
+#: src/pages/smart/index.vue:104
+msgid "保存成功"
+msgstr ""
+
+#: src/pages/network/dhcp/index.vue:85
+#: src/pages/network/gateway/index.vue:80
+#: src/pages/network/pppoe/index.vue:29
+msgid "保存配置"
+msgstr ""
+
+#: src/components/action-raid/setup-edit.vue:84
+#: src/components/action-raid/setup-recover.vue:84
+#: src/components/action-raid/setup-remove.vue:73
+#: src/pages/interfaceconfig/index.vue:267
+#: src/pages/smart/index.vue:94
+msgid "保存中..."
+msgstr ""
+
+#: src/pages/index/system/index.vue:13
+msgid "备份升级"
+msgstr ""
+
+#: src/components/action-dns/index.vue:31
+msgid "备用DNS地址"
+msgstr ""
+
+#: src/pages/network/dhcp/index.vue:73
+#: src/pages/network/dhcp/index.vue:74
+msgid "备用DNS服务器"
+msgstr ""
+
+#: src/components/action-dns/index.vue:29
+msgid "备用DNS服务器地址"
+msgstr ""
+
+#: src/pages/network/gateway/index.vue:8
+msgid "本向导支持自动或手动配置："
+msgstr ""
+
+#: src/pages/interfaceconfig/index.vue:39
+#: src/pages/interfaceconfig/index.vue:69
+#: src/pages/smart/index/index.vue:120
+msgid "编辑"
+msgstr ""
+
+#: src/components/action-edit/index.vue:8
+#: src/components/action-edit/index.vue:9
+msgid "编辑LAN"
+msgstr ""
+
+#: src/components/action-edit/index.vue:5
+#: src/components/action-edit/index.vue:6
+msgid "编辑WAN"
+msgstr ""
+
+#: src/components/action-disk-format/index.vue:123
+msgid "并挂载到"
+msgstr ""
+
+#: src/pages/index/network/info.vue:313
+msgid "拨号上网"
+msgstr ""
+
+#: src/components/action-disk-format/index.vue:95
+msgid "不格式化,使用原文件系统"
+msgstr ""
+
+#: src/components/action-disk-part/item.vue:29
+msgid "不支持挂载"
+msgstr ""
+
+#: src/pages/raid/index/index.vue:33
+#: src/pages/smart/index/index.vue:92
+msgid "操作"
+msgstr ""
+
+#: src/pages/smart/index/index.vue:40
+msgid "测试时磁盘会转动，请选择合适的模式来控制磁盘转动。"
+msgstr ""
+
+#: src/pages/index/network/info.vue:203
+msgid "测速"
+msgstr ""
+
+#: src/pages/index/system/index.vue:14
+msgid "插件备份"
+msgstr ""
+
+#: src/pages/index/nas/disk/index.vue:14
+msgid "查看磁盘管理信息"
+msgstr ""
+
+#: src/pages/index/nas/service/index.vue:10
+msgid "查看存储服务信息"
+msgstr ""
+
+#: src/pages/index/nas/download/index.vue:11
+msgid "查看高级配置"
+msgstr ""
+
+#: src/components/action-ddnsto/setup-ddnsto-save.vue:19
+#: src/components/action-domain/setup-ddns-success.vue:19
+msgid "查看更多详情"
+msgstr ""
+
+#: src/components/action-domain/setup-ddns.vue:15
+#: src/components/action-domain/setup-ddns.vue:25
+#: src/components/action-domain/setup-ddns.vue:35
+msgid "查看教程"
+msgstr ""
+
+#: src/pages/smart/index.vue:55
+msgid "查看日志"
+msgstr ""
+
+#: src/pages/index/network/info.vue:151
+msgid "查看设备信息"
+msgstr ""
+
+#: src/pages/index/network/info.vue:241
+msgid "查看网络接口信息"
+msgstr ""
+
+#: src/pages/index/system/index.vue:5
+msgid "查看系统信息"
+msgstr ""
+
+#: src/pages/index/nas/disk/item.vue:101
+msgid "查看详情"
+msgstr ""
+
+#: src/pages/smart/index.vue:47
+msgid "常规设置"
+msgstr ""
+
+#: src/pages/raid/index/index.vue:31
+msgid "成员"
+msgstr ""
+
+#: src/components/action-disk-format/index.vue:278
+msgid "初始化成功"
+msgstr ""
+
+#: src/components/action-disk-format/index.vue:262
+msgid "初始化中..."
+msgstr ""
+
+#: src/components/action-disk-part/item.vue:112
+msgid "处理中..."
+msgstr ""
+
+#: src/components/smart/add-task.vue:33
+#: src/pages/smart/task/index.vue:61
+msgid "传输时自检"
+msgstr ""
+
+#: src/components/action-ttyd/index.vue:14
+msgid "窗口 %{ item }"
+msgstr ""
+
+#: src/components/action-nas/samba/index.vue:64
+#: src/components/action-nas/webdav/index.vue:55
+#: src/components/action-raid/setup-create.vue:53
+#: src/components/action-raid/setup-create.vue:54
+msgid "创建"
+msgstr ""
+
+#: src/components/action-nas/samba/index.vue:137
+#: src/components/action-nas/webdav/index.vue:147
+#: src/components/action-raid/setup-create.vue:79
+msgid "创建成功"
+msgstr ""
+
+#: src/components/smart/add-task.vue:6
+msgid "创建计划任务"
+msgstr ""
+
+#: src/components/action-nas/samba/index.vue:128
+#: src/components/action-nas/webdav/index.vue:138
+msgid "创建中..."
+msgstr ""
+
+#: src/pages/raid/index/index.vue:17
+msgid "创建RAID"
+msgstr ""
+
+#: src/components/smart/add-task.vue:12
+#: src/components/smart/edit-disk.vue:12
+msgid "磁盘"
+msgstr ""
+
+#: src/pages/index/nas/disk/index.vue:31
+msgid "磁盘管理"
+msgstr ""
+
+#: src/pages/index/nas/disk/index.vue:7
+msgid "磁盘信息"
+msgstr ""
+
+#: src/components/action-raid/setup-create.vue:26
+msgid "磁盘阵列成员："
+msgstr ""
+
+#: src/components/action-sandbox/index.vue:55
+msgid "此操作会将会删除该分区全部数据"
+msgstr ""
+
+#: src/components/action-sandbox/index.vue:79
+msgid "此操作会将会删除该分区全部数据，并格式化成EXT4，随后自动重启进入沙箱模式，是否继续？"
+msgstr ""
+
+#: src/components/action-disk-part/item.vue:39
+msgid "此分区为只读状态，可能无法写入数据"
+msgstr ""
+
+#: src/components/action-disk-part/item.vue:48
+msgid "此文件系统不支持Docker等应用数据，建议格式化成EXT4文件系统"
+msgstr ""
+
+#: src/pages/index/nas/service/index.vue:5
+msgid "存储服务"
+msgstr ""
+
+#: src/components/action-sandbox/index.vue:91
+msgid "错误"
+msgstr ""
+
+#: src/pages/index/network/info.vue:159
+#: src/pages/index/network/info.vue:360
+msgid "带宽监控"
+msgstr ""
+
+#: src/pages/smart/index/index.vue:35
+msgid "待机"
+msgstr ""
+
+#: src/pages/smart/index/index.vue:43
+msgid "待机-处于待机和睡眠模式下不检查设备。此模式下磁盘一般不旋转，如果你不想每次检查都转动磁盘，那么这个模式比较适合。"
+msgstr ""
+
+#: src/pages/network/gateway/index.vue:102
+msgid "当前 IPv4 上游信息（点此刷新）"
+msgstr ""
+
+#: src/components/action-sandboxenvironment/index.vue:11
+msgid "当前处于沙箱环境："
+msgstr ""
+
+#: src/components/action-softwaresource/index.vue:12
+msgid "当前软件源"
+msgstr ""
+
+#: src/pages/index/nas/docker/status.vue:5
+#: src/pages/index/nas/download/aria2.vue:5
+#: src/pages/index/nas/download/qbittorrent.vue:5
+#: src/pages/index/nas/download/transmission.vue:5
+#: src/pages/index/nas/service/linkease.vue:5
+#: src/pages/index/nas/service/samba.vue:6
+#: src/pages/index/nas/service/webdav.vue:4
+msgid "当前状态:"
+msgstr ""
+
+#: src/components/action-docker/index.vue:5
+msgid "当系统根目录空间不足时，可将Docker根目录迁移到外置硬盘，以保证系统的正常运行（目标分区不支持NTFS，FAT等文件系统）"
+msgstr ""
+
+#: src/pages/index/nas/service/samba.vue:16
+msgid "地址"
+msgstr ""
+
+#: src/request/request.ts:22
+msgid "登录过期，请重新登录"
+msgstr ""
+
+#: src/components/action-sandbox/index.vue:61
+msgid "等待设备重启，重启完成后"
+msgstr ""
+
+#: src/pages/index/nas/download/aria2.vue:39
+msgid "点此自动配置 AriaNg"
+msgstr ""
+
+#: src/pages/network/gateway/index.vue:9
+msgid "点击“自动配置”按钮开始自动配置向导；"
+msgstr ""
+
+#: src/pages/smart/index.vue:12
+msgid "电路的运行情况进行监控、记录并与厂商所设定的预设安全值进行比较，若监控情况将要或已超出预设安全值的安全范围，"
+msgstr ""
+
+#: src/pages/smart/index/index.vue:28
+msgid "电源模式"
+msgstr ""
+
+#: src/pages/smart/task/index.vue:9
+msgid "调度"
+msgstr ""
+
+#: src/pages/smart/task/index.vue:29
+msgid "调试"
+msgstr ""
+
+#: src/components/action-disk-format/index.vue:331
+#: src/components/action-disk-mount/index.vue:232
+msgid "读取结果失败"
+msgstr ""
+
+#: src/components/action-disk-part/item.vue:33
+#: src/components/action-disk-part/item.vue:34
+#: src/components/action-disk-part/item.vue:35
+msgid "读写"
+msgstr ""
+
+#: src/components/smart/add-task.vue:31
+#: src/pages/smart/task/index.vue:57
+msgid "短暂自检"
+msgstr ""
+
+#: src/components/tooltip/index.vue:9
+msgid "发送："
+msgstr ""
+
+#: src/components/action-confirm/index.vue:10
+#: src/components/action-confirm/index.vue:11
+#: src/components/action-disk-format/index.vue:106
+#: src/components/action-disk-mount/index.vue:102
+#: src/components/action-disk-mount/index.vue:103
+#: src/components/action-disk-mount/index.vue:65
+#: src/components/action-disk-part/index.vue:20
+#: src/components/action-disk/index.vue:26
+#: src/components/action-docker/index.vue:78
+#: src/components/action-domain/setup-ddns.vue:95
+#: src/pages/network/dhcp/index.vue:100
+#: src/pages/network/dhcp/index.vue:87
+#: src/pages/network/gateway/index.vue:117
+#: src/pages/network/gateway/index.vue:16
+#: src/pages/network/gateway/index.vue:82
+#: src/pages/network/pppoe/index.vue:31
+#: src/pages/network/pppoe/index.vue:44
+msgid "返回"
+msgstr ""
+
+#: src/components/action-ddnsto/setup-ddnsto-save.vue:13
+#: src/components/action-domain/setup-ddns-success.vue:13
+msgid "访问地址："
+msgstr ""
+
+#: src/utils/utils.ts:101
+msgid "非法的用户名"
+msgstr ""
+
+#: src/components/action-disk-part/index.vue:9
+msgid "分区 / 挂载点"
+msgstr ""
+
+#: src/components/action-disk-part/item.vue:17
+#: src/components/action-disk-part/item.vue:18
+msgid "分区并格式化"
+msgstr ""
+
+#: src/pages/index/nas/disk/item.vue:61
+msgid "分区存在异常，点击分区列表查看错误"
+msgstr ""
+
+#: src/components/action-disk-part/index.vue:5
+msgid "分区信息"
+msgstr ""
+
+#: src/components/action-domain/setup-ddns-success.vue:18
+msgid "服务-动态DNS"
+msgstr ""
+
+#: src/pages/index/nas/service/linkease.vue:15
+msgid "服务地址:"
+msgstr ""
+
+#: src/pages/index/nas/service/webdav.vue:20
+msgid "服务路径:"
+msgstr ""
+
+#: src/components/action-nas/samba/index.vue:11
+#: src/components/action-nas/webdav/index.vue:11
+msgid "服务目录路径"
+msgstr ""
+
+#: src/components/action-homebox/index.vue:14
+#: src/components/action-nas/linkease/index.vue:14
+msgid "服务已启动"
+msgstr ""
+
+#: src/components/action-download/index.vue:94
+msgid "附加的 BT Tracker："
+msgstr ""
+
+#: src/components/action-docker/index.vue:72
+msgid "覆盖迁移（覆盖目标路径，继续迁移会清空该目标路径下的文件）"
+msgstr ""
+
+#: src/components/action-disk/index.vue:122
+msgid "该分区尚未挂载，请先去挂载"
+msgstr ""
+
+#: src/pages/index/nav/index.vue:124
+msgid "该固件不支持沙箱模式"
+msgstr ""
+
+#: src/components/action-docker/index.vue:64
+msgid "该目标路径不为空"
+msgstr ""
+
+#: src/pages/network/index/index.vue:49
+msgid "高级模式"
+msgstr ""
+
+#: src/components/action-disk/index.vue:21
+msgid "高级设置"
+msgstr ""
+
+#: src/components/action-disk-format/index.vue:94
+msgid "格式化"
+msgstr ""
+
+#: src/pages/index/nas/disk/item.vue:87
+msgid "格式化并挂载"
+msgstr ""
+
+#: src/components/action-disk-format/index.vue:121
+#: src/components/action-disk-format/index.vue:313
+msgid "格式化成功"
+msgstr ""
+
+#: src/components/action-disk-part/item.vue:18
+#: src/components/action-disk-part/item.vue:19
+msgid "格式化分区"
+msgstr ""
+
+#: src/components/action-disk-format/index.vue:99
+msgid "格式化为EXT4文件系统"
+msgstr ""
+
+#: src/components/action-disk-format/index.vue:89
+msgid "格式化选项"
+msgstr ""
+
+#: src/components/action-disk-format/index.vue:300
+msgid "格式化中..."
+msgstr ""
+
+#: src/components/action-docker/index.vue:68
+msgid "更换目录（不覆盖目标路径，仅将Docker目录修改为目标路径）"
+msgstr ""
+
+#: src/components/action-netip/index.vue:67
+msgid "更换配置"
+msgstr ""
+
+#: src/pages/smart/task/index.vue:10
+msgid "功能"
+msgstr ""
+
+#: src/components/action-nas/samba/index.vue:104
+#: src/components/action-nas/webdav/index.vue:123
+msgid "共享路径不能为空"
+msgstr ""
+
+#: src/components/action-nas/samba/index.vue:21
+msgid "共享名（建议使用英文字母）"
+msgstr ""
+
+#: src/components/action-nas/samba/index.vue:24
+msgid "共享名称"
+msgstr ""
+
+#: src/components/action-nas/samba/index.vue:108
+msgid "共享名称不能为空"
+msgstr ""
+
+#: src/pages/index/system/index.vue:52
+msgid "固件版本"
+msgstr ""
+
+#: src/pages/index/nav/index.vue:16
+msgid "固件更新"
+msgstr ""
+
+#: src/pages/index/nav/index.vue:21
+msgid "固件更新选项"
+msgstr ""
+
+#: src/components/action-disk-mount/index.vue:117
+#: src/components/action-disk-mount/index.vue:214
+#: src/components/action-disk-part/item.vue:124
+msgid "挂载成功"
+msgstr ""
+
+#: src/components/action-disk-mount/index.vue:91
+#: src/pages/index/nas/disk/index.vue:32
+msgid "挂载点"
+msgstr ""
+
+#: src/pages/index/nas/service/webdav.vue:12
+msgid "挂载路径:"
+msgstr ""
+
+#: src/pages/raid/index/index.vue:32
+msgid "挂载信息"
+msgstr ""
+
+#: src/components/action-disk-mount/index.vue:201
+msgid "挂载中..."
+msgstr ""
+
+#: src/components/action-ddnsto/setup-ddnsto-save.vue:23
+#: src/components/action-domain/setup-ddns-success.vue:23
+#: src/components/action-homebox/index.vue:22
+#: src/components/action-nas/linkease/index.vue:22
+#: src/components/action-nas/samba/index.vue:62
+#: src/components/action-nas/webdav/index.vue:49
+#: src/components/action-raid/setup-create.vue:71
+#: src/components/action-raid/setup-create.vue:82
+#: src/components/action-raid/setup-info.vue:7
+#: src/components/action/index.vue:14
+#: src/components/smart/disk-info.vue:58
+#: src/components/smart/test-task.vue:13
+msgid "关闭"
+msgstr ""
+
+#: src/components/action-domain/setup-ddns.vue:30
+#: src/components/action-domain/setup-index.vue:35
+msgid "花生壳"
+msgstr ""
+
+#: src/components/action-nas/index.vue:5
+msgid "欢迎使用 NAS 配置向导"
+msgstr ""
+
+#: src/pages/network/index/index.vue:3
+msgid "欢迎使用网络配置向导"
+msgstr ""
+
+#: src/components/action-raid/setup-recover.vue:4
+#: src/pages/raid/index/index.vue:77
+#: src/pages/raid/index/index.vue:79
+msgid "恢复"
+msgstr ""
+
+#: src/pages/raid/index/index.vue:264
+msgid "恢复完成"
+msgstr ""
+
+#: src/components/action-disk-mount/index.vue:189
+msgid "获取不到分区"
+msgstr ""
+
+#: src/components/action-disk-format/index.vue:296
+#: src/components/action-disk-mount/index.vue:193
+msgid "获取不到分区路径"
+msgstr ""
+
+#: src/components/action-disk-mount/index.vue:197
+msgid "获取不到分区ID"
+msgstr ""
+
+#: src/components/action-disk-format/index.vue:258
+msgid "获取不到设备路径"
+msgstr ""
+
+#: src/components/action-disk-format/index.vue:254
+msgid "获取不到设备名称"
+msgstr ""
+
+#: src/pages/raid/index/index.vue:29
+msgid "级别"
+msgstr ""
+
+#: src/components/action-sandbox/index.vue:60
+msgid "即将重启设备"
+msgstr ""
+
+#: src/pages/smart/index.vue:51
+msgid "计划任务"
+msgstr ""
+
+#: src/components/action-sandbox/index.vue:82
+msgid "继续"
+msgstr ""
+
+#: src/components/action-confirm/index.vue:12
+#: src/components/action-confirm/index.vue:13
+#: src/components/action-domain/setup-ddns.vue:170
+msgid "继续保存"
+msgstr ""
+
+#: src/components/action-nas/linkease/index.vue:19
+msgid "继续配置"
+msgstr ""
+
+#: src/components/action-sandbox/index.vue:143
+msgid "加载磁盘信息失败"
+msgstr ""
+
+#: src/components/action-nas/webdav/index.vue:93
+msgid "加载中..."
+msgstr ""
+
+#: src/components/action-nas/samba/index.vue:55
+msgid "兼容一些电视或者电视盒子"
+msgstr ""
+
+#: src/components/action-sandbox/index.vue:21
+msgid "检测不到挂载的磁盘信息，请先插上磁盘，建议使用U盘或者移动硬盘，方便装卸"
+msgstr ""
+
+#: src/components/action-raid/setup-create.vue:42
+#: src/components/action-raid/setup-edit.vue:37
+#: src/components/action-raid/setup-recover.vue:37
+msgid "检测不到可用磁盘阵列成员"
+msgstr ""
+
+#: src/utils/app.ts:69
+msgid "检测到你尚未安装 %{name} 插件,是否安装？"
+msgstr ""
+
+#: src/components/action-domain/setup-ddns.vue:200
+msgid "检测到你有未保存的配置，可前往页面右上角点击查看，保存并应用或者恢复配置后继续"
+msgstr ""
+
+#: src/components/action-domain/setup-ddns.vue:171
+msgid "检测到您的wan口没有公网IP或者IPv6地址，可以使用DDNSTO配置远程域名访问"
+msgstr ""
+
+#: src/components/action-docker/index.vue:35
+msgid "检测到您还没有挂载外置硬盘或分区小于8GB，需要您接上硬盘并格式化或手动挂载硬盘后，再执行Docker迁移向导，将Docker迁移到目标硬盘。"
+msgstr ""
+
+#: src/components/action-domain/setup-ddns.vue:139
+#: src/components/action-raid/setup-create.vue:30
+#: src/components/action-raid/setup-edit.vue:25
+#: src/components/action-raid/setup-recover.vue:25
+#: src/pages/index/network/info.vue:141
+msgid "检测中..."
+msgstr ""
+
+#: src/utils/app.ts:81
+msgid "检查插件状态失败"
+msgstr ""
+
+#: src/utils/app.ts:55
+msgid "检查中..."
+msgstr ""
+
+#: src/pages/smart/index/index.vue:91
+msgid "健康"
+msgstr ""
+
+#: src/pages/raid/index/index.vue:251
+msgid "将扫描磁盘里 RAID 的磁盘阵列配置并恢复，确定要恢复 RAID 磁盘阵列吗？"
+msgstr ""
+
+#: src/components/tooltip/index.vue:8
+msgid "接收："
+msgstr ""
+
+#: src/pages/index/nas/disk/item.vue:38
+msgid "仅统计已挂载分区"
+msgstr ""
+
+#: src/pages/network/dhcp/index.vue:97
+#: src/pages/network/gateway/index.vue:92
+#: src/pages/network/pppoe/index.vue:41
+msgid "进入控制台"
+msgstr ""
+
+#: src/components/action-homebox/index.vue:19
+msgid "进行测速"
+msgstr ""
+
+#: src/components/smart/edit-disk.vue:28
+#: src/components/smart/edit-disk.vue:45
+#: src/pages/smart/index/index.vue:55
+#: src/pages/smart/index/index.vue:71
+msgid "禁用"
+msgstr ""
+
+#: src/components/action-disk-format/index.vue:239
+msgid "警告：该操作将初始化 %{model} 硬盘并创建分区，请你谨慎操作"
+msgstr ""
+
+#: src/components/action-disk-format/index.vue:227
+msgid "警告：格式化会清空 %{partname} 分区数据，请你谨慎操作"
+msgstr ""
+
+#: src/components/action-edit/index.vue:29
+msgid "静态地址"
+msgstr ""
+
+#: src/pages/index/network/info.vue:315
+msgid "静态网络"
+msgstr ""
+
+#: src/pages/network/dhcp/index.vue:18
+#: src/pages/network/dhcp/index.vue:26
+msgid "静态IP地址"
+msgstr ""
+
+#: src/pages/smart/index.vue:15
+msgid "就可以通过主机的监控硬件或软件自动向用户作出警告并进行轻微的自动修复，以提前保障硬盘数据的安全。"
+msgstr ""
+
+#: src/components/action-nas/index.vue:11
+msgid "局域网文件共享（Samba）"
+msgstr ""
+
+#: src/components/action-nas/index.vue:12
+msgid "局域网文件共享（WebDAV）"
+msgstr ""
+
+#: src/pages/network/gateway/index.vue:76
+msgid "开启 NAT（可修复某些无线热点不能访问外网问题）"
+msgstr ""
+
+#: src/components/action-sandbox/index.vue:66
+#: src/pages/index/nav/index.vue:46
+#: src/pages/index/nav/index.vue:47
+#: src/pages/index/nav/index.vue:48
+#: src/pages/index/nav/index.vue:49
+msgid "开启沙箱"
+msgstr ""
+
+#: src/components/action-disk-part/item.vue:35
+msgid "可读写状态："
+msgstr ""
+
+#: src/components/action-ddnsto/setup-ddnsto-save.vue:17
+#: src/components/action-domain/setup-ddns-success.vue:17
+msgid "可前往"
+msgstr ""
+
+#: src/pages/index/nas/domain/index.vue:24
+msgid "控制台"
+msgstr ""
+
+#: src/components/action-nas/index.vue:10
+msgid "跨设备共享（易有云）"
+msgstr ""
+
+#: src/pages/index/nas/docker/index.vue:9
+#: src/pages/index/nas/domain/index.vue:9
+#: src/pages/index/nas/download/index.vue:9
+#: src/pages/index/nas/service/index.vue:9
+msgid "快速配置"
+msgstr ""
+
+#: src/pages/network/index/index.vue:11
+msgid "宽带拨号连接"
+msgstr ""
+
+#: src/pages/network/pppoe/index.vue:20
+msgid "宽带密码"
+msgstr ""
+
+#: src/pages/network/pppoe/index.vue:12
+#: src/pages/network/pppoe/index.vue:14
+msgid "宽带账号"
+msgstr ""
+
+#: src/pages/raid/index/index.vue:75
+msgid "扩充"
+msgstr ""
+
+#: src/components/smart/disk-info.vue:24
+msgid "扩展信息"
+msgstr ""
+
+#: src/components/smart/add-task.vue:26
+#: src/pages/smart/task/index.vue:8
+msgid "类型"
+msgstr ""
+
+#: src/components/smart/add-task.vue:34
+#: src/pages/smart/task/index.vue:63
+msgid "离线时自检"
+msgstr ""
+
+#: src/pages/network/index/index.vue:21
+msgid "连接现有路由器"
+msgstr ""
+
+#: src/pages/network/dhcp/index.vue:114
+#: src/pages/network/pppoe/index.vue:57
+msgid "链接"
+msgstr ""
+
+#: src/pages/index/network/flow.vue:372
+msgid "流量统计"
+msgstr ""
+
+#: src/components/action-netip/index.vue:119
+msgid "路由器 IP 可能已经修改成功。若刷新页面失败，请重新连接路由器，否则请尝试重新配置。"
+msgstr ""
+
+#: src/pages/network/index/index.vue:49
+msgid "没找到想要的配置？请使用%{link}"
+msgstr ""
+
+#: src/components/action-nas/samba/index.vue:37
+#: src/components/action-nas/webdav/index.vue:40
+#: src/pages/network/pppoe/index.vue:18
+msgid "密码"
+msgstr ""
+
+#: src/components/action-domain/setup-ddns.vue:87
+msgid "密码："
+msgstr ""
+
+#: src/components/action-nas/samba/index.vue:116
+#: src/components/action-nas/webdav/index.vue:131
+#: src/pages/network/pppoe/index.vue:108
+msgid "密码不能为空"
+msgstr ""
+
+#: src/components/action-edit/index.vue:15
+#: src/pages/raid/index/index.vue:26
+msgid "名称"
+msgstr ""
+
+#: src/components/tooltip/index.vue:5
+msgid "名称："
+msgstr ""
+
+#: src/components/action-download/index.vue:98
+msgid "默认"
+msgstr ""
+
+#: src/pages/index/nas/download/qbittorrent.vue:38
+msgid "默认密码："
+msgstr ""
+
+#: src/pages/index/nas/download/qbittorrent.vue:34
+msgid "默认用户名："
+msgstr ""
+
+#: src/components/action-sandbox/index.vue:27
+msgid "目标磁盘（建议选择U盘或者移动硬盘，方便装卸）"
+msgstr ""
+
+#: src/components/action-disk-format/index.vue:82
+#: src/components/action-disk-mount/index.vue:82
+msgid "目标分区"
+msgstr ""
+
+#: src/components/action-sandbox/index.vue:41
+msgid "目标分区（分区大小须大于2G，将此分区作为外部 overlay 使用）"
+msgstr ""
+
+#: src/pages/index/nas/service/samba.vue:19
+msgid "目录"
+msgstr ""
+
+#: src/pages/index/system/index.vue:36
+msgid "内存使用率"
+msgstr ""
+
+#: src/pages/index/system/index.vue:60
+msgid "内核版本"
+msgstr ""
+
+#: src/pages/index/network/info.vue:210
+msgid "内网测速"
+msgstr ""
+
+#: src/components/action-netip/index.vue:6
+#: src/pages/index/nav/index.vue:37
+#: src/pages/index/nav/index.vue:38
+#: src/pages/index/nav/index.vue:39
+msgid "内网配置"
+msgstr ""
+
+#: src/pages/index/nas/disk/item.vue:49
+msgid "您的系统空间已不足，检测到您的Docker根目录位于系统根目录上，可能会影响系统的正常运行，建议使用Docker迁移向导将Docker根目录迁移到外置硬盘上。"
+msgstr ""
+
+#: src/pages/network/gateway/index.vue:6
+msgid "您可以用上一级路由（主路由）拨号，然后用本路由来实现一些高级功能。"
+msgstr ""
+
+#: src/pages/network/gateway/index.vue:5
+msgid "旁路由模式，也叫单臂路由模式。"
+msgstr ""
+
+#: src/pages/network/gateway/index.vue:33
+msgid "旁路由模式仅支持静态IP地址"
+msgstr ""
+
+#: src/pages/network/gateway/index.vue:3
+msgid "旁路由配置前的准备工作"
+msgstr ""
+
+#: src/pages/network/gateway/index.vue:97
+msgid "旁路由自动配置"
+msgstr ""
+
+#: src/components/action-netip/index.vue:118
+msgid "配置超时"
+msgstr ""
+
+#: src/components/action-dns/index.vue:122
+#: src/components/action-netip/index.vue:82
+#: src/pages/interfaceconfig/index.vue:278
+#: src/pages/network/dhcp/index.vue:249
+#: src/pages/network/dhcp/index.vue:94
+#: src/pages/network/gateway/index.vue:89
+#: src/pages/network/pppoe/index.vue:124
+#: src/pages/network/pppoe/index.vue:38
+msgid "配置成功"
+msgstr ""
+
+#: src/components/action-download/index.vue:230
+#: src/components/action-softwaresource/index.vue:52
+msgid "配置成功！"
+msgstr ""
+
+#: src/pages/network/dhcp/index.vue:4
+msgid "配置互联网"
+msgstr ""
+
+#: src/pages/network/pppoe/index.vue:3
+msgid "配置宽带账号"
+msgstr ""
+
+#: src/components/action-download/index.vue:138
+#: src/components/action-download/index.vue:182
+#: src/components/action-download/index.vue:48
+msgid "配置目录"
+msgstr ""
+
+#: src/components/action-download/index.vue:134
+#: src/components/action-download/index.vue:178
+#: src/components/action-download/index.vue:44
+msgid "配置目录："
+msgstr ""
+
+#: src/pages/network/gateway/index.vue:21
+msgid "配置旁路由网络"
+msgstr ""
+
+#: src/components/action-sandbox/index.vue:214
+msgid "配置沙箱重启中..."
+msgstr ""
+
+#: src/components/action-netip/index.vue:96
+msgid "配置失败"
+msgstr ""
+
+#: src/pages/network/index/index.vue:31
+msgid "配置为旁路由"
+msgstr ""
+
+#: src/components/action-dns/index.vue:113
+#: src/components/action-domain/setup-ddns.vue:187
+#: src/components/action-download/index.vue:331
+#: src/components/action-download/index.vue:363
+#: src/components/action-download/index.vue:395
+#: src/components/action-edit/index.vue:74
+#: src/components/action-nas/index.vue:93
+#: src/pages/network/gateway/index.vue:175
+#: src/pages/network/pppoe/index.vue:112
+msgid "配置中..."
+msgstr ""
+
+#: src/pages/network/dhcp/index.vue:239
+msgid "配置中...."
+msgstr ""
+
+#: src/pages/index/network/info.vue:376
+#: src/pages/index/network/info.vue:379
+msgid "启动失败"
+msgstr ""
+
+#: src/components/action-download/index.vue:211
+#: src/components/action-download/index.vue:212
+#: src/components/action-download/index.vue:213
+#: src/components/action-download/index.vue:214
+#: src/components/action-download/index.vue:215
+#: src/components/action-download/index.vue:217
+#: src/pages/smart/index/index.vue:5
+msgid "启用"
+msgstr ""
+
+#: src/pages/network/dhcp/index.vue:80
+#: src/pages/network/pppoe/index.vue:24
+msgid "启用LAN口DHCP服务（用于从旁路由模式恢复成默认状态）"
+msgstr ""
+
+#: src/components/action-docker/index.vue:54
+msgid "迁移成功！"
+msgstr ""
+
+#: src/components/action-docker/index.vue:12
+msgid "迁移到："
+msgstr ""
+
+#: src/components/action-homebox/index.vue:16
+#: src/components/action-nas/linkease/index.vue:16
+msgid "前往"
+msgstr ""
+
+#: src/components/action-softwaresource/index.vue:21
+msgid "切换软件源"
+msgstr ""
+
+#: src/components/action-netip/index.vue:97
+msgid "请尝试重新配置"
+msgstr ""
+
+#: src/pages/network/dhcp/index.vue:5
+msgid "请确保您已将本设备 WAN 口连接到上级路由器局域网（ LAN ）接口"
+msgstr ""
+
+#: src/pages/network/pppoe/index.vue:4
+msgid "请确保您已将路由 WAN 口连接到光猫"
+msgstr ""
+
+#: src/components/action-ddnsto/setup-ddnsto-save.vue:11
+#: src/components/action-domain/setup-ddns-success.vue:11
+msgid "请稍等1分钟生效后再使用。"
+msgstr ""
+
+#: src/components/editable-select/index.vue:13
+msgid "请输入%{title}"
+msgstr ""
+
+#: src/pages/network/dhcp/index.vue:207
+msgid "请输入合法的地址"
+msgstr ""
+
+#: src/pages/network/dhcp/index.vue:195
+msgid "请输入合法的IP地址"
+msgstr ""
+
+#: src/components/action-domain/setup-ddns.vue:90
+msgid "请输入密码"
+msgstr ""
+
+#: src/components/action-docker/index.vue:26
+msgid "请输入迁移路径"
+msgstr ""
+
+#: src/components/action-domain/setup-ddns.vue:81
+msgid "请输入用户名"
+msgstr ""
+
+#: src/components/action-download/index.vue:113
+msgid "请输入BT Tracker服务器地址，多个地址使用换行或者英文逗号分隔"
+msgstr ""
+
+#: src/components/action-dns/index.vue:25
+msgid "请输入DNS地址"
+msgstr ""
+
+#: src/components/action-download/index.vue:86
+msgid "请输入RPC令牌"
+msgstr ""
+
+#: src/components/action-sandbox/index.vue:61
+msgid "请刷新界面"
+msgstr ""
+
+#: src/components/editable-select/index.vue:5
+msgid "请选择%{title}"
+msgstr ""
+
+#: src/components/action-raid/setup-create.vue:204
+#: src/components/smart/add-task.vue:148
+msgid "请选择磁盘"
+msgstr ""
+
+#: src/components/action-sandbox/index.vue:31
+msgid "请选择目标磁盘"
+msgstr ""
+
+#: src/components/action-sandbox/index.vue:46
+msgid "请选择目标分区"
+msgstr ""
+
+#: src/components/action-disk/index.vue:110
+msgid "请选择目标硬盘"
+msgstr ""
+
+#: src/components/action-docker/index.vue:19
+msgid "请选择迁移路径"
+msgstr ""
+
+#: src/components/action-softwaresource/index.vue:26
+msgid "请选择软件源"
+msgstr ""
+
+#: src/components/action-nas/index.vue:6
+msgid "请选择需要添加的NAS服务"
+msgstr ""
+
+#: src/components/action-disk-format/index.vue:203
+#: src/components/action-disk-format/index.vue:93
+msgid "请选择选项"
+msgstr ""
+
+#: src/components/action-raid/setup-remove.vue:69
+msgid "请选择要删除的硬盘"
+msgstr ""
+
+#: src/components/action-raid/setup-edit.vue:80
+#: src/components/action-raid/setup-recover.vue:80
+msgid "请选择要添加的硬盘"
+msgstr ""
+
+#: src/components/action-disk/index.vue:7
+msgid "请选择一个硬盘或分区"
+msgstr ""
+
+#: src/components/action-disk/index.vue:115
+msgid "请选择硬盘分区"
+msgstr ""
+
+#: src/components/action-raid/setup-create.vue:208
+msgid "请选择至少%{min}块磁盘"
+msgstr ""
+
+#: src/components/action-raid/setup-create.vue:200
+msgid "请选择raid类型"
+msgstr ""
+
+#: src/pages/interfaceconfig/index.vue:172
+msgid "请在保存以后前往'网络-接口'页面配置接口详细参数"
+msgstr ""
+
+#: src/components/action-ddnsto/setup-ddnsto-install.vue:11
+#: src/components/action-dns/index.vue:40
+#: src/components/action-docker/index.vue:40
+#: src/components/action-docker/index.vue:41
+#: src/components/action-docker/index.vue:42
+#: src/components/action-docker/index.vue:76
+#: src/components/action-docker/index.vue:77
+#: src/components/action-docker/index.vue:79
+#: src/components/action-domain/setup-index.vue:43
+#: src/components/action-download/index.vue:215
+#: src/components/action-download/index.vue:216
+#: src/components/action-download/index.vue:217
+#: src/components/action-download/index.vue:220
+#: src/components/action-edit/index.vue:36
+#: src/components/action-nas/index.vue:19
+#: src/components/action-nas/index.vue:20
+#: src/components/action-netip/index.vue:58
+#: src/components/action-netip/index.vue:60
+#: src/components/action-raid/setup-create.vue:53
+#: src/components/action-raid/setup-edit.vue:44
+#: src/components/action-raid/setup-recover.vue:44
+#: src/components/action-raid/setup-remove.vue:32
+#: src/components/action-sandbox/index.vue:67
+#: src/components/action-sandbox/index.vue:83
+#: src/components/action-sandbox/index.vue:97
+#: src/components/action-sandboxenvironment/index.vue:24
+#: src/components/action-sandboxenvironment/index.vue:25
+#: src/components/action-sandboxenvironment/index.vue:27
+#: src/components/action-softwaresource/index.vue:34
+#: src/components/action-softwaresource/index.vue:35
+#: src/components/action-softwaresource/index.vue:36
+#: src/components/action-softwaresource/index.vue:37
+#: src/components/smart/add-task.vue:91
+#: src/components/smart/edit-disk.vue:56
+#: src/pages/raid/index/index.vue:184
+#: src/pages/raid/index/index.vue:275
+msgid "取消"
+msgstr ""
+
+#: src/pages/raid/index/index.vue:71
+msgid "去挂载"
+msgstr ""
+
+#: src/pages/raid/index/index.vue:180
+msgid "去卸载"
+msgstr ""
+
+#: src/components/tooltip/index.vue:36
+msgid "全双工"
+msgstr ""
+
+#: src/components/action-confirm/index.vue:11
+#: src/components/action-confirm/index.vue:12
+#: src/components/action-ddnsto/setup-ddnsto-install.vue:12
+#: src/components/action-disk-mount/index.vue:101
+#: src/components/action-docker/index.vue:41
+#: src/components/action-docker/index.vue:46
+#: src/components/action-docker/index.vue:56
+#: src/components/action-docker/index.vue:77
+#: src/components/action-download/index.vue:232
+#: src/components/action-softwaresource/index.vue:54
+#: src/pages/raid/index/index.vue:252
+msgid "确定"
+msgstr ""
+
+#: src/components/action-raid/setup-create.vue:214
+msgid "确定创建 %{name}？该操作不可逆,请谨慎操作"
+msgstr ""
+
+#: src/components/action-sandboxenvironment/index.vue:109
+msgid "确定放弃沙箱中的数据？再次进入沙箱需要重新格式化相应磁盘分区"
+msgstr ""
+
+#: src/pages/raid/index/index.vue:191
+msgid "确定要删除 %{name} 该磁盘阵列吗？删除操作可能会导致数据丢失，请谨慎操作。删除成功后，如需另外组RAID，建议稍等几分钟后再试。"
+msgstr ""
+
+#: src/pages/raid/index/index.vue:194
+msgid "确定要删除 %{name} 吗?"
+msgstr ""
+
+#: src/components/action-dns/index.vue:39
+#: src/components/action-netip/index.vue:59
+#: src/components/action-softwaresource/index.vue:35
+msgid "确认"
+msgstr ""
+
+#: src/pages/index/nas/download/aria2.vue:35
+msgid "认证失败？"
+msgstr ""
+
+#: src/components/action-disk-part/index.vue:10
+#: src/pages/raid/index/index.vue:30
+#: src/pages/smart/index/index.vue:88
+msgid "容量"
+msgstr ""
+
+#: src/pages/raid/index/index.vue:84
+msgid "如果您在RAID磁盘阵列中创建了文件系统，先卸载文件系统，后删除文件系统删除操作可能会导致数据丢失，请谨慎操作。"
+msgstr ""
+
+#: src/components/smart/edit-disk.vue:50
+#: src/pages/smart/index/index.vue:76
+msgid "如果温度大于或等于 N 摄氏度则报告."
+msgstr ""
+
+#: src/pages/raid/index/index.vue:13
+msgid "如果由于系统重置或重启导致的RAID设备丢失可以尝试通过下方'扫描恢复RAID'按钮恢复"
+msgstr ""
+
+#: src/components/action-sandboxenvironment/index.vue:18
+msgid "如需<b>临时</b>退出沙箱环境，请将设备关机后拔出相关磁盘，启动前插入相关磁盘可再次进入沙箱。<br/> 注意临时退出沙箱环境以后升级固件会导致之前的沙箱数据无效"
+msgstr ""
+
+#: src/components/action-nas/index.vue:16
+msgid "如需对 Samba 或 WebDAV 进行更细致的权限控制，请使用“%{unishare}”"
+msgstr ""
+
+#: src/pages/index/network/info.vue:86
+msgid "软件源错误"
+msgstr ""
+
+#: src/components/action-softwaresource/index.vue:45
+#: src/components/action-softwaresource/index.vue:6
+#: src/pages/index/nav/index.vue:42
+#: src/pages/index/nav/index.vue:43
+#: src/pages/index/nav/index.vue:44
+#: src/pages/index/network/info.vue:88
+msgid "软件源配置"
+msgstr ""
+
+#: src/pages/raid/index/index.vue:18
+msgid "扫描恢复RAID"
+msgstr ""
+
+#: src/pages/raid/index/index.vue:255
+msgid "扫描中..."
+msgstr ""
+
+#: src/components/action-sandbox/index.vue:6
+#: src/components/action-sandboxenvironment/index.vue:6
+msgid "沙箱模式配置向导"
+msgstr ""
+
+#: src/pages/index/nav/index.vue:47
+#: src/pages/index/nav/index.vue:48
+#: src/pages/index/nav/index.vue:49
+#: src/pages/index/nav/index.vue:51
+msgid "沙箱已开启"
+msgstr ""
+
+#: src/pages/interfaceconfig/index.vue:42
+#: src/pages/interfaceconfig/index.vue:72
+#: src/pages/raid/index/index.vue:77
+#: src/pages/raid/index/index.vue:78
+#: src/pages/raid/index/index.vue:79
+#: src/pages/raid/index/index.vue:83
+#: src/pages/smart/task/index.vue:30
+msgid "删除"
+msgstr ""
+
+#: src/pages/raid/index/index.vue:179
+msgid "删除 RAID 设备之前请先卸载文件系统"
+msgstr ""
+
+#: src/pages/raid/index/index.vue:209
+msgid "删除成功"
+msgstr ""
+
+#: src/pages/raid/index/index.vue:197
+msgid "删除中..."
+msgstr ""
+
+#: src/pages/index/network/flow.vue:436
+#: src/pages/index/network/flow.vue:478
+#: src/pages/index/network/flow.vue:552
+msgid "上传"
+msgstr ""
+
+#: src/pages/index/network/flow.vue:5
+msgid "上传:"
+msgstr ""
+
+#: src/components/action-raid/setup-edit.vue:9
+#: src/components/action-raid/setup-recover.vue:9
+#: src/components/action-raid/setup-remove.vue:9
+#: src/components/smart/disk-info.vue:32
+#: src/components/smart/edit-disk.vue:6
+#: src/pages/raid/index/index.vue:27
+#: src/pages/smart/index/index.vue:85
+#: src/pages/smart/task/index.vue:7
+msgid "设备"
+msgstr ""
+
+#: src/pages/index/network/info.vue:158
+msgid "设备路由"
+msgstr ""
+
+#: src/components/smart/disk-info.vue:9
+msgid "设备信息"
+msgstr ""
+
+#: src/pages/index/system/index.vue:44
+msgid "设备型号"
+msgstr ""
+
+#: src/components/action-sandboxenvironment/index.vue:79
+msgid "设备重启中..."
+msgstr ""
+
+#: src/components/action-sandboxenvironment/index.vue:116
+#: src/components/action-sandboxenvironment/index.vue:96
+msgid "设备重启中... 若页面长时间未刷新可能需要手动填写地址"
+msgstr ""
+
+#: src/components/action-domain/setup-ddns.vue:63
+msgid "设定哪一个 IP 地址（IPv4 或 IPv6）会被发送给 DDNS 提供商"
+msgstr ""
+
+#: src/components/smart/edit-disk.vue:27
+#: src/components/smart/edit-disk.vue:44
+msgid "使用全局配置"
+msgstr ""
+
+#: src/pages/index/nas/download/aria2.vue:44
+msgid "使用易有云APP，随时随地远程下载"
+msgstr ""
+
+#: src/components/action-domain/setup-ddns.vue:169
+msgid "使用DDNSTO"
+msgstr ""
+
+#: src/components/action-raid/setup-create.vue:211
+msgid "是否立即创建 %{name}？选择的硬盘所有分区将会被清除，此操作可能会导致硬盘数据丢失，请谨慎操作。"
+msgstr ""
+
+#: src/components/action-disk-format/index.vue:242
+msgid "是否确定初始化?"
+msgstr ""
+
+#: src/components/action-disk-format/index.vue:231
+msgid "是否确定格式化 %{partname}?"
+msgstr ""
+
+#: src/pages/smart/index.vue:9
+msgid "是一种自动的硬盘状态检测与预警系统和规范。通过在硬盘硬件内的检测指令对硬盘的硬件如磁头、盘片、马达、"
+msgstr ""
+
+#: src/components/action-disk-part/item.vue:30
+#: src/pages/index/nas/disk/item.vue:102
+msgid "手动挂载"
+msgstr ""
+
+#: src/pages/index/network/info.vue:324
+msgid "手动配置"
+msgstr ""
+
+#: src/pages/network/gateway/index.vue:14
+msgid "手动配置..."
+msgstr ""
+
+#: src/pages/network/gateway/index.vue:10
+msgid "手动配置则需自行获取主路由器的IP地址（例如 192.168.2.1 ）和子网掩码，记录以备后续填写，点击“手动配置”按钮，切换到参数配置页，按实际情况自行填写。"
+msgstr ""
+
+#: src/components/action-sandboxenvironment/index.vue:16
+msgid "手动在地址栏输入地址"
+msgstr ""
+
+#: src/pages/network/dhcp/index.vue:52
+msgid "手工配置"
+msgstr ""
+
+#: src/pages/network/gateway/index.vue:99
+msgid "首先确认主路由开启了 DHCP 服务，确认本路由 WAN 口是 DHCP 客户端模式（默认即是，如果不是可使用“连接现有路由器”向导改成 DHCP 客户端），然后将本路由 WAN 口与主路由的 LAN 连接，以自动获取配置。"
+msgstr ""
+
+#: src/components/smart/disk-info.vue:14
+msgid "属性"
+msgstr ""
+
+#: src/components/action-netip/index.vue:116
+#: src/components/action-netip/index.vue:120
+msgid "刷新页面"
+msgstr ""
+
+#: src/pages/smart/index/index.vue:34
+msgid "睡眠"
+msgstr ""
+
+#: src/pages/smart/index/index.vue:42
+msgid "睡眠-处于睡眠模式下不检查设备。"
+msgstr ""
+
+#: src/pages/network/gateway/index.vue:66
+msgid "提供 DHCPv4 服务"
+msgstr ""
+
+#: src/pages/network/gateway/index.vue:65
+msgid "提供 DHCPv4 服务（需要关闭主路由 DHCP 服务）"
+msgstr ""
+
+#: src/components/action-sandboxenvironment/index.vue:22
+msgid "提交"
+msgstr ""
+
+#: src/components/action-sandboxenvironment/index.vue:75
+msgid "提交中..."
+msgstr ""
+
+#: src/components/action-confirm/index.vue:4
+#: src/components/action-confirm/index.vue:5
+msgid "提示"
+msgstr ""
+
+#: src/components/smart/add-task.vue:57
+msgid "天"
+msgstr ""
+
+#: src/components/action-ddnsto/setup-ddnsto-save.vue:10
+#: src/components/action-domain/setup-ddns-success.vue:10
+msgid "添加成功"
+msgstr ""
+
+#: src/components/action-edit/index.vue:8
+#: src/components/action-edit/index.vue:9
+msgid "添加LAN"
+msgstr ""
+
+#: src/components/action-edit/index.vue:5
+#: src/components/action-edit/index.vue:6
+msgid "添加WAN"
+msgstr ""
+
+#: src/components/help/index.vue:2
+msgid "跳转教程"
+msgstr ""
+
+#: src/components/action-nas/index.vue:16
+msgid "统一文件共享"
+msgstr ""
+
+#: src/components/action-sandboxenvironment/index.vue:23
+#: src/components/action-sandboxenvironment/index.vue:24
+#: src/components/action-sandboxenvironment/index.vue:25
+msgid "退出"
+msgstr ""
+
+#: src/pages/index/network/info.vue:211
+msgid "外网测速"
+msgstr ""
+
+#: src/components/action-disk-format/index.vue:129
+#: src/components/action-disk-format/index.vue:132
+#: src/components/action-disk-format/index.vue:90
+#: src/components/action-disk-format/index.vue:91
+#: src/components/action-disk-mount/index.vue:119
+#: src/components/action-disk-mount/index.vue:122
+#: src/components/action-disk-mount/index.vue:79
+#: src/components/action-disk-mount/index.vue:80
+#: src/components/action-dns/index.vue:53
+msgid "完成"
+msgstr ""
+
+#: src/pages/network/dhcp/index.vue:40
+#: src/pages/network/dhcp/index.vue:42
+#: src/pages/network/gateway/index.vue:51
+#: src/pages/network/gateway/index.vue:53
+msgid "网关地址"
+msgstr ""
+
+#: src/pages/network/gateway/index.vue:107
+msgid "网关地址: "
+msgstr ""
+
+#: src/pages/index/network/info.vue:249
+#: src/pages/interfaceconfig/index.vue:3
+msgid "网口配置"
+msgstr ""
+
+#: src/pages/index/nas/download/aria2.vue:25
+#: src/pages/index/nas/download/qbittorrent.vue:25
+#: src/pages/index/nas/download/transmission.vue:25
+msgid "网络地址:"
+msgstr ""
+
+#: src/pages/index/network/info.vue:239
+msgid "网络接口状态"
+msgstr ""
+
+#: src/pages/index/nav/index.vue:4
+msgid "网络向导"
+msgstr ""
+
+#: src/request/do.ts:21
+msgid "网络异常："
+msgstr ""
+
+#: src/components/action-domain/setup-ddns.vue:13
+#: src/components/action-domain/setup-ddns.vue:23
+#: src/components/action-domain/setup-ddns.vue:33
+#: src/components/action-domain/setup-index.vue:20
+#: src/components/action-domain/setup-index.vue:29
+#: src/components/action-domain/setup-index.vue:38
+msgid "为拥有动态IP的主机配置一个固定的可访问域名"
+msgstr ""
+
+#: src/pages/index/nas/docker/status.vue:9
+msgid "未安装"
+msgstr ""
+
+#: src/pages/index/nas/domain/index.vue:22
+msgid "未安装或未配置"
+msgstr ""
+
+#: src/components/action-disk-part/item.vue:5
+msgid "未分区"
+msgstr ""
+
+#: src/components/action-disk-part/item.vue:13
+msgid "未分区（%{total}）"
+msgstr ""
+
+#: src/components/action-sandbox/index.vue:47
+#: src/components/action-sandbox/index.vue:48
+msgid "未格式化"
+msgstr ""
+
+#: src/components/action-disk/item.vue:36
+#: src/components/action-disk/item.vue:37
+#: src/components/action-disk/item.vue:38
+#: src/components/action-disk/item.vue:40
+#: src/components/action-disk/item.vue:45
+msgid "未挂载磁盘"
+msgstr ""
+
+#: src/pages/index/network/info.vue:116
+msgid "未联网"
+msgstr ""
+
+#: src/pages/index/nas/service/linkease.vue:9
+msgid "未配置"
+msgstr ""
+
+#: src/pages/index/nas/download/aria2.vue:9
+#: src/pages/index/nas/download/qbittorrent.vue:9
+#: src/pages/index/nas/download/transmission.vue:9
+msgid "未启动"
+msgstr ""
+
+#: src/pages/index/nas/service/samba.vue:8
+#: src/pages/index/nas/service/samba.vue:9
+#: src/pages/index/nas/service/webdav.vue:6
+#: src/pages/index/nas/service/webdav.vue:7
+msgid "未启用"
+msgstr ""
+
+#: src/components/action-disk-part/item.vue:13
+#: src/pages/smart/task/index.vue:65
+msgid "未知"
+msgstr ""
+
+#: src/components/action-docker/index.vue:167
+#: src/components/action-domain/setup-ddns.vue:157
+#: src/components/action-domain/setup-ddns.vue:215
+#: src/components/action-download/index.vue:343
+#: src/components/action-download/index.vue:375
+#: src/components/action-download/index.vue:407
+#: src/components/action-netip/index.vue:282
+#: src/components/action-sandbox/index.vue:159
+#: src/components/action-sandbox/index.vue:226
+#: src/components/action-sandboxenvironment/index.vue:102
+#: src/components/action-sandboxenvironment/index.vue:122
+#: src/components/action-sandboxenvironment/index.vue:85
+#: src/components/action-softwaresource/index.vue:123
+msgid "未知错误"
+msgstr ""
+
+#: src/pages/smart/index/index.vue:89
+msgid "温度"
+msgstr ""
+
+#: src/components/smart/edit-disk.vue:22
+#: src/pages/smart/index/index.vue:50
+msgid "温度监测（差异）"
+msgstr ""
+
+#: src/components/smart/edit-disk.vue:39
+#: src/pages/smart/index/index.vue:66
+msgid "温度监测（最大）"
+msgstr ""
+
+#: src/components/action-domain/setup-ddns.vue:168
+#: src/components/action-domain/setup-ddns.vue:199
+#: src/components/action-sandbox/index.vue:76
+msgid "温馨提示"
+msgstr ""
+
+#: src/pages/index/nas/disk/index.vue:12
+msgid "文件管理"
+msgstr ""
+
+#: src/components/action-disk-part/item.vue:44
+msgid "文件系统："
+msgstr ""
+
+#: src/components/action-netip/index.vue:95
+#: src/components/action-netip/index.vue:98
+msgid "我知道了"
+msgstr ""
+
+#: src/components/action-disk-format/index.vue:218
+msgid "无法识别路径"
+msgstr ""
+
+#: src/components/action-disk-format/index.vue:248
+msgid "无法识别数据"
+msgstr ""
+
+#: src/pages/index/nas/disk/index.vue:45
+msgid "系统根目录"
+msgstr ""
+
+#: src/pages/index/system/index.vue:12
+msgid "系统监控"
+msgstr ""
+
+#: src/pages/index/system/index.vue:76
+msgid "系统时间"
+msgstr ""
+
+#: src/pages/index/system/index.vue:4
+msgid "系统信息"
+msgstr ""
+
+#: src/components/action-disk-format/index.vue:108
+#: src/components/action-disk-format/index.vue:129
+#: src/components/action-disk-format/index.vue:132
+#: src/components/action-disk-format/index.vue:90
+#: src/components/action-disk-format/index.vue:91
+#: src/components/action-disk-mount/index.vue:119
+#: src/components/action-disk-mount/index.vue:122
+#: src/components/action-disk-mount/index.vue:79
+#: src/components/action-disk-mount/index.vue:80
+#: src/components/action-disk/index.vue:25
+#: src/components/action-disk/index.vue:27
+#: src/components/action-disk/index.vue:28
+#: src/components/action-domain/setup-index.vue:44
+#: src/components/action-nas/index.vue:18
+msgid "下一步"
+msgstr ""
+
+#: src/pages/index/network/flow.vue:410
+#: src/pages/index/network/flow.vue:484
+#: src/pages/index/network/flow.vue:539
+msgid "下载"
+msgstr ""
+
+#: src/pages/index/network/flow.vue:6
+msgid "下载:"
+msgstr ""
+
+#: src/pages/index/nas/download/index.vue:5
+msgid "下载服务"
+msgstr ""
+
+#: src/components/action-download/index.vue:9
+msgid "下载服务："
+msgstr ""
+
+#: src/components/action-download/index.vue:4
+msgid "下载服务配置向导"
+msgstr ""
+
+#: src/components/action-download/index.vue:157
+#: src/components/action-download/index.vue:201
+#: src/components/action-download/index.vue:67
+msgid "下载目录"
+msgstr ""
+
+#: src/pages/index/nas/download/aria2.vue:15
+#: src/pages/index/nas/download/qbittorrent.vue:15
+#: src/pages/index/nas/download/transmission.vue:15
+msgid "下载目录:"
+msgstr ""
+
+#: src/components/action-download/index.vue:153
+#: src/components/action-download/index.vue:197
+#: src/components/action-download/index.vue:63
+msgid "下载目录："
+msgstr ""
+
+#: src/pages/index/nas/service/linkease.vue:23
+msgid "下载易有云客户端，随时随地相册备份、远程访问"
+msgstr ""
+
+#: src/pages/smart/index/index.vue:36
+msgid "闲置"
+msgstr ""
+
+#: src/pages/smart/index/index.vue:44
+msgid "闲置-处于待机、睡眠、闲置模式下不检查设备，在闲置状态下，大多数磁盘还在转动，所以这可能不适合你。"
+msgstr ""
+
+#: src/pages/network/gateway/index.vue:90
+msgid "现在，将本路由WAN口断开，将其中一个LAN口与主路由连接，并将当前浏览器设备连接到主路由。点击“进入控制台”浏览器将跳转到新的路由IP"
+msgstr ""
+
+#: src/pages/network/gateway/index.vue:22
+msgid "现在，请你配置旁路由信息"
+msgstr ""
+
+#: src/pages/raid/index/index.vue:78
+#: src/pages/raid/index/index.vue:81
+#: src/pages/smart/index/index.vue:121
+#: src/pages/smart/index/index.vue:122
+msgid "详情"
+msgstr ""
+
+#: src/components/action-disk/index.vue:20
+msgid "想要更精确的配置？请前往"
+msgstr ""
+
+#: src/components/smart/add-task.vue:41
+msgid "小时"
+msgstr ""
+
+#: src/components/action-edit/index.vue:23
+msgid "协议（网络获取方式）"
+msgstr ""
+
+#: src/pages/smart/task/index.vue:1
+#: src/pages/smart/task/index.vue:2
+msgid "新建"
+msgstr ""
+
+#: src/components/smart/disk-info.vue:36
+#: src/pages/smart/index/index.vue:86
+msgid "型号"
+msgstr ""
+
+#: src/components/action-raid/setup-edit.vue:4
+msgid "修改"
+msgstr ""
+
+#: src/components/action-netip/index.vue:31
+msgid "修改DHCP服务"
+msgstr ""
+
+#: src/components/action-ddnsto/setup-ddnsto-install.vue:75
+msgid "需要安装DDNSTO插件，点击“确定”开始安装"
+msgstr ""
+
+#: src/components/smart/disk-info.vue:40
+#: src/pages/smart/index/index.vue:87
+msgid "序号"
+msgstr ""
+
+#: src/components/smart/add-task.vue:17
+msgid "选择磁盘"
+msgstr ""
+
+#: src/components/action-raid/setup-create.vue:48
+msgid "选择将要用于创建 RAID 的硬盘，通过 USB 接入的设备不会在列表中显示（USB接入不稳定）。"
+msgstr ""
+
+#: src/pages/network/index/index.vue:4
+msgid "选择一种连接方式以开始"
+msgstr ""
+
+#: src/components/action-raid/setup-edit.vue:21
+msgid "选择硬盘（选择被添加到RAID的硬盘）："
+msgstr ""
+
+#: src/components/action-raid/setup-recover.vue:21
+msgid "选择硬盘（选择空闲的硬盘恢复RAID设备）："
+msgstr ""
+
+#: src/components/action-raid/setup-remove.vue:21
+msgid "选择硬盘（选择要从RAID阵列中删除的硬盘）："
+msgstr ""
+
+#: src/components/action-sandbox/index.vue:9
+#: src/components/action-sandboxenvironment/index.vue:9
+msgid "一个简易沙箱，方便用来实验系统配置和程序，方便开发未完成的软件，但不保护 Docker 和硬盘的数据"
+msgstr ""
+
+#: src/components/action-raid/setup-remove.vue:4
+#: src/pages/raid/index/index.vue:76
+#: src/pages/raid/index/index.vue:77
+msgid "移除"
+msgstr ""
+
+#: src/components/action-disk-mount/index.vue:118
+msgid "已成功将分区 %{dev} 挂载到 <a>%{mount}</a>"
+msgstr ""
+
+#: src/components/interfacer/item.vue:38
+msgid "已断开"
+msgstr ""
+
+#: src/pages/index/nas/disk/index.vue:54
+msgid "已挂载磁盘"
+msgstr ""
+
+#: src/components/action-disk-part/item.vue:25
+msgid "已挂载为交换区"
+msgstr ""
+
+#: src/components/action-disk-format/index.vue:127
+msgid "已经成功初始化分区"
+msgstr ""
+
+#: src/components/action-disk-format/index.vue:123
+msgid "已经成功格式化磁盘"
+msgstr ""
+
+#: src/pages/index/network/info.vue:194
+msgid "已连接设备"
+msgstr ""
+
+#: src/pages/index/network/info.vue:27
+msgid "已联网"
+msgstr ""
+
+#: src/pages/index/nas/service/linkease.vue:8
+msgid "已配置"
+msgstr ""
+
+#: src/pages/index/nas/download/aria2.vue:8
+#: src/pages/index/nas/download/qbittorrent.vue:8
+#: src/pages/index/nas/download/transmission.vue:8
+#: src/pages/index/system/index.vue:68
+msgid "已启动"
+msgstr ""
+
+#: src/pages/index/nas/service/samba.vue:8
+#: src/pages/index/nas/service/samba.vue:9
+#: src/pages/index/nas/service/webdav.vue:6
+#: src/pages/index/nas/service/webdav.vue:7
+msgid "已启用"
+msgstr ""
+
+#: src/components/action-sandboxenvironment/index.vue:16
+msgid "以上操作都将重启设备，设备重启完成后会自动刷新页面。如果 IP 变化可能需要"
+msgstr ""
+
+#: src/components/action-nas/index.vue:84
+#: src/pages/index/nas/disk/index.vue:126
+#: src/pages/index/nas/service/index.vue:28
+msgid "易有云"
+msgstr ""
+
+#: src/components/action-disk-format/index.vue:6
+msgid "硬盘配置"
+msgstr ""
+
+#: src/components/action-nas/samba/index.vue:29
+#: src/components/action-nas/webdav/index.vue:27
+msgid "用户名"
+msgstr ""
+
+#: src/components/action-domain/setup-ddns.vue:78
+msgid "用户名："
+msgstr ""
+
+#: src/components/action-nas/samba/index.vue:112
+#: src/components/action-nas/webdav/index.vue:127
+msgid "用户名不能为空"
+msgstr ""
+
+#: src/utils/utils.ts:96
+msgid "用户名不能以_开头"
+msgstr ""
+
+#: src/utils/utils.ts:93
+msgid "用户名不能以数字开头"
+msgstr ""
+
+#: src/utils/utils.ts:86
+msgid "用户名太短"
+msgstr ""
+
+#: src/utils/utils.ts:90
+msgid "用户名只能为小写"
+msgstr ""
+
+#: src/components/action-download/index.vue:40
+msgid "用于放置配置文件的目录。例如：/mnt/sda1/Configs/aria2；请勿使用 /tmp 或 /var ，以免重启以后任务丢失"
+msgstr ""
+
+#: src/components/action-download/index.vue:130
+msgid "用于放置配置文件的目录。例如：/mnt/sda1/Configs/qb；请勿使用 /tmp 或 /var ，以免重启以后任务丢失"
+msgstr ""
+
+#: src/components/action-download/index.vue:174
+msgid "用于放置配置文件的目录。例如：/mnt/sda1/Configs/tr；请勿使用 /tmp 或 /var ，以免重启以后任务丢失"
+msgstr ""
+
+#: src/components/action-download/index.vue:149
+#: src/components/action-download/index.vue:193
+#: src/components/action-download/index.vue:59
+msgid "用于放置下载文件的目录。例如：/mnt/sda1/download"
+msgstr ""
+
+#: src/components/action-download/index.vue:79
+msgid "用于远程访问的令牌。"
+msgstr ""
+
+#: src/pages/network/dhcp/index.vue:113
+#: src/pages/network/pppoe/index.vue:56
+msgid "由于您的设备<span>没有 WAN 口</span>，无法使用本设置向导，具体请看%{link}"
+msgstr ""
+
+#: src/pages/smart/task/index.vue:29
+msgid "预览"
+msgstr ""
+
+#: src/components/action-domain/setup-ddns.vue:69
+msgid "域名："
+msgstr ""
+
+#: src/pages/index/network/info.vue:159
+#: src/pages/index/network/info.vue:212
+#: src/pages/index/network/info.vue:251
+msgid "域名配置"
+msgstr ""
+
+#: src/components/action-ddnsto/setup-ddnsto-bind.vue:4
+#: src/components/action-ddnsto/setup-ddnsto-install.vue:4
+#: src/components/action-ddnsto/setup-ddnsto-login.vue:4
+#: src/components/action-ddnsto/setup-ddnsto-run.vue:4
+#: src/components/action-domain/setup-ddns.vue:5
+#: src/components/action-domain/setup-index.vue:4
+msgid "域名配置向导"
+msgstr ""
+
+#: src/pages/index/nas/domain/index.vue:5
+msgid "远程域名"
+msgstr ""
+
+#: src/components/smart/add-task.vue:73
+msgid "月"
+msgstr ""
+
+#: src/components/action-nas/samba/index.vue:47
+msgid "允许旧协议与身份验证(不安全)"
+msgstr ""
+
+#: src/components/smart/test-task.vue:14
+msgid "运行"
+msgstr ""
+
+#: src/components/smart/test-task.vue:6
+msgid "运行调试"
+msgstr ""
+
+#: src/components/smart/add-task.vue:32
+#: src/pages/smart/task/index.vue:59
+msgid "长时自检"
+msgstr ""
+
+#: src/pages/index/nas/service/webdav.vue:28
+msgid "账号:"
+msgstr ""
+
+#: src/pages/network/pppoe/index.vue:104
+msgid "账号不能为空"
+msgstr ""
+
+#: src/components/action-nas/samba/index.vue:32
+#: src/components/action-nas/webdav/index.vue:33
+msgid "账号用户名"
+msgstr ""
+
+#: src/utils/app.ts:70
+msgid "正在安装中..."
+msgstr ""
+
+#: src/components/action-raid/setup-create.vue:61
+msgid "正在创建中..."
+msgstr ""
+
+#: src/pages/index/nas/disk/index.vue:41
+msgid "正在获取磁盘信息..."
+msgstr ""
+
+#: src/components/action-sandbox/index.vue:14
+msgid "正在加载中..."
+msgstr ""
+
+#: src/components/action-ddnsto/setup-ddnsto-run.vue:31
+msgid "正在检测插件是否已启动..."
+msgstr ""
+
+#: src/components/action-ddnsto/setup-ddnsto-install.vue:55
+msgid "正在检测中..."
+msgstr ""
+
+#: src/components/action-netip/index.vue:224
+msgid "正在配置…请稍等"
+msgstr ""
+
+#: src/components/action-docker/index.vue:150
+msgid "正在迁移中..."
+msgstr ""
+
+#: src/components/action-softwaresource/index.vue:113
+msgid "正在切换中..."
+msgstr ""
+
+#: src/components/action-sandboxenvironment/index.vue:112
+msgid "执行中..."
+msgstr ""
+
+#: src/components/action-disk-part/item.vue:33
+#: src/components/action-disk-part/item.vue:34
+#: src/components/action-disk-part/item.vue:35
+msgid "只读"
+msgstr ""
+
+#: src/components/action-raid/setup-create.vue:126
+msgid "至少需要2块硬盘，“区块延展”功能是将数据分成多个块，并将数据块分散到组成的多个硬盘上以提高性能的过程。不提供数据冗余。"
+msgstr ""
+
+#: src/components/action-raid/setup-create.vue:120
+msgid "至少需要2块硬盘，将多个硬盘合并为单个存储空间，其容量等于所有硬盘容量的总和。不提供数据冗余。"
+msgstr ""
+
+#: src/components/action-raid/setup-create.vue:132
+msgid "至少需要2块硬盘，同时向所有硬盘写入相同的数据。提供数据冗余。"
+msgstr ""
+
+#: src/components/action-raid/setup-create.vue:138
+msgid "至少需要3块硬盘，执行段落分块延展，并对分布到所有组成硬盘上的数据执行奇偶校验，从而提供比 RAID 1 更有效的数据冗余。"
+msgstr ""
+
+#: src/components/action-raid/setup-create.vue:150
+msgid "至少需要4块硬盘，提供 RAID 0 的性能和 RAID 1 的数据保护级别，将硬盘组合进镜像数据的由两个硬盘组成的组。"
+msgstr ""
+
+#: src/components/action-raid/setup-create.vue:144
+msgid "至少需要4块硬盘，执行两个层级的数据奇偶校验以存储等于 2 个硬盘容量的冗余数据，提供比 RAID 5 更大程度的数据冗余。"
+msgstr ""
+
+#: src/components/action-dns/index.vue:104
+msgid "至少需要填写一个DNS"
+msgstr ""
+
+#: src/pages/index/nav/index.vue:8
+#: src/pages/index/nav/index.vue:9
+msgid "终端"
+msgstr ""
+
+#: src/components/action-raid/setup-create.vue:72
+msgid "重新创建"
+msgstr ""
+
+#: src/components/action-sandboxenvironment/index.vue:22
+#: src/components/action-sandboxenvironment/index.vue:23
+#: src/components/action-sandboxenvironment/index.vue:24
+msgid "重置"
+msgstr ""
+
+#: src/components/action-sandboxenvironment/index.vue:92
+msgid "重置中..."
+msgstr ""
+
+#: src/pages/raid/index/index.vue:28
+#: src/pages/smart/index/index.vue:90
+msgid "状态"
+msgstr ""
+
+#: src/components/action-dns/index.vue:16
+msgid "自定义DNS"
+msgstr ""
+
+#: src/pages/index/network/info.vue:326
+msgid "自动获取"
+msgstr ""
+
+#: src/pages/network/gateway/index.vue:71
+msgid "自动获取 IPV6（即开启 DHCPv6 客户端）"
+msgstr ""
+
+#: src/pages/network/dhcp/index.vue:51
+msgid "自动获取（DHCP）"
+msgstr ""
+
+#: src/components/action-dns/index.vue:15
+msgid "自动获取DNS"
+msgstr ""
+
+#: src/pages/network/dhcp/index.vue:17
+msgid "自动获取IP地址（DHCP）"
+msgstr ""
+
+#: src/pages/index/nav/index.vue:28
+msgid "自动检查更新"
+msgstr ""
+
+#: src/pages/network/gateway/index.vue:13
+msgid "自动配置..."
+msgstr ""
+
+#: src/pages/network/gateway/index.vue:115
+msgid "自动填写..."
+msgstr ""
+
+#: src/components/action-download/index.vue:102
+msgid "自己添加"
+msgstr ""
+
+#: src/components/smart/disk-info.vue:19
+msgid "自检日志"
+msgstr ""
+
+#: src/components/smart/edit-disk.vue:33
+#: src/pages/smart/index/index.vue:60
+msgid "自上次报告以来温度变化至少 N 度，则需报告."
+msgstr ""
+
+#: src/pages/network/dhcp/index.vue:32
+#: src/pages/network/dhcp/index.vue:34
+#: src/pages/network/gateway/index.vue:45
+#: src/pages/network/gateway/index.vue:47
+msgid "子网掩码"
+msgstr ""
+
+#: src/pages/network/gateway/index.vue:106
+msgid "子网掩码: "
+msgstr ""
+
+#: src/pages/smart/index/index.vue:33
+msgid "总是"
+msgstr ""
+
+#: src/pages/smart/index/index.vue:41
+msgid "总是-无论是什么功耗模式下都测试(检查)磁盘，当检查时，这可能会使停转的磁盘开始转动。"
+msgstr ""
+
+#: src/pages/index/nas/download/index.vue:21
+msgid "Aria2高级配置"
+msgstr ""
+
+#: src/pages/index/system/index.vue:28
+msgid "CPU使用率"
+msgstr ""
+
+#: src/pages/index/system/index.vue:20
+msgid "CPU温度"
+msgstr ""
+
+#: src/components/action-domain/setup-index.vue:10
+msgid "DDNSTO"
+msgstr ""
+
+#: src/components/action-domain/setup-index.vue:12
+msgid "DDNSTO 是一个不需要公网IP也可以在外网访问的穿透域名服务，一个浏览器搞定内网穿透，远程访问Openwrt、远程终端、远程桌面..."
+msgstr ""
+
+#: src/components/action-ddnsto/setup-ddnsto-save.vue:18
+msgid "DDNSTO控制台"
+msgstr ""
+
+#: src/components/action-netip/index.vue:220
+msgid "DHCP的IP池格式错误或超出子网范围"
+msgstr ""
+
+#: src/components/action-edit/index.vue:27
+msgid "DHCP客户端"
+msgstr ""
+
+#: src/pages/network/dhcp/index.vue:48
+msgid "DNS 配置方式"
+msgstr ""
+
+#: src/pages/index/network/info.vue:56
+msgid "DNS错误"
+msgstr ""
+
+#: src/pages/network/dhcp/index.vue:59
+#: src/pages/network/dhcp/index.vue:61
+#: src/pages/network/dhcp/index.vue:68
+#: src/pages/network/dhcp/index.vue:70
+#: src/pages/network/gateway/index.vue:57
+msgid "DNS服务器"
+msgstr ""
+
+#: src/pages/network/gateway/index.vue:108
+msgid "DNS服务器: "
+msgstr ""
+
+#: src/components/action-dns/index.vue:23
+msgid "DNS服务器地址"
+msgstr ""
+
+#: src/components/action-dns/index.vue:47
+#: src/components/action-dns/index.vue:6
+#: src/pages/index/nav/index.vue:39
+#: src/pages/index/nav/index.vue:40
+#: src/pages/index/nav/index.vue:41
+#: src/pages/index/network/info.vue:58
+msgid "DNS配置"
+msgstr ""
+
+#: src/components/action-dns/index.vue:50
+msgid "DNS配置已保存"
+msgstr ""
+
+#: src/components/action-dns/index.vue:11
+msgid "DNS选项"
+msgstr ""
+
+#: src/components/action-domain/setup-ddns.vue:20
+msgid "dnspod"
+msgstr ""
+
+#: src/components/action-domain/setup-index.vue:26
+msgid "Dnspod"
+msgstr ""
+
+#: src/pages/index/nas/docker/index.vue:20
+msgid "Docker高级配置"
+msgstr ""
+
+#: src/components/action-docker/index.vue:7
+#: src/pages/index/nas/docker/status.vue:24
+msgid "Docker根目录："
+msgstr ""
+
+#: src/pages/index/nas/docker/index.vue:11
+msgid "Docker管理"
+msgstr ""
+
+#: src/components/action-docker/index.vue:4
+#: src/components/action-docker/index.vue:50
+#: src/components/action-docker/index.vue:60
+msgid "Docker迁移向导"
+msgstr ""
+
+#: src/pages/network/gateway/index.vue:39
+msgid "IP 地址"
+msgstr ""
+
+#: src/pages/network/gateway/index.vue:105
+msgid "IP 地址: "
+msgstr ""
+
+#: src/components/action-netip/index.vue:48
+msgid "IP池结束地址"
+msgstr ""
+
+#: src/components/action-netip/index.vue:39
+msgid "IP池起始地址"
+msgstr ""
+
+#: src/pages/index/network/info.vue:216
+#: src/pages/network/dhcp/index.vue:24
+#: src/pages/network/gateway/index.vue:41
+msgid "IP地址"
+msgstr ""
+
+#: src/components/action-domain/setup-ddns.vue:41
+msgid "IP地址版本："
+msgstr ""
+
+#: src/components/action-domain/setup-ddns.vue:45
+#: src/components/action-netip/index.vue:11
+msgid "IPv4地址"
+msgstr ""
+
+#: src/components/action-netip/index.vue:195
+#: src/components/action-netip/index.vue:212
+msgid "IPv4地址格式错误"
+msgstr ""
+
+#: src/components/action-netip/index.vue:21
+msgid "IPv4子网掩码"
+msgstr ""
+
+#: src/components/action-netip/index.vue:199
+#: src/components/action-netip/index.vue:216
+msgid "IPv4子网掩码格式错误"
+msgstr ""
+
+#: src/components/action-domain/setup-ddns.vue:46
+msgid "IPv6地址"
+msgstr ""
+
+#: src/pages/index/index.vue:4
+msgid "iStoreOS官网"
+msgstr ""
+
+#: src/components/action-raid/setup-create.vue:119
+msgid "JBOD (线性)"
+msgstr ""
+
+#: src/pages/network/gateway/index.vue:26
+msgid "LAN 接口配置方式"
+msgstr ""
+
+#: src/pages/interfaceconfig/index.vue:256
+msgid "LAN口未关联任何物理网口，可能导致路由器失联，是否继续操作？"
+msgstr ""
+
+#: src/components/tooltip/index.vue:6
+msgid "MAC："
+msgstr ""
+
+#: src/pages/index/nas/download/index.vue:22
+msgid "qBittorrent高级配置"
+msgstr ""
+
+#: src/pages/raid/index/index.vue:6
+msgid "RAID （ Redundant Array of Independent Disks ）即独立磁盘冗余阵列，简称为「磁盘阵列」，就是用多个独立的磁盘组成在一起形成一个大的磁盘系统，从而实现比单块磁盘更好的存储性能和更高的可靠性。"
+msgstr ""
+
+#: src/components/action-raid/setup-create.vue:125
+msgid "RAID 0 (条带)"
+msgstr ""
+
+#: src/components/action-raid/setup-create.vue:131
+msgid "RAID 1 (镜像)"
+msgstr ""
+
+#: src/components/action-raid/setup-create.vue:4
+msgid "RAID创建向导"
+msgstr ""
+
+#: src/components/action-raid/setup-create.vue:8
+msgid "RAID磁盘阵列是用多个独立的磁盘组成在一起形成一个大的磁盘系统，从而实现比单块磁盘更好的存储性能和更高的可靠性。"
+msgstr ""
+
+#: src/pages/raid/index/index.vue:10
+msgid "RAID功能正在公测中，使用过程中如造成数据丢失等问题，概不负责，请谨慎使用。"
+msgstr ""
+
+#: src/pages/index/nas/disk/index.vue:23
+#: src/pages/raid/index/index.vue:3
+msgid "RAID管理"
+msgstr ""
+
+#: src/components/action-raid/setup-create.vue:12
+msgid "RAID级别："
+msgstr ""
+
+#: src/pages/index/nas/disk/index.vue:65
+msgid "RAID设备"
+msgstr ""
+
+#: src/components/action-download/index.vue:83
+msgid "RPC 令牌："
+msgstr ""
+
+#: src/pages/smart/index.vue:6
+msgid "S.M.A.R.T.，全称为“Self-Monitoring Analysis and Reporting Technology”，即“自我监测、分析及报告技术”，"
+msgstr ""
+
+#: src/pages/index/nas/disk/item.vue:22
+msgid "S.M.A.R.T异常"
+msgstr ""
+
+#: src/pages/index/nas/service/index.vue:31
+msgid "SAMBA"
+msgstr ""
+
+#: src/pages/index/nas/service/index.vue:19
+msgid "SAMBA高级配置"
+msgstr ""
+
+#: src/components/action-nas/samba/index.vue:6
+msgid "Samba共享配置"
+msgstr ""
+
+#: src/pages/index/nas/download/index.vue:23
+msgid "Transmission高级配置"
+msgstr ""
+
+#: src/pages/network/dhcp/index.vue:14
+msgid "WAN 接口配置方式"
+msgstr ""
+
+#: src/pages/index/nas/service/index.vue:34
+msgid "WEBDAV"
+msgstr ""
+
+#: src/pages/index/nas/service/index.vue:20
+msgid "WebDAV高级配置"
+msgstr ""
+
+#: src/components/action-nas/webdav/index.vue:6
+msgid "Webdav共享配置"
+msgstr ""

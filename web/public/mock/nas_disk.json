@@ -1,0 +1,483 @@
+{
+    "result": {
+        "disks": [
+            {
+                "childrens": [
+                    {
+                        "filesystem": "ext4",
+                        "isDockerRoot": true,
+                        "isSystemRoot": true,
+                        "mountPoint": "/overlay",
+                        "name": "vda3",
+                        "path": "/dev/vda3",
+                        "sizeInt": "2147483648",
+                        "total": "2.0 GiB",
+                        "used": "11.5 MiB",
+                        "uuid": "c681d440-8845-47c4-80eb-549c3dc571ab"
+                    },
+                    {
+                        "filesystem": "Free Space",
+                        "name": "Free Space",
+                        "sizeInt": "1744585728",
+                        "total": "1.6 GiB"
+                    }
+                ],
+                "isDockerRoot": true,
+                "isExternalDisk": true,
+                "isSystemRoot": true,
+                "members": null,
+                "name": "vda",
+                "partLabelType": "GPT",
+                "path": "/dev/vda",
+                "size": "4.0 GiB",
+                "sizeInt": "4294967296",
+                "total": "2.4 GiB",
+                "tranName": "virtio",
+                "usage": 6,
+                "used": "168.3 MiB",
+                "usedInt": "176439296",
+                "venderModel": "0x1af4"
+            },
+            {
+                "childrens": [
+                    {
+                        "filesystem": "ext4",
+                        "name": "vdb1",
+                        "path": "/dev/vdb1",
+                        "sizeInt": "209715200",
+                        "total": "200.0 MiB",
+                        "used": "0 B",
+                        "uuid": "c1fa30cb-bf5e-4b7c-95e5-df78ecb49027"
+                    },
+                    {
+                        "filesystem": "ext4",
+                        "name": "vdb2",
+                        "path": "/dev/vdb2",
+                        "sizeInt": "16969088512",
+                        "total": "15.8 GiB",
+                        "used": "0 B",
+                        "uuid": "250460ce-fbfd-41c0-98b8-284eb037f126"
+                    }
+                ],
+                "isExternalDisk": true,
+                "members": null,
+                "name": "vdb",
+                "partLabelType": "GPT",
+                "path": "/dev/vdb",
+                "size": "16.0 GiB",
+                "sizeInt": "17179869184",
+                "total": "16.0 GiB",
+                "tranName": "virtio",
+                "used": "0 B",
+                "usedInt": "0",
+                "venderModel": "0x1af4"
+            },
+            {
+                "childrens": [
+                    {
+                        "filesystem": "ext4",
+                        "isDockerRoot": true,
+                        "mountPoint": "/mnt/sda1",
+                        "name": "sda1",
+                        "path": "/dev/sda1",
+                        "sizeInt": "6001173463040",
+                        "total": "5.5T",
+                        "used": "0B",
+                        "uuid": "e04e463b-cff6-46a7-a536-fecb151446a8"
+                    }
+                ],
+                "isDockerRoot": true,
+                "name": "sda",
+                "path": "/dev/sda",
+                "size": "5.5T",
+                "sizeInt": "6001175126016",
+                "total": "5.5T",
+                "used": "0B",
+                "venderModel": "ATA ST6000VM000-2BC1"
+            },
+            {
+                "childrens": [
+                    {
+                        "filesystem": "ext4",
+                        "name": "sda1",
+                        "path": "/dev/sda1",
+                        "sizeInt": "6001173463040",
+                        "total": "5.5T",
+                        "used": "0B",
+                        "uuid": "e04e463b-cff6-46a7-a536-fecb151446a8"
+                    }
+                ],
+                "name": "sda",
+                "path": "/dev/sda",
+                "size": "5.5T",
+                "sizeInt": "6001175126016",
+                "total": "5.5T",
+                "used": "0B",
+                "venderModel": "ATA ST6000VM000-2BC1"
+            },
+            {
+                "childrens": [
+                    {
+                        "filesystem": "ext4",
+                        "name": "sda1",
+                        "path": "/dev/sda1",
+                        "sizeInt": "6001173463040",
+                        "total": "5.5T",
+                        "used": "0B",
+                        "uuid": "e04e463b-cff6-46a7-a536-fecb151446a8"
+                    },
+                    {
+                        "filesystem": "ext4",
+                        "name": "sda1",
+                        "path": "/dev/sda1",
+                        "sizeInt": "6001173463040",
+                        "total": "5.5T",
+                        "used": "0B",
+                        "uuid": "e04e463b-cff6-46a7-a536-fecb151446a8"
+                    }
+                ],
+                "name": "sda",
+                "path": "/dev/sda",
+                "size": "5.5T",
+                "sizeInt": "6001175126016",
+                "total": "5.5T",
+                "used": "0B",
+                "venderModel": "ATA ST6000VM000-2BC1"
+            },
+            {
+                "childrens": [],
+                "name": "sdb",
+                "path": "/dev/sdb",
+                "size": "5.5T",
+                "sizeInt": "6001175126016",
+                "total": "5.5T",
+                "used": "0B",
+                "venderModel": "New Disk ???"
+            },
+            {
+                "childrens": [
+                    {
+                        "filesystem": "ntfs",
+                        "mountPoint": "/mnt/sda1",
+                        "name": "sda1",
+                        "path": "/dev/sda1",
+                        "sizeInt": "6001173463040",
+                        "total": "5.5T",
+                        "used": "0B",
+                        "uuid": "e04e463b-cff6-46a7-a536-fecb151446a8",
+                        "isReadOnly": true
+                    },
+                    {
+                        "filesystem": "ntfs",
+                        "name": "sda2",
+                        "path": "/dev/sda2",
+                        "sizeInt": "6001173463040",
+                        "total": "5.5T",
+                        "used": "0B",
+                        "uuid": "e04e463b-cff6-46a7-a536-fecb151446a8"
+                    }
+                ],
+                "name": "sda",
+                "path": "/dev/sda",
+                "size": "5.5T",
+                "sizeInt": "6001175126016",
+                "total": "5.5T",
+                "used": "0B",
+                "venderModel": "Windows"
+            },
+            {
+                "childrens": [
+                    {
+                        "filesystem": "ntfs",
+                        "mountPoint": "/mnt/sda1",
+                        "name": "sda1",
+                        "path": "/dev/sda1",
+                        "sizeInt": "6001173463040",
+                        "total": "5.5T",
+                        "used": "0B",
+                        "uuid": "e04e463b-cff6-46a7-a536-fecb151446a8",
+                        "isReadOnly": true
+                    },
+                    {
+                        "filesystem": "ntfs",
+                        "name": "sda1",
+                        "path": "/dev/sda1",
+                        "sizeInt": "6001173463040",
+                        "total": "5.5T",
+                        "used": "0B",
+                        "uuid": "e04e463b-cff6-46a7-a536-fecb151446a8"
+                    }
+                ],
+                "name": "sda",
+                "path": "/dev/sda",
+                "size": "5.5T",
+                "sizeInt": "6001175126016",
+                "total": "5.5T",
+                "used": "0B",
+                "venderModel": "Windows2"
+            },
+            {
+                "childrens": [
+                    {
+                        "filesystem": "squashfs",
+                        "mountPoint": "/rom",
+                        "name": "mmcblk0p1",
+                        "path": "/dev/mmcblk0p1",
+                        "sizeInt": "134209536",
+                        "total": "128.0M",
+                        "usage": 100,
+                        "used": "128.0M"
+                    },
+                    {
+                        "filesystem": "ext4",
+                        "isSystemRoot": true,
+                        "mountPoint": "/overlay",
+                        "name": "mmcblk0p2",
+                        "path": "/dev/mmcblk0p2",
+                        "sizeInt": "7381966848",
+                        "total": "6.9G",
+                        "usage": 12,
+                        "used": "844.8M",
+                        "uuid": "b65e0ba8-95df-4ba8-9c78-abd59020185b"
+                    }
+                ],
+                "isSystemRoot": true,
+                "name": "mmcblk0",
+                "path": "/dev/mmcblk0",
+                "size": "7.3G",
+                "sizeInt": "7818182656",
+                "total": "7.0G",
+                "usage": 13,
+                "used": "972.8M",
+                "venderModel": "mmcblk0"
+            },
+            {
+                "childrens": [
+                    {
+                        "filesystem": "squashfs",
+                        "mountPoint": "/rom",
+                        "name": "mmcblk0p1",
+                        "path": "/dev/mmcblk0p1",
+                        "sizeInt": "134209536",
+                        "total": "128.0M",
+                        "usage": 100,
+                        "used": "128.0M"
+                    },
+                    {
+                        "filesystem": "ext4",
+                        "isSystemRoot": true,
+                        "mountPoint": "/overlay",
+                        "name": "mmcblk0p2",
+                        "path": "/dev/mmcblk0p2",
+                        "sizeInt": "7381966848",
+                        "total": "6.9G",
+                        "usage": 12,
+                        "used": "844.8M",
+                        "uuid": "b65e0ba8-95df-4ba8-9c78-abd59020185b"
+                    }
+                ],
+                "isDockerRoot": true,
+                "isSystemRoot": true,
+                "name": "mmcblk0",
+                "path": "/dev/mmcblk0",
+                "size": "7.3G",
+                "sizeInt": "7818182656",
+                "total": "7.0G",
+                "usage": 13,
+                "used": "972.8M",
+                "venderModel": "mmcblk0"
+            },
+            {
+                "childrens": [
+                    {
+                        "filesystem": "squashfs",
+                        "mountPoint": "/rom",
+                        "name": "mmcblk0p1",
+                        "path": "/dev/mmcblk0p1",
+                        "sizeInt": "134209536",
+                        "total": "128.0M",
+                        "usage": 100,
+                        "used": "128.0M"
+                    },
+                    {
+                        "filesystem": "ext4",
+                        "isSystemRoot": true,
+                        "mountPoint": "/overlay",
+                        "name": "mmcblk0p2",
+                        "path": "/dev/mmcblk0p2",
+                        "sizeInt": "7381966848",
+                        "total": "6.9G",
+                        "usage": 12,
+                        "used": "844.8M",
+                        "uuid": "b65e0ba8-95df-4ba8-9c78-abd59020185b"
+                    },
+                    {
+                        "name": "Free Space",
+                        "filesystem": "Free Space",
+                        "sizeInt": "134209536",
+                        "total": "7.0G"
+                    }
+                ],
+                "isSystemRoot": true,
+                "name": "mmcblk0",
+                "path": "/dev/mmcblk0",
+                "size": "14G",
+                "sizeInt": "7818182656",
+                "total": "7.0G",
+                "usage": 13,
+                "used": "972.8M",
+                "venderModel": "mmcblk0"
+            },
+            {
+                "childrens": [
+                ],
+                
+                "isSystemRoot": true,
+                "partLabelType": "LOOP",
+                "name": "mtdblock18",
+                "path": "/dev/mtdblock18",
+                "size": "14G",
+                "sizeInt": "7818182656",
+                "total": "7.0G",
+                "usage": 13,
+                "used": "972.8M",
+                "venderModel": "mtd系统分区隐藏"
+            },
+            {
+                "childrens": [
+                    {
+                        "filesystem": "ext4",
+                        "isSystemRoot": true,
+                        "mountPoint": "/overlay",
+                        "name": "mtdblock19",
+                        "path": "/dev/mtdblock19",
+                        "sizeInt": "7381966848",
+                        "total": "6.9G",
+                        "usage": 12,
+                        "used": "844.8M",
+                        "uuid": "b65e0ba8-95df-4ba8-9c78-abd59020185b"
+                    }
+                ],
+                "isSystemRoot": true,
+                "partLabelType": "LOOP",
+                "name": "mtdblock19",
+                "path": "/dev/mtdblock19",
+                "size": "14G",
+                "sizeInt": "7818182656",
+                "total": "7.0G",
+                "usage": 13,
+                "used": "972.8M",
+                "venderModel": "mtd单LOOP分区"
+            },
+            {
+                "childrens": [
+                    {
+                        "filesystem": "ext4",
+                        "mountPoint": "/data",
+                        "name": "mtdblock20",
+                        "path": "/dev/mtdblock20",
+                        "sizeInt": "7381966848",
+                        "total": "6.9G",
+                        "usage": 12,
+                        "used": "844.8M",
+                        "uuid": "b65e0ba8-95df-4ba8-9c78-abd59020185b"
+                    }
+                ],
+                "partLabelType": "LOOP",
+                "name": "mtdblock20",
+                "path": "/dev/mtdblock20",
+                "size": "16G",
+                "sizeInt": "7818182656",
+                "total": "16.0G",
+                "usage": 13,
+                "used": "972.8M",
+                "venderModel": "mtd非系统分区"
+            },
+            {
+                "childrens": [
+                    {
+                        "filesystem": "Free Space",
+                        "name": "Free Space",
+                        "sizeInt": "1744585728",
+                        "total": "1.6 GiB"
+                    }
+                ],
+                "isDockerRoot": true,
+                "isExternalDisk": true,
+                "isSystemRoot": true,
+                "members": null,
+                "name": "vde",
+                "partLabelType": "GPT",
+                "path": "/dev/vde",
+                "size": "4.0 GiB",
+                "sizeInt": "4294967296",
+                "total": "2.4 GiB",
+                "tranName": "virtio",
+                "usage": 6,
+                "used": "168.3 MiB",
+                "usedInt": "176439296",
+                "venderModel": "系统盘分区隐藏且有未分区空间"
+            },
+            {
+                "childrens": [
+                ],
+                "isDockerRoot": true,
+                "isExternalDisk": true,
+                "isSystemRoot": true,
+                "members": null,
+                "name": "vdh",
+                "partLabelType": "GPT",
+                "path": "/dev/vdh",
+                "size": "4.0 GiB",
+                "sizeInt": "4294967296",
+                "total": "4.0 GiB",
+                "tranName": "virtio",
+                "usage": 6,
+                "used": "168.3 MiB",
+                "usedInt": "176439296",
+                "venderModel": "系统盘分区隐藏无未分区空间"
+            },
+            {
+                "childrens": [
+                    {
+                        "filesystem": "swap",
+                        "name": "sda1",
+                        "path": "/dev/sda1",
+                        "sizeInt": "6001173463040",
+                        "total": "5.5T",
+                        "used": "0B",
+                        "uuid": "e04e463b-cff6-46a7-a536-fecb151446a8"
+                    }
+                ],
+                "name": "sda",
+                "path": "/dev/sda",
+                "size": "5.5T",
+                "sizeInt": "6001175126016",
+                "total": "5.5T",
+                "used": "0B",
+                "venderModel": "SWAP分区未挂载"
+            },
+            {
+                "childrens": [
+                    {
+                        "filesystem": "swap",
+                        "mountPoint": "[swap]",
+                        "name": "sda1",
+                        "path": "/dev/sda1",
+                        "sizeInt": "6001173463040",
+                        "total": "5.5T",
+                        "used": "0B",
+                        "uuid": "e04e463b-cff6-46a7-a536-fecb151446a8"
+                    }
+                ],
+                "name": "sda",
+                "path": "/dev/sda",
+                "size": "5.5T",
+                "sizeInt": "6001175126016",
+                "total": "5.5T",
+                "used": "0B",
+                "venderModel": "SWAP分区已挂载"
+            }
+        ]
+    }
+}

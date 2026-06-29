@@ -1,0 +1,202 @@
+@hostname22  = 192.168.9.1
+@hostname  = 192.168.10.109
+@hostname444  = 192.168.100.1
+@port = 3000
+@host = {{hostname}}:{{port}}
+
+
+@prePath = /cgi-bin/luci/istore
+@contentType = application/json
+@sid=testSID
+
+
+@contentType = application/json
+###
+ 
+###
+GET http://{{host}}{{prePath}}/dhcp/ 
+X-Forwarded-Sid:{{sid}}
+###
+GET http://{{host}}{{prePath}}/system/ 
+X-Forwarded-Sid:{{sid}}
+###
+GET http://{{host}}{{prePath}}/board/ 
+X-Forwarded-Sid:{{sid}}
+###
+GET http://{{host}}{{prePath}}/network/basic/ 
+X-Forwarded-Sid:{{sid}}
+###
+GET http://{{host}}{{prePath}}/network/interfaces/
+X-Forwarded-Sid:{{sid}}
+###
+GET http://{{host}}{{prePath}}/network/lan/ 
+X-Forwarded-Sid:{{sid}}
+###
+GET http://{{host}}{{prePath}}/network/wan/ 
+X-Forwarded-Sid:{{sid}}
+###
+
+
+### system
+GET http://{{host}}{{prePath}}/system/version/ 
+X-Forwarded-Sid:{{sid}}
+
+
+
+###
+GET http://{{host}}{{prePath}}/system/time/ 
+X-Forwarded-Sid:{{sid}}
+
+###
+GET http://{{host}}{{prePath}}/system/cpu/status/ 
+X-Forwarded-Sid:{{sid}}
+
+###
+GET http://{{host}}{{prePath}}/system/cpu/temperature/
+X-Forwarded-Sid:{{sid}}
+###
+GET http://{{host}}{{prePath}}/system/memery/status/
+X-Forwarded-Sid:{{sid}}
+###
+GET http://{{host}}{{prePath}}/system/check-update/
+X-Forwarded-Sid:{{sid}}
+###  network
+GET http://{{host}}{{prePath}}/network/statistics/
+X-Forwarded-Sid:{{sid}}
+###
+GET http://{{host}}{{prePath}}/network/status/
+X-Forwarded-Sid:{{sid}}
+###
+GET http://{{host}}{{prePath}}/network/device/list/
+X-Forwarded-Sid:{{sid}}
+
+
+
+###app 
+POST  http://{{host}}{{prePath}}/app/check/
+X-Forwarded-Sid:{{sid}}
+Content-Type: application/json
+
+{
+    "name": "zerotier"
+}
+### 
+POST http://{{host}}{{prePath}}/app/install/
+X-Forwarded-Sid:{{sid}}
+Content-Type: application/json
+
+{
+    "name": "app-meta-zerotier"
+}
+ 
+###
+GET http://{{host}}{{prePath}}/guide/pppoe/
+###
+POST http://{{host}}{{prePath}}/guide/pppoe/
+X-Forwarded-Sid:{{sid}}
+Content-Type: application/json
+
+{
+    "account": "07551200714155@163.gd",
+    "password": "12345633333"
+} 
+###
+GET http://{{host}}{{prePath}}/guide/client-mode/
+
+###
+POST http://{{host}}{{prePath}}/guide/client-mode/
+X-Forwarded-Sid:{{sid}}
+Content-Type: application/json
+
+{
+    "wanProto":"dhcp",
+    "dnsProto": "manual",
+    "staticDNSIP":"114.114.114.114",
+    "staticIp":"192.168.9.224",
+    "subnetMask":"255.255.255.0"
+}
+ 
+###
+POST http://{{host}}{{prePath}}/guide/gateway-router/
+X-Forwarded-Sid:{{sid}}
+Content-Type: application/json
+
+{
+     
+    "dnsProto": "manual",
+    "staticDnsIp":"114.114.114.114",
+    "staticLanIp":"192.168.100.1",
+    "subnetMask":"255.255.255.0"
+}
+
+
+### 
+GET http://{{host}}{{prePath}}/guide/dns-config/
+ X-Forwarded-Sid:{{sid}}
+
+###
+
+POST http://{{host}}{{prePath}}/guide/dns-config/
+X-Forwarded-Sid:{{sid}}
+Content-Type: application/json
+
+{
+    "dnsProto": "auto",
+    "manualDnsIp":["114.114.114.114","8.8.8.8"]
+}
+
+
+
+### NAS
+GET http://{{host}}{{prePath}}/nas/disk/status/:
+ 
+
+  /cgi-bin/luci/istore/nas/service/status/:
+   
+
+  /cgi-bin/luci/istore/nas/disk/erase:
+    
+  
+  /cgi-bin/luci/istore/nas/samba/create:
+   
+
+  /cgi-bin/luci/istore/nas/webdav/create:
+ 
+
+
+
+
+
+# 192.168.9.1
+# network.wan=interface
+# network.wan._orig_ifname='eth1'
+# network.wan._orig_bridge='false'
+# network.wan.proto='pppoe'
+# network.wan.username='07551200714155@163.gd'
+# network.wan.password='ARDKOLQW'
+# network.wan.ifname='eth0'
+# network.wan.ipv6='auto'
+# network.wan.dns='114.114.114.114'
+
+
+
+
+
+###
+
+# static
+# network.wan=interface
+# network.wan.ifname='eth0'
+# network.wan._orig_ifname='eth0'
+# network.wan._orig_bridge='false'
+# network.wan.proto='static'
+# network.wan.netmask='255.255.255.0'
+# network.wan.ipaddr='192.168.9.110'
+
+# dhcp
+# network.wan=interface
+# network.wan.ifname='eth0'
+# network.wan._orig_ifname='eth0'
+# network.wan._orig_bridge='false'
+# network.wan.proto='dhcp'
+# network.wan.hostname='ARS2-9.114'
