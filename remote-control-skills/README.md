@@ -93,7 +93,7 @@ tar.gz 输出：
 确认后执行类似流程：
 
 ```sh
-url="https://example.com/remote-control-skills.zip"
+url="https://fw0.koolcenter.com/iStoreOS/alpha/skills/remote-control-skills.zip"
 sha256="<expected-sha256>"
 tmp="${TMPDIR:-/tmp}/remote-control-skills-install"
 
