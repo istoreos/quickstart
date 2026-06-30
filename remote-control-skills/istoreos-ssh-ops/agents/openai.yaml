@@ -1,0 +1,4 @@
+interface:
+  display_name: "iStoreOS SSH Ops"
+  short_description: "Safely inspect iStoreOS/OpenWrt routers over SSH"
+  default_prompt: "Use $istoreos-ssh-ops to connect to an iStoreOS/OpenWrt router by SSH, run read-only diagnostics, and route fixes to the right specialized skill."

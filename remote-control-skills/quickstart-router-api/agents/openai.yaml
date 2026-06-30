@@ -1,0 +1,4 @@
+interface:
+  display_name: "QuickStart Router API"
+  short_description: "Safely control QuickStart router APIs"
+  default_prompt: "Use $quickstart-router-api to inspect and safely control a QuickStart router by API."
