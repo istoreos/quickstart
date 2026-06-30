@@ -1,3 +1,3 @@
 package api
 
-const VERSION = "0.12.2"
+const VERSION = "0.13.0"
