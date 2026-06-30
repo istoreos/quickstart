@@ -5,9 +5,6 @@ PROJECT_ROOT := $(CURDIR)
 BACKEND_ROOT := $(PROJECT_ROOT)/backend
 BUILD_DIR ?= $(PROJECT_ROOT)/bin
 LOCAL_BINARY ?= $(BUILD_DIR)/quickstart.amd64
-SKILLS_ROOT := $(PROJECT_ROOT)/remote-control-skills
-SKILLS_ZIP ?= $(PROJECT_ROOT)/remote-control-skills.zip
-SKILLS_TARGZ ?= $(PROJECT_ROOT)/remote-control-skills.tar.gz
 
 DEPLOY_TARGET ?=
 SSH_TARGET ?=
@@ -20,12 +17,11 @@ REMOTE_SERVICE ?=
 REMOTE_LOG_COMMAND ?=
 ROLLBACK_RELEASE ?=
 
-export PROJECT_ROOT BACKEND_ROOT BUILD_DIR GO LOCAL_BINARY SKILLS_ROOT SKILLS_ZIP SKILLS_TARGZ
+export PROJECT_ROOT BACKEND_ROOT BUILD_DIR GO LOCAL_BINARY
 export DEPLOY_TARGET SSH_TARGET SSH_PORT SSH_EXTRA_OPTS
 export REMOTE_BINARY REMOTE_TMP REMOTE_BACKUP_DIR REMOTE_SERVICE REMOTE_LOG_COMMAND ROLLBACK_RELEASE
 
 .PHONY: help fmt tidy test build build-amd64 build-arm64 build-armv7 release clean
-.PHONY: skills-package skills-zip skills-targz skills-package-all clean-skills-package
 .PHONY: ops-targets ops-show-selected ops-release ops-init-selected ops-preflight-selected ops-deploy-selected ops-verify-selected ops-rollback-selected test-ops
 
 help:
@@ -37,11 +33,6 @@ help:
 		'  build                  Build linux amd64/arm64/armv7 binaries' \
 		'  build-amd64            Build the target-device amd64 binary' \
 		'  release                Build release tarball and sha256' \
-		'  skills-package         Alias for skills-zip' \
-		'  skills-zip             Package remote-control-skills.zip and sha256' \
-		'  skills-targz           Package remote-control-skills.tar.gz and sha256' \
-		'  skills-package-all     Package remote-control-skills as zip and tar.gz' \
-		'  clean-skills-package   Remove generated skill package archives' \
 		'  ops-targets            List .it-runner deployment targets' \
 		'  ops-show-selected      Show resolved deployment target' \
 		'  ops-release            Alias for release' \
@@ -75,20 +66,6 @@ build-armv7:
 release:
 	./scripts/ops/release.sh
 
-skills-package: skills-zip
-
-skills-zip:
-	sh $(SKILLS_ROOT)/package.sh --zip $(SKILLS_ZIP)
-
-skills-targz:
-	sh $(SKILLS_ROOT)/package.sh --tar.gz $(SKILLS_TARGZ)
-
-skills-package-all:
-	sh $(SKILLS_ROOT)/package.sh --all
-
-clean-skills-package:
-	rm -f $(SKILLS_ZIP) $(SKILLS_ZIP).sha256 $(SKILLS_TARGZ) $(SKILLS_TARGZ).sha256
-
 ops-targets:
 	./scripts/ops/targets.sh
 
@@ -117,4 +94,3 @@ test-ops:
 
 clean:
 	rm -rf $(BUILD_DIR)
-	rm -f $(SKILLS_ZIP) $(SKILLS_ZIP).sha256 $(SKILLS_TARGZ) $(SKILLS_TARGZ).sha256
