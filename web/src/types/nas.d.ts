@@ -89,18 +89,53 @@ declare interface NasWebdavResult {
     webdavUrl?: string //webdav服务地址
     username?: string //用户名
 }
-declare interface NasCreateSamba {
+declare interface ShareUserInfo {
+    userName?: string
+    password?: string
+}
+
+declare interface ShareUserCreateRequest {
+    userName: string
+    password: string
+}
+
+declare interface ShareUserListResponse {
+    users: ShareUserInfo[]
+}
+
+declare interface ShareServiceUserPermission {
+    userName?: string
+    ro?: boolean
+    rw?: boolean
+}
+
+declare interface ShareServiceInfo {
+    name?: string
+    path?: string
+    samba?: boolean
+    webdav?: boolean
+    users: ShareServiceUserPermission[]
+}
+
+declare interface ShareServiceCreateRequest {
+    name: string
+    path: string
+    samba: boolean
+    webdav: boolean
+    users: ShareServiceUserPermission[]
+}
+
+declare interface ShareServiceListResponse {
+    services: ShareServiceInfo[]
+}
+
+declare interface NasCreateUniShare {
     shareName: string
     username: string
     password: string
     rootPath: string
-    allowLegacy: boolean
-}
-
-declare interface NasCreateWebdav {
-    username: string
-    password: string
-    rootPath: string
+    samba: boolean
+    webdav: boolean
 }
 
 declare interface NasGetSandbox {
