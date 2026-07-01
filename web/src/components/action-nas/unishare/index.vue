@@ -1,7 +1,7 @@
 <template>
     <action-component :type="1">
         <transition name="rotate" mode="out-in">
-            <form class="action" @submit.prevent="onSumbit">
+            <form class="action" @submit.prevent="onSubmit">
                 <div class="action-header">
                     <div class="action-header_title">{{ $gettext("局域网文件共享配置") }}</div>
                 </div>
@@ -100,14 +100,32 @@ const unishare = ref<NasCreateUniShare>({
     webdav: true
 })
 
-const onSumbit = () => {
+const validateShareName = (shareName: string) => {
+    if (shareName == "") {
+        Toast.Warning($gettext("共享名称不能为空"))
+        return false
+    }
+    if (shareName.length > 15) {
+        Toast.Warning($gettext("共享名称不能超过15个字符"))
+        return false
+    }
+    if (!/^[a-z][a-z0-9_-]*$/.test(shareName)) {
+        Toast.Warning($gettext("共享名称需以小写字母开头，仅支持小写字母、数字、下划线和中划线"))
+        return false
+    }
+    return true
+}
+
+const onSubmit = async () => {
+    if (disabled.value) {
+        return
+    }
     const _unishare = unishare.value
     if (_unishare.rootPath == "") {
         Toast.Warning($gettext("共享路径不能为空"))
         return
     }
-    if (_unishare.shareName == "") {
-        Toast.Warning($gettext("共享名称不能为空"))
+    if (!validateShareName(_unishare.shareName)) {
         return
     }
     if (_unishare.username == "") {
@@ -127,7 +145,7 @@ const onSumbit = () => {
         Toast.Warning(`${checkname}`)
         return
     }
-    onCreateUniShare(_unishare)
+    await onCreateUniShare(_unishare)
 }
 
 const checkResponse = (res: { data?: { error?: string } } | undefined) => {
@@ -140,7 +158,17 @@ const checkResponse = (res: { data?: { error?: string } } | undefined) => {
 const onCreateUniShare = async (_unishare: NasCreateUniShare) => {
     disabled.value = true
     const load = Toast.Loading($gettext("创建中..."))
+    let success = false
     try {
+        const servicesRes = await request.Share.Service.List.GET()
+        checkResponse(servicesRes)
+        const services = servicesRes?.data?.result?.services || []
+        const serviceExists = services.some(item => item.name == _unishare.shareName)
+        if (serviceExists) {
+            Toast.Warning($gettext("共享名称已存在，请更换共享名"))
+            return
+        }
+
         const userName = _unishare.username
         const userPayload: ShareUserCreateRequest = {
             userName,
@@ -165,24 +193,22 @@ const onCreateUniShare = async (_unishare: NasCreateUniShare) => {
                 rw: true
             }]
         }
-        const servicesRes = await request.Share.Service.List.GET()
-        checkResponse(servicesRes)
-        const services = servicesRes?.data?.result?.services || []
-        const serviceExists = services.some(item => item.name == _unishare.shareName)
-        const serviceRes = serviceExists
-            ? await request.Share.Service.Update.POST(servicePayload)
-            : await request.Share.Service.Create.POST(servicePayload)
+        const serviceRes = await request.Share.Service.Create.POST(servicePayload)
         checkResponse(serviceRes)
 
         Toast.Success($gettext("创建成功"))
+        success = true
         window.setTimeout(() => {
             location.reload();
         }, 1000)
     } catch (error) {
         Toast.Error(error as string)
+    } finally {
+        load.Close()
+        if (!success) {
+            disabled.value = false
+        }
     }
-    load.Close()
-    disabled.value = false
 }
 </script>
 <style lang="scss" scoped>
