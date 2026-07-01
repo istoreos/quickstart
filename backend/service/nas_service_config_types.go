@@ -1,23 +1,19 @@
 package service
 
-import "github.com/istoreos/quickstart/backend/modules/nas/serviceconfig"
+import (
+	"context"
 
-type NasSambaCreateInput = serviceconfig.SambaCreateInput
+	"github.com/istoreos/quickstart/backend/models"
+)
 
-type NasWebdavCreateInput = serviceconfig.WebdavCreateInput
-
-type NasServiceStatusReader = serviceconfig.StatusReader
-
-type NasServiceRuntimeReader = serviceconfig.RuntimeReader
-
-type NasServiceConfigWriter = serviceconfig.ConfigWriter
-
-type NasSambaTemplateWriter = serviceconfig.SambaTemplateWriter
-
-func buildNasSambaURL(ipv4addr string, shareName string) string {
-	return serviceconfig.BuildSambaURL(ipv4addr, shareName)
+type NasServiceStatusReader interface {
+	ReadSambaShares() []*models.NasServiceSambaInfo
+	ReadWebdavPort() (string, bool)
+	ReadWebdavInfo() models.NasServiceWebdavInfo
+	ReadLinkeaseInfo(ctx context.Context) (enabledByConfig bool, port string, err error)
 }
 
-func buildNasWebdavURL(ipv4addr string, port string) string {
-	return serviceconfig.BuildWebdavURL(ipv4addr, port)
+type NasServiceRuntimeReader interface {
+	ReadLANIPv4(ctx context.Context) (string, error)
+	HasLinkeaseBinary() bool
 }

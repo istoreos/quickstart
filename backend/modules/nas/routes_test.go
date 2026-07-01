@@ -9,9 +9,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/julienschmidt/httprouter"
 	"github.com/istoreos/quickstart/backend/internal/httpapi"
 	"github.com/istoreos/quickstart/backend/models"
+	"github.com/julienschmidt/httprouter"
 )
 
 type fakeNasBackend struct {
@@ -148,36 +148,6 @@ func (backend *fakeNasBackend) PostNasDiskPartMount(ctx context.Context, r *http
 	return &models.NasDiskPartitionMountResponse{}, nil
 }
 
-func (backend *fakeNasBackend) PostNasDiskSambaCreate(ctx context.Context, r *http.Request) (*models.NasSambaCreateResponse, error) {
-	backend.recordRequest("sambaCreate", r)
-	if backend.err != nil {
-		return nil, backend.err
-	}
-	return &models.NasSambaCreateResponse{
-		Result: &models.NasSambaCreateResponseResult{SambaURL: "smb://router/share"},
-	}, nil
-}
-
-func (backend *fakeNasBackend) PostNasDiskWebdavCreate(ctx context.Context, r *http.Request) (*models.NasWebdavCreateResponse, error) {
-	backend.recordRequest("webdavCreate", r)
-	if backend.err != nil {
-		return nil, backend.err
-	}
-	return &models.NasWebdavCreateResponse{
-		Result: &models.NasWebdavCreateResponseResult{WebdavURL: "http://router:5244"},
-	}, nil
-}
-
-func (backend *fakeNasBackend) PostNasDiskWebdavStatus(ctx context.Context, r *http.Request) (*models.NasWebdavStatusResponse, error) {
-	backend.recordRequest("webdavStatus", r)
-	if backend.err != nil {
-		return nil, backend.err
-	}
-	return &models.NasWebdavStatusResponse{
-		Result: &models.NasWebdavStatusResponseResult{Port: "5244"},
-	}, nil
-}
-
 func (backend *fakeNasBackend) PostNasDiskLinkeaseEnable(ctx context.Context, r *http.Request) (*models.NasLinkeaseEnableResponse, error) {
 	backend.recordRequest("linkeaseEnable", r)
 	if backend.err != nil {
@@ -244,24 +214,6 @@ func TestRegisterNasRoutesSuccessRoutes(t *testing.T) {
 			method:   http.MethodPost,
 			path:     "/cgi-bin/luci/istore/nas/disk/partition/mount",
 			wantCall: "diskPartMount",
-		},
-		{
-			name:     "samba create",
-			method:   http.MethodPost,
-			path:     "/cgi-bin/luci/istore/nas/samba/create",
-			wantCall: "sambaCreate",
-		},
-		{
-			name:     "webdav create",
-			method:   http.MethodPost,
-			path:     "/cgi-bin/luci/istore/nas/webdav/create",
-			wantCall: "webdavCreate",
-		},
-		{
-			name:     "webdav status",
-			method:   http.MethodGet,
-			path:     "/cgi-bin/luci/istore/nas/webdav/status/",
-			wantCall: "webdavStatus",
 		},
 		{
 			name:     "linkease enable",
@@ -334,6 +286,28 @@ func TestRegisterNasRoutesSuccessRoutes(t *testing.T) {
 				t.Fatalf("expected request path %q, got %q", tt.wantRequestPath, backend.requestPath)
 			}
 		})
+	}
+}
+
+func TestRegisterRoutesDoesNotExposeLegacyNasShareQuickCreate(t *testing.T) {
+	router := httprouter.New()
+	RegisterRoutes(router, &fakeNasBackend{})
+
+	cases := []struct {
+		method string
+		path   string
+	}{
+		{http.MethodPost, "/cgi-bin/luci/istore/nas/samba/create"},
+		{http.MethodPost, "/cgi-bin/luci/istore/nas/webdav/create"},
+		{http.MethodGet, "/cgi-bin/luci/istore/nas/webdav/status/"},
+	}
+	for _, tc := range cases {
+		req := httptest.NewRequest(tc.method, tc.path, strings.NewReader(`{}`))
+		rec := httptest.NewRecorder()
+		router.ServeHTTP(rec, req)
+		if rec.Code != http.StatusNotFound {
+			t.Fatalf("%s %s status = %d, want 404", tc.method, tc.path, rec.Code)
+		}
 	}
 }
 

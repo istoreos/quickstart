@@ -2,13 +2,10 @@ package service
 
 import (
 	"context"
-	"fmt"
-	"os"
 	"strings"
 
 	"github.com/digineo/go-uci"
 	"github.com/istoreos/quickstart/backend/models"
-	"github.com/istoreos/quickstart/backend/modules/nas/serviceconfig"
 	"github.com/istoreos/quickstart/backend/utils"
 )
 
@@ -31,14 +28,7 @@ var (
 	readNasServiceLinkeaseConfig = func(ctx context.Context, key string) ([]byte, error) {
 		return utils.BatchOutputCmd(ctx, "uci get linkease.@linkease[0]."+key, 0)
 	}
-	runNasServiceBatch = func(ctx context.Context, cmdList []string) error {
-		return utils.BatchRun(ctx, cmdList, 0)
-	}
-	runNasServiceBatchOutErr = func(ctx context.Context, cmdList []string) (string, string, error) {
-		return utils.BatchOutErr(ctx, cmdList, 0)
-	}
-	nasSambaTemplatePath = "/etc/samba/smb.conf.template"
-	hasNasServiceBinary  = func(path string) bool {
+	hasNasServiceBinary = func(path string) bool {
 		return Exists(path)
 	}
 )
@@ -156,63 +146,4 @@ func (defaultNasServiceRuntimeReader) ReadLANIPv4(ctx context.Context) (string, 
 
 func (defaultNasServiceRuntimeReader) HasLinkeaseBinary() bool {
 	return hasNasServiceBinary("/usr/sbin/linkease")
-}
-
-type defaultNasServiceConfigWriter struct{}
-
-func newDefaultNasServiceConfigWriter() NasServiceConfigWriter {
-	return defaultNasServiceConfigWriter{}
-}
-
-func (defaultNasServiceConfigWriter) PrepareSamba(ctx context.Context) error {
-	return runNasServiceBatch(ctx, []string{
-		"uci commit samba4",
-		"/etc/init.d/samba4 restart",
-	})
-}
-
-func (defaultNasServiceConfigWriter) CreateSambaUser(ctx context.Context, username string, password string) error {
-	cmdList := []string{
-		fmt.Sprintf("useradd %v -g users -s /sbin/nologin -d /dev/null", username),
-		fmt.Sprintf("echo -e \"%v\n%v\" | smbpasswd -a -s %v", password, password, username),
-	}
-	_, _, err := runNasServiceBatchOutErr(ctx, cmdList)
-	return err
-}
-
-func (defaultNasServiceConfigWriter) WriteSambaShare(ctx context.Context, input NasSambaCreateInput) error {
-	loadNasServiceConfig("samba4")
-	sambashares, _ := getNasServiceSections("samba4", "sambashare")
-	cmdList := serviceconfig.BuildSambaShareCommands(len(sambashares), input)
-	return runNasServiceBatch(ctx, cmdList)
-}
-
-func (defaultNasServiceConfigWriter) WriteWebdavConfig(ctx context.Context, input NasWebdavCreateInput) error {
-	return runNasServiceBatch(ctx, serviceconfig.BuildWebdavConfigCommands(input))
-}
-
-func (defaultNasServiceConfigWriter) RestartWebdav(ctx context.Context) error {
-	return runNasServiceBatch(ctx, []string{"/etc/init.d/gowebdav restart"})
-}
-
-type defaultNasSambaTemplateWriter struct{}
-
-func newDefaultNasSambaTemplateWriter() NasSambaTemplateWriter {
-	return defaultNasSambaTemplateWriter{}
-}
-
-func (defaultNasSambaTemplateWriter) EnableRoot() error {
-	input, err := os.ReadFile(nasSambaTemplatePath)
-	if err != nil {
-		return err
-	}
-
-	lines := strings.Split(string(input), "\n")
-	for i, line := range lines {
-		if strings.Contains(line, "invalid users") {
-			lines[i] = "#" + line
-		}
-	}
-
-	return os.WriteFile(nasSambaTemplatePath, []byte(strings.Join(lines, "\n")), 0644)
 }

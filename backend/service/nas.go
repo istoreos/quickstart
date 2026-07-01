@@ -4,9 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"io/ioutil"
-	"log"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -329,79 +328,6 @@ func NasServiceStatus(ctx context.Context) (*models.NasServiceResponse, error) {
 	return &resp, nil
 }
 
-// NasServiceSambaCreate
-func NasServiceSambaCreate(ctx context.Context, r *http.Request) (*models.NasSambaCreateResponse, error) {
-	req := models.NasSambaCreateRequest{}
-	err := getBody(&req, r)
-	if err != nil {
-		return nil, err
-	}
-	model, err := newNasSambaCreateServiceFacade().Create(ctx, NasSambaCreateInput{
-		ShareName:   req.ShareName,
-		RootPath:    req.RootPath,
-		Username:    req.Username,
-		Password:    req.Password,
-		AllowLegacy: req.AllowLegacy,
-	})
-	if err != nil {
-		return nil, err
-	}
-	resp := models.NasSambaCreateResponse{}
-	resp.Result = model
-	return &resp, nil
-}
-
-func enableRoot() {
-	filePath := "/etc/samba/smb.conf.template"
-	input, err := ioutil.ReadFile(filePath)
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	lines := strings.Split(string(input), "\n")
-
-	for i, line := range lines {
-		if strings.Contains(line, "invalid users") {
-			lines[i] = "#" + line
-		}
-	}
-	output := strings.Join(lines, "\n")
-	err = ioutil.WriteFile(filePath, []byte(output), 0644)
-	if err != nil {
-		log.Fatalln(err)
-	}
-}
-
-func NasServiceWebdavCreate(ctx context.Context, r *http.Request) (*models.NasWebdavCreateResponse, error) {
-	req := models.NasWebdavCreateRequest{}
-	err := getBody(&req, r)
-	if err != nil {
-		return nil, err
-	}
-	model, err := newNasWebdavCreateServiceFacade().Create(ctx, NasWebdavCreateInput{
-		RootPath: req.RootPath,
-		Username: req.Username,
-		Password: req.Password,
-	})
-	if err != nil {
-		return nil, err
-	}
-	resp := models.NasWebdavCreateResponse{Result: model}
-	return &resp, nil
-
-}
-
-func NasServiceWebdavStatus(ctx context.Context) (*models.NasWebdavStatusResponse, error) {
-	model, err := newNasWebdavStatusServiceFacade().Read(ctx)
-	if err != nil {
-		return nil, err
-	}
-	resp := models.NasWebdavStatusResponse{}
-	resp.Result = model
-	return &resp, nil
-
-}
-
 func NasServiceLinkeaseEnable(ctx context.Context, r *http.Request) (*models.NasLinkeaseEnableResponse, error) {
 	model, err := newNasLinkeaseEnableServiceFacade().Enable(ctx)
 	if err != nil {
@@ -490,7 +416,7 @@ func GetDiskInfoForX86Install() (*DiskInfoForX86Install, error) {
 }
 
 func readRootEnd(name string) (int64, error) {
-	start, err := ioutil.ReadFile(fmt.Sprintf("/sys/class/block/%s/start", name))
+	start, err := os.ReadFile(fmt.Sprintf("/sys/class/block/%s/start", name))
 	if err != nil {
 		return 0, err
 	}
