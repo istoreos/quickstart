@@ -245,7 +245,7 @@ declare interface NasServiceLinkeaseInfo {
 declare interface NasServiceStatus {
     // services?: ServiceModel[]
     sambas?: NasServiceSambaInfo[];
-    webdav?: NasServiceSambaInfo;
+    webdav?: NasServiceWebdavInfo;
     linkease?: NasServiceLinkeaseInfo;
 }
 declare interface NasSambaResult {
