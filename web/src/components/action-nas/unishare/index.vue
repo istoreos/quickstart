@@ -155,6 +155,17 @@ const checkResponse = (res: { data?: { error?: string } } | undefined) => {
     }
 }
 
+const mergeServiceUsers = (users: ShareServiceUserPermission[], userName: string) => {
+    const merged = users.map(item => ({ ...item }))
+    if (!merged.some(item => item.userName == userName)) {
+        merged.push({
+            userName,
+            rw: true
+        })
+    }
+    return merged
+}
+
 const onCreateUniShare = async (_unishare: NasCreateUniShare) => {
     disabled.value = true
     const load = Toast.Loading($gettext("创建中..."))
@@ -163,37 +174,43 @@ const onCreateUniShare = async (_unishare: NasCreateUniShare) => {
         const servicesRes = await request.Share.Service.List.GET()
         checkResponse(servicesRes)
         const services = servicesRes?.data?.result?.services || []
-        const serviceExists = services.some(item => item.name == _unishare.shareName)
-        if (serviceExists) {
-            Toast.Warning($gettext("共享名称已存在，请更换共享名"))
+        const existingService = services.find(item => item.name == _unishare.shareName)
+        if (existingService && existingService.path != _unishare.rootPath) {
+            Toast.Warning($gettext("共享名称已存在且路径不同，请更换共享名"))
             return
         }
 
         const userName = _unishare.username
-        const userPayload: ShareUserCreateRequest = {
-            userName,
-            password: _unishare.password
-        }
         const usersRes = await request.Share.User.List.GET()
         checkResponse(usersRes)
         const users = usersRes?.data?.result?.users || []
-        const userExists = users.some(item => item.userName == userName)
-        const userRes = userExists
-            ? await request.Share.User.Update.POST(userPayload)
-            : await request.Share.User.Create.POST(userPayload)
-        checkResponse(userRes)
+        const existingUser = users.find(item => item.userName == userName)
+        if (!existingUser) {
+            const userPayload: ShareUserCreateRequest = {
+                userName,
+                password: _unishare.password
+            }
+            const userRes = await request.Share.User.Create.POST(userPayload)
+            checkResponse(userRes)
+        } else if (existingUser.password && existingUser.password != _unishare.password) {
+            Toast.Warning($gettext("用户名已存在，将复用原密码"))
+        }
 
         const servicePayload: ShareServiceCreateRequest = {
             name: _unishare.shareName,
             path: _unishare.rootPath,
-            samba: _unishare.samba,
-            webdav: _unishare.webdav,
-            users: [{
-                userName,
-                rw: true
-            }]
+            samba: Boolean(existingService?.samba || _unishare.samba),
+            webdav: Boolean(existingService?.webdav || _unishare.webdav),
+            users: existingService
+                ? mergeServiceUsers(existingService.users || [], userName)
+                : [{
+                    userName,
+                    rw: true
+                }]
         }
-        const serviceRes = await request.Share.Service.Create.POST(servicePayload)
+        const serviceRes = existingService
+            ? await request.Share.Service.Update.POST(servicePayload)
+            : await request.Share.Service.Create.POST(servicePayload)
         checkResponse(serviceRes)
 
         Toast.Success($gettext("创建成功"))

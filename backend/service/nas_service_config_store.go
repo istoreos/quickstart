@@ -41,6 +41,9 @@ func newDefaultNasServiceStatusReader() NasServiceStatusReader {
 
 func (defaultNasServiceStatusReader) ReadSambaShares() []*models.NasServiceSambaInfo {
 	loadNasServiceConfig("unishare")
+	if !nasServiceUnishareEnabled() {
+		return nil
+	}
 
 	sections, ok := getNasServiceSections("unishare", "share")
 	if !ok {
@@ -67,12 +70,18 @@ func (defaultNasServiceStatusReader) ReadSambaShares() []*models.NasServiceSamba
 
 func (defaultNasServiceStatusReader) ReadWebdavPort() (string, bool) {
 	loadNasServiceConfig("unishare")
+	if !nasServiceUnishareEnabled() {
+		return "", false
+	}
 	return nasServiceReadWebdavPortFromUnishare()
 }
 
 func (defaultNasServiceStatusReader) ReadWebdavInfo() models.NasServiceWebdavInfo {
 	loadNasServiceConfig("unishare")
 	info := models.NasServiceWebdavInfo{}
+	if !nasServiceUnishareEnabled() {
+		return info
+	}
 	info.Port, _ = nasServiceReadWebdavPortFromUnishare()
 
 	if sections, ok := getNasServiceSections("unishare", "share"); ok {
@@ -87,6 +96,11 @@ func (defaultNasServiceStatusReader) ReadWebdavInfo() models.NasServiceWebdavInf
 		}
 	}
 	return info
+}
+
+func nasServiceUnishareEnabled() bool {
+	value, ok := getNasServiceLast("unishare", "@global[0]", "enabled")
+	return !ok || strings.TrimSpace(value) != "0"
 }
 
 func nasServiceReadWebdavPortFromUnishare() (string, bool) {

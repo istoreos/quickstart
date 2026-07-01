@@ -301,105 +301,6 @@ definitions:
       result:
         $ref: "#/definitions/PartitionInfo"
 
-  NasSambaCreateRequest:
-    type: object
-    properties:
-      shareName:
-        type: string
-        description: "共享名"
-      username:
-        type: string
-        description: "用户名"
-      password:
-        type: string
-        description: "密码" 
-      rootPath:
-        type: string
-        description: "服务根目录"
-      allowLegacy:
-        type: boolean
-        description: "允许旧协议" 
-
-  NasSambaCreateResponse:
-    type: object
-    properties:
-      success:
-        $ref: "common.yaml#/definitions/responseSuccess"
-      error:
-        $ref: "common.yaml#/definitions/responseError"
-      scope:
-        $ref: "common.yaml#/definitions/responseScope"
-      result:
-        type: object
-        properties:
-          sambaUrl:
-            type: string
-            description: "samba服务地址"
-            example:  
-          username:
-            type: string
-            description: "用户名"
-
-  NasWebdavCreateRequest:
-    type: object
-    properties:
-      username:
-        type: string
-        description: "用户名"
-      password:
-        type: string
-        description: "密码" 
-      rootPath:
-        type: string
-        description: "服务根目录"
-
-  NasWebdavCreateResponse:
-    type: object
-    properties:
-      success:
-        $ref: "common.yaml#/definitions/responseSuccess"
-      error:
-        $ref: "common.yaml#/definitions/responseError"
-      scope:
-        $ref: "common.yaml#/definitions/responseScope"
-      result:
-        type: object
-        properties:
-          webdavUrl:
-            type: string
-            description: "webdav服务地址"
-            example:  
-          username:
-            type: string
-            description: "用户名"
-          password:
-            type: string
-
-  NasWebdavStatusResponse:
-    type: object
-    properties:
-      success:
-        $ref: "common.yaml#/definitions/responseSuccess"
-      error:
-        $ref: "common.yaml#/definitions/responseError"
-      scope:
-        $ref: "common.yaml#/definitions/responseScope"
-      result:
-        type: object
-        properties:
-          webdavUrl:
-            type: string
-            description: "webdav服务地址"
-            example:  
-          path:
-            type: string
-          username:
-            type: string
-          password:
-            type: string
-          port:
-            type: string
-
   NasLinkeaseEnableResponse:
     type: object
     properties:
@@ -612,10 +513,10 @@ definitions:
         $ref: "common.yaml#/definitions/responseScope"
       result:
         $ref: "#/definitions/GlobalFolders"
-  
+
   SystemAutoCheckUpdateRequest:
     type: object
     properties:
         enable:
           type: boolean
-          description: "启用自动检查更新" 
+          description: "启用自动检查更新"

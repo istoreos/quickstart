@@ -38,6 +38,9 @@ func TestDefaultNasServiceStatusReaderReadsUniShareServices(t *testing.T) {
 		if config != "unishare" {
 			t.Fatalf("unexpected getLast config: %s", config)
 		}
+		if option == "enabled" && section == "@global[0]" {
+			return "1", true
+		}
 		values := map[string]map[string]string{
 			"@share[0]": {
 				"name": "samba-only",
@@ -103,6 +106,64 @@ func TestDefaultNasServiceStatusReaderReadsUniShareServices(t *testing.T) {
 	}
 }
 
+func TestDefaultNasServiceStatusReaderIgnoresSharesWhenUniShareDisabled(t *testing.T) {
+	originalLoadConfig := loadNasServiceConfig
+	originalGetLast := getNasServiceLast
+	originalGetSections := getNasServiceSections
+	originalGetValues := getNasServiceValues
+	defer func() {
+		loadNasServiceConfig = originalLoadConfig
+		getNasServiceLast = originalGetLast
+		getNasServiceSections = originalGetSections
+		getNasServiceValues = originalGetValues
+	}()
+
+	loadNasServiceConfig = func(config string) {
+		if config != "unishare" {
+			t.Fatalf("unexpected config load: %q", config)
+		}
+	}
+	getNasServiceLast = func(config string, section string, option string) (string, bool) {
+		if config == "unishare" && section == "@global[0]" && option == "enabled" {
+			return "0", true
+		}
+		if config == "unishare" && section == "@global[0]" && option == "webdav_port" {
+			return "8080", true
+		}
+		if config == "unishare" && section == "@share[0]" && option == "name" {
+			return "disabled", true
+		}
+		if config == "unishare" && section == "@share[0]" && option == "path" {
+			return "/mnt/disabled", true
+		}
+		t.Fatalf("unexpected getLast call: %s %s %s", config, section, option)
+		return "", false
+	}
+	getNasServiceSections = func(config string, sectionType string) ([]string, bool) {
+		if config != "unishare" || sectionType != "share" {
+			t.Fatalf("unexpected getSections call: %s %s", config, sectionType)
+		}
+		return []string{"@share[0]"}, true
+	}
+	getNasServiceValues = func(config string, section string, option string) ([]string, bool) {
+		if config != "unishare" || section != "@share[0]" || option != "proto" {
+			t.Fatalf("unexpected getValues call: %s %s %s", config, section, option)
+		}
+		return []string{"samba", "webdav"}, true
+	}
+
+	reader := newDefaultNasServiceStatusReader()
+	if shares := reader.ReadSambaShares(); len(shares) != 0 {
+		t.Fatalf("expected no Samba shares when UniShare is disabled, got %#v", shares)
+	}
+	if port, ok := reader.ReadWebdavPort(); ok || port != "" {
+		t.Fatalf("expected no WebDAV port when UniShare is disabled, got %q ok=%v", port, ok)
+	}
+	if info := reader.ReadWebdavInfo(); info.Path != "" || info.Port != "" {
+		t.Fatalf("expected no WebDAV info when UniShare is disabled, got %#v", info)
+	}
+}
+
 func TestDefaultNasServiceRuntimeReaderDelegatesToNetworkStatus(t *testing.T) {
 	originalReadNetworkStatus := readNasServiceNetworkStatus
 	defer func() {
@@ -149,6 +210,9 @@ func TestDefaultNasServiceStatusReaderReadsConfiguredUniShareWebdavPort(t *testi
 		}
 	}
 	getNasServiceLast = func(config string, section string, option string) (string, bool) {
+		if config == "unishare" && section == "@global[0]" && option == "enabled" {
+			return "1", true
+		}
 		if config == "unishare" && section == "@global[0]" && option == "webdav_port" {
 			return "6086", true
 		}
