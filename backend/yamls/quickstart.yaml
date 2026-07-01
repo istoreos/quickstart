@@ -391,62 +391,6 @@ paths:
           schema:
             $ref: "nas.yaml#/definitions/NasDiskPartitionMountResponse"
 
-  /cgi-bin/luci/istore/nas/samba/create:
-    post:
-      tags:
-        - "nas"
-      summary: "创建samba服务"
-      description: "创建samba服务"
-      produces:
-        - "application/json"
-      parameters: 
-        - in: "body"
-          name: "body"
-          description: ""
-          required: true
-          schema:
-            $ref: "nas.yaml#/definitions/NasSambaCreateRequest"
-      responses:
-        200:
-          description: "OK"
-          schema:
-            $ref: "nas.yaml#/definitions/NasSambaCreateResponse"
-
-  /cgi-bin/luci/istore/nas/webdav/create:
-    post:
-      tags:
-        - "nas"
-      summary: "创建webdav服务"
-      description: "创建webdav服务"
-      produces:
-        - "application/json"
-      parameters: 
-        - in: "body"
-          name: "body"
-          description: ""
-          required: true
-          schema:
-            $ref: "nas.yaml#/definitions/NasWebdavCreateRequest"
-      responses:
-        200:
-          description: "OK"
-          schema:
-            $ref: "nas.yaml#/definitions/NasWebdavCreateResponse"
-  
-  /cgi-bin/luci/istore/nas/webdav/status:
-    post:
-      tags:
-        - "nas"
-      summary: "创建webdav服务"
-      description: "创建webdav服务"
-      produces:
-        - "application/json" 
-      responses:
-        200:
-          description: "OK"
-          schema:
-            $ref: "nas.yaml#/definitions/NasWebdavStatusResponse"
-
   /cgi-bin/luci/istore/nas/linkease/enable:
     post:
       tags:
