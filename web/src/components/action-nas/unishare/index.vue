@@ -157,7 +157,11 @@ const checkResponse = (res: { data?: { error?: string } } | undefined) => {
 
 const mergeServiceUsers = (users: ShareServiceUserPermission[], userName: string) => {
     const merged = users.map(item => ({ ...item }))
-    if (!merged.some(item => item.userName == userName)) {
+    const user = merged.find(item => item.userName == userName)
+    if (user) {
+        user.ro = false
+        user.rw = true
+    } else {
         merged.push({
             userName,
             rw: true
