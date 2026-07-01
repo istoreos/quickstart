@@ -14,6 +14,7 @@ type fakeShareServiceFacade struct {
 	err        error
 
 	createInput shareservice.CreateInput
+	ensureInput shareservice.CreateInput
 	updateInput shareservice.UpdateInput
 	deleteInput shareservice.DeleteInput
 }
@@ -24,6 +25,11 @@ func (svc *fakeShareServiceFacade) List(ctx context.Context) ([]*models.ShareSer
 
 func (svc *fakeShareServiceFacade) Create(ctx context.Context, input shareservice.CreateInput) error {
 	svc.createInput = input
+	return svc.err
+}
+
+func (svc *fakeShareServiceFacade) Ensure(ctx context.Context, input shareservice.CreateInput) error {
+	svc.ensureInput = input
 	return svc.err
 }
 
@@ -67,6 +73,25 @@ func TestShareServiceCompatibilityDelegatesListCreateUpdateDelete(t *testing.T) 
 		t.Fatalf("create users = %#v", facade.createInput.Users)
 	}
 
+	if _, err := ShareServiceEnsureTyped(context.Background(), models.ShareServiceCreateRequest{
+		Name:   "docs",
+		Path:   "/mnt/docs",
+		Samba:  true,
+		Webdav: true,
+		Users: []*models.ShareServiceUserPermission{
+			{UserName: "alice", Rw: true},
+			{UserName: "bob", Ro: true},
+		},
+	}); err != nil {
+		t.Fatalf("ShareServiceEnsureTyped returned error: %v", err)
+	}
+	if facade.ensureInput.Name != "docs" || facade.ensureInput.Path != "/mnt/docs" || !facade.ensureInput.Samba || !facade.ensureInput.Webdav {
+		t.Fatalf("ensure input = %#v", facade.ensureInput)
+	}
+	if len(facade.ensureInput.Users) != 2 || !facade.ensureInput.Users[0].Rw || !facade.ensureInput.Users[1].Ro {
+		t.Fatalf("ensure users = %#v", facade.ensureInput.Users)
+	}
+
 	if _, err := ShareServiceUpdate(context.Background(), shareTestRequest(body)); err != nil {
 		t.Fatalf("ShareServiceUpdate returned error: %v", err)
 	}
@@ -96,6 +121,9 @@ func TestShareServiceCompatibilityPropagatesFacadeErrors(t *testing.T) {
 	}
 	if _, err := ShareServiceCreate(context.Background(), shareTestRequest(`{"name":"docs","path":"/mnt/docs"}`)); !errors.Is(err, expectedErr) {
 		t.Fatalf("ShareServiceCreate error = %v, want expectedErr", err)
+	}
+	if _, err := ShareServiceEnsureTyped(context.Background(), models.ShareServiceCreateRequest{Name: "docs", Path: "/mnt/docs"}); !errors.Is(err, expectedErr) {
+		t.Fatalf("ShareServiceEnsureTyped error = %v, want expectedErr", err)
 	}
 	if _, err := ShareServiceUpdate(context.Background(), shareTestRequest(`{"name":"docs","path":"/mnt/docs"}`)); !errors.Is(err, expectedErr) {
 		t.Fatalf("ShareServiceUpdate error = %v, want expectedErr", err)

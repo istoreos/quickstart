@@ -13,6 +13,7 @@ import (
 type shareServiceFacade interface {
 	List(ctx context.Context) ([]*models.ShareServiceInfo, error)
 	Create(ctx context.Context, input shareservice.CreateInput) error
+	Ensure(ctx context.Context, input shareservice.CreateInput) error
 	Update(ctx context.Context, input shareservice.UpdateInput) error
 	Delete(ctx context.Context, input shareservice.DeleteInput) error
 }
@@ -135,4 +136,12 @@ func shareServiceListCommands(target string, input shareservice.CreateInput) []s
 		commands = append(commands, fmt.Sprintf("add_list unishare.%v.proto=%v", target, value))
 	}
 	return commands
+}
+
+func ShareServiceEnsureTyped(ctx context.Context, req models.ShareServiceCreateRequest) (*models.SDKNormalResponse, error) {
+	if err := newShareService().Ensure(ctx, shareservice.CreateInput{Name: req.Name, Path: req.Path, Samba: req.Samba, Webdav: req.Webdav, Users: req.Users}); err != nil {
+		return nil, err
+	}
+	success := models.ResponseSuccess(int64(0))
+	return &models.SDKNormalResponse{Success: &success}, nil
 }

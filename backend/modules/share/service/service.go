@@ -88,6 +88,22 @@ func (svc *Service) Create(ctx context.Context, input CreateInput) error {
 	return svc.store.CreateShare(ctx, len(shares), input)
 }
 
+func (svc *Service) Ensure(ctx context.Context, input CreateInput) error {
+	if err := validateShareInput(input.Name, input.Path); err != nil {
+		return err
+	}
+
+	shares, _, err := svc.store.ReadConfig(ctx)
+	if err != nil {
+		return err
+	}
+	index := findShareIndex(shares, input.Name)
+	if index >= 0 {
+		return svc.store.UpdateShare(ctx, index, UpdateInput(input))
+	}
+	return svc.store.CreateShare(ctx, len(shares), input)
+}
+
 func (svc *Service) Update(ctx context.Context, input UpdateInput) error {
 	if err := validateShareInput(input.Name, input.Path); err != nil {
 		return err
