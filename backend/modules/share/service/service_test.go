@@ -164,6 +164,35 @@ func TestCreateWritesNextShareIndex(t *testing.T) {
 	}
 }
 
+func TestServiceEnsureCreatesOrUpdatesShare(t *testing.T) {
+	input := CreateInput{
+		Name:   "media",
+		Path:   "/mnt/media",
+		Samba:  true,
+		Webdav: true,
+		Users: []*models.ShareServiceUserPermission{
+			{UserName: "media", Rw: true},
+		},
+	}
+	store := &fakeStore{}
+	svc := NewService(store)
+
+	if err := svc.Ensure(context.Background(), input); err != nil {
+		t.Fatalf("Ensure create: %v", err)
+	}
+	if store.createdInput.Name != "media" || store.createdInput.Path != "/mnt/media" || !store.createdInput.Samba || !store.createdInput.Webdav {
+		t.Fatalf("created = %#v", store.createdInput)
+	}
+
+	store.shares = []*ShareRecord{{Name: "media", Path: "/mnt/old", Proto: []string{"samba"}}}
+	if err := svc.Ensure(context.Background(), input); err != nil {
+		t.Fatalf("Ensure update: %v", err)
+	}
+	if store.updatedIndex != 0 || store.updatedInput.Path != "/mnt/media" || !store.updatedInput.Webdav {
+		t.Fatalf("updated = %#v", store.updatedInput)
+	}
+}
+
 func TestUpdateFindsExistingShareAndWritesSameIndex(t *testing.T) {
 	store := &fakeStore{
 		shares: []*ShareRecord{{Name: "media"}, {Name: "docs"}},

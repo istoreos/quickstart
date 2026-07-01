@@ -24,6 +24,8 @@ type fakeShareUserFacade struct {
 	listErr     error
 	createInput shareuser.CreateInput
 	createErr   error
+	ensureInput shareuser.CreateInput
+	ensureErr   error
 	updateInput shareuser.UpdateInput
 	updateErr   error
 	deleteInput shareuser.DeleteInput
@@ -37,6 +39,11 @@ func (svc *fakeShareUserFacade) List(ctx context.Context) ([]*models.ShareUserIn
 func (svc *fakeShareUserFacade) Create(ctx context.Context, input shareuser.CreateInput) error {
 	svc.createInput = input
 	return svc.createErr
+}
+
+func (svc *fakeShareUserFacade) Ensure(ctx context.Context, input shareuser.CreateInput) error {
+	svc.ensureInput = input
+	return svc.ensureErr
 }
 
 func (svc *fakeShareUserFacade) Update(ctx context.Context, input shareuser.UpdateInput) error {
@@ -75,6 +82,13 @@ func TestShareUserCompatibilityDelegatesListCreateUpdateDelete(t *testing.T) {
 		t.Fatalf("unexpected create input: %#v", facade.createInput)
 	}
 
+	if _, err := ShareUserEnsureTyped(context.Background(), models.ShareUserCreateRequest{UserName: "bob", Password: "ensured"}); err != nil {
+		t.Fatalf("unexpected ensure error: %v", err)
+	}
+	if facade.ensureInput.UserName != "bob" || facade.ensureInput.Password != "ensured" {
+		t.Fatalf("unexpected ensure input: %#v", facade.ensureInput)
+	}
+
 	if _, err := ShareUserUpdate(context.Background(), shareTestRequest(`{"userName":"bob","password":"new"}`)); err != nil {
 		t.Fatalf("unexpected update error: %v", err)
 	}
@@ -99,6 +113,7 @@ func TestShareUserCompatibilityPropagatesFacadeErrors(t *testing.T) {
 		return &fakeShareUserFacade{
 			listErr:   expectedErr,
 			createErr: expectedErr,
+			ensureErr: expectedErr,
 			updateErr: expectedErr,
 			deleteErr: expectedErr,
 		}
@@ -109,6 +124,9 @@ func TestShareUserCompatibilityPropagatesFacadeErrors(t *testing.T) {
 	}
 	if _, err := ShareUserCreate(context.Background(), shareTestRequest(`{"userName":"bob","password":"pw"}`)); !errors.Is(err, expectedErr) {
 		t.Fatalf("expected create error, got %v", err)
+	}
+	if _, err := ShareUserEnsureTyped(context.Background(), models.ShareUserCreateRequest{UserName: "bob", Password: "pw"}); !errors.Is(err, expectedErr) {
+		t.Fatalf("expected ensure error, got %v", err)
 	}
 	if _, err := ShareUserUpdate(context.Background(), shareTestRequest(`{"userName":"bob","password":"pw"}`)); !errors.Is(err, expectedErr) {
 		t.Fatalf("expected update error, got %v", err)

@@ -123,6 +123,28 @@ func TestServiceCreateUsesNextUserIndexAndWritesStore(t *testing.T) {
 	}
 }
 
+func TestServiceEnsureCreatesOrUpdatesUser(t *testing.T) {
+	t.Parallel()
+
+	store := &fakeStore{}
+	svc := NewService(store)
+
+	if err := svc.Ensure(context.Background(), CreateInput{UserName: "media", Password: "pw1"}); err != nil {
+		t.Fatalf("Ensure create: %v", err)
+	}
+	if store.createCall == nil || store.createCall.index != 0 || store.createCall.input.UserName != "media" || store.createCall.input.Password != "pw1" {
+		t.Fatalf("created = %#v", store.createCall)
+	}
+
+	store.users = []*models.ShareUserInfo{{UserName: "media", Password: "old"}}
+	if err := svc.Ensure(context.Background(), CreateInput{UserName: "media", Password: "pw2"}); err != nil {
+		t.Fatalf("Ensure update: %v", err)
+	}
+	if store.updateCall == nil || store.updateCall.index != 0 || store.updateCall.password != "pw2" {
+		t.Fatalf("updated = %#v", store.updateCall)
+	}
+}
+
 func TestServiceUpdatePreservesLegacyValidationAndUpdatesMatchingUser(t *testing.T) {
 	t.Parallel()
 

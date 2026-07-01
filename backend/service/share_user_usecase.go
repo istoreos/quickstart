@@ -13,6 +13,7 @@ import (
 type shareUserFacade interface {
 	List(ctx context.Context) ([]*models.ShareUserInfo, error)
 	Create(ctx context.Context, input shareuser.CreateInput) error
+	Ensure(ctx context.Context, input shareuser.CreateInput) error
 	Update(ctx context.Context, input shareuser.UpdateInput) error
 	Delete(ctx context.Context, input shareuser.DeleteInput) error
 }
@@ -72,4 +73,12 @@ func (store defaultShareUserStore) DeleteUser(ctx context.Context, index int) er
 		"commit unishare",
 	}
 	return utils.UCIBatchRun(ctx, ucicmdList, "/etc/init.d/unishare reload", 0)
+}
+
+func ShareUserEnsureTyped(ctx context.Context, req models.ShareUserCreateRequest) (*models.SDKNormalResponse, error) {
+	if err := newShareUserService().Ensure(ctx, shareuser.CreateInput{UserName: req.UserName, Password: req.Password}); err != nil {
+		return nil, err
+	}
+	success := models.ResponseSuccess(int64(0))
+	return &models.SDKNormalResponse{Success: &success}, nil
 }

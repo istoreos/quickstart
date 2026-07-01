@@ -1,9 +1,11 @@
-import { createApp, Plugin } from 'vue'
+import { createApp } from 'vue'
 import compnonet from "./index.vue"
-declare interface NasSambaProps {
+
+declare interface NasUniShareProps {
     rootPath: string
 }
-export default (props: NasSambaProps) => {
+
+export default (props: NasUniShareProps) => {
     const el = document.createElement("div")
     document.body.appendChild(el)
     const vm = createApp(compnonet, {

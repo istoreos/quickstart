@@ -4,30 +4,7 @@ import (
 	"context"
 
 	"github.com/istoreos/quickstart/backend/models"
-	"github.com/istoreos/quickstart/backend/modules/nas/serviceconfig"
 )
-
-type NasSambaCreateService = serviceconfig.SambaCreateService
-type NasWebdavCreateService = serviceconfig.WebdavCreateService
-type NasWebdavStatusService = serviceconfig.WebdavStatusService
-type NasServiceStatusService = serviceconfig.StatusService
-
-type nasSambaCreateFacade interface {
-	Create(ctx context.Context, input NasSambaCreateInput) (*models.NasSambaCreateResponseResult, error)
-}
-
-var newNasSambaCreateServiceFacade = func() nasSambaCreateFacade {
-	return newNasSambaCreateService()
-}
-
-func newNasSambaCreateService() *NasSambaCreateService {
-	return serviceconfig.NewSambaCreateService(
-		newDefaultNasServiceStatusReader(),
-		newDefaultNasServiceRuntimeReader(),
-		newDefaultNasServiceConfigWriter(),
-		newDefaultNasSambaTemplateWriter(),
-	)
-}
 
 type nasServiceStatusFacade interface {
 	Read(ctx context.Context) (*models.NasServiceResponseResult, error)
@@ -38,33 +15,38 @@ var newNasServiceStatusServiceFacade = func() nasServiceStatusFacade {
 }
 
 func newNasServiceStatusService() *NasServiceStatusService {
-	return serviceconfig.NewStatusService(newDefaultNasServiceStatusReader(), newDefaultNasServiceRuntimeReader())
+	return NewNasServiceStatusService(newDefaultNasServiceStatusReader(), newDefaultNasServiceRuntimeReader())
 }
 
-type nasWebdavCreateFacade interface {
-	Create(ctx context.Context, input NasWebdavCreateInput) (*models.NasWebdavCreateResponseResult, error)
+type NasServiceStatusService struct {
+	statusReader  NasServiceStatusReader
+	runtimeReader NasServiceRuntimeReader
 }
 
-var newNasWebdavCreateServiceFacade = func() nasWebdavCreateFacade {
-	return newNasWebdavCreateService()
+func NewNasServiceStatusService(statusReader NasServiceStatusReader, runtimeReader NasServiceRuntimeReader) *NasServiceStatusService {
+	return &NasServiceStatusService{
+		statusReader:  statusReader,
+		runtimeReader: runtimeReader,
+	}
 }
 
-func newNasWebdavCreateService() *NasWebdavCreateService {
-	return serviceconfig.NewWebdavCreateService(
-		newDefaultNasServiceStatusReader(),
-		newDefaultNasServiceRuntimeReader(),
-		newDefaultNasServiceConfigWriter(),
-	)
-}
+func (s NasServiceStatusService) Read(ctx context.Context) (*models.NasServiceResponseResult, error) {
+	model := &models.NasServiceResponseResult{}
+	model.Sambas = s.statusReader.ReadSambaShares()
 
-type nasWebdavStatusFacade interface {
-	Read(ctx context.Context) (*models.NasWebdavStatusResponseResult, error)
-}
+	webdav := s.statusReader.ReadWebdavInfo()
+	model.Webdav = &webdav
 
-var newNasWebdavStatusServiceFacade = func() nasWebdavStatusFacade {
-	return newNasWebdavStatusService()
-}
+	linkease := &models.NasServiceLinkeaseInfo{}
+	enabledByConfig, port, err := s.statusReader.ReadLinkeaseInfo(ctx)
+	if err != nil {
+		return nil, err
+	}
+	if enabledByConfig && s.runtimeReader.HasLinkeaseBinary() {
+		linkease.Enabel = true
+		linkease.Port = port
+	}
+	model.Linkease = linkease
 
-func newNasWebdavStatusService() *NasWebdavStatusService {
-	return serviceconfig.NewWebdavStatusService(newDefaultNasServiceStatusReader())
+	return model, nil
 }

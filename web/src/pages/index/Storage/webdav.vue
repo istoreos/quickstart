@@ -15,7 +15,7 @@
             <a target="_blank" :href="'/cgi-bin/luci/admin/services/linkease/file/?path=/root' + webdav?.path">{{ webdav?.path }}</a>
         </div>
     </li>
-    <li class="webdav-item" v-if="webdav?.port">
+    <li class="webdav-item" v-if="webdav?.path">
         <div class="webdav-item_name">
             <span>{{ $gettext("服务路径:") }}</span>
         </div>
@@ -23,19 +23,11 @@
             <a :href="target" target="_blank" rel="noopener noreferrer">{{ target }}</a>
         </div>
     </li>
-    <li class="webdav-item" v-if="webdav?.username">
-        <div class="webdav-item_name">
-            <span>{{ $gettext("账号:") }}</span>
-        </div>
-        <div class="webdav-item_value">
-            <span>{{ webdav?.username }}</span>
-        </div>
-    </li>
 </template>
 <script setup lang="ts">
 import { computed, PropType } from 'vue';
-import { useGettext,formatNumber } from '/@/plugins/i18n'
-const { $gettext,$ngettext } = useGettext()
+import { useGettext } from '/@/plugins/i18n'
+const { $gettext } = useGettext()
 
 const props = defineProps({
     webdav: {
@@ -43,7 +35,7 @@ const props = defineProps({
     }
 })
 const target = computed(() => {
-    return `http://${location.hostname}:${props.webdav?.port}`
+    return `http://${location.hostname}:${props.webdav?.port || "8080"}`
 })
 </script>
 <style lang="scss" scoped>

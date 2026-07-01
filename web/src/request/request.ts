@@ -268,39 +268,6 @@ export const Nas = {
       },
     },
   },
-  Samba: {
-    Create: {
-      POST(data: NasCreateSamba) {
-        return Request<NasSambaResult>("/nas/samba/create", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json;charset=utf-8",
-          },
-          body: JSON.stringify(data),
-        });
-      },
-    },
-  },
-  Webdav: {
-    Create: {
-      POST(data: NasCreateWebdav) {
-        return Request<NasWebdavResult>("/nas/webdav/create", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json;charset=utf-8",
-          },
-          body: JSON.stringify(data),
-        });
-      },
-    },
-    Status: {
-      GET() {
-        return Request<NasServiceWebdavInfo>("/nas/webdav/status/", {
-          method: "GET",
-        });
-      },
-    },
-  },
   Linkease: {
     Enable: {
       POST() {
@@ -376,6 +343,70 @@ export const Nas = {
           "Content-Type": "application/json;charset=utf-8",
         },
       });
+    },
+  },
+};
+export const Share = {
+  User: {
+    List: {
+      GET() {
+        return Request<ShareUserListResponse>("/share/user/list/", {
+          method: "GET",
+        });
+      },
+    },
+    Create: {
+      POST(data: ShareUserCreateRequest) {
+        return Request<null>("/share/user/create/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json;charset=utf-8",
+          },
+          body: JSON.stringify(data),
+        });
+      },
+    },
+    Update: {
+      POST(data: ShareUserCreateRequest) {
+        return Request<null>("/share/user/update/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json;charset=utf-8",
+          },
+          body: JSON.stringify(data),
+        });
+      },
+    },
+  },
+  Service: {
+    List: {
+      GET() {
+        return Request<ShareServiceListResponse>("/share/service/list/", {
+          method: "GET",
+        });
+      },
+    },
+    Create: {
+      POST(data: ShareServiceCreateRequest) {
+        return Request<null>("/share/service/create/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json;charset=utf-8",
+          },
+          body: JSON.stringify(data),
+        });
+      },
+    },
+    Update: {
+      POST(data: ShareServiceCreateRequest) {
+        return Request<null>("/share/service/update/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json;charset=utf-8",
+          },
+          body: JSON.stringify(data),
+        });
+      },
     },
   },
 };

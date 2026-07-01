@@ -8,8 +8,7 @@
                     <label>
                         <select v-model="service">
                             <option value="linkease">{{ $gettext("跨设备共享（易有云）") }}</option>
-                            <option value="samba">{{ $gettext("局域网文件共享（Samba）") }}</option>
-                            <option value="webdav">{{ $gettext("局域网文件共享（WebDAV）") }}</option>
+                            <option value="unishare">{{ $gettext("局域网文件共享（Samba + WebDAV）") }}</option>
                         </select>
                     </label>
                 </form>
@@ -25,17 +24,14 @@
     </action-component>
 </template>
 <script setup lang="ts">
-import { onMounted, PropType, ref, provide } from "vue";
-import { useGettext,formatNumber } from '/@/plugins/i18n'
-const { $gettext,$ngettext } = useGettext()
+import { PropType, ref } from "vue";
+import { useGettext } from '/@/plugins/i18n'
+const { $gettext } = useGettext()
 
 import ActionComponent from "/@/components/action/modal.vue"
 import ActionDisk from "/@/components/action-disk";
-import request from "/@/request";
-import Toast from "/@/components/toast";
 import ActionLinkease from "./linkease"
-import ActionWebdav from "./webdav"
-import ActionSamba from "./samba";
+import ActionUniShare from "./unishare"
 import appUtils from "/@/utils/app";
 import { feature } from "/@/utils/features"
 
@@ -47,7 +43,7 @@ const props = defineProps({
     },
 })
 const show = ref(true)
-const service = ref("linkease")
+const service = ref("unishare")
 const disabled = ref(false)
 const setup = ref(props.setup || 0)
 
@@ -58,24 +54,13 @@ const onClose = () => {
 }
 const onNext = async () => {
     switch (service.value) {
-        case "webdav":
-            await checkIsInstallWebdav()
-            break
-        case "samba":
-            await checkIsInstallSamba()
+        case "unishare":
+            await checkIsInstallUniShare()
             break
         case "linkease":
             await checkIsInstallLinkease()
             break
     }
-}
-//检测是否安装了Webdav
-const checkIsInstallWebdav = async () => {
-    disabled.value = true
-    if (await appUtils.checkAndInstallApp("app-meta-gowebdav", "GoWebdav")) {
-        onDisk()
-    }
-    disabled.value = false
 }
 
 //检测是否安装了Linkease
@@ -87,12 +72,22 @@ const checkIsInstallLinkease = async () => {
     disabled.value = false
 }
 
-//检测是否安装了Samba
-const checkIsInstallSamba = async () => {
+//检测是否安装了UniShare
+const checkIsInstallUniShare = async () => {
     disabled.value = true
-    const load = Toast.Loading($gettext("配置中..."))
+    const apps = [
+        { pkg: "luci-app-unishare", app: $gettext("统一文件共享") },
+        { pkg: "unishare", app: "UniShare" },
+        { pkg: "samba4-server", app: "Samba" },
+        { pkg: "webdav2", app: "WebDAV" },
+    ]
+    for (const item of apps) {
+        if (!await appUtils.checkAndInstallApp(item.pkg, item.app)) {
+            disabled.value = false
+            return
+        }
+    }
     onDisk()
-    load.Close()
     disabled.value = false
 }
 
@@ -105,11 +100,8 @@ const onDisk = () => {
         },
         Next: (rootPath: string) => {
             switch (service.value) {
-                case "webdav":
-                    onWebdav(rootPath)
-                    break
-                case "samba":
-                    onSamba(rootPath)
+                case "unishare":
+                    onUniShare(rootPath)
                     break
             }
         }
@@ -119,14 +111,8 @@ const onLinkease = () => {
     ActionLinkease({})
     onClose()
 }
-const onWebdav = (rootPath: string) => {
-    ActionWebdav({
-        rootPath: rootPath
-    })
-    onClose()
-}
-const onSamba = (rootPath: string) => {
-    ActionSamba({
+const onUniShare = (rootPath: string) => {
+    ActionUniShare({
         rootPath: rootPath
     })
     onClose()

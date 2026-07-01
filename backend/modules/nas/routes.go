@@ -4,9 +4,9 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/julienschmidt/httprouter"
 	"github.com/istoreos/quickstart/backend/internal/httpapi"
 	"github.com/istoreos/quickstart/backend/models"
+	"github.com/julienschmidt/httprouter"
 )
 
 type Backend interface {
@@ -23,9 +23,6 @@ type Backend interface {
 	GetNasSanboxDisks(ctx context.Context) (*models.NasSandboxDisksResponse, error)
 	GetNasSanboxStatus(ctx context.Context) (*models.NasSandboxStatusResponse, error)
 	PostNasDiskPartMount(ctx context.Context, r *http.Request) (*models.NasDiskPartitionMountResponse, error)
-	PostNasDiskSambaCreate(ctx context.Context, r *http.Request) (*models.NasSambaCreateResponse, error)
-	PostNasDiskWebdavCreate(ctx context.Context, r *http.Request) (*models.NasWebdavCreateResponse, error)
-	PostNasDiskWebdavStatus(ctx context.Context, r *http.Request) (*models.NasWebdavStatusResponse, error)
 	PostNasDiskLinkeaseEnable(ctx context.Context, r *http.Request) (*models.NasLinkeaseEnableResponse, error)
 }
 
@@ -59,18 +56,6 @@ func RegisterRoutes(router *httprouter.Router, backend Backend) {
 
 	httpapi.PostJSON(router, "/cgi-bin/luci/istore/nas/disk/partition/mount", func(ctx context.Context, r *http.Request) (any, error) {
 		return backend.PostNasDiskPartMount(ctx, r)
-	})
-
-	httpapi.PostJSON(router, "/cgi-bin/luci/istore/nas/samba/create", func(ctx context.Context, r *http.Request) (any, error) {
-		return backend.PostNasDiskSambaCreate(ctx, r)
-	})
-
-	httpapi.PostJSON(router, "/cgi-bin/luci/istore/nas/webdav/create", func(ctx context.Context, r *http.Request) (any, error) {
-		return backend.PostNasDiskWebdavCreate(ctx, r)
-	})
-
-	httpapi.GetJSON(router, "/cgi-bin/luci/istore/nas/webdav/status/", func(ctx context.Context, r *http.Request) (any, error) {
-		return backend.PostNasDiskWebdavStatus(ctx, r)
 	})
 
 	httpapi.PostJSONAliases(router, []string{

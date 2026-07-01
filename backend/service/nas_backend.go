@@ -64,18 +64,6 @@ func (backend *ServiceBackend) PostNasDiskPartMount(ctx context.Context, r *http
 	return NasDiskPartitionMount(ctx, r)
 }
 
-func (backend *ServiceBackend) PostNasDiskSambaCreate(ctx context.Context, r *http.Request) (*models.NasSambaCreateResponse, error) {
-	return NasServiceSambaCreate(ctx, r)
-}
-
-func (backend *ServiceBackend) PostNasDiskWebdavCreate(ctx context.Context, r *http.Request) (*models.NasWebdavCreateResponse, error) {
-	return NasServiceWebdavCreate(ctx, r)
-}
-
-func (backend *ServiceBackend) PostNasDiskWebdavStatus(ctx context.Context, r *http.Request) (*models.NasWebdavStatusResponse, error) {
-	return NasServiceWebdavStatus(ctx)
-}
-
 func (backend *ServiceBackend) PostNasDiskLinkeaseEnable(ctx context.Context, r *http.Request) (*models.NasLinkeaseEnableResponse, error) {
 	return NasServiceLinkeaseEnable(ctx, r)
 }

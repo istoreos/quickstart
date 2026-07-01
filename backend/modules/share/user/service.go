@@ -69,6 +69,23 @@ func (svc *Service) Create(ctx context.Context, input CreateInput) error {
 	return svc.store.CreateUser(ctx, len(users), input)
 }
 
+func (svc *Service) Ensure(ctx context.Context, input CreateInput) error {
+	if err := validateCreateInput(input); err != nil {
+		return err
+	}
+
+	users, err := svc.store.ReadUsers(ctx)
+	if err != nil {
+		return err
+	}
+	for idx, user := range users {
+		if user != nil && input.UserName == user.UserName {
+			return svc.store.UpdateUser(ctx, idx, input.Password)
+		}
+	}
+	return svc.store.CreateUser(ctx, len(users), input)
+}
+
 func (svc *Service) Update(ctx context.Context, input UpdateInput) error {
 	if err := validateUpdateInput(input); err != nil {
 		return err

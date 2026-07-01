@@ -3,45 +3,10 @@ package service
 import (
 	"context"
 	"errors"
-	"net/http/httptest"
-	"strings"
 	"testing"
 
 	"github.com/istoreos/quickstart/backend/models"
 )
-
-type fakeNasSambaCreateFacade struct {
-	result *models.NasSambaCreateResponseResult
-	err    error
-	inputs []NasSambaCreateInput
-}
-
-func (f *fakeNasSambaCreateFacade) Create(ctx context.Context, input NasSambaCreateInput) (*models.NasSambaCreateResponseResult, error) {
-	f.inputs = append(f.inputs, input)
-	return f.result, f.err
-}
-
-type fakeNasWebdavCreateFacade struct {
-	result *models.NasWebdavCreateResponseResult
-	err    error
-	inputs []NasWebdavCreateInput
-}
-
-func (f *fakeNasWebdavCreateFacade) Create(ctx context.Context, input NasWebdavCreateInput) (*models.NasWebdavCreateResponseResult, error) {
-	f.inputs = append(f.inputs, input)
-	return f.result, f.err
-}
-
-type fakeNasWebdavStatusFacade struct {
-	result *models.NasWebdavStatusResponseResult
-	err    error
-	calls  int
-}
-
-func (f *fakeNasWebdavStatusFacade) Read(ctx context.Context) (*models.NasWebdavStatusResponseResult, error) {
-	f.calls++
-	return f.result, f.err
-}
 
 type fakeNasServiceStatusFacade struct {
 	result *models.NasServiceResponseResult
@@ -52,157 +17,6 @@ type fakeNasServiceStatusFacade struct {
 func (f *fakeNasServiceStatusFacade) Read(ctx context.Context) (*models.NasServiceResponseResult, error) {
 	f.calls++
 	return f.result, f.err
-}
-
-func TestNasServiceSambaCreateCompatibilityDelegatesToService(t *testing.T) {
-	originalFactory := newNasSambaCreateServiceFacade
-	defer func() {
-		newNasSambaCreateServiceFacade = originalFactory
-	}()
-
-	facade := &fakeNasSambaCreateFacade{
-		result: &models.NasSambaCreateResponseResult{SambaURL: "smb://192.168.100.1/share"},
-	}
-	newNasSambaCreateServiceFacade = func() nasSambaCreateFacade {
-		return facade
-	}
-
-	req := httptest.NewRequest("POST", "/nas/samba", strings.NewReader(`{"shareName":"share","rootPath":"/mnt/data","username":"user","password":"pw","allowLegacy":true}`))
-	resp, err := NasServiceSambaCreate(context.Background(), req)
-	if err != nil {
-		t.Fatalf("unexpected wrapper error: %v", err)
-	}
-	if resp == nil || resp.Result == nil || resp.Result.SambaURL != "smb://192.168.100.1/share" {
-		t.Fatalf("unexpected wrapper response: %#v", resp)
-	}
-	if len(facade.inputs) != 1 {
-		t.Fatalf("expected one service call, got %d", len(facade.inputs))
-	}
-	if facade.inputs[0] != (NasSambaCreateInput{
-		ShareName:   "share",
-		RootPath:    "/mnt/data",
-		Username:    "user",
-		Password:    "pw",
-		AllowLegacy: true,
-	}) {
-		t.Fatalf("unexpected service input: %#v", facade.inputs[0])
-	}
-}
-
-func TestNasServiceSambaCreateCompatibilityPropagatesServiceError(t *testing.T) {
-	originalFactory := newNasSambaCreateServiceFacade
-	defer func() {
-		newNasSambaCreateServiceFacade = originalFactory
-	}()
-
-	serviceErr := errors.New("samba create failed")
-	newNasSambaCreateServiceFacade = func() nasSambaCreateFacade {
-		return &fakeNasSambaCreateFacade{err: serviceErr}
-	}
-
-	req := httptest.NewRequest("POST", "/nas/samba", strings.NewReader(`{"shareName":"share","rootPath":"/mnt/data","username":"user","password":"pw"}`))
-	if _, err := NasServiceSambaCreate(context.Background(), req); !errors.Is(err, serviceErr) {
-		t.Fatalf("expected wrapper to propagate service error, got %v", err)
-	}
-}
-
-func TestNasServiceWebdavCreateCompatibilityDelegatesToService(t *testing.T) {
-	originalFactory := newNasWebdavCreateServiceFacade
-	defer func() {
-		newNasWebdavCreateServiceFacade = originalFactory
-	}()
-
-	facade := &fakeNasWebdavCreateFacade{
-		result: &models.NasWebdavCreateResponseResult{
-			Username:  "user",
-			WebdavURL: "http://192.168.100.1:5244",
-		},
-	}
-	newNasWebdavCreateServiceFacade = func() nasWebdavCreateFacade {
-		return facade
-	}
-
-	req := httptest.NewRequest("POST", "/nas/webdav", strings.NewReader(`{"rootPath":"/mnt/data","username":"user","password":"pw"}`))
-	resp, err := NasServiceWebdavCreate(context.Background(), req)
-	if err != nil {
-		t.Fatalf("unexpected wrapper error: %v", err)
-	}
-	if resp == nil || resp.Result == nil || resp.Result.Username != "user" || resp.Result.WebdavURL != "http://192.168.100.1:5244" {
-		t.Fatalf("unexpected wrapper response: %#v", resp)
-	}
-	if len(facade.inputs) != 1 {
-		t.Fatalf("expected one service call, got %d", len(facade.inputs))
-	}
-	if facade.inputs[0] != (NasWebdavCreateInput{
-		RootPath: "/mnt/data",
-		Username: "user",
-		Password: "pw",
-	}) {
-		t.Fatalf("unexpected service input: %#v", facade.inputs[0])
-	}
-}
-
-func TestNasServiceWebdavCreateCompatibilityPropagatesServiceError(t *testing.T) {
-	originalFactory := newNasWebdavCreateServiceFacade
-	defer func() {
-		newNasWebdavCreateServiceFacade = originalFactory
-	}()
-
-	serviceErr := errors.New("webdav create failed")
-	newNasWebdavCreateServiceFacade = func() nasWebdavCreateFacade {
-		return &fakeNasWebdavCreateFacade{err: serviceErr}
-	}
-
-	req := httptest.NewRequest("POST", "/nas/webdav", strings.NewReader(`{"rootPath":"/mnt/data","username":"user","password":"pw"}`))
-	if _, err := NasServiceWebdavCreate(context.Background(), req); !errors.Is(err, serviceErr) {
-		t.Fatalf("expected wrapper to propagate service error, got %v", err)
-	}
-}
-
-func TestNasServiceWebdavStatusCompatibilityDelegatesToService(t *testing.T) {
-	originalFactory := newNasWebdavStatusServiceFacade
-	defer func() {
-		newNasWebdavStatusServiceFacade = originalFactory
-	}()
-
-	facade := &fakeNasWebdavStatusFacade{
-		result: &models.NasWebdavStatusResponseResult{
-			Path:     "/mnt/data",
-			Port:     "5244",
-			Username: "user",
-			Password: "pw",
-		},
-	}
-	newNasWebdavStatusServiceFacade = func() nasWebdavStatusFacade {
-		return facade
-	}
-
-	resp, err := NasServiceWebdavStatus(context.Background())
-	if err != nil {
-		t.Fatalf("unexpected wrapper error: %v", err)
-	}
-	if resp == nil || resp.Result == nil || resp.Result.Path != "/mnt/data" || resp.Result.Port != "5244" || resp.Result.Username != "user" || resp.Result.Password != "pw" {
-		t.Fatalf("unexpected wrapper response: %#v", resp)
-	}
-	if facade.calls != 1 {
-		t.Fatalf("expected one service call, got %d", facade.calls)
-	}
-}
-
-func TestNasServiceWebdavStatusCompatibilityPropagatesServiceError(t *testing.T) {
-	originalFactory := newNasWebdavStatusServiceFacade
-	defer func() {
-		newNasWebdavStatusServiceFacade = originalFactory
-	}()
-
-	serviceErr := errors.New("webdav status failed")
-	newNasWebdavStatusServiceFacade = func() nasWebdavStatusFacade {
-		return &fakeNasWebdavStatusFacade{err: serviceErr}
-	}
-
-	if _, err := NasServiceWebdavStatus(context.Background()); !errors.Is(err, serviceErr) {
-		t.Fatalf("expected wrapper to propagate service error, got %v", err)
-	}
 }
 
 func TestNasServiceStatusCompatibilityDelegatesToService(t *testing.T) {
@@ -256,5 +70,100 @@ func TestNasServiceStatusCompatibilityPropagatesServiceError(t *testing.T) {
 
 	if _, err := NasServiceStatus(context.Background()); !errors.Is(err, serviceErr) {
 		t.Fatalf("expected wrapper to propagate service error, got %v", err)
+	}
+}
+
+type fakeNasStatusReader struct {
+	sambaShares  []*models.NasServiceSambaInfo
+	webdavInfo   models.NasServiceWebdavInfo
+	linkeaseOn   bool
+	linkeasePort string
+	linkeaseErr  error
+}
+
+func (f fakeNasStatusReader) ReadSambaShares() []*models.NasServiceSambaInfo {
+	return f.sambaShares
+}
+
+func (f fakeNasStatusReader) ReadWebdavPort() (string, bool) {
+	return f.webdavInfo.Port, f.webdavInfo.Port != ""
+}
+
+func (f fakeNasStatusReader) ReadWebdavInfo() models.NasServiceWebdavInfo {
+	return f.webdavInfo
+}
+
+func (f fakeNasStatusReader) ReadLinkeaseInfo(ctx context.Context) (bool, string, error) {
+	return f.linkeaseOn, f.linkeasePort, f.linkeaseErr
+}
+
+type fakeNasRuntimeReader struct {
+	linkeaseBinary bool
+}
+
+func (f fakeNasRuntimeReader) ReadLANIPv4(ctx context.Context) (string, error) {
+	return "", nil
+}
+
+func (f fakeNasRuntimeReader) HasLinkeaseBinary() bool {
+	return f.linkeaseBinary
+}
+
+func TestNasServiceStatusServiceAggregatesSambaWebdavAndLinkease(t *testing.T) {
+	service := NewNasServiceStatusService(
+		fakeNasStatusReader{
+			sambaShares: []*models.NasServiceSambaInfo{{ShareName: "share", Path: "/mnt/data"}},
+			webdavInfo: models.NasServiceWebdavInfo{
+				Path: "/mnt/data",
+				Port: "6086",
+			},
+			linkeaseOn:   true,
+			linkeasePort: "8897",
+		},
+		fakeNasRuntimeReader{linkeaseBinary: true},
+	)
+
+	result, err := service.Read(context.Background())
+	if err != nil {
+		t.Fatalf("unexpected status read error: %v", err)
+	}
+	if len(result.Sambas) != 1 || result.Sambas[0].ShareName != "share" || result.Sambas[0].Path != "/mnt/data" {
+		t.Fatalf("unexpected samba status: %#v", result.Sambas)
+	}
+	if result.Webdav == nil || result.Webdav.Path != "/mnt/data" || result.Webdav.Port != "6086" {
+		t.Fatalf("unexpected webdav status: %#v", result.Webdav)
+	}
+	if result.Linkease == nil || !result.Linkease.Enabel || result.Linkease.Port != "8897" {
+		t.Fatalf("unexpected linkease status: %#v", result.Linkease)
+	}
+}
+
+func TestNasServiceStatusServiceKeepsLinkeaseDisabledWithoutBinary(t *testing.T) {
+	service := NewNasServiceStatusService(
+		fakeNasStatusReader{
+			linkeaseOn:   true,
+			linkeasePort: "8897",
+		},
+		fakeNasRuntimeReader{linkeaseBinary: false},
+	)
+
+	result, err := service.Read(context.Background())
+	if err != nil {
+		t.Fatalf("unexpected status read error: %v", err)
+	}
+	if result.Linkease == nil {
+		t.Fatalf("expected linkease status")
+	}
+	if result.Linkease.Enabel || result.Linkease.Port != "" {
+		t.Fatalf("expected LinkEase disabled without binary, got %#v", result.Linkease)
+	}
+}
+
+func TestNasServiceStatusServicePropagatesReaderErrors(t *testing.T) {
+	expectedErr := errors.New("linkease read failed")
+	service := NewNasServiceStatusService(fakeNasStatusReader{linkeaseErr: expectedErr}, fakeNasRuntimeReader{})
+
+	if _, err := service.Read(context.Background()); !errors.Is(err, expectedErr) {
+		t.Fatalf("expected reader error, got %v", err)
 	}
 }
