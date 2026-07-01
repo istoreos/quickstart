@@ -32,10 +32,9 @@
     </ul>
 </template>
 <script setup lang="ts">
-import request from '/@/request';
-import { PropType, ref } from 'vue';
-import { useGettext,formatNumber } from '/@/plugins/i18n'
-const { $gettext,$ngettext } = useGettext()
+import { PropType } from 'vue';
+import { useGettext } from '/@/plugins/i18n'
+const { $gettext } = useGettext()
 
 const props = defineProps({
     sambas: {

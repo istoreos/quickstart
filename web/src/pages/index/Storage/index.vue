@@ -13,8 +13,7 @@
             </div>
         </template>
         <template #settings-menu>
-            <div><a href="/cgi-bin/luci/admin/services/samba4">{{ $gettext("SAMBA高级配置") }}</a></div>
-            <div><a @click="onClickWebDAV">{{ $gettext("WebDAV高级配置") }}</a></div>
+            <div><a href="/cgi-bin/luci/admin/nas/unishare">{{ $gettext("统一共享高级配置") }}</a></div>
         </template>
         <div class="content">
             <div class="tab">
@@ -59,11 +58,8 @@ import webdavVue from './webdav.vue';
 import linkeaseVue from './linkease.vue';
 import ActionNAS from "/@/components/action-nas"
 import { useNasStore } from '/@/plugins/store';
-import appUtils from "/@/utils/app";
 
 const { $gettext } = useGettext()
-const showWebdavBlock = ref(false)
-const curr = ref("linkease")
 const service = ref<NasServiceStatus>()
 const nasStore = useNasStore()
 
@@ -86,15 +82,6 @@ const onSetting = () => {
     ActionNAS({
         setup: 0
     })
-}
-
-const MoreDevice = () => {
-    showWebdavBlock.value = !showWebdavBlock.value
-}
-
-const onClickWebDAV = () => {
-    MoreDevice()
-    appUtils.installAndGo("app-meta-gowebdav", "GoWebDAV", "/cgi-bin/luci/admin/nas/gowebdav")
 }
 
 const activeIndex = ref(0)
