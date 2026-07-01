@@ -13,14 +13,14 @@ import (
 )
 
 var (
-	readNasServiceSambaShares = func() []*models.NasServiceSambaInfo {
-		return NasServiceSambaStatus()
-	}
 	loadNasServiceConfig = func(config string) {
 		uci.LoadConfig(config, true)
 	}
 	getNasServiceLast = func(config string, section string, option string) (string, bool) {
 		return uci.GetLast(config, section, option)
+	}
+	getNasServiceValues = func(config string, section string, option string) ([]string, bool) {
+		return uci.Get(config, section, option)
 	}
 	getNasServiceSections = func(config string, sectionType string) ([]string, bool) {
 		return uci.GetSections(config, sectionType)
@@ -50,31 +50,73 @@ func newDefaultNasServiceStatusReader() NasServiceStatusReader {
 }
 
 func (defaultNasServiceStatusReader) ReadSambaShares() []*models.NasServiceSambaInfo {
-	return readNasServiceSambaShares()
+	loadNasServiceConfig("unishare")
+
+	sections, ok := getNasServiceSections("unishare", "share")
+	if !ok {
+		return nil
+	}
+
+	shares := make([]*models.NasServiceSambaInfo, 0, len(sections))
+	for _, section := range sections {
+		if !nasServiceHasProto("unishare", section, "samba") {
+			continue
+		}
+
+		share := &models.NasServiceSambaInfo{}
+		if value, ok := getNasServiceLast("unishare", section, "name"); ok {
+			share.ShareName = value
+		}
+		if value, ok := getNasServiceLast("unishare", section, "path"); ok {
+			share.Path = value
+		}
+		shares = append(shares, share)
+	}
+	return shares
 }
 
 func (defaultNasServiceStatusReader) ReadWebdavPort() (string, bool) {
-	loadNasServiceConfig("gowebdav")
-	return getNasServiceLast("gowebdav", "config", "listen_port")
+	loadNasServiceConfig("unishare")
+	return nasServiceReadWebdavPortFromUnishare()
 }
 
 func (defaultNasServiceStatusReader) ReadWebdavInfo() models.NasServiceWebdavInfo {
-	loadNasServiceConfig("gowebdav")
-
+	loadNasServiceConfig("unishare")
 	info := models.NasServiceWebdavInfo{}
-	if value, ok := getNasServiceLast("gowebdav", "config", "root_dir"); ok && len(value) > 0 {
-		info.Path = value
-	}
-	if value, ok := getNasServiceLast("gowebdav", "config", "listen_port"); ok && len(value) > 0 {
-		info.Port = value
-	}
-	if value, ok := getNasServiceLast("gowebdav", "config", "username"); ok && len(value) > 0 {
-		info.Username = value
-	}
-	if value, ok := getNasServiceLast("gowebdav", "config", "password"); ok && len(value) > 0 {
-		info.Password = value
+	info.Port, _ = nasServiceReadWebdavPortFromUnishare()
+
+	if sections, ok := getNasServiceSections("unishare", "share"); ok {
+		for _, section := range sections {
+			if !nasServiceHasProto("unishare", section, "webdav") {
+				continue
+			}
+			if value, ok := getNasServiceLast("unishare", section, "path"); ok {
+				info.Path = value
+			}
+			break
+		}
 	}
 	return info
+}
+
+func nasServiceReadWebdavPortFromUnishare() (string, bool) {
+	if value, ok := getNasServiceLast("unishare", "@global[0]", "webdav_port"); ok && len(value) > 0 {
+		return value, true
+	}
+	return "8080", true
+}
+
+func nasServiceHasProto(config string, section string, proto string) bool {
+	values, ok := getNasServiceValues(config, section, "proto")
+	if !ok {
+		return false
+	}
+	for _, value := range values {
+		if value == proto {
+			return true
+		}
+	}
+	return false
 }
 
 func (defaultNasServiceStatusReader) ReadLinkeaseInfo(ctx context.Context) (bool, string, error) {
