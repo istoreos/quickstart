@@ -36,4 +36,10 @@ for task in ops-targets ops-show-selected ops-release ops-init-selected ops-pref
 done
 
 "${SCRIPT_DIR}/show-selected.sh" >/dev/null
+
+resolved_target="$(${SCRIPT_DIR}/show-selected.sh)"
+printf '%s\n' "$resolved_target" | grep -q '^SCP_EXTRA_OPTS=-O$' || {
+    echo "OpenWrt target must use legacy SCP transport (-O)" >&2
+    exit 1
+}
 echo "ops contract ok"

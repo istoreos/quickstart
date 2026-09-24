@@ -1,12 +1,15 @@
 <template>
     <div class="container">
-        <div style="display: flex;justify-content: end;">
+        <div class="device-toolbar">
             <SearchVue @handleAdd="showModal = true" @refresh="handleRefresh" @batch-delete="handleBatchDelete"
                 @search="handleSearch" />
         </div>
-        <div>
+        <PageState v-if="isLoading" kind="loading" :title="$gettext('正在加载静态分配')"
+            :description="$gettext('请稍候…')" />
+        <LoadError v-else-if="loadError" :message="loadError" @retry="handleRefresh" />
+        <div v-if="!isLoading && !loadError">
                 <CustomTable :data="tableData1" :columns="columns" rowKey="assignedMac" :showSelection="showSelection"
-                :showPagination="false" @selection-change="handleSelectionChange">
+                :showPagination="false" :emptyText="$gettext('暂无静态分配')" @selection-change="handleSelectionChange">
                 <!-- @vue-ignore -->
                 <template #action="{ row }">
                     <button class="del-button edit-button" @click="handleEdit(row)">
@@ -39,7 +42,7 @@
             <!-- 默认插槽内容 -->
             <div class="custom-content">
                 <div class="img_box">
-                    <img src="https://fwindex.koolcenter.com/cover/x86_64/cover.png" alt="">
+                    <ComputerIcon color="#8c8c8c" />
                 </div>
                 <div class="item_box">
                     <div class="item_left">{{ $gettext('名称') }}：</div>
@@ -83,6 +86,10 @@ import SearchVue from "./components/search.vue";
 import SwitchVue from "./components/switch.vue";
 import Toast from "/@/components/toast";
 import DialogVue from "/@/components/dialog/index.vue";
+import ComputerIcon from "/@/components/svg/computer.vue";
+import LoadError from "./components/loadError.vue";
+import PageState from "./components/pageState.vue";
+import { requestErrorMessage } from "./requestError";
 import { useGettext } from '/@/plugins/i18n'
 const { $gettext } = useGettext()
 const dhcpTags = ref<any>([])
@@ -91,9 +98,11 @@ const getGlobalData = async () => {
         const { data } = await request.DeviceMangement.globalConfigs.GET()
         if (data.result) {
             dhcpTags.value = data.result?.dhcpTags || []
+        } else if (data.error) {
+            Toast.Warning(String(data.error))
         }
     } catch (error) {
-
+        Toast.Warning(requestErrorMessage(error, `${$gettext('读取结果失败')}，${$gettext('请刷新界面')}`))
     }
 }
 getGlobalData()
@@ -132,19 +141,24 @@ const filterChinese = (e: any) => {
     staticStateData.hostname = e.target.value.replace(/[\u4e00-\u9fa5\s]/g, '');
 };
 
+const loadError = ref('')
+const isLoading = ref(true)
 const getData = async () => {
-    let load = Toast.Loading($gettext("加载中..."))
+    isLoading.value = true
     try {
         const { data } = await request.DeviceMangement.listStaticDevices.GET()
         // console.log(data, '=======');
         if (data.result) {
             tableData.value = data.result || []
             tableData1.value = data.result || []
+            loadError.value = ''
+        } else if (data.error) {
+            loadError.value = String(data.error)
         }
     } catch (error) {
-
+        loadError.value = requestErrorMessage(error, `${$gettext('读取结果失败')}，${$gettext('请刷新界面')}`)
     } finally {
-        load.Close()
+        isLoading.value = false
     }
 }
 getData()
@@ -158,19 +172,14 @@ const handleSelectionChange = (items: any) => {
 
 // 刷新
 const handleRefresh = async () => {
-    tableData.value = []
-    let load = Toast.Loading($gettext("加载中..."))
     await getData()
-    load.Close()
 }
 
 const searchDevices = (keyword: string) => {
+    const normalizedKeyword = keyword.toLowerCase()
     return tableData.value.filter((device: any) => {
-        // 检查IP地址是否包含关键词
-        const ipMatch = device.assignedIP.includes(keyword);
-        // 检查MAC地址是否包含关键词（忽略大小写）
-        const macMatch = device.assignedMac.toLowerCase().includes(keyword.toLowerCase());
-        return ipMatch || macMatch;
+        return [device.hostname, device.assignedIP, device.assignedMac]
+            .some(value => String(value || '').toLowerCase().includes(normalizedKeyword))
     });
 }
 // 搜索
@@ -207,7 +216,8 @@ const handleEdit = (row: any) => {
 
 // 单项删除
 const handelDelete = async (row: any) => {
-    if (confirm($gettext("温馨提示：删除设备的静态分配可能影响此设备的联网，请谨慎操作！"))) {
+    const identity = `${row.hostname || row.assignedIP || $gettext('未命名设备')} · ${String(row.assignedMac || '').slice(-5)}`
+    if (confirm(`${$gettext('确认删除此设备的静态分配？')}\n${identity}`)) {
         let obj = {
             hostname: row.hostname || '',
             assignedIP: row.assignedIP || '',
@@ -229,13 +239,13 @@ const deleteDevice = async (obj: any, type?: number) => {
             if (JSON.stringify(data) === '{}') {
                 Toast.Success('删除成功' + ' !')
             } else {
-                Toast.Success(data?.error || '删除失败！')
+                Toast.Warning(data?.error || $gettext('配置失败'))
             }
             getData()
         }
         return data;
     } catch (error) {
-
+        Toast.Warning(requestErrorMessage(error, $gettext('配置失败')))
     } finally {
         load.Close()
     }
@@ -245,7 +255,7 @@ const handleBatchDelete = async () => {
     if (selectedItems.value.length === 0) {
         return Toast.Warning($gettext("请勾选要删除的数据") + ' !')
     }
-    if (confirm($gettext("温馨提示：删除设备的静态分配可能影响此设备的联网，请谨慎操作！"))) {
+    if (confirm(`${$gettext('确认批量删除静态分配？')}\n${selectedItems.value.length} ${$gettext('项')}`)) {
         try {
             const deletePromises = selectedItems.value.map((item: any) => {
                 const obj = {
@@ -264,7 +274,7 @@ const handleBatchDelete = async () => {
             Toast.Success($gettext('所有删除操作已完成'));
             getData();
         } catch (error) {
-
+            Toast.Warning(requestErrorMessage(error, $gettext('配置失败')))
         }
     }
 }
@@ -338,10 +348,10 @@ const staticStateConfirm = async () => {
             handleRefresh()
             Toast.Success("保存成功" + ' !')
         } else {
-            Toast.Success(data?.error || '保存失败！')
+            Toast.Warning(data?.error || $gettext('配置失败'))
         }
     } catch (error: any) {
-        Toast.Warning(`${error?.error} || ${error?.message}`)
+        Toast.Warning(requestErrorMessage(error, $gettext('配置失败')))
     } finally {
         load.Close()
     }
@@ -365,6 +375,12 @@ const handleCancel = () => {
 
 
 <style lang="scss" scoped>
+.device-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    max-width: 100%;
+}
+
 .custom-content {
     position: relative;
 
@@ -375,7 +391,7 @@ const handleCancel = () => {
         width: 100px;
         height: 100px;
 
-        >img {
+        :deep(svg) {
             width: 100%;
             height: 100%;
         }

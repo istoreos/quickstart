@@ -1,0 +1,496 @@
+<template>
+    <section class="device-center" aria-labelledby="device-center-title">
+        <div class="device-center__header">
+            <div>
+                <h2 id="device-center-title">{{ $gettext('设备') }}</h2>
+                <p>{{ $gettext('查看当前在线和本次开机发现过的局域网设备') }}</p>
+            </div>
+            <div class="device-center__tools">
+                <label class="device-search">
+                    <span class="sr-only">{{ $gettext('搜索设备') }}</span>
+                    <input v-model.trim="query" type="search" :placeholder="$gettext('搜索名称、IP、MAC 或厂商')" />
+                </label>
+                <select v-model="sort" :aria-label="$gettext('排序方式')">
+                    <option value="recent">{{ $gettext('最近活跃') }}</option>
+                    <option value="name">{{ $gettext('按名称') }}</option>
+                </select>
+                <button class="icon-button" type="button" :disabled="loading" @click="load" :aria-label="$gettext('刷新')">↻</button>
+            </div>
+        </div>
+
+        <nav class="device-filters" :aria-label="$gettext('设备筛选')">
+            <button v-for="item in filters" :key="item.value" type="button"
+                :class="{ active: filter === item.value }" @click="filter = item.value">
+                {{ item.label }} <span>{{ counts[item.value] }}</span>
+            </button>
+        </nav>
+
+        <div v-if="telemetryHealth === 'partial' || telemetryHealth === 'stale'" class="telemetry-notice" role="status">
+            {{ telemetryHealth === 'stale' ? $gettext('流量数据更新延迟，正在恢复采样') : $gettext('流量采样暂不可用，设备清单仍可正常使用') }}
+        </div>
+
+        <PageState v-if="loading" kind="loading" :title="$gettext('正在加载设备')" :description="$gettext('正在整理设备身份和在线状态…')" />
+        <LoadError v-else-if="loadError" :message="loadError" @retry="load" />
+        <PageState v-else-if="health.state === 'partial'" kind="info" :title="$gettext('部分设备信息暂不可用')"
+            :description="$gettext('设备清单仍可使用，缺失的信息会在数据源恢复后自动补齐。')" />
+        <PageState v-if="!loading && !loadError && visibleDevices.length === 0" kind="empty"
+            :title="query ? $gettext('没有匹配的设备') : $gettext('当前筛选下没有设备')"
+            :description="query ? $gettext('请尝试名称、IP、MAC 或厂商的其他关键词。') : $gettext('可以切换到“全部”查看本次开机发现过的设备。')" />
+
+        <div v-if="!loading && !loadError && visibleDevices.length" class="device-table-wrap">
+            <table class="device-table">
+                <thead>
+                    <tr>
+                        <th>{{ $gettext('设备') }}</th>
+                        <th>{{ $gettext('状态') }}</th>
+                        <th>{{ $gettext('地址') }}</th>
+                        <th>{{ $gettext('连接') }}</th>
+                        <th>{{ $gettext('实时流量') }}</th>
+                        <th>{{ $gettext('策略与操作') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="device in visibleDevices" :key="device.deviceId" @click="openDetails(device)">
+                        <td>
+                            <div class="device-identity">
+                                <DeviceSceneIcon :scene="device.scene" :label="sceneLabel(device.scene)" />
+                                <div>
+                                    <strong>
+                                        <template v-for="(part, index) in highlight(displayName(device))" :key="index">
+                                            <mark v-if="part.matched">{{ part.text }}</mark><template v-else>{{ part.text }}</template>
+                                        </template>
+                                    </strong>
+                                    <span class="identity-meta" :title="device.brand || categoryMeta(device)"><b v-if="identityPresentation(device).showBrandInMeta">{{ device.brand }}</b><template v-if="identityPresentation(device).showBrandInMeta"> · </template>{{ categoryMeta(device) }}</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="status-pill" :class="device.online ? 'online' : 'offline'">{{ device.online ? $gettext('在线') : $gettext('离线') }}</span></td>
+                        <td><span class="mono">{{ device.primaryAddress || '—' }}</span><small v-if="device.extraAddressCount">+{{ device.extraAddressCount }}</small></td>
+                        <td>{{ connectionLabel(device.connection.kind) }}</td>
+                        <td><div class="traffic"><span>↑ {{ trafficLabel(device, 'up') }}</span><span>↓ {{ trafficLabel(device, 'down') }}</span></div></td>
+                        <td>
+                            <div class="policy-action">
+                                <div class="policy-list">
+                                    <span v-for="policy in device.policyLabels" :key="policy">{{ policyLabel(policy) }}</span>
+                                    <span v-if="device.policyLabels.length === 0" class="muted">{{ $gettext('无策略') }}</span>
+                                </div>
+                                <button type="button" @click.stop="openDetails(device)">{{ $gettext('详情') }}</button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <article v-for="device in visibleDevices" :key="`card-${device.deviceId}`" class="device-card" @click="openDetails(device)">
+                <div class="device-card__top">
+                    <div class="device-identity">
+                        <DeviceSceneIcon :scene="device.scene" :label="sceneLabel(device.scene)" />
+                        <div><strong>{{ displayName(device) }}</strong><span class="identity-meta"><b v-if="identityPresentation(device).showBrandInMeta">{{ device.brand }}</b><template v-if="identityPresentation(device).showBrandInMeta"> · </template>{{ categoryMeta(device) }}</span></div>
+                    </div>
+                    <span class="status-pill" :class="device.online ? 'online' : 'offline'">{{ device.online ? $gettext('在线') : $gettext('离线') }}</span>
+                </div>
+                <div class="device-card__facts">
+                    <span><small>{{ $gettext('地址') }}</small><span class="mono">{{ device.primaryAddress || '—' }}</span></span>
+                    <span><small>{{ $gettext('连接') }}</small>{{ connectionLabel(device.connection.kind) }}</span>
+                    <span><small>{{ $gettext('实时流量') }}</small>↑ {{ trafficLabel(device, 'up') }} · ↓ {{ trafficLabel(device, 'down') }}</span>
+                    <span><small>{{ $gettext('策略') }}</small>{{ device.policyLabels.length ? device.policyLabels.map(policyLabel).join(' · ') : $gettext('无策略') }}</span>
+                </div>
+            </article>
+        </div>
+
+        <div v-if="selected" class="drawer-backdrop" @click.self="selected = null">
+            <aside class="device-drawer" role="dialog" aria-modal="true" :aria-label="$gettext('设备详情')">
+                <div class="drawer-header">
+                    <div class="device-identity">
+                        <DeviceSceneIcon :scene="selected.scene" :label="sceneLabel(selected.scene)" />
+                        <div><h3>{{ displayName(selected) }}</h3><span class="identity-meta"><b v-if="identityPresentation(selected).showBrandInMeta">{{ selected.brand }}</b><template v-if="identityPresentation(selected).showBrandInMeta"> · </template>{{ categoryMeta(selected) }}</span></div>
+                    </div>
+                    <button type="button" class="drawer-close" @click="selected = null" :aria-label="$gettext('关闭')">×</button>
+                </div>
+                <div class="drawer-section">
+                    <dl>
+                        <div><dt>{{ $gettext('状态') }}</dt><dd>{{ selected.online ? $gettext('在线') : $gettext('离线') }}</dd></div>
+                        <div><dt>{{ $gettext('品牌') }}</dt><dd>{{ selected.brand || $gettext('未知品牌') }}</dd></div>
+                        <div><dt>{{ $gettext('设备类型') }}</dt><dd>{{ sceneLabel(selected.scene) }}</dd></div>
+                        <div><dt>{{ $gettext('原始厂商') }}</dt><dd>{{ selected.classification.manufacturer || '—' }}</dd></div>
+                        <div><dt>{{ $gettext('识别依据') }}</dt><dd>{{ classificationSourceLabel(selected.classification.source) }}</dd></div>
+                        <div><dt>{{ $gettext('识别可信度') }}</dt><dd>{{ confidenceLabel(selected.classification.confidence) }}</dd></div>
+                        <div><dt>MAC</dt><dd class="mono">{{ selected.mac || '—' }}</dd></div>
+                        <div v-if="selected.identity?.scope === 'boot'"><dt>{{ $gettext('身份稳定性') }}</dt><dd>{{ $gettext('本次开机') }}</dd></div>
+                        <div><dt>{{ $gettext('连接') }}</dt><dd>{{ connectionLabel(selected.connection.kind) }}</dd></div>
+                        <div><dt>{{ $gettext('最近出现') }}</dt><dd>{{ formatLastSeen(selected.lastSeenAt) }}</dd></div>
+                    </dl>
+                </div>
+                <div class="drawer-section">
+                    <h4>{{ $gettext('设备类型') }}</h4>
+                    <DeviceClassificationEditor :device="selected" @saved="handleClassificationSaved" />
+                </div>
+                <div class="drawer-section">
+                    <h4>{{ $gettext('当前地址') }}</h4>
+                    <div v-if="selected.addresses.current.length" class="address-list">
+                        <button v-for="address in selected.addresses.current" :key="address.address" type="button"
+                            class="address-copy" :title="$gettext('复制地址')" @click="copyAddress(address.address)">
+                            <code>{{ address.address }}</code><span>{{ copiedAddress === address.address ? $gettext('已复制') : $gettext('复制') }}</span>
+                        </button>
+                    </div>
+                    <span v-else class="muted">{{ $gettext('当前没有地址') }}</span>
+                    <h4 v-if="selected.addresses.historical.length">{{ $gettext('历史地址') }}</h4>
+                    <div class="address-list">
+                        <button v-for="address in selected.addresses.historical" :key="address.address" type="button"
+                            class="address-copy" :title="$gettext('复制地址')" @click="copyAddress(address.address)">
+                            <code>{{ address.address }}</code><span>{{ copiedAddress === address.address ? $gettext('已复制') : $gettext('复制') }}</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="drawer-section">
+                    <h4>{{ $gettext('设备流量') }}</h4>
+                    <dl>
+                        <div><dt>{{ $gettext('当前速率') }}</dt><dd>↑ {{ trafficLabel(selected, 'up') }} · ↓ {{ trafficLabel(selected, 'down') }}</dd></div>
+                        <div><dt>{{ $gettext('本次开机') }}</dt><dd>↑ {{ trafficTotal(selected, 'up') }} · ↓ {{ trafficTotal(selected, 'down') }}</dd></div>
+                        <div><dt>{{ $gettext('连接数') }}</dt><dd>{{ selected.telemetry?.state === 'warming_up' || !selected.telemetry ? $gettext('采集中') : selected.telemetry.connectionCount }}</dd></div>
+                    </dl>
+                    <div v-if="trafficHistory[selected.deviceId]?.length" class="traffic-chart" :aria-label="$gettext('近期流量趋势')">
+                        <span v-for="(point, index) in trafficHistory[selected.deviceId]" :key="index" class="traffic-chart__bar">
+                            <i class="upload" :style="{ height: `${chartHeight(selected.deviceId, point.up)}%` }"></i>
+                            <i class="download" :style="{ height: `${chartHeight(selected.deviceId, point.down)}%` }"></i>
+                        </span>
+                    </div>
+                    <small class="chart-legend"><span>↑ {{ $gettext('上传') }}</span><span>↓ {{ $gettext('下载') }}</span></small>
+                </div>
+                <div class="drawer-section">
+                    <h4>{{ $gettext('设备控制') }}</h4>
+                    <DevicePolicyPanel :device="selected" @saved="handlePolicySaved" />
+                </div>
+                <div class="drawer-footer">
+                    <button type="button" class="secondary-button" @click="$emit('use-legacy')">{{ $gettext('在经典列表中管理') }}</button>
+                </div>
+            </aside>
+        </div>
+    </section>
+</template>
+
+<script setup lang="ts">
+import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { useGettext } from '/@/plugins/i18n'
+import request from '/@/request'
+import LoadError from './components/loadError.vue'
+import PageState from './components/pageState.vue'
+import DeviceClassificationEditor from './components/deviceClassificationEditor.vue'
+import DevicePolicyPanel from './components/devicePolicyPanel.vue'
+import DeviceSceneIcon from './components/deviceSceneIcon.vue'
+import { requestErrorMessage } from './requestError'
+import {
+    buildDeviceListItems,
+    deviceIdentityPresentation,
+    deviceCounts,
+    selectDeviceListItems,
+    splitHighlight,
+    type DeviceFilter,
+    type DeviceClassification,
+    type DeviceListItem,
+    type DeviceSort,
+    type InventoryDevice,
+    type LegacyDevice,
+} from './deviceInventory'
+import type { DeviceScene } from './deviceScene'
+import {
+    formatTrafficBytes,
+    telemetryBackoff,
+    telemetryByDevice,
+    telemetrySpeedLabel,
+    type DeviceTelemetryItem,
+    type DeviceTelemetryState,
+} from './deviceTelemetry'
+
+defineEmits<{ (event: 'use-legacy'): void }>()
+const { $gettext } = useGettext()
+
+const devices = ref<DeviceListItem[]>([])
+const health = ref<{ state: string; reasons: string[] }>({ state: 'ready', reasons: [] })
+const loading = ref(true)
+const loadError = ref('')
+const filter = ref<DeviceFilter>('online')
+const sort = ref<DeviceSort>('recent')
+const query = ref('')
+const selected = ref<DeviceListItem | null>(null)
+const copiedAddress = ref('')
+const telemetryItems = ref(new Map<string, DeviceTelemetryItem>())
+const telemetryHealth = ref<DeviceTelemetryState>('warming_up')
+const trafficHistory = ref<Record<string, Array<{ up: number; down: number }>>>({})
+let telemetryTimer: number | undefined
+let telemetryFailures = 0
+
+const counts = computed(() => deviceCounts(devices.value))
+const visibleDevices = computed(() => selectDeviceListItems(devices.value, filter.value, query.value, sort.value))
+const filters = computed(() => [
+    { value: 'online' as DeviceFilter, label: $gettext('在线') },
+    { value: 'all' as DeviceFilter, label: $gettext('全部') },
+    { value: 'controlled' as DeviceFilter, label: $gettext('已控制') },
+])
+
+const load = async () => {
+    loading.value = true
+    loadError.value = ''
+    try {
+        const [inventoryResponse, legacyResponse] = await Promise.all([
+            request.DeviceMangement.deviceInventoryV2.GET(),
+            request.DeviceMangement.listDevices.GET(),
+        ])
+        const inventoryData = inventoryResponse.data
+        if (!inventoryData?.result) throw inventoryData?.error || $gettext('设备清单不可用')
+        const legacyData = legacyResponse.data
+        const inventoryDevices: InventoryDevice[] = inventoryData.result.devices || []
+        const legacyDevices: LegacyDevice[] = legacyData?.result?.devices || []
+        devices.value = buildDeviceListItems(inventoryDevices, legacyDevices)
+        applyTelemetry(telemetryItems.value)
+        health.value = inventoryData.result.health || { state: 'ready', reasons: [] }
+        if (selected.value) {
+            selected.value = devices.value.find(device => device.deviceId === selected.value?.deviceId) || null
+        }
+    } catch (error) {
+        loadError.value = requestErrorMessage(error, `${$gettext('读取结果失败')}，${$gettext('请刷新界面')}`)
+    } finally {
+        loading.value = false
+    }
+}
+
+const displayName = (device: DeviceListItem) => {
+    const name = device.displayName || device.hostname || ''
+    if (name) return name
+    if (device.brand) return `${device.brand} ${device.classification.source === 'fallback' ? $gettext('设备') : sceneLabel(device.scene)}`
+    return $gettext('未命名设备')
+}
+const connectionLabel = (kind: string) => kind === 'wifi' ? 'Wi-Fi' : kind === 'lan' ? $gettext('有线') : $gettext('未知')
+const sceneLabel = (scene: DeviceScene) => ({
+    phone: $gettext('手机'),
+    computer: $gettext('电脑'),
+    tablet: $gettext('平板'),
+    tv: $gettext('电视与影音'),
+    network: $gettext('网络设备'),
+    'smart-home': $gettext('智能家居'),
+    camera: $gettext('摄像头'),
+    gaming: $gettext('游戏设备'),
+    storage: $gettext('存储与服务器'),
+    printer: $gettext('打印机'),
+    wearable: $gettext('穿戴设备'),
+    unknown: $gettext('未知设备'),
+}[scene])
+const categoryMeta = (device: DeviceListItem) => {
+    const presentation = identityPresentation(device)
+    if (presentation.metaMode === 'pending') return $gettext('类型待确认')
+    if (presentation.metaMode === 'classification-source') return classificationSourceLabel(device.classification.source)
+    return sceneLabel(device.scene)
+}
+const identityPresentation = (device: DeviceListItem) => deviceIdentityPresentation(device)
+const classificationSourceLabel = (source: DeviceListItem['classification']['source']) => ({
+    model: $gettext('型号特征'),
+    hostname: $gettext('设备名称'),
+    manufacturer_default: $gettext('厂商默认类型'),
+    fallback: $gettext('安全回退'),
+    manual: $gettext('手动设置'),
+}[source])
+const confidenceLabel = (confidence: DeviceListItem['classification']['confidence']) => ({
+    high: $gettext('高'),
+    medium: $gettext('中'),
+    low: $gettext('低'),
+}[confidence])
+const policyLabel = (policy: string) => ({ static: $gettext('静态地址'), limited: $gettext('已限速'), blocked: $gettext('已断网') }[policy] || policy)
+const trafficLabel = (device: DeviceListItem, direction: 'up' | 'down') => telemetrySpeedLabel(device.telemetry, direction)
+const trafficTotal = (device: DeviceListItem, direction: 'up' | 'down') => {
+    if (!device.telemetry || device.telemetry.state === 'warming_up') return $gettext('采集中')
+    return formatTrafficBytes(direction === 'up' ? device.telemetry.uploadBytes : device.telemetry.downloadBytes)
+}
+const chartHeight = (deviceId: string, value: number) => {
+    const points = trafficHistory.value[deviceId] || []
+    const max = Math.max(1, ...points.flatMap(point => [point.up, point.down]))
+    return Math.max(3, Math.round(value * 100 / max))
+}
+const highlight = (value: string) => splitHighlight(value, query.value)
+const openDetails = (device: DeviceListItem) => { selected.value = device }
+const handlePolicySaved = (labels: string[]) => {
+    if (!selected.value) return
+    selected.value.policyLabels = labels
+    selected.value.controlled = labels.length > 0
+}
+const handleClassificationSaved = (classification: DeviceClassification) => {
+    if (!selected.value) return
+    const deviceId = selected.value.deviceId
+    devices.value = devices.value.map(device => device.deviceId === deviceId ? {
+        ...device,
+        classification,
+        scene: classification.category,
+        brand: classification.brand,
+    } : device)
+    selected.value = devices.value.find(device => device.deviceId === deviceId) || null
+}
+const copyAddress = async (value: string) => {
+    try {
+        await navigator.clipboard.writeText(value)
+    } catch (_) {
+        const input = document.createElement('textarea')
+        input.value = value
+        input.style.position = 'fixed'
+        input.style.opacity = '0'
+        document.body.appendChild(input)
+        input.select()
+        document.execCommand('copy')
+        input.remove()
+    }
+    copiedAddress.value = value
+    window.setTimeout(() => { if (copiedAddress.value === value) copiedAddress.value = '' }, 1500)
+}
+const formatLastSeen = (value: string) => {
+    const date = new Date(value)
+    return Number.isNaN(date.getTime()) ? value : date.toLocaleString()
+}
+
+const applyTelemetry = (items: Map<string, DeviceTelemetryItem>) => {
+    for (const device of devices.value) device.telemetry = items.get(device.deviceId)
+    if (selected.value) selected.value = devices.value.find(device => device.deviceId === selected.value?.deviceId) || null
+}
+const recordTrafficHistory = (items: DeviceTelemetryItem[]) => {
+    const next = { ...trafficHistory.value }
+    for (const item of items) {
+        if (item.state !== 'ready') continue
+        next[item.deviceId] = [...(next[item.deviceId] || []), { up: item.uploadSpeed, down: item.downloadSpeed }].slice(-20)
+    }
+    trafficHistory.value = next
+}
+const scheduleTelemetry = (delay: number) => {
+    if (telemetryTimer !== undefined) window.clearTimeout(telemetryTimer)
+    telemetryTimer = undefined
+    if (!document.hidden) telemetryTimer = window.setTimeout(loadTelemetry, delay)
+}
+const loadTelemetry = async () => {
+    if (document.hidden) return
+    try {
+        const response = await request.DeviceMangement.deviceTrafficV2.GET()
+        if (!response.data?.result) throw response.data?.error || new Error('telemetry unavailable')
+        const items: DeviceTelemetryItem[] = response.data.result.items || []
+        telemetryItems.value = telemetryByDevice(items)
+        telemetryHealth.value = response.data.result.health?.state || 'ready'
+        telemetryFailures = 0
+        applyTelemetry(telemetryItems.value)
+        recordTrafficHistory(items)
+        scheduleTelemetry(3000)
+    } catch (_) {
+        telemetryHealth.value = 'partial'
+        telemetryFailures++
+        scheduleTelemetry(telemetryBackoff(telemetryFailures))
+    }
+}
+const handleVisibility = () => {
+    if (document.hidden) {
+        if (telemetryTimer !== undefined) window.clearTimeout(telemetryTimer)
+        telemetryTimer = undefined
+        return
+    }
+    loadTelemetry()
+}
+
+onMounted(async () => {
+    await load()
+    document.addEventListener('visibilitychange', handleVisibility)
+    loadTelemetry()
+})
+onUnmounted(() => {
+    document.removeEventListener('visibilitychange', handleVisibility)
+    if (telemetryTimer !== undefined) window.clearTimeout(telemetryTimer)
+})
+</script>
+
+<style lang="scss" scoped>
+.device-center { color: var(--flow-span-color); }
+.device-center__header { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; margin-bottom: 14px; }
+.device-center__header h2 { margin: 0; padding: 0; color: inherit; background: none !important; font-size: 20px; text-align: left; }
+.device-center__header p { margin: 5px 0 0; opacity: .65; font-size: 13px; }
+.device-center__tools { display: flex; align-items: center; gap: 8px; }
+.device-search input { width: 280px; max-width: 100%; min-height: 36px; padding: 7px 12px; color: inherit; background: transparent; border: 1px solid rgba(127, 127, 127, .3); border-radius: 7px; }
+select, .icon-button { min-height: 36px; color: inherit; background: transparent; border: 1px solid rgba(127, 127, 127, .3); border-radius: 7px; }
+select { padding: 0 28px 0 10px; }
+.icon-button { width: 38px; cursor: pointer; font-size: 19px; }
+.device-filters { display: flex; gap: 6px; margin-bottom: 14px; }
+.device-filters button { padding: 7px 12px; color: inherit; background: transparent; border: 1px solid transparent; border-radius: 999px; cursor: pointer; }
+.device-filters button span { margin-left: 5px; opacity: .6; }
+.device-filters button.active { color: #553afe; background: rgba(85, 58, 254, .09); border-color: rgba(85, 58, 254, .18); }
+.telemetry-notice { margin: 0 0 12px; padding: 8px 11px; color: #8a5a00; background: #fff8e8; border: 1px solid #f3d18a; border-radius: 7px; font-size: 12px; }
+.device-table-wrap { width: 100%; overflow: hidden; }
+.device-table { width: 100%; border-collapse: collapse; }
+.device-table th { padding: 12px 10px; text-align: left; white-space: nowrap; font-size: 13px; font-weight: 500; opacity: .7; background: rgba(127, 127, 127, .055); }
+.device-table td { padding: 15px 10px; border-bottom: 1px solid rgba(127, 127, 127, .11); vertical-align: middle; }
+.device-table tbody tr { cursor: pointer; transition: background .15s ease; }
+.device-table tbody tr:hover { background: rgba(85, 58, 254, .035); }
+.device-identity { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.device-identity div { display: flex; flex-direction: column; min-width: 0; }
+.device-identity strong { max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.device-identity span { margin-top: 2px; opacity: .72; font-size: 12px; }
+.identity-meta { display: block; max-width: 240px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.identity-meta b { color: #553afe; font-weight: 600; }
+mark { color: inherit; background: #fff0a6; border-radius: 2px; }
+.status-pill { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.status-pill::before { width: 7px; height: 7px; content: ''; border-radius: 50%; background: #a8adb7; }
+.status-pill.online::before { background: #26a269; box-shadow: 0 0 0 3px rgba(38, 162, 105, .12); }
+.status-pill.offline { opacity: .65; }
+.mono, code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+td > small { margin-left: 5px; color: #553afe; }
+.traffic { display: flex; flex-direction: column; gap: 3px; white-space: nowrap; font-size: 13px; }
+.policy-action { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.policy-list { display: flex; flex-wrap: wrap; gap: 5px; }
+.policy-list > span:not(.muted) { padding: 3px 7px; color: #553afe; background: rgba(85, 58, 254, .08); border-radius: 999px; font-size: 12px; }
+.policy-action button, .secondary-button { padding: 6px 10px; color: #553afe; background: transparent; border: 1px solid rgba(85, 58, 254, .45); border-radius: 6px; cursor: pointer; white-space: nowrap; }
+button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid #553afe; outline-offset: 2px; }
+.muted { opacity: .55; }
+.device-card { display: none; }
+.drawer-backdrop { position: fixed; inset: 0; z-index: 1000; display: flex; justify-content: flex-end; background: rgba(0, 0, 0, .36); }
+.device-drawer { width: min(430px, 100%); height: 100%; padding: 22px; overflow-y: auto; color: var(--flow-span-color); background: var(--card-bg-color); box-shadow: -8px 0 28px rgba(0, 0, 0, .18); }
+.drawer-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.device-drawer h3 { margin: 0; padding: 0; color: inherit; background: none !important; font-size: 19px; text-align: left; }
+.drawer-close { color: inherit; background: transparent; border: 0; cursor: pointer; font-size: 28px; }
+.drawer-section { padding: 18px 0; border-bottom: 1px solid rgba(127, 127, 127, .14); }
+.drawer-section h4 { margin: 0 0 10px; font-size: 14px; }
+dl { margin: 0; }
+dl div { display: grid; grid-template-columns: 100px 1fr; gap: 12px; padding: 7px 0; }
+dt { opacity: .58; }
+dd { margin: 0; overflow-wrap: anywhere; }
+.address-list { display: flex; flex-direction: column; gap: 7px; }
+code { padding: 7px 9px; overflow-wrap: anywhere; background: rgba(127, 127, 127, .07); border-radius: 5px; }
+.address-copy { display: flex; align-items: center; justify-content: space-between; gap: 10px; width: 100%; padding: 0; color: inherit; text-align: left; background: transparent; border: 0; cursor: pointer; }
+.address-copy code { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.address-copy span { flex: none; color: #553afe; font-size: 12px; }
+.traffic-chart { display: flex; align-items: flex-end; gap: 3px; height: 72px; margin-top: 13px; padding: 8px; background: rgba(127, 127, 127, .055); border-radius: 7px; }
+.traffic-chart__bar { display: flex; flex: 1; align-items: flex-end; justify-content: center; gap: 1px; height: 100%; }
+.traffic-chart__bar i { display: block; width: min(4px, 45%); min-height: 2px; border-radius: 2px 2px 0 0; }
+.traffic-chart__bar .upload { background: #8c7cf0; }
+.traffic-chart__bar .download { background: #32a873; }
+.chart-legend { display: flex; gap: 14px; margin-top: 6px; opacity: .65; }
+.drawer-footer { padding-top: 20px; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+
+@media (max-width: 980px) {
+    .device-center__header { flex-direction: column; }
+    .device-center__tools { width: 100%; }
+    .device-search { flex: 1; }
+    .device-search input { width: 100%; }
+    .device-table th:nth-child(4), .device-table td:nth-child(4) { display: none; }
+}
+
+@media (max-width: 700px) {
+    .device-center__tools { flex-wrap: wrap; }
+    .device-search { flex-basis: 100%; }
+    .device-table { display: none; }
+    .device-card { display: block; margin-bottom: 10px; padding: 14px; border: 1px solid rgba(127, 127, 127, .15); border-radius: 9px; cursor: pointer; }
+    .device-card__top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+    .device-card__facts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px; }
+    .device-card__facts > span { display: flex; flex-direction: column; min-width: 0; overflow-wrap: anywhere; }
+    .device-card__facts small { margin-bottom: 3px; opacity: .55; }
+    .identity-meta { max-width: min(220px, 58vw); }
+}
+
+@media (max-width: 420px) {
+    .device-center__header p { max-width: 30ch; }
+    .device-filters { overflow-x: auto; }
+    .device-filters button { flex: none; }
+    .device-card__facts { grid-template-columns: 1fr; }
+    .device-drawer { padding: 18px 16px; }
+}
+</style>

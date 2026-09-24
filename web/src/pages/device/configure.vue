@@ -6,11 +6,17 @@
                 {{ tab.label }}
             </button>
         </div>
-        <div class="tab-content_g">
+        <PageState v-if="isLoading" kind="loading" :title="$gettext('正在加载全局设置')"
+            :description="$gettext('请稍候…')" />
+        <LoadError v-else-if="loadError" :message="loadError" @retry="getGlobalData" />
+        <div v-else class="tab-content_g">
 
             <!-- IP限速 -->
             <div v-show="activeTab === 'ip'">
-                <div class="not_installed" v-if="!eqosShow">
+                <PageState v-if="speedCapability.state === 'error'" kind="error"
+                    :title="$gettext('无法确认限速功能状态')" :description="$gettext('请重试或检查插件状态。')"
+                    :action-label="$gettext('重新加载')" @action="getGlobalData" />
+                <div class="not_installed" v-else-if="!eqosShow">
                     <svg t="1752659436579" class="icon" viewBox="0 0 1024 1024" version="1.1"
                         xmlns="http://www.w3.org/2000/svg" p-id="4943" width="150" height="150">
                         <path d="M216.896 97.232l-55.792 106.24 704.784 8.928-24.352-75.888-38.496-39.28z"
@@ -56,7 +62,10 @@
 
             <!-- 浮动网关 -->
             <div v-show="activeTab === 'gateway'">
-                <div class="not_installed" v-if="!floatipShow">
+                <PageState v-if="floatCapability.state === 'error'" kind="error"
+                    :title="$gettext('无法确认浮动网关状态')" :description="$gettext('请重试或检查插件状态。')"
+                    :action-label="$gettext('重新加载')" @action="getGlobalData" />
+                <div class="not_installed" v-else-if="!floatipShow">
                     <svg t="1752659436579" class="icon" viewBox="0 0 1024 1024" version="1.1"
                         xmlns="http://www.w3.org/2000/svg" p-id="4943" width="150" height="150">
                         <path d="M216.896 97.232l-55.792 106.24 704.784 8.928-24.352-75.888-38.496-39.28z"
@@ -170,6 +179,10 @@ import Toast from "/@/components/toast";
 import SwitchVue from "./components/switch.vue";
 import request from '/@/request';
 import CustomTable from "./components/CustomTable.vue";
+import LoadError from "./components/loadError.vue";
+import PageState from "./components/pageState.vue";
+import { requestErrorMessage } from "./requestError";
+import { capabilityAllowsConfiguration, resolveCapability, type DeviceCapability } from "./deviceCapabilities";
 import { useGettext } from '/@/plugins/i18n'
 import { on } from 'events';
 const { $gettext } = useGettext()
@@ -211,11 +224,19 @@ const floatGatewayData = reactive({
 })
 
 const globalData = ref<any>({})
+const loadError = ref('')
+const isLoading = ref(true)
+const speedCapability = ref<DeviceCapability>({ state: 'error', reason: 'loading' })
+const floatCapability = ref<DeviceCapability>({ state: 'error', reason: 'loading' })
 const getGlobalData = async () => {
+    isLoading.value = true
     try {
         const { data } = await request.DeviceMangement.globalConfigs.GET()
         if (data.result) {
+            loadError.value = ''
             globalData.value = data.result || {}
+            speedCapability.value = resolveCapability(globalData.value, 'speedLimit')
+            floatCapability.value = resolveCapability(globalData.value, 'floatGateway')
             DHCPData.dhcpEnabled = data.result?.dhcpGlobal?.dhcpEnabled || false
             if (data.result?.dhcpGlobal?.dhcpGateway) {
                 DHCPData.dhcpGateway = data.result?.dhcpGlobal?.dhcpGateway
@@ -235,9 +256,15 @@ const getGlobalData = async () => {
             floatGatewayData.role = data.result?.floatGateway?.role || ''
             floatGatewayData.setIP = data.result?.floatGateway?.setIP || ''
             floatGatewayData.checkIP = data.result?.floatGateway?.checkIP || ''
+        } else if (data.error) {
+            loadError.value = String(data.error)
         }
     } catch (error) {
-
+        loadError.value = requestErrorMessage(error, `${$gettext('读取结果失败')}，${$gettext('请刷新界面')}`)
+        speedCapability.value = { state: 'error', reason: 'status_unavailable' }
+        floatCapability.value = { state: 'error', reason: 'status_unavailable' }
+    } finally {
+        isLoading.value = false
     }
 }
 getGlobalData()
@@ -254,60 +281,18 @@ const DHCPSave = async () => {
             Toast.Success($gettext("保存成功"));
             getGlobalData()
         } else {
-            Toast.Success(data?.error || '保存失败！')
+            Toast.Warning(data?.error || $gettext('配置失败'))
         }
 
     } catch (error: any) {
-        Toast.Warning(`${error?.error} || ${error?.message}`)
+        Toast.Warning(requestErrorMessage(error, $gettext('配置失败')))
     } finally {
         load.Close()
     }
 }
 
-const checkAndInstallApp = async (pkg: string, app: string) => {
-    let load = Toast.Loading($gettext("检查中..."))
-    try {
-        const res = await request.App.Check.POST({
-            name: pkg
-        })
-        load.Close()
-        if (res?.data) {
-            const { result, error } = res.data
-            if (error) {
-                Toast.Warning(error)
-            } else if (result) {
-                if (result.status == "installed") {
-                    return true
-                } else {
-                    return false
-                }
-            } else {
-                Toast.Warning($gettext("检查插件状态失败"))
-            }
-        }
-        return false
-    } catch (error) {
-        load.Close()
-        Toast.Warning(error as string)
-        return false
-    }
-}
-const eqosShow = ref(false)
-const floatipShow = ref(false)
-//检测是否安装了浮动网关
-const checkIsInstallFloatip = async () => {
-    if (await checkAndInstallApp("app-meta-floatip", "Floatip")) {
-        floatipShow.value = true
-    }
-}
-//检测是否安装了IP限速
-const checkIsInstallEqos = async () => {
-    if (await checkAndInstallApp("app-meta-eqos", "Eqos")) {
-        eqosShow.value = true
-    }
-}
-checkIsInstallFloatip()
-checkIsInstallEqos()
+const eqosShow = computed(() => capabilityAllowsConfiguration(speedCapability.value))
+const floatipShow = computed(() => capabilityAllowsConfiguration(floatCapability.value))
 
 type Tab = {
     id: string;
@@ -363,11 +348,7 @@ const openMode = async (pkg: string) => {
     tagDialogRef.value.openInstallDialog()
     const is = await appUtils.installApp(pkg)
     if (is) {
-        if (pkg == 'app-meta-floatip') {
-            checkIsInstallFloatip()
-        } else {
-            checkIsInstallEqos()
-        }
+        await getGlobalData()
         tagDialogRef.value.showInstallResult()
         return true
     } else {
@@ -407,11 +388,11 @@ const ipSave = async () => {
             Toast.Success($gettext("保存成功"));
             getGlobalData()
         } else {
-            Toast.Success(data?.error || '保存失败！')
+            Toast.Warning(data?.error || $gettext('配置失败'))
         }
 
     } catch (error: any) {
-        Toast.Warning(`${error?.error} || ${error?.message}`)
+        Toast.Warning(requestErrorMessage(error, $gettext('配置失败')))
     } finally {
         load.Close()
     }
@@ -451,10 +432,10 @@ const floatGatewaySave = async () => {
             Toast.Success($gettext("保存成功"));
             getGlobalData()
         } else {
-            Toast.Success(data?.error || '保存失败！')
+            Toast.Warning(data?.error || $gettext('配置失败'))
         }
     } catch (error: any) {
-        Toast.Warning(`${error?.error} || ${error?.message}`)
+        Toast.Warning(requestErrorMessage(error, $gettext('配置失败')))
     } finally {
         load.Close()
     }
@@ -500,10 +481,10 @@ const handleDelete = async (row: any) => {
                 Toast.Success($gettext("删除成功"));
                 getGlobalData()
             } else {
-                Toast.Success(data?.error || '删除失败！')
+                Toast.Warning(data?.error || $gettext('配置失败'))
             }
         } catch (error: any) {
-            Toast.Warning(`${error?.error} || ${error?.message}`)
+            Toast.Warning(requestErrorMessage(error, $gettext('配置失败')))
         } finally {
             load.Close()
         }
@@ -540,10 +521,10 @@ const handleTagConfirm = async (tagData: any) => {
             Toast.Success($gettext("保存成功"));
             getGlobalData()
         } else {
-            Toast.Success(data?.error || '保存失败！')
+            Toast.Warning(data?.error || $gettext('配置失败'))
         }
     } catch (error: any) {
-        Toast.Warning(`${error?.error} || ${error?.message}`)
+        Toast.Warning(requestErrorMessage(error, $gettext('配置失败')))
     } finally {
         load.Close()
     }

@@ -3,15 +3,23 @@
 package service
 
 import (
+	"bufio"
+	"context"
 	"net/netip"
+	"os"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/ti-mo/conntrack"
 )
 
 const (
-	testIP          = "192.168.9.3"
-	lanStatTimeTick = 3 * time.Second
+	testIP                  = "192.168.9.3"
+	lanStatTimeTick         = 3 * time.Second
+	lanPrefixRefreshEvery   = time.Minute
+	defaultLanStatHostTTL   = 10 * time.Minute
+	defaultLanStatHostLimit = 2048
 )
 
 type LanStats struct {
@@ -22,26 +30,45 @@ type LanStats struct {
 	lastRunningTime  time.Time
 	hosts            map[string]*LanStatHost
 	fetchHostStatsCh chan *fetchHostStatsReq
+	lanPrefixes      []netip.Prefix
+	lanPrefixReader  func() ([]netip.Prefix, error)
+	lastPrefixRead   time.Time
+	maxHosts         int
+	hostIdleTTL      time.Duration
+	now              func() time.Time
+	lastFetchAt      time.Time
+	lastFetchErr     error
+	sampleCount      int64
+	procFallback     bool
 }
 
 type LanStatHost struct {
-	ip       string
-	rxTotal  int64
-	txTotal  int64
-	lastItem *NetworkStatisticsItem
-	items    []*NetworkStatisticsItem
+	ip              string
+	rxTotal         int64
+	txTotal         int64
+	lastItem        *NetworkStatisticsItem
+	items           []*NetworkStatisticsItem
+	lastSeen        time.Time
+	txBytes         int64
+	rxBytes         int64
+	connectionCount int64
+	sampledAt       time.Time
 }
 
 type fetchHostStatsReq struct {
 	hostIP    string
 	speedOnly bool
-	itemCh    chan []*LanHostRet
+	response  chan lanStatsSnapshot
 }
 
 func NewLanStats() *LanStats {
 	stats := &LanStats{
 		hosts:            make(map[string]*LanStatHost),
 		fetchHostStatsCh: make(chan *fetchHostStatsReq, 1),
+		lanPrefixReader:  readSystemLANPrefixes,
+		maxHosts:         defaultLanStatHostLimit,
+		hostIdleTTL:      defaultLanStatHostTTL,
+		now:              time.Now,
 	}
 	go stats.run()
 	return stats
@@ -79,6 +106,11 @@ func (lstat *LanStats) runOnce(tm *time.Timer) error {
 		lstat.lastRunningTime = time.Now()
 		lstat.isRunning = true
 		err := lstat.fetchItems()
+		lstat.lastFetchErr = err
+		if err == nil {
+			lstat.lastFetchAt = lstat.currentTime()
+			lstat.sampleCount++
+		}
 		if err != nil {
 			l.Debugln("fetchItems in fetchStatCh err=", err)
 		}
@@ -95,6 +127,11 @@ func (lstat *LanStats) runOnce(tm *time.Timer) error {
 			return nil
 		}
 		err := lstat.fetchItems()
+		lstat.lastFetchErr = err
+		if err == nil {
+			lstat.lastFetchAt = lstat.currentTime()
+			lstat.sampleCount++
+		}
 		if err != nil {
 			l.Debugln("fetchItems in timer err=", err)
 		}
@@ -124,21 +161,18 @@ func (lstat *LanStats) closeConn() {
 }
 
 func (lstat *LanStats) fetchItems() error {
-	err := lstat.dial()
+	lstat.refreshLANPrefixes()
+	flows, err := lstat.readTrafficFlows()
 	if err != nil {
 		return err
 	}
-	c := lstat.c
-	flows, err := c.Dump(nil)
-	if err != nil {
-		return err
+	for _, host := range lstat.hosts {
+		host.connectionCount = 0
 	}
 
 	for _, flow := range flows {
-		// Get source and destination IPs
-		srcIP := flow.TupleOrig.IP.SourceAddress
-		dstIP := flow.TupleOrig.IP.DestinationAddress
-
+		srcIP := flow.source
+		dstIP := flow.destination
 		// Skip broadcast IPs (like 255.255.255.255)
 		if srcIP.IsUnspecified() || dstIP.IsUnspecified() ||
 			srcIP.IsMulticast() || dstIP.IsMulticast() {
@@ -146,27 +180,11 @@ func (lstat *LanStats) fetchItems() error {
 		}
 
 		// Get upstream (outbound) and downstream (inbound) traffic
-		upstream := int64(flow.CountersOrig.Bytes)
-		downstream := int64(flow.CountersReply.Bytes)
-
-		// Update stats for source IP
-		if srcIP.IsValid() && !srcIP.IsUnspecified() && !srcIP.IsMulticast() {
-			if !lstat.isLanIP(srcIP) {
-				continue
-			}
-			lstat.addSpeeds(srcIP.String(), upstream, downstream)
-		}
-
-		// Update stats for destination IP
-		if dstIP.IsValid() && !dstIP.IsUnspecified() && !dstIP.IsMulticast() {
-			if !lstat.isLanIP(dstIP) {
-				continue
-			}
-			lstat.addSpeeds(dstIP.String(), downstream, upstream)
-		}
+		lstat.recordFlow(srcIP, dstIP, flow.upstream, flow.downstream)
 	}
 
-	curr := time.Now()
+	curr := lstat.currentTime()
+	lstat.pruneHosts(curr)
 	for _, host := range lstat.hosts {
 		rxTotal, txTotal := host.rxTotal, host.txTotal
 		host.rxTotal, host.txTotal = 0, 0
@@ -178,18 +196,157 @@ func (lstat *LanStats) fetchItems() error {
 	return nil
 }
 
+type lanTrafficFlow struct {
+	source      netip.Addr
+	destination netip.Addr
+	upstream    int64
+	downstream  int64
+}
+
+func (lstat *LanStats) readTrafficFlows() ([]lanTrafficFlow, error) {
+	if !lstat.procFallback {
+		if err := lstat.dial(); err == nil {
+			flows, dumpErr := lstat.c.Dump(nil)
+			if dumpErr == nil {
+				result := make([]lanTrafficFlow, 0, len(flows))
+				for _, flow := range flows {
+					result = append(result, lanTrafficFlow{
+						source: flow.TupleOrig.IP.SourceAddress, destination: flow.TupleOrig.IP.DestinationAddress,
+						upstream: int64(flow.CountersOrig.Bytes), downstream: int64(flow.CountersReply.Bytes),
+					})
+				}
+				return result, nil
+			}
+		}
+		lstat.closeConn()
+		lstat.procFallback = true
+	}
+	return readProcConntrackFlows("/proc/net/nf_conntrack")
+}
+
+func readProcConntrackFlows(path string) ([]lanTrafficFlow, error) {
+	file, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+	result := make([]lanTrafficFlow, 0)
+	scanner := bufio.NewScanner(file)
+	buffer := make([]byte, 64*1024)
+	scanner.Buffer(buffer, 1024*1024)
+	for scanner.Scan() {
+		var source, destination netip.Addr
+		bytes := make([]int64, 0, 2)
+		for _, field := range strings.Fields(scanner.Text()) {
+			key, value, ok := strings.Cut(field, "=")
+			if !ok {
+				continue
+			}
+			switch key {
+			case "src":
+				if !source.IsValid() {
+					source, _ = netip.ParseAddr(value)
+				}
+			case "dst":
+				if !destination.IsValid() {
+					destination, _ = netip.ParseAddr(value)
+				}
+			case "bytes":
+				if len(bytes) < 2 {
+					parsed, parseErr := strconv.ParseInt(value, 10, 64)
+					if parseErr == nil && parsed >= 0 {
+						bytes = append(bytes, parsed)
+					}
+				}
+			}
+		}
+		if !source.IsValid() || !destination.IsValid() || len(bytes) == 0 {
+			continue
+		}
+		downstream := int64(0)
+		if len(bytes) > 1 {
+			downstream = bytes[1]
+		}
+		result = append(result, lanTrafficFlow{source: source.Unmap(), destination: destination.Unmap(), upstream: bytes[0], downstream: downstream})
+	}
+	return result, scanner.Err()
+}
+
+func (lstat *LanStats) recordFlow(srcIP, dstIP netip.Addr, upstream, downstream int64) {
+	if lstat.isLanIP(srcIP) {
+		lstat.addSpeeds(srcIP.String(), upstream, downstream)
+	}
+	if lstat.isLanIP(dstIP) {
+		lstat.addSpeeds(dstIP.String(), downstream, upstream)
+	}
+}
+
 func (lstat *LanStats) addSpeeds(ip string, tx, rx int64) {
+	now := lstat.currentTime()
 	host, ok := lstat.hosts[ip]
 	if !ok {
+		lstat.pruneHosts(now)
+		if len(lstat.hosts) >= lstat.hostLimit() {
+			lstat.evictOldestHost()
+		}
 		host = &LanStatHost{
-			ip:      ip,
-			rxTotal: rx,
-			txTotal: tx,
+			ip:       ip,
+			rxTotal:  rx,
+			txTotal:  tx,
+			lastSeen: now,
 		}
 		lstat.hosts[ip] = host
 	} else {
 		host.rxTotal += rx
 		host.txTotal += tx
+		host.lastSeen = now
+	}
+	host.connectionCount++
+}
+
+func (lstat *LanStats) currentTime() time.Time {
+	if lstat.now != nil {
+		return lstat.now()
+	}
+	return time.Now()
+}
+
+func (lstat *LanStats) hostLimit() int {
+	if lstat.maxHosts > 0 {
+		return lstat.maxHosts
+	}
+	return defaultLanStatHostLimit
+}
+
+func (lstat *LanStats) idleTTL() time.Duration {
+	if lstat.hostIdleTTL > 0 {
+		return lstat.hostIdleTTL
+	}
+	return defaultLanStatHostTTL
+}
+
+func (lstat *LanStats) pruneHosts(now time.Time) {
+	for ip, host := range lstat.hosts {
+		if !host.lastSeen.IsZero() && now.Sub(host.lastSeen) > lstat.idleTTL() {
+			delete(lstat.hosts, ip)
+		}
+	}
+	for len(lstat.hosts) > lstat.hostLimit() {
+		lstat.evictOldestHost()
+	}
+}
+
+func (lstat *LanStats) evictOldestHost() {
+	var oldestIP string
+	var oldestTime time.Time
+	for ip, host := range lstat.hosts {
+		if oldestIP == "" || host.lastSeen.Before(oldestTime) || (host.lastSeen.Equal(oldestTime) && ip < oldestIP) {
+			oldestIP = ip
+			oldestTime = host.lastSeen
+		}
+	}
+	if oldestIP != "" {
+		delete(lstat.hosts, oldestIP)
 	}
 }
 
@@ -204,25 +361,26 @@ func (lstat *LanStats) processHost(host *LanStatHost, curr time.Time, tx, rx int
 			startTime: curr,
 		}
 		host.items = make([]*NetworkStatisticsItem, 0, slots+1)
+		host.sampledAt = curr
 		return host
 	}
 	item := host.lastItem
 	item.endTime = curr
 	duration := item.endTime.Sub(item.startTime).Milliseconds() + 1
 	if tx < item.txStart {
-		if len(host.items) > 0 {
-			item.txAvg = host.items[len(host.items)-1].txAvg
-		}
+		item.txAvg = 0
 	} else {
-		item.txAvg = 1000 * (tx - item.txStart) / int64(duration)
+		delta := tx - item.txStart
+		item.txAvg = 1000 * delta / int64(duration)
+		host.txBytes += delta
 	}
 
 	if rx < item.rxStart {
-		if len(host.items) > 0 {
-			item.rxAvg = host.items[len(host.items)-1].rxAvg
-		}
+		item.rxAvg = 0
 	} else {
-		item.rxAvg = 1000 * (rx - item.rxStart) / int64(duration)
+		delta := rx - item.rxStart
+		item.rxAvg = 1000 * delta / int64(duration)
+		host.rxBytes += delta
 	}
 
 	if len(host.items) >= slots {
@@ -238,6 +396,7 @@ func (lstat *LanStats) processHost(host *LanStatHost, curr time.Time, tx, rx int
 		rxStart:   rx,
 		txStart:   tx,
 	}
+	host.sampledAt = curr
 	return host
 }
 
@@ -248,7 +407,8 @@ func (lstat *LanStats) respHosts(req *fetchHostStatsReq) error {
 		if ok {
 			//l.Debugln("found host ip=", host.ip, "items=", len(host.items))
 			ret := &LanHostRet{
-				ip: host.ip,
+				ip: host.ip, txBytes: host.txBytes, rxBytes: host.rxBytes,
+				connectionCount: host.connectionCount, sampledAt: host.sampledAt,
 			}
 			if req.speedOnly {
 				ret.items = make([]*NetworkStatisticsItem, 0, 1)
@@ -261,8 +421,8 @@ func (lstat *LanStats) respHosts(req *fetchHostStatsReq) error {
 			}
 			rets = append(rets, ret)
 		}
-		req.itemCh <- rets
-		close(req.itemCh)
+		req.response <- lanStatsSnapshot{hosts: rets, sampledAt: lstat.lastFetchAt, err: lstat.lastFetchErr, samples: lstat.sampleCount}
+		close(req.response)
 		return nil
 	}
 
@@ -270,7 +430,8 @@ func (lstat *LanStats) respHosts(req *fetchHostStatsReq) error {
 	rets := make([]*LanHostRet, 0, len(lstat.hosts))
 	for _, host := range lstat.hosts {
 		ret := &LanHostRet{
-			ip: host.ip,
+			ip: host.ip, txBytes: host.txBytes, rxBytes: host.rxBytes,
+			connectionCount: host.connectionCount, sampledAt: host.sampledAt,
 		}
 		if req.speedOnly {
 			// Get last speed only
@@ -284,23 +445,100 @@ func (lstat *LanStats) respHosts(req *fetchHostStatsReq) error {
 		}
 		rets = append(rets, ret)
 	}
-	req.itemCh <- rets
-	close(req.itemCh)
+	req.response <- lanStatsSnapshot{hosts: rets, sampledAt: lstat.lastFetchAt, err: lstat.lastFetchErr, samples: lstat.sampleCount}
+	close(req.response)
 	return nil
 }
 
 func (lstat *LanStats) isLanIP(ip netip.Addr) bool {
-	// TODO check if it's LAN IP?
-	return true
+	if !ip.IsValid() || ip.IsUnspecified() || ip.IsMulticast() {
+		return false
+	}
+	ip = ip.Unmap()
+	for _, prefix := range lstat.lanPrefixes {
+		if prefix.Contains(ip) {
+			return true
+		}
+	}
+	return false
+}
+
+func (lstat *LanStats) refreshLANPrefixes() {
+	if lstat.lanPrefixReader == nil {
+		return
+	}
+	now := lstat.currentTime()
+	if !lstat.lastPrefixRead.IsZero() && now.Sub(lstat.lastPrefixRead) < lanPrefixRefreshEvery {
+		return
+	}
+	lstat.lastPrefixRead = now
+	prefixes, err := lstat.lanPrefixReader()
+	if err != nil {
+		l.Debugln("read LAN prefixes failed, err=", err)
+		return
+	}
+	if len(prefixes) == 0 {
+		l.Debugln("read LAN prefixes returned no usable network")
+		return
+	}
+	lstat.lanPrefixes = prefixes
+}
+
+func readSystemLANPrefixes() ([]netip.Prefix, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	defer cancel()
+	status, err := ubusGetLanStatus(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return lanPrefixesFromStatus(status), nil
+}
+
+func lanPrefixesFromStatus(status *ubusLanStatus) []netip.Prefix {
+	if status == nil {
+		return nil
+	}
+	prefixes := make([]netip.Prefix, 0, len(status.network.Ipv4)+len(status.network.Ipv6)+len(status.network.Ipv6PA))
+	seen := make(map[netip.Prefix]struct{})
+	appendAddress := func(address *ubusNetworkInterfaceAddress) {
+		if address == nil {
+			return
+		}
+		addr, err := netip.ParseAddr(address.Address)
+		if err != nil || address.Mask < 0 || address.Mask > addr.BitLen() {
+			return
+		}
+		prefix := netip.PrefixFrom(addr.Unmap(), address.Mask).Masked()
+		if _, ok := seen[prefix]; ok {
+			return
+		}
+		seen[prefix] = struct{}{}
+		prefixes = append(prefixes, prefix)
+	}
+	for _, address := range status.network.Ipv4 {
+		appendAddress(address)
+	}
+	for _, address := range status.network.Ipv6 {
+		appendAddress(address)
+	}
+	for _, assignment := range status.network.Ipv6PA {
+		if assignment != nil {
+			appendAddress(&ubusNetworkInterfaceAddress{Address: assignment.Address, Mask: assignment.Mask})
+		}
+	}
+	return prefixes
 }
 
 func (lstat *LanStats) reqHosts(hostIP string, speedOnly bool) []*LanHostRet {
+	return lstat.reqSnapshot(hostIP, speedOnly).hosts
+}
+
+func (lstat *LanStats) reqSnapshot(hostIP string, speedOnly bool) lanStatsSnapshot {
 	req := &fetchHostStatsReq{
 		hostIP:    hostIP,
 		speedOnly: speedOnly,
-		itemCh:    make(chan []*LanHostRet, 1),
+		response:  make(chan lanStatsSnapshot, 1),
 	}
 	lstat.fetchHostStatsCh <- req
-	rets := <-req.itemCh
-	return rets
+	return <-req.response
 }

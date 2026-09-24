@@ -1014,6 +1014,56 @@ export const GuidePage = {
 
 // 设备管理
 export const DeviceMangement = {
+  // 版本化设备清单（稳定身份、在线状态与历史地址）
+  deviceInventoryV2: {
+    GET() {
+      return Request<any>("/lanctrl/v2/devices/", {
+        method: "GET",
+      });
+    },
+  },
+  // 设备类型人工修正（稳定身份持久化，临时身份仅本次开机）
+  deviceClassificationV2: {
+    GET(deviceId: string) {
+      return Request<any>(`/lanctrl/v2/device-classification/?deviceId=${encodeURIComponent(deviceId)}`, {
+        method: "GET",
+      });
+    },
+    POST(data: { deviceId: string; action: "set" | "reset"; category?: string }) {
+      return Request<any>("/lanctrl/v2/device-classification/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json;charset=utf-8" },
+        body: JSON.stringify(data),
+      });
+    },
+  },
+  // 按稳定设备身份聚合的实时遥测
+  deviceTrafficV2: {
+    GET() {
+      return Request<any>("/lanctrl/v2/device-traffic/", {
+        method: "GET",
+      });
+    },
+  },
+  devicePolicyV2: {
+    GET(deviceId: string) {
+      return Request<any>(`/lanctrl/v2/device-policy/?deviceId=${encodeURIComponent(deviceId)}`, {
+        method: "GET",
+      });
+    },
+    POST(data: { [key: string]: any }) {
+      return Request<any>("/lanctrl/v2/device-policy/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json;charset=utf-8" },
+        body: JSON.stringify(data),
+      });
+    },
+  },
+  devicePolicyRulesV2: {
+    GET() {
+      return Request<any>("/lanctrl/v2/device-policy/rules/", { method: "GET" });
+    },
+  },
   // 获取局域网内所有设备列表
   listDevices: {
     GET() {

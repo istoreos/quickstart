@@ -9,9 +9,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/julienschmidt/httprouter"
 	"github.com/istoreos/quickstart/backend/internal/httpapi"
 	"github.com/istoreos/quickstart/backend/models"
+	"github.com/julienschmidt/httprouter"
 )
 
 type fakeLanControlBackend struct {
@@ -100,6 +100,53 @@ func (backend *fakeLanControlBackend) GetLanListDevices(ctx context.Context) (*m
 	}, nil
 }
 
+func (backend *fakeLanControlBackend) GetDeviceInventoryV2(ctx context.Context) (*models.DeviceInventoryResponse, error) {
+	backend.record("deviceInventoryV2")
+	if backend.err != nil {
+		return nil, backend.err
+	}
+	return &models.DeviceInventoryResponse{Result: &models.DeviceInventoryResult{
+		Devices: []*models.DeviceInventoryItem{{DeviceID: "mac:aa:bb:cc:dd:ee:ff"}},
+	}}, nil
+}
+
+func (backend *fakeLanControlBackend) GetDeviceClassificationV2(ctx context.Context, r *http.Request) (*models.DeviceClassificationResponse, error) {
+	backend.recordRequest("getDeviceClassificationV2", r)
+	return &models.DeviceClassificationResponse{Result: &models.DeviceClassificationResult{
+		DeviceID: r.URL.Query().Get("deviceId"),
+	}}, nil
+}
+
+func (backend *fakeLanControlBackend) PostDeviceClassificationV2(ctx context.Context, r *http.Request) (*models.DeviceClassificationResponse, error) {
+	backend.recordRequest("postDeviceClassificationV2", r)
+	return &models.DeviceClassificationResponse{Result: &models.DeviceClassificationResult{Changed: true}}, nil
+}
+
+func (backend *fakeLanControlBackend) GetDeviceTrafficV2(ctx context.Context) (*models.DeviceTrafficResponse, error) {
+	backend.record("deviceTrafficV2")
+	if backend.err != nil {
+		return nil, backend.err
+	}
+	return &models.DeviceTrafficResponse{Result: &models.DeviceTrafficResult{
+		Items: []*models.DeviceTrafficItem{{DeviceID: "mac:aa:bb:cc:dd:ee:ff", State: "ready"}},
+	}}, nil
+}
+
+func (backend *fakeLanControlBackend) GetDevicePolicyV2(ctx context.Context, r *http.Request) (*models.DevicePolicyResponse, error) {
+	backend.recordRequest("getDevicePolicyV2", r)
+	return &models.DevicePolicyResponse{Result: &models.DevicePolicyResult{Policy: &models.DevicePolicy{DeviceID: r.URL.Query().Get("deviceId")}}}, nil
+}
+
+func (backend *fakeLanControlBackend) PostDevicePolicyV2(ctx context.Context, r *http.Request) (*models.DevicePolicyResponse, error) {
+	backend.recordRequest("postDevicePolicyV2", r)
+	return &models.DevicePolicyResponse{Result: &models.DevicePolicyResult{Changed: true}}, nil
+}
+
+func (backend *fakeLanControlBackend) GetDevicePolicyRulesV2(ctx context.Context) (*models.DevicePolicyRulesResponse, error) {
+	backend.record("devicePolicyRulesV2")
+	return &models.DevicePolicyRulesResponse{Result: &models.DevicePolicyRulesResult{}}, nil
+}
+
 func (backend *fakeLanControlBackend) GetLanListStaticDevices(ctx context.Context) (*models.LANCtrlStaticAssignedResponse, error) {
 	backend.record("listStaticDevices")
 	if backend.err != nil {
@@ -140,6 +187,50 @@ func TestRegisterLanControlRoutesMapsRoutesToBackendMethods(t *testing.T) {
 			method:   http.MethodGet,
 			path:     "/cgi-bin/luci/istore/lanctrl/speedsForDevices/",
 			wantCall: "speedsForDevices",
+		},
+		{
+			name:     "device inventory v2",
+			method:   http.MethodGet,
+			path:     "/cgi-bin/luci/istore/lanctrl/v2/devices/",
+			wantCall: "deviceInventoryV2",
+		},
+		{
+			name:     "get device classification v2",
+			method:   http.MethodGet,
+			path:     "/cgi-bin/luci/istore/lanctrl/v2/device-classification/?deviceId=mac%3Aaa",
+			wantCall: "getDeviceClassificationV2",
+		},
+		{
+			name:     "post device classification v2",
+			method:   http.MethodPost,
+			path:     "/cgi-bin/luci/istore/lanctrl/v2/device-classification/",
+			body:     `{"deviceId":"mac:aa","action":"set","category":"computer"}`,
+			wantCall: "postDeviceClassificationV2",
+		},
+		{
+			name:     "device traffic v2",
+			method:   http.MethodGet,
+			path:     "/cgi-bin/luci/istore/lanctrl/v2/device-traffic/",
+			wantCall: "deviceTrafficV2",
+		},
+		{
+			name:     "get device policy v2",
+			method:   http.MethodGet,
+			path:     "/cgi-bin/luci/istore/lanctrl/v2/device-policy/?deviceId=mac%3Aaa",
+			wantCall: "getDevicePolicyV2",
+		},
+		{
+			name:     "post device policy v2",
+			method:   http.MethodPost,
+			path:     "/cgi-bin/luci/istore/lanctrl/v2/device-policy/",
+			body:     `{"deviceId":"mac:aa","kind":"access","access":{"networkAccess":false}}`,
+			wantCall: "postDevicePolicyV2",
+		},
+		{
+			name:     "device policy rules v2",
+			method:   http.MethodGet,
+			path:     "/cgi-bin/luci/istore/lanctrl/v2/device-policy/rules/",
+			wantCall: "devicePolicyRulesV2",
 		},
 		{
 			name:     "speeds for one device",

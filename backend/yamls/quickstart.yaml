@@ -1600,6 +1600,63 @@ paths:
           schema:
             $ref: "lanctrl.yaml#/definitions/LANCtrlStaticAssignedResponse"
 
+  /cgi-bin/luci/istore/lanctrl/v2/devices/:
+    get:
+      tags:
+        - "lanctrl"
+      summary: "Get the versioned device inventory snapshot"
+      description: "获取按稳定设备身份聚合的 IPv4 设备清单与数据健康状态"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "设备清单快照"
+          schema:
+            $ref: "lanctrl.yaml#/definitions/DeviceInventoryResponse"
+  /cgi-bin/luci/istore/lanctrl/v2/device-traffic/:
+    get:
+      tags:
+        - "lanctrl"
+      responses:
+        200:
+          description: "Device traffic telemetry"
+          schema:
+            $ref: "lanctrl.yaml#/definitions/DeviceTrafficResponse"
+  /cgi-bin/luci/istore/lanctrl/v2/device-policy/:
+    get:
+      tags: ["lanctrl"]
+      parameters:
+        - name: deviceId
+          in: query
+          required: true
+          type: string
+      responses:
+        200:
+          description: "Device policy"
+          schema:
+            $ref: "lanctrl.yaml#/definitions/DevicePolicyResponse"
+    post:
+      tags: ["lanctrl"]
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: "lanctrl.yaml#/definitions/DevicePolicyApplyRequest"
+      responses:
+        200:
+          description: "Applied device policy"
+          schema:
+            $ref: "lanctrl.yaml#/definitions/DevicePolicyResponse"
+  /cgi-bin/luci/istore/lanctrl/v2/device-policy/rules/:
+    get:
+      tags: ["lanctrl"]
+      responses:
+        200:
+          description: "Device policy rules"
+          schema:
+            $ref: "lanctrl.yaml#/definitions/DevicePolicyRulesResponse"
+
   /cgi-bin/luci/istore/lanctrl/listSpeedLimitedDevices/:
     get:
       tags:

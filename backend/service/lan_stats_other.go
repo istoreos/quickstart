@@ -15,3 +15,7 @@ func NewLanStats() *LanStats {
 func (lstat *LanStats) reqHosts(_ string, _ bool) []*LanHostRet {
 	return []*LanHostRet{}
 }
+
+func (lstat *LanStats) reqSnapshot(_ string, _ bool) lanStatsSnapshot {
+	return lanStatsSnapshot{hosts: []*LanHostRet{}}
+}

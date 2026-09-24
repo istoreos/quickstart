@@ -9,3 +9,7 @@ repository as a formal release source.
 - Frontend source: `web`
 - Final iStoreOS LuCI plugin source:
   https://github.com/linkease/nas-packages-luci/tree/main/luci/luci-app-quickstart
+
+## Product Documents
+
+- [Device management comparison and roadmap](docs/device-management-comparison-and-roadmap.md)

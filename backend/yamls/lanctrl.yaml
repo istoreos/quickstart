@@ -1,4 +1,21 @@
 definitions:
+  DeviceManagementCapability:
+    type: object
+    required:
+      - state
+    properties:
+      state:
+        type: string
+        enum: [available, disabled, not_installed, error]
+      reason:
+        type: string
+  DeviceManagementCapabilities:
+    type: object
+    properties:
+      speedLimit:
+        $ref: "#/definitions/DeviceManagementCapability"
+      floatGateway:
+        $ref: "#/definitions/DeviceManagementCapability"
   LANDhcpGlobalConfig:
     type: object
     properties:
@@ -82,6 +99,8 @@ definitions:
   LANCtrlGlobalConfig:
     type: object
     properties:
+      capabilities:
+        $ref: "#/definitions/DeviceManagementCapabilities"
       dhcpGlobal:
         $ref: "#/definitions/LANDhcpGlobalConfig"
       dhcpTags:
@@ -296,4 +315,277 @@ definitions:
       result:
         type: array
         items:
-          $ref: "#/definitions/DeviceSpeedStat" 
+          $ref: "#/definitions/DeviceSpeedStat"
+
+  DeviceInventoryAddress:
+    type: object
+    required: [family, address]
+    properties:
+      family:
+        type: integer
+      address:
+        type: string
+      primary:
+        type: boolean
+  DeviceInventoryAddresses:
+    type: object
+    properties:
+      current:
+        type: array
+        items:
+          $ref: "#/definitions/DeviceInventoryAddress"
+      historical:
+        type: array
+        items:
+          $ref: "#/definitions/DeviceInventoryAddress"
+  DeviceInventoryConnection:
+    type: object
+    properties:
+      kind:
+        type: string
+        enum: [lan, wifi, unknown]
+  DeviceInventoryIdentity:
+    type: object
+    required: [kind, scope]
+    properties:
+      kind:
+        type: string
+        enum: [mac, duid_iaid]
+      scope:
+        type: string
+        enum: [persistent, boot]
+  DeviceInventoryHealth:
+    type: object
+    properties:
+      state:
+        type: string
+        enum: [ready, partial, warming_up, stale]
+      reasons:
+        type: array
+        items:
+          type: string
+  DeviceClassification:
+    type: object
+    required: [category, source, confidence]
+    properties:
+      brand:
+        type: string
+      manufacturer:
+        type: string
+      category:
+        type: string
+        enum: [phone, computer, tablet, tv, network, smart-home, camera, gaming, storage, printer, wearable]
+      source:
+        type: string
+        enum: [model, hostname, manufacturer_default, fallback, manual]
+      confidence:
+        type: string
+        enum: [high, medium, low]
+  DeviceInventoryItem:
+    type: object
+    required: [deviceId, online, lastSeenAt, mac, identity, addresses, connection, classification]
+    properties:
+      deviceId:
+        type: string
+      displayName:
+        type: string
+      hostname:
+        type: string
+      online:
+        type: boolean
+      lastSeenAt:
+        type: string
+      mac:
+        type: string
+      vendor:
+        type: string
+      classification:
+        $ref: "#/definitions/DeviceClassification"
+      identity:
+        $ref: "#/definitions/DeviceInventoryIdentity"
+      addresses:
+        $ref: "#/definitions/DeviceInventoryAddresses"
+      connection:
+        $ref: "#/definitions/DeviceInventoryConnection"
+  DeviceInventoryResponse:
+    type: object
+    allOf:
+      - $ref: "common.yaml#/definitions/JsonResponse"
+    properties:
+      result:
+        type: object
+        properties:
+          devices:
+            type: array
+            items:
+              $ref: "#/definitions/DeviceInventoryItem"
+          health:
+            $ref: "#/definitions/DeviceInventoryHealth"
+  DeviceClassificationOverride:
+    type: object
+    required: [active, scope]
+    properties:
+      active: { type: boolean }
+      category: { type: string }
+      scope:
+        type: string
+        enum: [persistent, boot]
+  DeviceClassificationResult:
+    type: object
+    required: [deviceId, changed]
+    properties:
+      deviceId: { type: string }
+      classification:
+        $ref: "#/definitions/DeviceClassification"
+      override:
+        $ref: "#/definitions/DeviceClassificationOverride"
+      changed: { type: boolean }
+      error:
+        $ref: "#/definitions/DevicePolicyError"
+  DeviceClassificationResponse:
+    type: object
+    allOf:
+      - $ref: "common.yaml#/definitions/JsonResponse"
+    properties:
+      result:
+        $ref: "#/definitions/DeviceClassificationResult"
+  DeviceClassificationApplyRequest:
+    type: object
+    required: [deviceId, action]
+    properties:
+      deviceId: { type: string }
+      action:
+        type: string
+        enum: [set, reset]
+      category: { type: string }
+  DeviceTrafficItem:
+    type: object
+    required: [deviceId, uploadSpeed, downloadSpeed, uploadBytes, downloadBytes, connectionCount, state]
+    properties:
+      deviceId:
+        type: string
+      uploadSpeed:
+        type: integer
+      downloadSpeed:
+        type: integer
+      uploadBytes:
+        type: integer
+      downloadBytes:
+        type: integer
+      connectionCount:
+        type: integer
+      state:
+        type: string
+        enum: [warming_up, ready, stale, partial]
+      sampledAt:
+        type: string
+  DeviceTrafficResponse:
+    type: object
+    allOf:
+      - $ref: "common.yaml#/definitions/JsonResponse"
+    properties:
+      result:
+        type: object
+        properties:
+          items:
+            type: array
+            items:
+              $ref: "#/definitions/DeviceTrafficItem"
+          health:
+            $ref: "#/definitions/DeviceInventoryHealth"
+  DevicePolicyCapability:
+    type: object
+    required: [state]
+    properties:
+      state:
+        type: string
+        enum: [available, disabled, not_installed, error]
+      reason:
+        type: string
+  DeviceStaticPolicy:
+    type: object
+    properties:
+      enabled: { type: boolean }
+      assignedIP: { type: string }
+      bindIP: { type: boolean }
+      hostname: { type: string }
+      tagName: { type: string }
+      tagTitle: { type: string }
+  DeviceSpeedPolicy:
+    type: object
+    properties:
+      enabled: { type: boolean }
+      uploadSpeed: { type: integer }
+      downloadSpeed: { type: integer }
+  DeviceAccessPolicy:
+    type: object
+    properties:
+      networkAccess: { type: boolean }
+  DevicePolicy:
+    type: object
+    properties:
+      deviceId: { type: string }
+      displayName: { type: string }
+      mac: { type: string }
+      currentIPv4: { type: string }
+      static:
+        $ref: "#/definitions/DeviceStaticPolicy"
+      speed:
+        $ref: "#/definitions/DeviceSpeedPolicy"
+      access:
+        $ref: "#/definitions/DeviceAccessPolicy"
+      capabilities:
+        type: object
+        additionalProperties:
+          $ref: "#/definitions/DevicePolicyCapability"
+  DevicePolicyError:
+    type: object
+    properties:
+      code:
+        type: string
+        enum: [dependency_not_installed, conflict, validation_failed, apply_failed]
+      message: { type: string }
+  DevicePolicyResponse:
+    type: object
+    allOf:
+      - $ref: "common.yaml#/definitions/JsonResponse"
+    properties:
+      result:
+        type: object
+        properties:
+          policy:
+            $ref: "#/definitions/DevicePolicy"
+          changed: { type: boolean }
+          error:
+            $ref: "#/definitions/DevicePolicyError"
+  DevicePolicyApplyRequest:
+    type: object
+    required: [deviceId, kind]
+    properties:
+      deviceId: { type: string }
+      kind:
+        type: string
+        enum: [static, speed, access]
+      idempotencyKey: { type: string }
+      static:
+        $ref: "#/definitions/DeviceStaticPolicy"
+      speed:
+        $ref: "#/definitions/DeviceSpeedPolicy"
+      access:
+        $ref: "#/definitions/DeviceAccessPolicy"
+  DevicePolicyRulesResponse:
+    type: object
+    allOf:
+      - $ref: "common.yaml#/definitions/JsonResponse"
+    properties:
+      result:
+        type: object
+        properties:
+          static:
+            type: array
+            items:
+              $ref: "#/definitions/LANStaticAssigned"
+          speed:
+            type: array
+            items:
+              $ref: "#/definitions/LANCtrlSpeedLimitItem"

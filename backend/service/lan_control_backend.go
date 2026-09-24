@@ -185,6 +185,81 @@ func (backend *ServiceBackend) GetLanListDevices(ctx context.Context) (*models.L
 	return newLanDeviceListService().GetListDevices(ctx, backend)
 }
 
+func (backend *ServiceBackend) GetDeviceInventoryV2(ctx context.Context) (*models.DeviceInventoryResponse, error) {
+	backend.mu.Lock()
+	if backend.deviceInventory == nil {
+		backend.deviceInventory = NewDeviceInventoryModule()
+	}
+	inventory := backend.deviceInventory
+	backend.mu.Unlock()
+	return inventory.Snapshot(ctx)
+}
+
+func (backend *ServiceBackend) GetDeviceClassificationV2(ctx context.Context, r *http.Request) (*models.DeviceClassificationResponse, error) {
+	return backend.deviceClassificationModule().Get(ctx, r.URL.Query().Get("deviceId"))
+}
+
+func (backend *ServiceBackend) PostDeviceClassificationV2(ctx context.Context, r *http.Request) (*models.DeviceClassificationResponse, error) {
+	var request models.DeviceClassificationApplyRequest
+	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
+		return classificationFailure("", "validation_failed", "invalid classification request"), nil
+	}
+	return backend.deviceClassificationModule().Apply(ctx, &request)
+}
+
+func (backend *ServiceBackend) deviceClassificationModule() *DeviceClassificationModule {
+	backend.mu.Lock()
+	defer backend.mu.Unlock()
+	if backend.deviceInventory == nil {
+		backend.deviceInventory = NewDeviceInventoryModule()
+	}
+	if backend.deviceClassification == nil {
+		backend.deviceClassification = NewDeviceClassificationModule(backend.deviceInventory)
+	}
+	return backend.deviceClassification
+}
+
+func (backend *ServiceBackend) GetDeviceTrafficV2(ctx context.Context) (*models.DeviceTrafficResponse, error) {
+	backend.mu.Lock()
+	if backend.deviceInventory == nil {
+		backend.deviceInventory = NewDeviceInventoryModule()
+	}
+	if backend.deviceTraffic == nil {
+		backend.deviceTraffic = NewDeviceTrafficModule(backend.deviceInventory, backend.lstats)
+	}
+	traffic := backend.deviceTraffic
+	backend.mu.Unlock()
+	return traffic.Snapshot(ctx)
+}
+
+func (backend *ServiceBackend) GetDevicePolicyV2(ctx context.Context, r *http.Request) (*models.DevicePolicyResponse, error) {
+	return backend.devicePolicyModule().Get(ctx, r.URL.Query().Get("deviceId"))
+}
+
+func (backend *ServiceBackend) PostDevicePolicyV2(ctx context.Context, r *http.Request) (*models.DevicePolicyResponse, error) {
+	var request models.DevicePolicyApplyRequest
+	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
+		return devicePolicyFailure("validation_failed", "invalid policy request"), nil
+	}
+	return backend.devicePolicyModule().Apply(ctx, &request)
+}
+
+func (backend *ServiceBackend) GetDevicePolicyRulesV2(ctx context.Context) (*models.DevicePolicyRulesResponse, error) {
+	return backend.devicePolicyModule().ListRules(ctx)
+}
+
+func (backend *ServiceBackend) devicePolicyModule() *DevicePolicyModule {
+	backend.mu.Lock()
+	defer backend.mu.Unlock()
+	if backend.deviceInventory == nil {
+		backend.deviceInventory = NewDeviceInventoryModule()
+	}
+	if backend.devicePolicy == nil {
+		backend.devicePolicy = NewDevicePolicyModule(backend.deviceInventory)
+	}
+	return backend.devicePolicy
+}
+
 func (backend *ServiceBackend) GetLanListStaticDevices(ctx context.Context) (*models.LANCtrlStaticAssignedResponse, error) {
 	return newLanStaticDeviceListService().GetListStaticDevices(ctx)
 }

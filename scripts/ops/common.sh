@@ -60,6 +60,7 @@ load_target_env() {
 
     : "${SSH_PORT:=22}"
     : "${SSH_EXTRA_OPTS:=}"
+    : "${SCP_EXTRA_OPTS:=}"
     : "${REMOTE_BINARY:=/usr/sbin/quickstart}"
     : "${REMOTE_TMP:=/tmp/quickstart.new}"
     : "${REMOTE_BACKUP_DIR:=/tmp/quickstart-backups}"
@@ -107,8 +108,10 @@ remote_shell() {
 copy_to_remote() {
     local_path="$1"
     remote_path="$2"
+    # SCP transport options are separate from SSH options because OpenWrt
+    # targets commonly lack an SFTP server and therefore require `scp -O`.
     # shellcheck disable=SC2046
-    scp -P "$SSH_PORT" ${SSH_EXTRA_OPTS:-} "$local_path" "${SSH_TARGET}:${remote_path}"
+    scp ${SCP_EXTRA_OPTS:-} -P "$SSH_PORT" ${SSH_EXTRA_OPTS:-} "$local_path" "${SSH_TARGET}:${remote_path}"
 }
 
 ensure_local_binary() {

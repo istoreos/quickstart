@@ -20,13 +20,17 @@ import (
 type ServiceBackend struct {
 	mu sync.Mutex
 
-	st             *WanStats
-	lstats         *LanStats
-	httpClient     *http.Client
-	netChecker     *NetworkOnlineChecker
-	foreignChecker *ForeignChecker
-	thermalZone    systemthermal.Getter
-	platform       string
+	st                   *WanStats
+	lstats               *LanStats
+	httpClient           *http.Client
+	netChecker           *NetworkOnlineChecker
+	foreignChecker       *ForeignChecker
+	thermalZone          systemthermal.Getter
+	platform             string
+	deviceInventory      *DeviceInventoryModule
+	deviceTraffic        *DeviceTrafficModule
+	devicePolicy         *DevicePolicyModule
+	deviceClassification *DeviceClassificationModule
 
 	dhnsServer  *dhns.DhnsServer
 	dhnsState   *dhnsruntime.State
@@ -115,18 +119,24 @@ func NewServiceBackend() *ServiceBackend {
 			thermalZone = systemthermal.NewZoneTemperature("thermal_zone0")
 		}
 	}
+	inventory := NewDeviceInventoryModule()
+	lanStats := NewLanStats()
 	backend := &ServiceBackend{
 		st:     NewWanStats(),
-		lstats: NewLanStats(),
+		lstats: lanStats,
 		httpClient: &http.Client{
 			Timeout: time.Second * 20,
 		},
-		netChecker:     NewNetworkOnlineChecker(),
-		foreignChecker: NewForeignChecker(),
-		platform:       runtime.GOARCH,
-		thermalZone:    thermalZone,
-		dhnsState:      dhnsruntime.NewState(),
+		netChecker:      NewNetworkOnlineChecker(),
+		foreignChecker:  NewForeignChecker(),
+		platform:        runtime.GOARCH,
+		thermalZone:     thermalZone,
+		deviceInventory: inventory,
+		dhnsState:       dhnsruntime.NewState(),
 	}
+	backend.deviceTraffic = NewDeviceTrafficModule(inventory, lanStats)
+	backend.devicePolicy = NewDevicePolicyModule(inventory)
+	backend.deviceClassification = NewDeviceClassificationModule(inventory)
 	backend.setupDhns()
 	return backend
 }

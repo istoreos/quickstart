@@ -1,0 +1,9 @@
+{
+  "persisted": true,
+  "title": "ASUS 网络设备",
+  "meta": "手动设置",
+  "icon": "/luci-static/quickstart/device-icons/network.webp",
+  "duplicateRemoved": true,
+  "mobileOverflow": false,
+  "assetVersion": "0.14.0-r2"
+}

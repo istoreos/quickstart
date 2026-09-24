@@ -4,9 +4,9 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/julienschmidt/httprouter"
 	"github.com/istoreos/quickstart/backend/internal/httpapi"
 	"github.com/istoreos/quickstart/backend/models"
+	"github.com/julienschmidt/httprouter"
 )
 
 type Backend interface {
@@ -20,6 +20,13 @@ type Backend interface {
 	PostLanStaticDeviceConfig(ctx context.Context, r *http.Request) (*models.JSONResponse, error)
 	GetLanGlobalConfigs(ctx context.Context) (*models.LANCtrlGlobalConfigResponse, error)
 	GetLanListDevices(ctx context.Context) (*models.LANDeviceResponse, error)
+	GetDeviceInventoryV2(ctx context.Context) (*models.DeviceInventoryResponse, error)
+	GetDeviceClassificationV2(ctx context.Context, r *http.Request) (*models.DeviceClassificationResponse, error)
+	PostDeviceClassificationV2(ctx context.Context, r *http.Request) (*models.DeviceClassificationResponse, error)
+	GetDeviceTrafficV2(ctx context.Context) (*models.DeviceTrafficResponse, error)
+	GetDevicePolicyV2(ctx context.Context, r *http.Request) (*models.DevicePolicyResponse, error)
+	PostDevicePolicyV2(ctx context.Context, r *http.Request) (*models.DevicePolicyResponse, error)
+	GetDevicePolicyRulesV2(ctx context.Context) (*models.DevicePolicyRulesResponse, error)
 	GetLanListStaticDevices(ctx context.Context) (*models.LANCtrlStaticAssignedResponse, error)
 	GetLanListSpeedLimitedDevices(ctx context.Context) (*models.LANCtrlSpeedLimitResponse, error)
 }
@@ -63,6 +70,34 @@ func RegisterRoutes(router *httprouter.Router, backend Backend) {
 
 	httpapi.GetJSON(router, "/cgi-bin/luci/istore/lanctrl/listDevices/", func(ctx context.Context, r *http.Request) (any, error) {
 		return backend.GetLanListDevices(ctx)
+	})
+
+	httpapi.GetJSON(router, "/cgi-bin/luci/istore/lanctrl/v2/devices/", func(ctx context.Context, r *http.Request) (any, error) {
+		return backend.GetDeviceInventoryV2(ctx)
+	})
+
+	httpapi.GetJSON(router, "/cgi-bin/luci/istore/lanctrl/v2/device-classification/", func(ctx context.Context, r *http.Request) (any, error) {
+		return backend.GetDeviceClassificationV2(ctx, r)
+	})
+
+	httpapi.PostJSON(router, "/cgi-bin/luci/istore/lanctrl/v2/device-classification/", func(ctx context.Context, r *http.Request) (any, error) {
+		return backend.PostDeviceClassificationV2(ctx, r)
+	})
+
+	httpapi.GetJSON(router, "/cgi-bin/luci/istore/lanctrl/v2/device-traffic/", func(ctx context.Context, r *http.Request) (any, error) {
+		return backend.GetDeviceTrafficV2(ctx)
+	})
+
+	httpapi.GetJSON(router, "/cgi-bin/luci/istore/lanctrl/v2/device-policy/", func(ctx context.Context, r *http.Request) (any, error) {
+		return backend.GetDevicePolicyV2(ctx, r)
+	})
+
+	httpapi.PostJSON(router, "/cgi-bin/luci/istore/lanctrl/v2/device-policy/", func(ctx context.Context, r *http.Request) (any, error) {
+		return backend.PostDevicePolicyV2(ctx, r)
+	})
+
+	httpapi.GetJSON(router, "/cgi-bin/luci/istore/lanctrl/v2/device-policy/rules/", func(ctx context.Context, r *http.Request) (any, error) {
+		return backend.GetDevicePolicyRulesV2(ctx)
 	})
 
 	httpapi.GetJSON(router, "/cgi-bin/luci/istore/lanctrl/listStaticDevices/", func(ctx context.Context, r *http.Request) (any, error) {

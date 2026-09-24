@@ -19,7 +19,14 @@
             </div>
             <div class="tab-content_g">
                 <div v-if="activeTab === 0" class="content-item">
-                    <DeviceListVue @openGloba="openGloba" />
+                    <DeviceCenterList v-if="!legacyMode" @use-legacy="legacyMode = true" />
+                    <div v-else>
+                        <div v-if="deviceInventoryV2Enabled" class="legacy-banner">
+                            <span>{{ $gettext('正在使用经典列表进行设备配置') }}</span>
+                            <button type="button" @click="legacyMode = false">{{ $gettext('返回新设备列表') }}</button>
+                        </div>
+                        <DeviceListVue @openGloba="openGloba" />
+                    </div>
                 </div>
                 <div v-if="activeTab === 1" class="content-item">
                     <StaticStateListVue />
@@ -38,6 +45,7 @@
 <script setup lang="ts">
 import { ref, nextTick, onMounted } from 'vue'
 import DeviceListVue from "./deviceList.vue";
+import DeviceCenterList from "./deviceCenterList.vue";
 import StaticStateListVue from "./staticStateList.vue";
 import SpeedLimitListVue from "./speedLimitList.vue";
 import ConfigureVue from "./configure.vue";
@@ -52,6 +60,8 @@ const tabs = ref([
     '全局设置'
 ]);
 const activeTab = ref(0);
+const deviceInventoryV2Enabled = window.quickstart_configs?.deviceInventoryV2 !== false
+const legacyMode = ref(!deviceInventoryV2Enabled)
 const configureRef = ref<any>(null)
 const openGloba = async () => {
     activeTab.value = 3
@@ -68,6 +78,8 @@ const openGloba = async () => {
 
 .tabs_box_g {
     display: flex;
+    max-width: 100%;
+    overflow-x: auto;
 }
 
 .tabs_box_g button {
@@ -98,17 +110,57 @@ const openGloba = async () => {
 .content-item {
     min-height: 60vh;
 }
+
+.legacy-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+    padding: 10px 12px;
+    color: var(--flow-span-color);
+    background: rgba(85, 58, 254, 0.06);
+    border: 1px solid rgba(85, 58, 254, 0.14);
+    border-radius: 8px;
+}
+
+.legacy-banner button {
+    flex: none;
+    padding: 6px 10px;
+    color: #553afe;
+    background: transparent;
+    border: 1px solid rgba(85, 58, 254, .45);
+    border-radius: 6px;
+    cursor: pointer;
+}
 </style>
 
 <style lang="scss" scoped>
 /* 移动端样式 - 基于827px设计图 */
 @media (max-width: 827px) {
+    .tabs_box_g {
+        -webkit-overflow-scrolling: touch;
+    }
+
     .tabs_box_g button {
+        flex: none;
         padding: 7px 12px !important;
     }
 
     .tab-content_g {
+        padding: 12px;
         border-radius: 0px 0px 8px 8px;
+    }
+}
+
+@media (max-width: 420px) {
+    .tab-content_g {
+        padding: 10px 8px;
+    }
+
+    .legacy-banner {
+        align-items: flex-start;
+        flex-direction: column;
     }
 }
 </style>

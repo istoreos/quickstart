@@ -13,7 +13,7 @@ func TestBuildDeviceInventoryItemInitializesDefaults(t *testing.T) {
 	initMutex.Lock()
 	original := d
 	d = make(map[int]interface{})
-	parse("AA:BB:CC", "Test Vendor")
+	parse("00:BB:CC", "Test Vendor")
 	t.Cleanup(func() {
 		initMutex.Lock()
 		d = original
@@ -21,7 +21,7 @@ func TestBuildDeviceInventoryItemInitializesDefaults(t *testing.T) {
 	})
 	initMutex.Unlock()
 
-	inputMAC := "aa:bb:cc:dd:ee:ff"
+	inputMAC := "00:bb:cc:dd:ee:ff"
 	item, ok := buildDeviceInventoryItem("192.168.100.2", inputMAC)
 	if !ok {
 		t.Fatalf("expected helper to accept valid ip/mac")
@@ -32,7 +32,7 @@ func TestBuildDeviceInventoryItemInitializesDefaults(t *testing.T) {
 	if got := item.IP; got != "192.168.100.2" {
 		t.Fatalf("expected IP 192.168.100.2, got %q", got)
 	}
-	if got := item.Mac; got != "AA:BB:CC:DD:EE:FF" {
+	if got := item.Mac; got != "00:BB:CC:DD:EE:FF" {
 		t.Fatalf("expected normalized MAC, got %q", got)
 	}
 	if got := item.Vendor; got != "Test Vendor" {
@@ -44,7 +44,7 @@ func TestBuildDeviceInventoryItemInitializesDefaults(t *testing.T) {
 	if item.StaticAssigned == nil {
 		t.Fatalf("expected StaticAssigned to be initialized")
 	}
-	if got := item.StaticAssigned.AssignedMac; got != "AA:BB:CC:DD:EE:FF" {
+	if got := item.StaticAssigned.AssignedMac; got != "00:BB:CC:DD:EE:FF" {
 		t.Fatalf("expected static assigned mac to be normalized MAC, got %q", got)
 	}
 	if got := item.StaticAssigned.AssignedIP; got != "192.168.100.2" {
@@ -56,7 +56,7 @@ func TestBuildDeviceInventoryItemInitializesDefaults(t *testing.T) {
 	if got := item.SpeedLimit.IP; got != "192.168.100.2" {
 		t.Fatalf("expected speed limit ip to be input IP, got %q", got)
 	}
-	if got := item.SpeedLimit.Mac; got != "AA:BB:CC:DD:EE:FF" {
+	if got := item.SpeedLimit.Mac; got != "00:BB:CC:DD:EE:FF" {
 		t.Fatalf("expected speed limit mac to be normalized MAC, got %q", got)
 	}
 	if got := item.SpeedLimit.NetworkAccess; !got {

@@ -1,11 +1,14 @@
 <template>
     <div class="container">
-        <div style="display: flex;justify-content: end;">
+        <div class="device-toolbar">
             <SearchVue @refresh="handleRefresh" :showAdd="false" :showBatchDelete="false" ref="searchRef"
                 @batch-delete="handleBatchDelete" @search="handleSearch" />
         </div>
-        <div>
-            <CustomTable :data="tableData1" :columns="columns" :showPagination="false">
+        <PageState v-if="isLoading" kind="loading" :title="$gettext('正在加载设备')" :description="$gettext('请稍候…')" />
+        <LoadError v-else-if="loadError" :message="loadError" @retry="handleRefresh" />
+        <LoadError v-else-if="trafficError" :message="trafficError" :retry="false" />
+        <div v-if="!isLoading && !loadError">
+            <CustomTable :data="tableData1" :columns="columns" :showPagination="false" :emptyText="$gettext('暂无设备')">
                 <template #action="{ row }">
                     <span style="color: #553AFE;cursor: pointer;" @click="openModal(row, 2)">{{
                         $gettext('静态分配') }}</span>
@@ -72,7 +75,7 @@
             <!-- 默认插槽内容 -->
             <div class="custom-content">
                 <div class="img_box">
-                    <img src="https://fwindex.koolcenter.com/cover/x86_64/cover.png" alt="">
+                    <ComputerIcon color="#8c8c8c" />
                 </div>
                 <div class="item_box">
                     <div class="item_left">{{ $gettext('名称') }}：</div>
@@ -114,7 +117,7 @@
             <div class="custom-content">
                 <div class="info-content">
                     <div class="img_box">
-                        <img src="https://fwindex.koolcenter.com/cover/x86_64/cover.png" alt="">
+                        <ComputerIcon color="#8c8c8c" />
                     </div>
                     <div style="margin-bottom: 16px;flex: 1;">
                         <div class="item_box">
@@ -158,6 +161,10 @@ import SwitchVue from "./components/switch.vue";
 import FlowVue from "./components/flow.vue";
 import Toast from "/@/components/toast";
 import DialogVue from "/@/components/dialog/index.vue";
+import ComputerIcon from "/@/components/svg/computer.vue";
+import LoadError from "./components/loadError.vue";
+import PageState from "./components/pageState.vue";
+import { requestErrorMessage } from "./requestError";
 const { $gettext } = useGettext()
 const emit = defineEmits(['openGloba'])
 
@@ -200,9 +207,11 @@ const getGlobalData = async () => {
         const { data } = await request.DeviceMangement.globalConfigs.GET()
         if (data.result) {
             globalData.value = data.result || {}
+        } else if (data.error) {
+            Toast.Warning(String(data.error))
         }
     } catch (error) {
-
+        Toast.Warning(requestErrorMessage(error, `${$gettext('读取结果失败')}，${$gettext('请刷新界面')}`))
     }
 }
 getGlobalData()
@@ -256,8 +265,11 @@ const beforeChange = (e: boolean) => {
 }
 
 const dhcpTags = ref<any>([])
+const loadError = ref('')
+const trafficError = ref('')
+const isLoading = ref(true)
 const getData = async () => {
-    let load = Toast.Loading($gettext("加载中..."))
+    isLoading.value = true
     try {
         const { data } = await request.DeviceMangement.listDevices.GET()
         // console.log(data, '=======');
@@ -265,11 +277,14 @@ const getData = async () => {
             tableData.value = data.result?.devices || []
             tableData1.value = data.result?.devices || []
             dhcpTags.value = data.result?.dhcpTags || []
+            loadError.value = ''
+        } else if (data.error) {
+            loadError.value = String(data.error)
         }
     } catch (error) {
-
+        loadError.value = requestErrorMessage(error, `${$gettext('读取结果失败')}，${$gettext('请刷新界面')}`)
     } finally {
-        load.Close()
+        isLoading.value = false
     }
 }
 
@@ -307,9 +322,12 @@ const speedsForDevices = async () => {
 
         if (data.result) {
             tableData1.value = mergeSpeedData(data.result, tableData1.value)
+            trafficError.value = ''
+        } else if (data.error) {
+            trafficError.value = String(data.error)
         }
     } catch (error) {
-
+        trafficError.value = requestErrorMessage(error, $gettext('读取结果失败'))
     }
 }
 
@@ -450,10 +468,10 @@ const staticStateConfirm = async () => {
             handleRefresh()
             Toast.Success("保存成功" + ' !')
         } else {
-            Toast.Success(data?.error || '保存失败！')
+            Toast.Warning(data?.error || $gettext('配置失败'))
         }
     } catch (error: any) {
-        Toast.Warning(`${error?.error} || ${error?.message}`)
+        Toast.Warning(requestErrorMessage(error, $gettext('配置失败')))
     } finally {
         load.Close()
     }
@@ -493,10 +511,10 @@ const speedLimitConfirm = async () => {
             handleRefresh()
             Toast.Success("保存成功" + ' !')
         } else {
-            Toast.Success(data?.error || '保存失败！')
+            Toast.Warning(data?.error || $gettext('配置失败'))
         }
     } catch (error: any) {
-        Toast.Warning(`${error?.error} || ${error?.message}`)
+        Toast.Warning(requestErrorMessage(error, $gettext('配置失败')))
     } finally {
         speedLimitData.downloadSpeed = 1000
         speedLimitData.uploadSpeed = 100
@@ -531,17 +549,14 @@ const selectedItems = ref([])
 const searchRef = ref<any>(null)
 // 刷新
 const handleRefresh = async () => {
-    tableData.value = []
     await getData()
 }
 
 const searchDevices = (keyword: string) => {
+    const normalizedKeyword = keyword.toLowerCase()
     return tableData.value.filter((device: any) => {
-        // 检查IP地址是否包含关键词
-        const ipMatch = device.ip.includes(keyword);
-        // 检查MAC地址是否包含关键词（忽略大小写）
-        const macMatch = device.mac.toLowerCase().includes(keyword.toLowerCase());
-        return ipMatch || macMatch;
+        return [device.hostname, device.ip, device.mac, device.vendor]
+            .some(value => String(value || '').toLowerCase().includes(normalizedKeyword))
     });
 }
 // 搜索
@@ -562,6 +577,12 @@ const handleBatchDelete = () => {
 
 
 <style lang="scss" scoped>
+.device-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    max-width: 100%;
+}
+
 :deep(.tag-input) {
     padding: 4px 12px;
 }
@@ -576,7 +597,7 @@ const handleBatchDelete = () => {
         width: 100px;
         height: 100px;
 
-        >img {
+        :deep(svg) {
             width: 100%;
             height: 100%;
         }

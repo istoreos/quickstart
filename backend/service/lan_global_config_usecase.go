@@ -37,26 +37,45 @@ func (svc *LanGlobalConfigService) GetGlobalConfigs(ctx context.Context) (*model
 		dhcpState = &LanDhcpState{}
 	}
 
-	floatState, err := svc.FloatIPReader.ReadFloatIPStatus(ctx)
-	if err != nil {
-		return nil, err
-	}
+	floatState, floatErr := svc.FloatIPReader.ReadFloatIPStatus(ctx)
 
-	speedState, err := svc.SpeedLimitReader.ReadSpeedLimitStatus(ctx)
-	if err != nil {
-		return nil, err
-	}
+	speedState, speedErr := svc.SpeedLimitReader.ReadSpeedLimitStatus(ctx)
 
 	plan := BuildAutoDhcpPlan(lanStatus, dhcpState)
 
 	return &models.LANCtrlGlobalConfigResponse{
 		Result: &models.LANCtrlGlobalConfig{
+			Capabilities: buildDeviceManagementCapabilities(floatState, floatErr, speedState, speedErr),
 			DhcpTags:     buildGlobalDhcpTags(lanStatus, dhcpState),
 			DhcpGlobal:   buildDhcpGlobalConfig(lanStatus, plan),
 			FloatGateway: toFloatGatewayModel(floatState),
 			SpeedLimit:   toSpeedLimitModel(speedState),
 		},
 	}, nil
+}
+
+func buildDeviceManagementCapabilities(floatState FloatIPStatus, floatErr error, speedState SpeedLimitStatus, speedErr error) *models.DeviceManagementCapabilities {
+	return &models.DeviceManagementCapabilities{
+		FloatGateway: buildDeviceManagementCapability(floatState.Installed, floatState.Enabled, floatErr),
+		SpeedLimit:   buildDeviceManagementCapability(speedState.Installed, speedState.Enabled, speedErr),
+	}
+}
+
+func buildDeviceManagementCapability(installed, enabled bool, err error) *models.DeviceManagementCapability {
+	capability := &models.DeviceManagementCapability{}
+	switch {
+	case err != nil:
+		capability.State = "error"
+		capability.Reason = "status_unavailable"
+	case !installed:
+		capability.State = "not_installed"
+		capability.Reason = "dependency_not_installed"
+	case !enabled:
+		capability.State = "disabled"
+	default:
+		capability.State = "available"
+	}
+	return capability
 }
 
 func buildGlobalDhcpTags(lanStatus LanStatusSnapshot, state *LanDhcpState) []*models.LANCtrlDhcpTagInfo {
