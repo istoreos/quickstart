@@ -5,11 +5,12 @@
   {"name":"phone-chinese","group":"phone","input":{"hostname":"家庭手机","manufacturer":"北京小米电子产品有限公司"},"expected":{"brand":"Xiaomi","category":"phone","source":"hostname","confidence":"medium"}},
   {"name":"phone-mobile","group":"phone","input":{"hostname":"mobile-client","manufacturer":"Huawei Technologies Co., Ltd."},"expected":{"brand":"HUAWEI","category":"phone","source":"hostname","confidence":"medium"}},
 
-  {"name":"computer-asus-default","group":"computer","input":{"manufacturer":"ASUSTeK COMPUTER INC."},"expected":{"brand":"ASUS","category":"computer","source":"manufacturer_default","confidence":"medium"}},
+  {"name":"network-asus-default","group":"network","input":{"manufacturer":"ASUSTeK COMPUTER INC."},"expected":{"brand":"ASUS","category":"network","source":"manufacturer_default","confidence":"medium"}},
   {"name":"computer-dell-laptop","group":"computer","input":{"hostname":"study-laptop","manufacturer":"Dell Inc."},"expected":{"brand":"Dell","category":"computer","source":"hostname","confidence":"medium"}},
   {"name":"computer-lenovo-workstation","group":"computer","input":{"hostname":"office-workstation","manufacturer":"Lenovo Group Limited"},"expected":{"brand":"Lenovo","category":"computer","source":"hostname","confidence":"medium"}},
   {"name":"computer-macbook","group":"computer","input":{"displayName":"MacBook Air","manufacturer":"Apple"},"expected":{"brand":"Apple","category":"computer","source":"hostname","confidence":"medium"}},
   {"name":"computer-windows","group":"computer","input":{"hostname":"windows-pc","manufacturer":"Microsoft Corporation"},"expected":{"brand":"Microsoft","category":"computer","source":"hostname","confidence":"medium"}},
+  {"name":"computer-generic-desktop","group":"computer","input":{"hostname":"family-desktop"},"expected":{"brand":"","category":"computer","source":"hostname","confidence":"medium"}},
 
   {"name":"tablet-ipad","group":"tablet","input":{"displayName":"Kids iPad","manufacturer":"Apple Inc."},"expected":{"brand":"Apple","category":"tablet","source":"hostname","confidence":"medium"}},
   {"name":"tablet-galaxy","group":"tablet","input":{"hostname":"galaxy-tablet","manufacturer":"Samsung"},"expected":{"brand":"Samsung","category":"tablet","source":"hostname","confidence":"medium"}},

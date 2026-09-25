@@ -6,13 +6,14 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { deviceSceneIconPath, type DeviceScene } from '../deviceScene'
+import { deviceIconPath, deviceSceneIconPath, type DeviceIconKey, type DeviceScene } from '../deviceScene'
 
-const props = defineProps<{ scene: DeviceScene; label: string }>()
+const props = defineProps<{ scene: DeviceScene; label: string; iconKey?: DeviceIconKey }>()
 const fallback = deviceSceneIconPath('computer')
-const source = ref(deviceSceneIconPath(props.scene))
+const resolveSource = () => props.iconKey ? deviceIconPath(props.iconKey) : deviceSceneIconPath(props.scene)
+const source = ref(resolveSource())
 
-watch(() => props.scene, scene => { source.value = deviceSceneIconPath(scene) })
+watch(() => [props.scene, props.iconKey], () => { source.value = resolveSource() })
 const useFallback = () => { source.value = fallback }
 </script>
 

@@ -23,7 +23,7 @@ export DEPLOY_TARGET SSH_TARGET SSH_PORT SSH_EXTRA_OPTS SCP_EXTRA_OPTS
 export REMOTE_BINARY REMOTE_TMP REMOTE_BACKUP_DIR REMOTE_SERVICE REMOTE_LOG_COMMAND ROLLBACK_RELEASE
 
 .PHONY: help fmt tidy test build build-amd64 build-arm64 build-armv7 release clean
-.PHONY: ops-targets ops-show-selected ops-release ops-init-selected ops-preflight-selected ops-deploy-selected ops-verify-selected ops-rollback-selected test-ops
+.PHONY: ops-targets ops-show-selected ops-release ops-init-selected ops-preflight-selected ops-deploy-selected ops-verify-selected ops-rollback-selected test-ops verify-product
 
 help:
 	@printf '%s\n' \
@@ -42,7 +42,8 @@ help:
 		'  ops-deploy-selected    Build, upload, install, restart, and verify quickstart' \
 		'  ops-verify-selected    Verify remote quickstart service' \
 		'  ops-rollback-selected  Restore a remote backup; set ROLLBACK_RELEASE=<file>' \
-		'  test-ops               Validate deployment scripts and task YAML'
+		'  test-ops               Validate deployment scripts and task YAML' \
+		'  verify-product         Validate and regenerate the five-layer product coverage matrix'
 
 fmt:
 	cd $(BACKEND_ROOT) && $(GO) fmt ./...
@@ -92,6 +93,9 @@ ops-rollback-selected:
 
 test-ops:
 	./scripts/ops/test-ops.sh
+
+verify-product:
+	node ./scripts/validate-lan-device-coverage.mjs --self-test --write
 
 clean:
 	rm -rf $(BUILD_DIR)

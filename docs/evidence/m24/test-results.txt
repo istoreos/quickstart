@@ -1,0 +1,10 @@
+M24 verification, 2026-09-25
+
+- backend: go test ./... — 1417 passed in 89 packages
+- web: node --test test/*.test.mjs — 43 passed, 0 failed
+- web: vue-tsc --noEmit — pass
+- icon manifest: 30 unique keys, 30 files, all labels/categories present
+- new AI-assisted assets: 18/18 are 256x256 yuva420p WebP
+- visual contact-sheet review: recognizable silhouettes, no text or third-party logos observed
+- coverage matrix validator/self-test: pass, 55 requirements
+- git diff --check: pass

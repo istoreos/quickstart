@@ -45,10 +45,12 @@
                     <ComputerIcon color="#8c8c8c" />
                 </div>
                 <div class="item_box">
-                    <div class="item_left">{{ $gettext('名称') }}：</div>
-                    <input id="tagName" type="text" @input="filterChinese" v-model.trim="staticStateData.hostname"
-                        :placeholder="$gettext('请输入') + '...'" class="tag-input" />
+                    <div class="item_left">{{ $gettext('DHCP 主机名（可选）') }}：</div>
+                    <input id="dhcpHostname" type="text" v-model.trim="staticStateData.hostname" maxlength="63"
+                        autocomplete="off" autocapitalize="none" spellcheck="false"
+                        placeholder="living-room-tv" class="tag-input" />
                 </div>
+                <div class="field-help">{{ $gettext('用于局域网名称解析，仅支持英文、数字和中间连字符') }}</div>
                 <div class="item_box">
                     <div class="item_left">MAC：</div>
                     <input id="tagName" type="text" v-model.trim="staticStateData.assignedMac"
@@ -90,6 +92,7 @@ import ComputerIcon from "/@/components/svg/computer.vue";
 import LoadError from "./components/loadError.vue";
 import PageState from "./components/pageState.vue";
 import { requestErrorMessage } from "./requestError";
+import { normalizeDhcpHostname, validDhcpHostname } from './devicePolicy'
 import { useGettext } from '/@/plugins/i18n'
 const { $gettext } = useGettext()
 const dhcpTags = ref<any>([])
@@ -114,7 +117,7 @@ const showModal = ref(false)
 
 const columns = ref([
     // { label: '设备图片', prop: 'hostImg', width: '120px' },
-    { label: '主机名称', prop: 'hostname' },
+    { label: 'DHCP 主机名', prop: 'hostname' },
     { label: 'IP地址', prop: 'assignedIP' },
     { label: 'MAC地址', prop: 'assignedMac' },
     { label: '静态IP绑定', prop: 'bindIP', slot: 'bindIP' },
@@ -135,11 +138,6 @@ const matchZh = (str: string): string => {
     // 使用类型断言确保访问安全
     return obj[str as GatewayType] || str;
 }
-
-const filterChinese = (e: any) => {
-    // 移除中文字符与空白字符，避免名称中出现空格
-    staticStateData.hostname = e.target.value.replace(/[\u4e00-\u9fa5\s]/g, '');
-};
 
 const loadError = ref('')
 const isLoading = ref(true)
@@ -320,6 +318,10 @@ const validateNetworkAddress = (type: 'ip' | 'mac', value: string) => {
 
 //静态分配确认按钮
 const staticStateConfirm = async () => {
+    if (!validDhcpHostname(staticStateData.hostname)) {
+        return Toast.Warning($gettext('DHCP 主机名仅支持 1～63 位英文、数字或中间连字符'));
+    }
+    staticStateData.hostname = normalizeDhcpHostname(staticStateData.hostname)
     if (!staticStateData.assignedMac) {
         return Toast.Warning(`${$gettext('请输入')}${$gettext('MAC')}`);
     }
@@ -409,6 +411,14 @@ const handleCancel = () => {
         text-align: center;
         margin-top: 16px;
         font-size: 12px;
+    }
+
+    .field-help {
+        margin: 5px 0 0 140px;
+        max-width: 260px;
+        color: #6b7280;
+        font-size: 12px;
+        line-height: 1.45;
     }
 
     .item_box {

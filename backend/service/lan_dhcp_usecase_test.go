@@ -282,6 +282,51 @@ func TestSetDhcpTagsRejectsMissingParams(t *testing.T) {
 	}
 }
 
+func TestSetDhcpTagsRejectsUnsafeConfiguration(t *testing.T) {
+	t.Parallel()
+
+	storeCalled := false
+	svc := NewLanDhcpService(
+		&fakeDhcpConfigStore{applyTagConfigFn: func(ctx context.Context, input DhcpTagConfigInput) error {
+			storeCalled = true
+			return nil
+		}},
+		&fakeLanStatusReader{},
+	)
+	tests := []DhcpTagConfigInput{
+		{Action: "replace", TagName: "guest", TagTitle: "Guest", DhcpOption: []string{"3,192.168.1.1"}},
+		{Action: "add", TagName: "guest;reboot", TagTitle: "Guest", DhcpOption: []string{"3,192.168.1.1"}},
+		{Action: "add", TagName: "guest", TagTitle: "Guest'", DhcpOption: []string{"3,192.168.1.1"}},
+		{Action: "add", TagName: "guest", TagTitle: "Guest", DhcpOption: []string{"3,192.168.1.1\ncommit system"}},
+		{Action: "add", TagName: "guest", TagTitle: "Guest", DhcpOption: []string{"42,192.168.1.1"}},
+		{Action: "add", TagName: "guest", TagTitle: "Guest", DhcpOption: []string{"3,2001:db8::1"}},
+	}
+	for index, input := range tests {
+		if err := svc.SetDhcpTags(context.Background(), input); err == nil {
+			t.Fatalf("case %d should fail: %+v", index, input)
+		}
+	}
+	if storeCalled {
+		t.Fatal("unsafe input reached the DHCP store")
+	}
+}
+
+func TestSetDhcpTagsDeleteNeedsOnlySafeIdentifier(t *testing.T) {
+	t.Parallel()
+
+	var got DhcpTagConfigInput
+	svc := NewLanDhcpService(&fakeDhcpConfigStore{applyTagConfigFn: func(_ context.Context, input DhcpTagConfigInput) error {
+		got = input
+		return nil
+	}}, &fakeLanStatusReader{})
+	if err := svc.SetDhcpTags(context.Background(), DhcpTagConfigInput{Action: "delete", TagName: "legacy_route", TagTitle: "old'unsafe", DhcpOption: []string{"bad"}}); err != nil {
+		t.Fatalf("delete safe identifier: %v", err)
+	}
+	if got.TagTitle != "" || got.DhcpOption != nil {
+		t.Fatalf("unused legacy values reached store: %+v", got)
+	}
+}
+
 func TestToModelDhcpTagsCopiesValues(t *testing.T) {
 	t.Run("nil and empty input", func(t *testing.T) {
 		cases := []struct {

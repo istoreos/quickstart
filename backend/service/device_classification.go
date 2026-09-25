@@ -53,6 +53,7 @@ func (module *DeviceClassificationModule) Apply(ctx context.Context, request *mo
 	if err != nil {
 		return classificationFailure(request.DeviceID, "write_failed", err.Error()), nil
 	}
+	module.inventory.Invalidate()
 	device, err = module.findDevice(ctx, request.DeviceID)
 	if err != nil {
 		return classificationFailure(request.DeviceID, "not_found", err.Error()), nil

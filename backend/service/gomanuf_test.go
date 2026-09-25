@@ -5,21 +5,26 @@ import (
 	"testing"
 )
 
-func useManufData(t *testing.T, data map[int]interface{}) {
+func useManufData(t *testing.T, data map[int]map[uint64]string) {
 	t.Helper()
 	<-initDone
 	original := d
+	originalPrefixes := manufPrefixLengths
 	d = data
+	finalizeManufIndex()
 	t.Cleanup(func() {
 		d = original
+		manufPrefixLengths = originalPrefixes
 	})
 }
 
 func TestLoadManufDataAllowsMissingFile(t *testing.T) {
 	<-initDone
 	original := d
+	originalPrefixes := manufPrefixLengths
 	t.Cleanup(func() {
 		d = original
+		manufPrefixLengths = originalPrefixes
 	})
 	d = nil
 
@@ -37,9 +42,9 @@ func TestLoadManufDataAllowsMissingFile(t *testing.T) {
 }
 
 func TestGomanufSearchUsesMostSpecificPrefix(t *testing.T) {
-	useManufData(t, map[int]interface{}{
-		24: map[uint64]string{0x001BC5000000: "Broad vendor"},
-		36: map[uint64]string{0x001BC5001000: "Specific vendor"},
+	useManufData(t, map[int]map[uint64]string{
+		24: {0x001BC5000000: "Broad vendor"},
+		36: {0x001BC5001000: "Specific vendor"},
 	})
 
 	for range 100 {
@@ -50,8 +55,8 @@ func TestGomanufSearchUsesMostSpecificPrefix(t *testing.T) {
 }
 
 func TestGomanufSearchRejectsNonGlobalAndInvalidMACs(t *testing.T) {
-	useManufData(t, map[int]interface{}{
-		24: map[uint64]string{
+	useManufData(t, map[int]map[uint64]string{
+		24: {
 			0x020000000000: "Locally administered",
 			0x010000000000: "Multicast",
 		},
@@ -65,11 +70,11 @@ func TestGomanufSearchRejectsNonGlobalAndInvalidMACs(t *testing.T) {
 }
 
 func TestParseUsesObservedPrefixLengthWhenMaskIsOmitted(t *testing.T) {
-	useManufData(t, make(map[int]interface{}))
+	useManufData(t, make(map[int]map[uint64]string))
 
 	parse("00:1B", "Two-byte vendor")
 
-	entries, ok := d[16].(map[uint64]string)
+	entries, ok := d[16]
 	if !ok {
 		t.Fatalf("expected an unmasked two-byte prefix to be stored as /16, got keys %#v", d)
 	}

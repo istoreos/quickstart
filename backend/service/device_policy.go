@@ -4,15 +4,12 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"net/netip"
 	"strings"
 	"sync"
 
 	"github.com/istoreos/quickstart/backend/models"
 )
-
-const devicePolicyIdempotencyLimit = 512
 
 type devicePolicyBackup interface{}
 
@@ -24,15 +21,10 @@ type devicePolicyStore interface {
 	Restore(context.Context, devicePolicyBackup) error
 }
 
-type devicePolicyIdempotencyRecord struct {
-	Fingerprint string
-}
-
 type DevicePolicyModule struct {
-	mu          sync.Mutex
-	store       devicePolicyStore
-	idempotency map[string]devicePolicyIdempotencyRecord
-	order       []string
+	mu           sync.Mutex
+	store        devicePolicyStore
+	transactions *TaskTransactionJournal
 }
 
 type PolicyError struct {
@@ -43,11 +35,11 @@ type PolicyError struct {
 func (err *PolicyError) Error() string { return err.Message }
 
 func NewDevicePolicyModule(inventory *DeviceInventoryModule) *DevicePolicyModule {
-	return &DevicePolicyModule{store: newSystemDevicePolicyStore(inventory), idempotency: map[string]devicePolicyIdempotencyRecord{}}
+	return &DevicePolicyModule{store: newSystemDevicePolicyStore(inventory), transactions: newMemoryTaskTransactionJournal()}
 }
 
 func newDevicePolicyModuleForTest(store devicePolicyStore) *DevicePolicyModule {
-	return &DevicePolicyModule{store: store, idempotency: map[string]devicePolicyIdempotencyRecord{}}
+	return &DevicePolicyModule{store: store, transactions: newMemoryTaskTransactionJournal()}
 }
 
 func (module *DevicePolicyModule) Get(ctx context.Context, deviceID string) (*models.DevicePolicyResponse, error) {
@@ -83,25 +75,15 @@ func (module *DevicePolicyModule) Apply(ctx context.Context, request *models.Dev
 	module.mu.Lock()
 	defer module.mu.Unlock()
 	if policyErr := validateDevicePolicyRequest(request); policyErr != nil {
-		return devicePolicyFailure(policyErr.Code, policyErr.Message), nil
-	}
-	fingerprint, _ := json.Marshal(request)
-	if request.IdempotencyKey != "" {
-		if previous, ok := module.idempotency[request.IdempotencyKey]; ok {
-			if previous.Fingerprint != string(fingerprint) {
-				return devicePolicyFailure("conflict", "idempotency key was already used for a different change"), nil
-			}
-			policy, err := module.store.Get(ctx, request.DeviceID)
-			if err != nil {
-				return devicePolicyFailure("apply_failed", err.Error()), nil
-			}
-			return devicePolicySuccess(policy, false), nil
+		key := ""
+		if request != nil {
+			key = request.IdempotencyKey
 		}
+		return attachDevicePolicyTransaction(devicePolicyFailure(policyErr.Code, policyErr.Message), rejectedTaskTransaction(devicePolicyTask(request), key)), nil
 	}
-
 	current, err := module.store.Get(ctx, request.DeviceID)
 	if err != nil {
-		return devicePolicyFailure("validation_failed", err.Error()), nil
+		return attachDevicePolicyTransaction(devicePolicyFailure("validation_failed", err.Error()), rejectedTaskTransaction(devicePolicyTask(request), request.IdempotencyKey)), nil
 	}
 	if capability := current.Capabilities[request.Kind]; capability == nil || capability.State != "available" {
 		reason := "this policy is unavailable"
@@ -114,39 +96,72 @@ func (module *DevicePolicyModule) Apply(ctx context.Context, request *models.Dev
 		} else if capability != nil && capability.State == "error" {
 			code = "apply_failed"
 		}
-		return devicePolicyFailure(code, reason), nil
+		return attachDevicePolicyTransaction(devicePolicyFailure(code, reason), rejectedTaskTransaction(devicePolicyTask(request), request.IdempotencyKey)), nil
 	}
 	if conflict := module.validateConflict(ctx, request, current); conflict != nil {
-		return devicePolicyFailure(conflict.Code, conflict.Message), nil
+		return attachDevicePolicyTransaction(devicePolicyFailure(conflict.Code, conflict.Message), rejectedTaskTransaction(devicePolicyTask(request), request.IdempotencyKey)), nil
+	}
+	fingerprint, _ := json.Marshal(request)
+	task := devicePolicyTask(request)
+	begin, err := module.transactions.Begin(ctx, task, request.IdempotencyKey, string(fingerprint))
+	if err != nil {
+		return devicePolicyFailure("transaction_unavailable", "could not create transaction record"), nil
+	}
+	transaction := begin.Transaction
+	if begin.Conflict {
+		return attachDevicePolicyTransaction(devicePolicyFailure("conflict", "idempotency key was already used for a different change"), transaction), nil
+	}
+	if begin.Replay {
+		policy, readErr := module.store.Get(ctx, request.DeviceID)
+		if readErr != nil {
+			return attachDevicePolicyTransaction(devicePolicyFailure("apply_failed", readErr.Error()), transaction), nil
+		}
+		if transaction.Status == "committed" || transaction.Status == "unchanged" {
+			return attachDevicePolicyTransaction(devicePolicySuccess(policy, false), transaction), nil
+		}
+		return attachDevicePolicyTransaction(devicePolicyFailure(transaction.Status, "previous transaction requires review"), transaction), nil
 	}
 	if devicePolicyNoOp(request, current) {
-		module.rememberIdempotency(request.IdempotencyKey, string(fingerprint))
-		return devicePolicySuccess(current, false), nil
+		_ = module.transactions.Advance(ctx, transaction, "verify", "unchanged", "")
+		return attachDevicePolicyTransaction(devicePolicySuccess(current, false), transaction), nil
 	}
 
+	_ = module.transactions.Advance(ctx, transaction, "snapshot", "in_progress", "")
 	backup, err := module.store.Backup(ctx, request.Kind)
 	if err != nil {
-		return devicePolicyFailure("apply_failed", "could not create a rollback snapshot"), nil
+		_ = module.transactions.Advance(ctx, transaction, "snapshot", "failed", "retry")
+		return attachDevicePolicyTransaction(devicePolicyFailure("apply_failed", "could not create a rollback snapshot"), transaction), nil
 	}
+	_ = module.transactions.Advance(ctx, transaction, "apply", "in_progress", "restore_task_snapshot")
 	if err := module.store.Apply(ctx, request, current); err != nil {
 		restoreErr := module.store.Restore(ctx, backup)
-		message := err.Error()
 		if restoreErr != nil {
-			message = fmt.Sprintf("%s; rollback failed: %v", message, restoreErr)
+			_ = module.transactions.Advance(ctx, transaction, "recover", "recovery_required", "restore_task_snapshot")
+			return attachDevicePolicyTransaction(devicePolicyFailure("recovery_required", "policy apply and rollback both failed"), transaction), nil
 		}
-		return devicePolicyFailure("apply_failed", message), nil
+		_ = module.transactions.Advance(ctx, transaction, "rollback", "rolled_back", "retry")
+		return attachDevicePolicyTransaction(devicePolicyFailure("rolled_back", "policy apply failed; original configuration was restored"), transaction), nil
 	}
+	_ = module.transactions.Advance(ctx, transaction, "verify", "in_progress", "restore_task_snapshot")
 	updated, err := module.store.Get(ctx, request.DeviceID)
 	if err != nil {
 		restoreErr := module.store.Restore(ctx, backup)
-		message := "could not verify the applied policy"
 		if restoreErr != nil {
-			message = fmt.Sprintf("%s; rollback failed: %v", message, restoreErr)
+			_ = module.transactions.Advance(ctx, transaction, "recover", "recovery_required", "restore_task_snapshot")
+			return attachDevicePolicyTransaction(devicePolicyFailure("recovery_required", "verification and rollback both failed"), transaction), nil
 		}
-		return devicePolicyFailure("apply_failed", message), nil
+		_ = module.transactions.Advance(ctx, transaction, "rollback", "rolled_back", "retry")
+		return attachDevicePolicyTransaction(devicePolicyFailure("rolled_back", "verification failed; original configuration was restored"), transaction), nil
 	}
-	module.rememberIdempotency(request.IdempotencyKey, string(fingerprint))
-	return devicePolicySuccess(updated, true), nil
+	_ = module.transactions.Advance(ctx, transaction, "verify", "committed", "")
+	return attachDevicePolicyTransaction(devicePolicySuccess(updated, true), transaction), nil
+}
+
+func devicePolicyTask(request *models.DevicePolicyApplyRequest) string {
+	if request != nil && request.Kind == "static" {
+		return "network"
+	}
+	return "restrictions"
 }
 
 func validateDevicePolicyRequest(request *models.DevicePolicyApplyRequest) *PolicyError {
@@ -162,6 +177,9 @@ func validateDevicePolicyRequest(request *models.DevicePolicyApplyRequest) *Poli
 			address, err := netip.ParseAddr(strings.TrimSpace(request.Static.AssignedIP))
 			if err != nil || !address.Is4() {
 				return &PolicyError{Code: "validation_failed", Message: "a valid IPv4 address is required"}
+			}
+			if request.Static.Hostname != "" && !dhcpHostnamePattern.MatchString(strings.TrimSpace(request.Static.Hostname)) {
+				return &PolicyError{Code: "validation_failed", Message: "DHCP hostname must be a 1-63 character ASCII label using only letters, numbers, and interior hyphens"}
 			}
 		}
 	case "speed":
@@ -214,22 +232,15 @@ func devicePolicyNoOp(request *models.DevicePolicyApplyRequest, current *models.
 	return false
 }
 
-func (module *DevicePolicyModule) rememberIdempotency(key, fingerprint string) {
-	if key == "" {
-		return
-	}
-	if _, exists := module.idempotency[key]; !exists {
-		module.order = append(module.order, key)
-	}
-	module.idempotency[key] = devicePolicyIdempotencyRecord{Fingerprint: fingerprint}
-	for len(module.order) > devicePolicyIdempotencyLimit {
-		delete(module.idempotency, module.order[0])
-		module.order = module.order[1:]
-	}
-}
-
 func devicePolicySuccess(policy *models.DevicePolicy, changed bool) *models.DevicePolicyResponse {
 	return &models.DevicePolicyResponse{Result: &models.DevicePolicyResult{Policy: policy, Changed: changed}}
+}
+
+func attachDevicePolicyTransaction(response *models.DevicePolicyResponse, transaction *models.TaskTransaction) *models.DevicePolicyResponse {
+	if response != nil && response.Result != nil {
+		response.Result.Transaction = transaction
+	}
+	return response
 }
 
 func devicePolicyFailure(code, message string) *models.DevicePolicyResponse {

@@ -1,0 +1,14 @@
+M25 self-check — 2026-09-25
+
+PASS backend full suite: 1426 tests / 89 packages
+PASS frontend node suite: 43 tests
+PASS frontend vue-tsc --noEmit
+PASS five-layer matrix validation: 55 requirements / 48 migrated / 7 P0 additions
+
+Fault scenarios covered:
+- firewall access independent of eqos
+- speed write independent of firewall
+- capability not_installed / disabled / unsupported / error
+- install plan and explicit confirmation
+- install cancel / low space / failure / state conflict / success
+- draft token preserved without policy auto-apply

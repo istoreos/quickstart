@@ -3,6 +3,9 @@
 package service
 
 import (
+	"context"
+	"errors"
+	"fmt"
 	"net/netip"
 	"os"
 	"path/filepath"
@@ -27,7 +30,8 @@ func TestReadProcConntrackFlowsParsesOriginalAndReplyCounters(t *testing.T) {
 	if err := os.WriteFile(path, []byte(content), 0600); err != nil {
 		t.Fatal(err)
 	}
-	flows, err := readProcConntrackFlows(path)
+	flows := make([]lanTrafficFlow, 0, 2)
+	err := walkProcConntrackFlows(path, func(flow lanTrafficFlow) { flows = append(flows, flow) })
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -36,6 +40,86 @@ func TestReadProcConntrackFlowsParsesOriginalAndReplyCounters(t *testing.T) {
 	}
 	if flows[1].source.String() != "fd5f:e357:7969::20" || flows[1].upstream != 80 || flows[1].downstream != 160 {
 		t.Fatalf("IPv6 flow = %#v", flows[1])
+	}
+}
+
+func TestWalkProcConntrackFlowsStreamsLargeTable(t *testing.T) {
+	t.Parallel()
+	path := filepath.Join(t.TempDir(), "nf_conntrack")
+	file, err := os.Create(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for index := 0; index < 20_000; index++ {
+		line := fmt.Sprintf("ipv4 2 tcp 6 30 ESTABLISHED src=192.168.%d.%d dst=1.1.1.1 packets=2 bytes=%d src=1.1.1.1 dst=192.168.%d.%d packets=3 bytes=%d\n", (index/250)%250, index%250+1, index+100, (index/250)%250, index%250+1, index+200)
+		if _, err := file.WriteString(line); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if err := file.Close(); err != nil {
+		t.Fatal(err)
+	}
+	count := 0
+	if err := walkProcConntrackFlows(path, func(lanTrafficFlow) { count++ }); err != nil {
+		t.Fatal(err)
+	}
+	if count != 20_000 {
+		t.Fatalf("flows = %d, want 20000", count)
+	}
+}
+
+func TestLanStatsSnapshotRequestHonorsCancellationBeforeQueue(t *testing.T) {
+	t.Parallel()
+	stats := &LanStats{fetchHostStatsCh: make(chan *fetchHostStatsReq)}
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel()
+	started := time.Now()
+	snapshot := stats.reqSnapshotContext(ctx, "", true)
+	if !errors.Is(snapshot.err, context.Canceled) {
+		t.Fatalf("err = %v", snapshot.err)
+	}
+	if time.Since(started) > time.Second {
+		t.Fatal("canceled request did not return promptly")
+	}
+}
+
+func TestLanStatsStopsSamplingAfterThirtySecondsWithoutConsumer(t *testing.T) {
+	stats := &LanStats{
+		isRunning:       true,
+		lastRunningTime: time.Now().Add(-31 * time.Second),
+		hosts:           map[string]*LanStatHost{},
+	}
+	stats.diagnosticSampling.Store(true)
+	timer := time.NewTimer(time.Millisecond)
+	defer timer.Stop()
+	if err := stats.runOnce(timer); err != nil {
+		t.Fatal(err)
+	}
+	if stats.isRunning || stats.diagnostics().Sampling {
+		t.Fatal("sampler remained active without a consumer")
+	}
+}
+
+func BenchmarkWalkProcConntrackFlows20K(b *testing.B) {
+	path := filepath.Join(b.TempDir(), "nf_conntrack")
+	file, err := os.Create(path)
+	if err != nil {
+		b.Fatal(err)
+	}
+	for index := 0; index < 20_000; index++ {
+		fmt.Fprintf(file, "ipv4 2 tcp 6 30 ESTABLISHED src=192.168.%d.%d dst=1.1.1.1 packets=2 bytes=%d src=1.1.1.1 dst=192.168.%d.%d packets=3 bytes=%d\n", (index/250)%250, index%250+1, index+100, (index/250)%250, index%250+1, index+200)
+	}
+	file.Close()
+	b.ReportAllocs()
+	b.ResetTimer()
+	for index := 0; index < b.N; index++ {
+		count := 0
+		if err := walkProcConntrackFlows(path, func(lanTrafficFlow) { count++ }); err != nil {
+			b.Fatal(err)
+		}
+		if count != 20_000 {
+			b.Fatalf("flows = %d", count)
+		}
 	}
 }
 

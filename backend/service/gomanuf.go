@@ -6,19 +6,30 @@ import (
 	"log"
 	"net"
 	"os"
+	"runtime"
 	"sort"
 	"strconv"
 	"strings"
 	"sync"
+	"time"
 )
 
 const hexDigit = "0123456789ABCDEF"
 
 var (
-	d         map[int]interface{}
-	initMutex sync.RWMutex
-	initDone  = make(chan struct{})
+	d                  map[int]map[uint64]string
+	manufPrefixLengths []int
+	manufStats         ManufRuntimeStats
+	initMutex          sync.RWMutex
+	initDone           = make(chan struct{})
 )
+
+type ManufRuntimeStats struct {
+	Entries        int
+	SourceBytes    int64
+	LoadDuration   time.Duration
+	HeapAllocDelta uint64
+}
 
 func init() {
 	go func() {
@@ -31,17 +42,35 @@ func init() {
 func initializeManufData() {
 	initMutex.Lock()
 	defer initMutex.Unlock()
-
-	d = make(map[int]interface{})
-	err := loadManufData("/usr/share/quickstart/manuf")
+	started := time.Now()
+	var before, after runtime.MemStats
+	runtime.ReadMemStats(&before)
+	d = make(map[int]map[uint64]string)
+	const sourcePath = "/usr/share/quickstart/manuf"
+	err := loadManufData(sourcePath)
 	if err != nil {
 		log.Printf("read manuf file failed, err=%v", err)
+	}
+	finalizeManufIndex()
+	runtime.ReadMemStats(&after)
+	manufStats.LoadDuration = time.Since(started)
+	if after.HeapAlloc > before.HeapAlloc {
+		manufStats.HeapAllocDelta = after.HeapAlloc - before.HeapAlloc
+	}
+	if info, statErr := os.Stat(sourcePath); statErr == nil {
+		manufStats.SourceBytes = info.Size()
+	}
+	for _, entries := range d {
+		manufStats.Entries += len(entries)
+	}
+	if manufStats.SourceBytes > 0 {
+		log.Printf("manuf index loaded entries=%d source_bytes=%d heap_delta=%d duration=%s", manufStats.Entries, manufStats.SourceBytes, manufStats.HeapAllocDelta, manufStats.LoadDuration)
 	}
 }
 
 func loadManufData(fileName string) error {
 	if d == nil {
-		d = make(map[int]interface{})
+		d = make(map[int]map[uint64]string)
 	}
 
 	err := readLine(fileName, func(s string) {
@@ -81,7 +110,22 @@ func parse(mac, comment string) {
 	if _, ok := d[b]; !ok {
 		d[b] = make(map[uint64]string)
 	}
-	d[b].(map[uint64]string)[maskMACPrefix(value, b)] = comment
+	d[b][maskMACPrefix(value, b)] = comment
+}
+
+func finalizeManufIndex() {
+	manufPrefixLengths = manufPrefixLengths[:0]
+	for prefixBits := range d {
+		if prefixBits > 0 && prefixBits <= 48 {
+			manufPrefixLengths = append(manufPrefixLengths, prefixBits)
+		}
+	}
+	sort.Sort(sort.Reverse(sort.IntSlice(manufPrefixLengths)))
+}
+
+func GomanufDiagnostics() ManufRuntimeStats {
+	<-initDone
+	return manufStats
 }
 
 func b2uint64(sList []string) uint64 {
@@ -140,18 +184,8 @@ func GomanufSearch(mac string) string {
 
 	// Initialization is immutable after initDone closes. Sort prefix lengths
 	// explicitly so /36 and /28 assignments always take precedence over /24.
-	prefixLengths := make([]int, 0, len(d))
-	for prefixBits := range d {
-		if prefixBits > 0 && prefixBits <= 48 {
-			prefixLengths = append(prefixLengths, prefixBits)
-		}
-	}
-	sort.Sort(sort.Reverse(sort.IntSlice(prefixLengths)))
-	for _, prefixBits := range prefixLengths {
-		entries, ok := d[prefixBits].(map[uint64]string)
-		if !ok {
-			continue
-		}
+	for _, prefixBits := range manufPrefixLengths {
+		entries := d[prefixBits]
 		if manufacturer, found := entries[maskMACPrefix(value, prefixBits)]; found {
 			return manufacturer
 		}

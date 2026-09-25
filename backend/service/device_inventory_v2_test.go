@@ -6,9 +6,31 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
+	"sync/atomic"
 	"testing"
 	"time"
+
+	"github.com/istoreos/quickstart/backend/models"
 )
+
+type blockingDeviceInventorySource struct {
+	calls   atomic.Int64
+	started chan struct{}
+	release chan struct{}
+	once    sync.Once
+}
+
+func (source *blockingDeviceInventorySource) Read(ctx context.Context) deviceInventorySourceSnapshot {
+	source.calls.Add(1)
+	source.once.Do(func() { close(source.started) })
+	select {
+	case <-ctx.Done():
+		return deviceInventorySourceSnapshot{}
+	case <-source.release:
+		return deviceInventorySourceSnapshot{ARP: []deviceInventoryObservation{{MAC: "AA:BB:CC:DD:EE:01", IPv4: "192.168.100.20", Online: true}}}
+	}
+}
 
 type fakeDeviceInventorySource struct {
 	snapshots []deviceInventorySourceSnapshot
@@ -33,6 +55,98 @@ func newTestDeviceInventory(t *testing.T, source deviceInventorySource, now *tim
 	return newDeviceInventoryModuleForTest(source, filepath.Join(t.TempDir(), "history.json"), "boot-test", func() time.Time {
 		return *now
 	}, limit)
+}
+
+func TestDeviceInventoryCachesProductionSnapshotUntilTTL(t *testing.T) {
+	t.Parallel()
+	now := time.Date(2026, 9, 24, 1, 0, 0, 0, time.UTC)
+	source := &fakeDeviceInventorySource{snapshots: []deviceInventorySourceSnapshot{
+		{ARP: []deviceInventoryObservation{{MAC: "AA:BB:CC:DD:EE:01", IPv4: "192.168.100.20", Online: true}}},
+		{ARP: []deviceInventoryObservation{{MAC: "AA:BB:CC:DD:EE:02", IPv4: "192.168.100.21", Online: true}}},
+	}}
+	module := newTestDeviceInventory(t, source, &now, 100)
+	module.cacheTTL = 10 * time.Second
+	first, err := module.Snapshot(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	now = now.Add(9 * time.Second)
+	second, err := module.Snapshot(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if source.index != 1 || first != second {
+		t.Fatalf("cache miss before TTL: reads=%d first=%p second=%p", source.index, first, second)
+	}
+	now = now.Add(2 * time.Second)
+	third, err := module.Snapshot(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if source.index != 2 || third == second {
+		t.Fatalf("cache did not refresh after TTL: reads=%d", source.index)
+	}
+}
+
+func TestDeviceInventoryCoalescesConcurrentRefresh(t *testing.T) {
+	t.Parallel()
+	now := time.Date(2026, 9, 24, 1, 0, 0, 0, time.UTC)
+	source := &blockingDeviceInventorySource{started: make(chan struct{}), release: make(chan struct{})}
+	module := newTestDeviceInventory(t, source, &now, 100)
+	module.cacheTTL = 10 * time.Second
+	const callers = 16
+	results := make(chan error, callers)
+	for index := 0; index < callers; index++ {
+		go func() { _, err := module.Snapshot(context.Background()); results <- err }()
+	}
+	<-source.started
+	close(source.release)
+	for index := 0; index < callers; index++ {
+		if err := <-results; err != nil {
+			t.Fatal(err)
+		}
+	}
+	if got := source.calls.Load(); got != 1 {
+		t.Fatalf("source reads = %d, want 1", got)
+	}
+}
+
+func TestDeviceInventoryWritesHistoryOnlyOnChangeAndDebounce(t *testing.T) {
+	t.Parallel()
+	now := time.Date(2026, 9, 24, 1, 0, 0, 0, time.UTC)
+	path := filepath.Join(t.TempDir(), "history.json")
+	source := &fakeDeviceInventorySource{snapshots: []deviceInventorySourceSnapshot{
+		{ARP: []deviceInventoryObservation{{MAC: "AA:BB:CC:DD:EE:01", IPv4: "192.168.100.20", Online: true}}},
+	}}
+	module := newDeviceInventoryModuleForTest(source, path, "boot-test", func() time.Time { return now }, 100)
+	if _, err := module.Snapshot(context.Background()); err != nil {
+		t.Fatal(err)
+	}
+	first, err := os.Stat(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := module.Snapshot(context.Background()); err != nil {
+		t.Fatal(err)
+	}
+	second, err := os.Stat(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !first.ModTime().Equal(second.ModTime()) {
+		t.Fatalf("unchanged history was rewritten: %s != %s", first.ModTime(), second.ModTime())
+	}
+	now = now.Add(10 * time.Second)
+	if _, err := module.Snapshot(context.Background()); err != nil {
+		t.Fatal(err)
+	}
+	third, err := os.Stat(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !second.ModTime().Equal(third.ModTime()) {
+		t.Fatal("history ignored debounce")
+	}
 }
 
 func TestDeviceInventorySnapshotMergesSourcesByMAC(t *testing.T) {
@@ -340,5 +454,32 @@ func TestBuildLANHostHintsRequiresNDPProofForLinkLocalIPv6(t *testing.T) {
 	}, prefixes, map[string]struct{}{"AA:BB:CC:DD:EE:01": {}})
 	if len(hints) != 1 || len(hints["AA:BB:CC:DD:EE:01"].IPv6Addrs) != 2 {
 		t.Fatalf("IPv6 hints = %#v", hints)
+	}
+}
+
+func TestDeviceInventoryManualDeviceIsPersistentNeverSeenAndMerges(t *testing.T) {
+	dir := t.TempDir()
+	now := time.Date(2026, 9, 25, 12, 0, 0, 0, time.UTC)
+	source := &fakeDeviceInventorySource{}
+	module := newDeviceInventoryModuleForTest(source, filepath.Join(dir, "history.json"), "boot", func() time.Time { return now }, 20)
+	response, err := module.AddManual(context.Background(), &models.DeviceInventoryAddRequest{MAC: "AA:BB:CC:DD:EE:77", Alias: "孩子的电脑"})
+	if err != nil || len(response.Result.Devices) != 1 {
+		t.Fatalf("add response=%#v err=%v", response, err)
+	}
+	device := response.Result.Devices[0]
+	if device.PresenceState != "never_seen" || device.DisplayName != "孩子的电脑" || device.DeviceID != "mac:aa:bb:cc:dd:ee:77" {
+		t.Fatalf("manual device=%#v", device)
+	}
+	restarted := newDeviceInventoryModuleForTest(source, filepath.Join(dir, "history.json"), "boot-2", func() time.Time { return now.Add(time.Hour) }, 20)
+	restartedResponse, err := restarted.Snapshot(context.Background())
+	if err != nil || len(restartedResponse.Result.Devices) != 1 || restartedResponse.Result.Devices[0].PresenceState != "never_seen" {
+		t.Fatalf("manual device did not persist: %#v err=%v", restartedResponse, err)
+	}
+	source.snapshots = []deviceInventorySourceSnapshot{{ARP: []deviceInventoryObservation{{MAC: "AA:BB:CC:DD:EE:77", IPv4: "192.168.1.77", Online: true}}}}
+	source.index = 0
+	restarted.Invalidate()
+	merged, err := restarted.Snapshot(context.Background())
+	if err != nil || len(merged.Result.Devices) != 1 || merged.Result.Devices[0].PresenceState != "online" || merged.Result.Devices[0].DisplayName != "孩子的电脑" {
+		t.Fatalf("manual device did not merge: %#v err=%v", merged, err)
 	}
 }

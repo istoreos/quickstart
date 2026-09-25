@@ -11,10 +11,12 @@ export type InventoryDevice = {
     displayName?: string
     hostname?: string
     online: boolean
+    presenceState?: 'online' | 'offline' | 'never_seen'
     lastSeenAt: string
     mac: string
     vendor?: string
     classification?: DeviceClassification
+    icon?: { mode: 'auto' | 'manual'; preferenceKey?: string; resolvedKey: string; assetKey: string; label: string; brandLabel?: string }
     identity?: { kind: 'mac' | 'duid_iaid'; scope: 'persistent' | 'boot' }
     addresses: {
         current: InventoryAddress[]
@@ -41,6 +43,11 @@ export type LegacyDevice = {
     speedLimit?: Record<string, unknown>
 }
 
+export type DevicePolicyRules = {
+    static?: Array<{ assignedMac?: string }>
+    speed?: Array<{ mac?: string; ip?: string; enabled?: boolean; networkAccess?: boolean }>
+}
+
 export type DeviceListItem = InventoryDevice & {
     scene: DeviceScene
     brand: string
@@ -52,6 +59,7 @@ export type DeviceListItem = InventoryDevice & {
     uploadSpeedStr: string
     downloadSpeedStr: string
     telemetry?: import('./deviceTelemetry').DeviceTelemetryItem
+    iconKey?: import('./deviceScene').DeviceIconKey
     legacy?: LegacyDevice
 }
 
@@ -113,7 +121,7 @@ export const detectDeviceScene = (device: Pick<InventoryDevice, 'displayName' | 
     if (/\b(?:rt|gt)-?ax\d+[a-z0-9-]*\b|\bzenwifi\b|\brouter\b|\bgateway\b|\baccess[-_ ]?point\b|\bmesh\b|\brepeater\b|路由|网关|交换机/i.test(combinedSource)) {
         return 'network'
     }
-    if (normalizeDeviceBrand(device.vendor) === 'ASUS') return 'computer'
+    if (normalizeDeviceBrand(device.vendor) === 'ASUS') return 'network'
     return 'unknown'
 }
 
@@ -139,7 +147,7 @@ export const resolveDeviceClassification = (device: InventoryDevice): DeviceClas
         brand: normalizeDeviceBrand(device.vendor),
         manufacturer: String(device.vendor || '').trim(),
         category,
-        source: legacyScene === 'unknown' ? 'fallback' : normalizeDeviceBrand(device.vendor) === 'ASUS' && category === 'computer' ? 'manufacturer_default' : 'hostname',
+        source: legacyScene === 'unknown' ? 'fallback' : normalizeDeviceBrand(device.vendor) === 'ASUS' && category === 'network' && !String(device.displayName || device.hostname || '').trim() ? 'manufacturer_default' : 'hostname',
         confidence: legacyScene === 'unknown' ? 'low' : 'medium',
     }
 }
@@ -158,21 +166,33 @@ const policyLabels = (legacy?: LegacyDevice): string[] => {
     return labels
 }
 
-export const buildDeviceListItems = (devices: InventoryDevice[], legacyDevices: LegacyDevice[]): DeviceListItem[] => {
+const policyLabelsFromRules = (device: InventoryDevice, rules?: DevicePolicyRules): string[] => {
+    if (!rules) return []
+    const mac = normalized(device.mac)
+    const addresses = new Set(device.addresses.current.map(item => normalized(item.address)))
+    const labels: string[] = []
+    if ((rules.static || []).some(rule => normalized(rule.assignedMac) === mac)) labels.push('static')
+    const speed = (rules.speed || []).find(rule => normalized(rule.mac) === mac || addresses.has(normalized(rule.ip)))
+    if (speed?.enabled) labels.push(speed.networkAccess === false ? 'blocked' : 'limited')
+    return labels
+}
+
+export const buildDeviceListItems = (devices: InventoryDevice[], legacyDevices: LegacyDevice[] = [], rules?: DevicePolicyRules): DeviceListItem[] => {
     const legacyByMac = new Map(legacyDevices.map(device => [normalized(device.mac), device]))
     return devices.map(device => {
         const legacy = legacyByMac.get(normalized(device.mac))
         const primary = device.addresses.current.find(address => address.primary)
             || device.addresses.current[0]
             || device.addresses.historical[0]
-        const labels = policyLabels(legacy)
+        const labels = rules ? policyLabelsFromRules(device, rules) : policyLabels(legacy)
         const classification = resolveDeviceClassification(device)
         return {
             ...device,
             scene: classification.category,
             brand: classification.brand,
             classification,
-            displayName: device.displayName || legacy?.hostname || '',
+            iconKey: device.icon?.assetKey as import('./deviceScene').DeviceIconKey | undefined,
+            displayName: device.displayName || '',
             primaryAddress: primary?.address || '',
             extraAddressCount: Math.max(0, device.addresses.current.length + device.addresses.historical.length - (primary ? 1 : 0)),
             controlled: labels.length > 0,
