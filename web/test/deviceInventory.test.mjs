@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 
 import { buildDeviceListItems, detectDeviceScene, deviceCounts, deviceIdentityPresentation, normalizeDeviceBrand, resolveDeviceClassification, selectDeviceListItems, splitHighlight } from '../src/pages/device/deviceInventory.ts'
-import { deviceSceneIconPath } from '../src/pages/device/deviceScene.ts'
+import { deviceIconKeys, deviceIconLabels, deviceIconPath, deviceSceneIconPath } from '../src/pages/device/deviceScene.ts'
 
 const inventory = [
     {
@@ -26,6 +26,16 @@ test('buildDeviceListItems joins policy summaries by stable MAC identity', () =>
     assert.equal(result[0].primaryAddress, '192.168.100.20')
     assert.deepEqual(result[0].policyLabels, ['blocked'])
     assert.equal(result[0].controlled, true)
+})
+
+test('v2 policy rules replace the legacy device list dependency', () => {
+    const result = buildDeviceListItems(inventory, [], {
+        static: [{ assignedMac: 'AA:BB:CC:DD:EE:01' }],
+        speed: [{ mac: 'AA:BB:CC:DD:EE:01', enabled: true, networkAccess: false }],
+    })
+    assert.deepEqual(result[0].policyLabels, ['static', 'blocked'])
+    assert.equal(result[0].controlled, true)
+    assert.equal(result[0].legacy, undefined)
 })
 
 test('selectDeviceListItems filters, searches all identity fields and sorts without mutating', () => {
@@ -75,10 +85,19 @@ test('device scenes use recognizable signals and safely fall back to unknown', (
     assert.equal(deviceSceneIconPath('unknown'), '/luci-static/quickstart/device-icons/computer.webp')
 })
 
-test('M7 presents reviewed brands without treating a manufacturer as a router', () => {
+test('M24 exposes 30 stable selectable icons with accessible labels', () => {
+    assert.equal(deviceIconKeys.length, 30)
+    assert.equal(new Set(deviceIconKeys).size, 30)
+    for (const key of deviceIconKeys) {
+        assert.ok(deviceIconLabels[key])
+        assert.match(deviceIconPath(key), /^\/luci-static\/quickstart\/device-icons\/.+\.webp$/)
+    }
+})
+
+test('confirmed ASUS manufacturer fallback presents a network device while stronger names win', () => {
     assert.equal(normalizeDeviceBrand('ASUSTek COMPUTER INC.'), 'ASUS')
     assert.equal(normalizeDeviceBrand('Unreviewed Manufacturer LLC'), '')
-    assert.equal(detectDeviceScene({ vendor: 'ASUSTek COMPUTER INC.' }), 'computer')
+    assert.equal(detectDeviceScene({ vendor: 'ASUSTek COMPUTER INC.' }), 'network')
     assert.equal(detectDeviceScene({ displayName: 'ASUS RT-AX88U', vendor: 'ASUSTek COMPUTER INC.' }), 'network')
     assert.equal(detectDeviceScene({ displayName: 'Family workstation', vendor: 'ASUSTek COMPUTER INC.' }), 'computer')
     assert.equal(detectDeviceScene({ displayName: '', hostname: '', vendor: '' }), 'unknown')
@@ -93,7 +112,7 @@ test('M8 prefers the backend classification contract and safely adapts old respo
 
     const legacy = resolveDeviceClassification({ ...inventory[0], displayName: '', hostname: '', vendor: 'ASUSTek COMPUTER INC.' })
     assert.equal(legacy.brand, 'ASUS')
-    assert.equal(legacy.category, 'computer')
+    assert.equal(legacy.category, 'network')
     assert.equal(legacy.source, 'manufacturer_default')
 
     const fallback = resolveDeviceClassification({ ...inventory[0], displayName: '', hostname: '', vendor: '' })

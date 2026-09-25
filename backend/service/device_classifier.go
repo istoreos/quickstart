@@ -95,7 +95,7 @@ func (classifier *DeviceClassifier) Classify(input DeviceClassificationInput) *m
 	}
 
 	if brand == "ASUS" {
-		return deviceClassification(brand, manufacturer, "computer", "manufacturer_default", "medium")
+		return deviceClassification(brand, manufacturer, "network", "manufacturer_default", "medium")
 	}
 	return deviceClassification(brand, manufacturer, "computer", "fallback", "low")
 }

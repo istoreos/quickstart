@@ -55,10 +55,16 @@ func (svc *LanGlobalConfigService) GetGlobalConfigs(ctx context.Context) (*model
 }
 
 func buildDeviceManagementCapabilities(floatState FloatIPStatus, floatErr error, speedState SpeedLimitStatus, speedErr error) *models.DeviceManagementCapabilities {
-	return &models.DeviceManagementCapabilities{
-		FloatGateway: buildDeviceManagementCapability(floatState.Installed, floatState.Enabled, floatErr),
-		SpeedLimit:   buildDeviceManagementCapability(speedState.Installed, speedState.Enabled, speedErr),
+	access := &models.DeviceManagementCapability{State: "available"}
+	speed := buildDeviceManagementCapability(speedState.Installed, speedState.Enabled, speedErr)
+	decorateCapabilityActions(speed, "app-meta-eqos")
+	floating := buildDeviceManagementCapability(floatState.Installed, floatState.Enabled, floatErr)
+	decorateCapabilityActions(floating, "app-meta-floatip")
+	traffic := &models.DeviceManagementCapability{State: "available"}
+	items := map[string]*models.Capability{
+		"internet_access": access, "device_speed_limit": speed, "floating_gateway": floating, "traffic_insights": traffic,
 	}
+	return &models.DeviceManagementCapabilities{Items: items, InternetAccess: access, FloatGateway: floating, SpeedLimit: speed, TrafficInsights: traffic}
 }
 
 func buildDeviceManagementCapability(installed, enabled bool, err error) *models.DeviceManagementCapability {
@@ -76,6 +82,20 @@ func buildDeviceManagementCapability(installed, enabled bool, err error) *models
 		capability.State = "available"
 	}
 	return capability
+}
+
+func decorateCapabilityActions(capability *models.DeviceManagementCapability, installTarget string) {
+	if capability == nil {
+		return
+	}
+	switch capability.State {
+	case "not_installed":
+		capability.Actions = []*models.CapabilityAction{{Kind: "install", Target: installTarget, RequiresConfirmation: true}}
+	case "disabled":
+		capability.Actions = []*models.CapabilityAction{{Kind: "enable", RequiresConfirmation: true}}
+	case "error":
+		capability.Actions = []*models.CapabilityAction{{Kind: "retry"}}
+	}
 }
 
 func buildGlobalDhcpTags(lanStatus LanStatusSnapshot, state *LanDhcpState) []*models.LANCtrlDhcpTagInfo {

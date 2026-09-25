@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"errors"
+	"path/filepath"
 	"testing"
 
 	"github.com/istoreos/quickstart/backend/models"
@@ -125,8 +126,20 @@ func TestDevicePolicyRollsBackInterruptedApply(t *testing.T) {
 	response, err := newDevicePolicyModuleForTest(store).Apply(context.Background(), &models.DevicePolicyApplyRequest{
 		DeviceID: store.policy.DeviceID, Kind: "access", Access: &models.DeviceAccessPolicy{NetworkAccess: false},
 	})
-	if err != nil || response.Result.Error.Code != "apply_failed" || store.restoreCalls != 1 || !store.policy.Access.NetworkAccess {
+	if err != nil || response.Result.Error.Code != "rolled_back" || response.Result.Transaction.Status != "rolled_back" || store.restoreCalls != 1 || !store.policy.Access.NetworkAccess {
 		t.Fatalf("response=%#v restore=%d policy=%#v err=%v", response, store.restoreCalls, store.policy, err)
+	}
+}
+
+func TestDevicePolicyReportsRecoveryRequiredWhenRollbackFails(t *testing.T) {
+	store := availablePolicyStore()
+	store.failApply, store.failRestore = true, true
+	response, err := newDevicePolicyModuleForTest(store).Apply(context.Background(), &models.DevicePolicyApplyRequest{
+		DeviceID: store.policy.DeviceID, Kind: "speed", IdempotencyKey: "rollback-failure",
+		Speed: &models.DeviceSpeedPolicy{Enabled: true, UploadSpeed: 10, DownloadSpeed: 20},
+	})
+	if err != nil || response.Result.Error.Code != "recovery_required" || response.Result.Transaction.Status != "recovery_required" || response.Result.Transaction.RecoveryAction != "restore_task_snapshot" {
+		t.Fatalf("response = %#v, err = %v", response, err)
 	}
 }
 
@@ -147,6 +160,26 @@ func TestDevicePolicyIdempotencyPreventsDuplicateWrite(t *testing.T) {
 	third, _ := module.Apply(context.Background(), &conflicting)
 	if third.Result.Error.Code != "conflict" || store.applyCalls != 1 {
 		t.Fatalf("third=%#v apply=%d", third.Result, store.applyCalls)
+	}
+}
+
+func TestDevicePolicyIdempotencySurvivesModuleRestart(t *testing.T) {
+	store := availablePolicyStore()
+	path := filepath.Join(t.TempDir(), "transactions.json")
+	firstModule := newDevicePolicyModuleForTest(store)
+	firstModule.transactions = NewDefaultTaskTransactionJournal()
+	firstModule.transactions.path = path
+	request := &models.DevicePolicyApplyRequest{
+		DeviceID: store.policy.DeviceID, Kind: "access", IdempotencyKey: "persistent-request",
+		Access: &models.DeviceAccessPolicy{NetworkAccess: false},
+	}
+	first, _ := firstModule.Apply(context.Background(), request)
+	restarted := newDevicePolicyModuleForTest(store)
+	restarted.transactions = NewDefaultTaskTransactionJournal()
+	restarted.transactions.path = path
+	replayed, _ := restarted.Apply(context.Background(), request)
+	if first.Result.Transaction.Status != "committed" || !replayed.Result.Transaction.Replayed || replayed.Result.Changed || store.applyCalls != 1 {
+		t.Fatalf("first=%#v replay=%#v calls=%d", first.Result, replayed.Result, store.applyCalls)
 	}
 }
 

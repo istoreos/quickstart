@@ -1,10 +1,20 @@
 package models
 
-// swagger:model devicePolicyCapability
-type DevicePolicyCapability struct {
-	State  string `json:"state"`
-	Reason string `json:"reason,omitempty"`
+type CapabilityAction struct {
+	Kind                 string `json:"kind"`
+	Target               string `json:"target,omitempty"`
+	RequiresConfirmation bool   `json:"requiresConfirmation,omitempty"`
 }
+
+// Capability is the shared truth contract for optional device-management features.
+type Capability struct {
+	State           string              `json:"state"`
+	Reason          string              `json:"reason,omitempty"`
+	Actions         []*CapabilityAction `json:"actions,omitempty"`
+	DesiredRetained bool                `json:"desiredRetained,omitempty"`
+}
+
+type DevicePolicyCapability = Capability
 
 // swagger:model deviceStaticPolicy
 type DeviceStaticPolicy struct {
@@ -48,9 +58,10 @@ type DevicePolicyError struct {
 
 // swagger:model devicePolicyResult
 type DevicePolicyResult struct {
-	Policy  *DevicePolicy      `json:"policy,omitempty"`
-	Changed bool               `json:"changed,omitempty"`
-	Error   *DevicePolicyError `json:"error,omitempty"`
+	Policy      *DevicePolicy      `json:"policy,omitempty"`
+	Changed     bool               `json:"changed,omitempty"`
+	Error       *DevicePolicyError `json:"error,omitempty"`
+	Transaction *TaskTransaction   `json:"transaction,omitempty"`
 }
 
 // swagger:model devicePolicyResponse

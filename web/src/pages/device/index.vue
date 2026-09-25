@@ -1,166 +1,60 @@
 <template>
-    <div id="page">
-        <div style="text-align: left;display: flex;align-items: center;margin-bottom: 20px;padding-top: 4px;">
-            <router-link to="/" style="text-decoration: none;color: var(--breadcrumbs-tit-color);line-height: 1.5em;margin-right: 4px;">{{ $gettext("首页") }}</router-link>
-            <svg width="20" height="20" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <path d="M20 30 L50 50 L20 70" stroke="#d6dbf8" stroke-width="8" stroke-linecap="round" fill="none" />
-            </svg>
-            <a style="text-decoration: none;color: var(--breadcrumbs-tit-color1);line-height: 1.5em;">{{
-                $gettext("设备管理") }}</a>
-        </div>
-    </div>
-    <div class="device_container" style="color: black;">
-        <div class="tab-container">
-            <div class="tabs_box_g">
-                <button v-for="(tab, index) in tabs" :key="index" @click="activeTab = index"
-                    :class="{ active: activeTab === index }">
-                    {{ $gettext(tab) }}
-                </button>
-            </div>
-            <div class="tab-content_g">
-                <div v-if="activeTab === 0" class="content-item">
-                    <DeviceCenterList v-if="!legacyMode" @use-legacy="legacyMode = true" />
-                    <div v-else>
-                        <div v-if="deviceInventoryV2Enabled" class="legacy-banner">
-                            <span>{{ $gettext('正在使用经典列表进行设备配置') }}</span>
-                            <button type="button" @click="legacyMode = false">{{ $gettext('返回新设备列表') }}</button>
-                        </div>
-                        <DeviceListVue @openGloba="openGloba" />
-                    </div>
-                </div>
-                <div v-if="activeTab === 1" class="content-item">
-                    <StaticStateListVue />
-                </div>
-                <div v-if="activeTab === 2" class="content-item">
-                    <SpeedLimitListVue @openGloba="openGloba" />
-                </div>
-                <div v-if="activeTab === 3" class="content-item">
-                    <ConfigureVue ref="configureRef" />
-                </div>
-            </div>
-            <div style="height: 30px;"></div>
-        </div>
-    </div>
+    <main id="page" class="device-management">
+        <nav class="breadcrumbs" :aria-label="$gettext('面包屑')"><router-link to="/">{{ $gettext('首页') }}</router-link><span aria-hidden="true">›</span><span>{{ $gettext('局域网设备管理') }}</span></nav>
+        <header class="page-heading"><div><h1>{{ $gettext('局域网设备管理') }}</h1><p>{{ $gettext('认识每台设备，并用简单的方式安排它如何连接和上网。') }}</p></div></header>
+        <nav class="primary-tabs" role="tablist" :aria-label="$gettext('局域网设备管理')">
+            <button v-for="tab in tabs" :key="tab.id" type="button" role="tab" :aria-selected="activeTab === tab.id" :class="{ active: activeTab === tab.id }" @click="activeTab = tab.id"><span aria-hidden="true">{{ tab.icon }}</span>{{ tab.label }}</button>
+        </nav>
+        <section class="primary-content" role="tabpanel">
+            <DeviceCenterList v-if="activeTab === 'devices'" />
+            <DeviceGroupsPanel v-else-if="activeTab === 'groups'" />
+            <LanSettingsPanel v-else />
+        </section>
+    </main>
 </template>
+
 <script setup lang="ts">
-import { ref, nextTick, onMounted } from 'vue'
-import DeviceListVue from "./deviceList.vue";
-import DeviceCenterList from "./deviceCenterList.vue";
-import StaticStateListVue from "./staticStateList.vue";
-import SpeedLimitListVue from "./speedLimitList.vue";
-import ConfigureVue from "./configure.vue";
-import request from '/@/request';
-import Toast from "/@/components/toast";
+import { computed, ref } from 'vue'
 import { useGettext } from '/@/plugins/i18n'
+import DeviceCenterList from './deviceCenterList.vue'
+import DeviceGroupsPanel from './deviceGroupsPanel.vue'
+import LanSettingsPanel from './lanSettingsPanel.vue'
+
 const { $gettext } = useGettext()
-const tabs = ref([
-    '设备列表',
-    '静态分配列表',
-    '限速设备列表',
-    '全局设置'
-]);
-const activeTab = ref(0);
-const deviceInventoryV2Enabled = window.quickstart_configs?.deviceInventoryV2 !== false
-const legacyMode = ref(!deviceInventoryV2Enabled)
-const configureRef = ref<any>(null)
-const openGloba = async () => {
-    activeTab.value = 3
-    await nextTick()
-    if (configureRef.value) {
-        configureRef.value.activeTab = 'ip'
-    }
-}
+const activeTab = ref<'devices'|'groups'|'settings'>('devices')
+const tabs = computed(() => [
+    { id: 'devices' as const, icon: '◉', label: $gettext('设备') },
+    { id: 'groups' as const, icon: '◫', label: $gettext('分组与计划') },
+    { id: 'settings' as const, icon: '⚙', label: $gettext('局域网设置') },
+])
 </script>
+
 <style lang="scss" scoped>
-.tab-container {
-    margin: 0 auto;
-}
-
-.tabs_box_g {
-    display: flex;
-    max-width: 100%;
-    overflow-x: auto;
-}
-
-.tabs_box_g button {
-    padding: 14px 24px;
-    border: none;
-    background: none;
-    cursor: pointer;
-    font-size: 14px;
-    // color: var(--flow-span-color);
-    border-radius: 8px 8px 0 0;
-    margin: 0;
-    transition: all 0.3s ease;
-}
-
-.tabs_box_g button.active {
-    background: var(--card-bg-color);
-    color: #553afe;
-    font-weight: bold;
-    position: relative;
-}
-
-.tab-content_g {
-    background: var(--card-bg-color);
-    padding: 16px;
-    border-radius: 0px 8px 8px 8px;
-}
-
-.content-item {
-    min-height: 60vh;
-}
-
-.legacy-banner {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    margin-bottom: 12px;
-    padding: 10px 12px;
-    color: var(--flow-span-color);
-    background: rgba(85, 58, 254, 0.06);
-    border: 1px solid rgba(85, 58, 254, 0.14);
-    border-radius: 8px;
-}
-
-.legacy-banner button {
-    flex: none;
-    padding: 6px 10px;
-    color: #553afe;
-    background: transparent;
-    border: 1px solid rgba(85, 58, 254, .45);
-    border-radius: 6px;
-    cursor: pointer;
-}
+.device-management { --device-accent: #553afe; max-width: 1320px; margin: 0 auto; color: var(--flow-span-color); }.breadcrumbs { display: flex; align-items: center; gap: 7px; margin-bottom: 18px; padding-top: 4px; font-size: 13px; }.breadcrumbs a { color: var(--breadcrumbs-tit-color); text-decoration: none; }.breadcrumbs span:last-child { color: var(--breadcrumbs-tit-color1); }.page-heading { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 18px; }.page-heading h1 { margin: 0; padding: 0; color: inherit; background: none!important; font-size: 25px; text-align: left; }.page-heading p { margin: 6px 0 0; opacity: .65; }.primary-tabs { display: flex; gap: 6px; padding: 5px; background: rgba(127,127,127,.07); border-radius: 11px 11px 0 0; }.primary-tabs button { display: inline-flex; align-items: center; gap: 7px; min-height: 42px; padding: 8px 16px; color: inherit; background: transparent; border: 0; border-radius: 8px; cursor: pointer; }.primary-tabs button.active { color: var(--device-accent); background: var(--card-bg-color); box-shadow: 0 2px 8px rgba(30,20,90,.07); font-weight: 600; }.primary-tabs button:focus-visible { outline: 2px solid var(--device-accent); outline-offset: 2px; }.primary-content { min-height: 62vh; padding: 18px; background: var(--card-bg-color); border-radius: 0 0 11px 11px; }
+@media(prefers-color-scheme:dark){.device-management{--device-accent:#a697ff}}
+@media(max-width:700px){.page-heading h1{font-size:21px}.page-heading p{max-width:34ch}.primary-tabs{overflow-x:auto}.primary-tabs button{flex:1;justify-content:center;min-width:max-content;padding:8px 11px}.primary-content{padding:13px}}
+@media(max-width:420px){.page-heading p{font-size:12px}.primary-tabs button span{display:none}.primary-content{padding:11px 8px}}
 </style>
 
-<style lang="scss" scoped>
-/* 移动端样式 - 基于827px设计图 */
-@media (max-width: 827px) {
-    .tabs_box_g {
-        -webkit-overflow-scrolling: touch;
-    }
-
-    .tabs_box_g button {
-        flex: none;
-        padding: 7px 12px !important;
-    }
-
-    .tab-content_g {
-        padding: 12px;
-        border-radius: 0px 0px 8px 8px;
-    }
+<style lang="scss">
+@media(max-width:420px){a.btn[href="/cgi-bin/luci/admin/system/admin"]{max-width:140px;white-space:normal;overflow-wrap:anywhere;text-align:center}}
+@media(prefers-color-scheme:dark){body:not([theme="light"]){background:#151518}}
+body[theme="dark"]{background:#151518}
+@media(prefers-color-scheme:dark){
+    body:not([theme="light"]) .device-management .feedback.error,
+    body:not([theme="light"]) .device-management .batch-result.partial,
+    body:not([theme="light"]) .device-management .batch-result.failed,
+    body:not([theme="light"]) .device-management .state-pill.orphaned,
+    body:not([theme="light"]) .device-management .state-pill.unsupported,
+    body:not([theme="light"]) .device-management .capability-pill.not_installed,
+    body:not([theme="light"]) .device-management .capability-pill.error { color:#ffbd8a!important; background:rgba(255,145,77,.12)!important }
+    body:not([theme="light"]) .device-management .feedback.success,
+    body:not([theme="light"]) .device-management .batch-result.all_success,
+    body:not([theme="light"]) .device-management .capability-pill.available { color:#7cdda9!important; background:rgba(38,162,105,.14)!important }
+    body:not([theme="light"]) .device-management .telemetry-notice,
+    body:not([theme="light"]) .device-management .attention { color:#ffd37a!important; background:rgba(255,196,77,.11)!important; border-color:rgba(255,196,77,.3)!important }
 }
-
-@media (max-width: 420px) {
-    .tab-content_g {
-        padding: 10px 8px;
-    }
-
-    .legacy-banner {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-}
+body[theme="dark"] .device-management .feedback.error,
+body[theme="dark"] .device-management .batch-result.partial,
+body[theme="dark"] .device-management .batch-result.failed { color:#ffbd8a!important; background:rgba(255,145,77,.12)!important }
 </style>

@@ -3,8 +3,13 @@ package service
 import (
 	"context"
 	"errors"
+	"os"
+	"path/filepath"
+	"strings"
 	"sync"
 	"testing"
+
+	"github.com/digineo/go-uci"
 )
 
 var lanSpeedLimitWriteTestMu sync.Mutex
@@ -85,15 +90,15 @@ func TestDefaultLanSpeedLimitWriteStoreExecutesDeleteOldEqosBeforeAdd(t *testing
 	lanSpeedLimitWriteTestMu.Lock()
 	defer lanSpeedLimitWriteTestMu.Unlock()
 
-	originalExec := lanSpeedLimitWriteExec
+	originalApply := lanSpeedLimitWriteApplyPlan
 	t.Cleanup(func() {
-		lanSpeedLimitWriteExec = originalExec
+		lanSpeedLimitWriteApplyPlan = originalApply
 	})
 
-	var got []string
-	lanSpeedLimitWriteExec = func(ctx context.Context, commands []string) error {
+	var got SpeedLimitWritePlan
+	lanSpeedLimitWriteApplyPlan = func(ctx context.Context, plan SpeedLimitWritePlan) error {
 		_ = ctx
-		got = append(got, commands...)
+		got = plan
 		return nil
 	}
 
@@ -114,15 +119,8 @@ func TestDefaultLanSpeedLimitWriteStoreExecutesDeleteOldEqosBeforeAdd(t *testing
 	if err != nil {
 		t.Fatalf("ApplyPlan returned error: %v", err)
 	}
-	wantPrefix := []string{
-		"uci del eqos.cfg01",
-		"uci commit eqos",
-		"uci add eqos device",
-	}
-	for i, want := range wantPrefix {
-		if got[i] != want {
-			t.Fatalf("got[%d] = %q, want %q", i, got[i], want)
-		}
+	if len(got.DeleteSections) != 1 || got.DeleteSections[0].SectionName != "cfg01" || !got.AddSpeedLimit {
+		t.Fatalf("unexpected plan: %#v", got)
 	}
 }
 
@@ -130,15 +128,15 @@ func TestDefaultLanSpeedLimitWriteStoreExecutesDeleteOldBlockBeforeAdd(t *testin
 	lanSpeedLimitWriteTestMu.Lock()
 	defer lanSpeedLimitWriteTestMu.Unlock()
 
-	originalExec := lanSpeedLimitWriteExec
+	originalApply := lanSpeedLimitWriteApplyPlan
 	t.Cleanup(func() {
-		lanSpeedLimitWriteExec = originalExec
+		lanSpeedLimitWriteApplyPlan = originalApply
 	})
 
-	var got []string
-	lanSpeedLimitWriteExec = func(ctx context.Context, commands []string) error {
+	var got SpeedLimitWritePlan
+	lanSpeedLimitWriteApplyPlan = func(ctx context.Context, plan SpeedLimitWritePlan) error {
 		_ = ctx
-		got = append(got, commands...)
+		got = plan
 		return nil
 	}
 
@@ -155,15 +153,8 @@ func TestDefaultLanSpeedLimitWriteStoreExecutesDeleteOldBlockBeforeAdd(t *testin
 	if err != nil {
 		t.Fatalf("ApplyPlan returned error: %v", err)
 	}
-	wantPrefix := []string{
-		"uci del firewall.cfg11",
-		"uci commit firewall",
-		"uci add firewall rule",
-	}
-	for i, want := range wantPrefix {
-		if got[i] != want {
-			t.Fatalf("got[%d] = %q, want %q", i, got[i], want)
-		}
+	if len(got.DeleteSections) != 1 || got.DeleteSections[0].SectionName != "cfg11" || !got.AddBlockRule {
+		t.Fatalf("unexpected plan: %#v", got)
 	}
 }
 
@@ -193,24 +184,51 @@ func TestDefaultLanSpeedLimitApplyDelegatesExpectedConfigs(t *testing.T) {
 	}
 }
 
-func TestDefaultLanSpeedLimitWriteStorePropagatesExecError(t *testing.T) {
+func TestDefaultLanSpeedLimitWriteStorePropagatesTypedWriteError(t *testing.T) {
 	lanSpeedLimitWriteTestMu.Lock()
 	defer lanSpeedLimitWriteTestMu.Unlock()
 
-	originalExec := lanSpeedLimitWriteExec
+	originalApply := lanSpeedLimitWriteApplyPlan
 	t.Cleanup(func() {
-		lanSpeedLimitWriteExec = originalExec
+		lanSpeedLimitWriteApplyPlan = originalApply
 	})
 
-	lanSpeedLimitWriteExec = func(ctx context.Context, commands []string) error {
+	lanSpeedLimitWriteApplyPlan = func(ctx context.Context, plan SpeedLimitWritePlan) error {
 		_ = ctx
-		_ = commands
-		return errors.New("exec failed")
+		_ = plan
+		return errors.New("typed write failed")
 	}
 
 	store := NewDefaultLanSpeedLimitWriteStore()
 	err := store.ApplyPlan(context.Background(), SpeedLimitWritePlan{})
-	if err == nil || err.Error() != "exec failed" {
-		t.Fatalf("err = %v, want exec failed", err)
+	if err == nil || err.Error() != "typed write failed" {
+		t.Fatalf("err = %v, want typed write failed", err)
+	}
+}
+
+func TestApplySpeedLimitPlanUsesTypedUCIForUntrustedComment(t *testing.T) {
+	directory := t.TempDir()
+	if err := os.WriteFile(filepath.Join(directory, "eqos"), []byte("config eqos 'main'\n\toption enabled '1'\n\nconfig device 'legacy'\n\toption ip '192.168.100.20'\n"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	marker := filepath.Join(directory, "not-executed")
+	comment := "孩子的'电脑; $(touch " + marker + ")"
+	if err := applySpeedLimitPlanAt(directory, SpeedLimitWritePlan{Input: SpeedLimitWriteInput{IP: "192.168.100.20", UploadSpeed: 100, DownloadSpeed: 200, Comment: comment}, DeleteSections: []SpeedLimitRuleMatch{{Config: "eqos", SectionName: "legacy"}}, AddSpeedLimit: true}); err != nil {
+		t.Fatal(err)
+	}
+	tree := uci.NewTree(directory)
+	if err := tree.LoadConfig("eqos", true); err != nil {
+		t.Fatal(err)
+	}
+	sections, _ := tree.GetSections("eqos", "device")
+	if len(sections) != 1 {
+		t.Fatalf("device sections=%v", sections)
+	}
+	stored, _ := tree.GetLast("eqos", sections[0], "comment")
+	if stored != safeSpeedPolicyComment(comment) || strings.Contains(stored, "'") {
+		t.Fatalf("comment was not safely encoded: %q", stored)
+	}
+	if _, err := os.Stat(marker); !errors.Is(err, os.ErrNotExist) {
+		t.Fatal("untrusted comment executed a command")
 	}
 }

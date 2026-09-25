@@ -31,6 +31,19 @@ type ServiceBackend struct {
 	deviceTraffic        *DeviceTrafficModule
 	devicePolicy         *DevicePolicyModule
 	deviceClassification *DeviceClassificationModule
+	deviceProfile        *DeviceProfileModule
+	gatewayPolicy        *GatewayPolicyModule
+	deviceNetworkPolicy  *DeviceNetworkPolicyModule
+	floatingGateway      *FloatingGatewayModule
+	networkRules         *NetworkRulesModule
+	lanDeviceMigration   *LanDeviceMigrationModule
+	capabilityActions    *CapabilityActionModule
+	routerContext        *RouterContextModule
+	deviceGroups         *DeviceGroupModule
+	trafficInsights      *TrafficInsightsModule
+	networkAudit         *NetworkAuditModule
+	advancedNetwork      *AdvancedNetworkModule
+	taskTransactions     *TaskTransactionJournal
 
 	dhnsServer  *dhns.DhnsServer
 	dhnsState   *dhnsruntime.State
@@ -120,6 +133,7 @@ func NewServiceBackend() *ServiceBackend {
 		}
 	}
 	inventory := NewDeviceInventoryModule()
+	transactions := NewDefaultTaskTransactionJournal()
 	lanStats := NewLanStats()
 	backend := &ServiceBackend{
 		st:     NewWanStats(),
@@ -127,16 +141,34 @@ func NewServiceBackend() *ServiceBackend {
 		httpClient: &http.Client{
 			Timeout: time.Second * 20,
 		},
-		netChecker:      NewNetworkOnlineChecker(),
-		foreignChecker:  NewForeignChecker(),
-		platform:        runtime.GOARCH,
-		thermalZone:     thermalZone,
-		deviceInventory: inventory,
-		dhnsState:       dhnsruntime.NewState(),
+		netChecker:       NewNetworkOnlineChecker(),
+		foreignChecker:   NewForeignChecker(),
+		platform:         runtime.GOARCH,
+		thermalZone:      thermalZone,
+		deviceInventory:  inventory,
+		taskTransactions: transactions,
+		dhnsState:        dhnsruntime.NewState(),
 	}
 	backend.deviceTraffic = NewDeviceTrafficModule(inventory, lanStats)
 	backend.devicePolicy = NewDevicePolicyModule(inventory)
+	backend.devicePolicy.transactions = transactions
 	backend.deviceClassification = NewDeviceClassificationModule(inventory)
+	backend.deviceProfile = NewDeviceProfileModule(inventory)
+	backend.deviceProfile.transactions = transactions
+	backend.gatewayPolicy = NewDefaultGatewayPolicyModule(inventory)
+	backend.deviceNetworkPolicy = NewDefaultDeviceNetworkPolicyModule(inventory, backend.devicePolicy, backend.gatewayPolicy)
+	backend.deviceNetworkPolicy.transactions = transactions
+	backend.floatingGateway = NewDefaultFloatingGatewayModule(backend.gatewayPolicy)
+	backend.networkRules = NewDefaultNetworkRulesModule(inventory, backend.devicePolicy, backend.gatewayPolicy)
+	backend.lanDeviceMigration = NewDefaultLanDeviceMigrationModule(backend.networkRules)
+	backend.capabilityActions = NewDefaultCapabilityActionModule()
+	backend.routerContext = NewDefaultRouterContextModule()
+	backend.trafficInsights = NewDefaultTrafficInsightsModule(backend.devicePolicy)
+	backend.deviceGroups = NewDefaultDeviceGroupModule(backend.devicePolicy, backend.deviceNetworkPolicy, backend.trafficInsights)
+	backend.networkAudit = NewDefaultNetworkAuditModule()
+	backend.trafficInsights.audit = backend.networkAudit
+	backend.trafficInsights.AttachCollector(backend.deviceTraffic.Snapshot)
+	backend.advancedNetwork = NewAdvancedNetworkModule(inventory, backend.deviceGroups, backend.trafficInsights, backend.networkAudit)
 	backend.setupDhns()
 	return backend
 }

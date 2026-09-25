@@ -78,10 +78,12 @@
                     <ComputerIcon color="#8c8c8c" />
                 </div>
                 <div class="item_box">
-                    <div class="item_left">{{ $gettext('名称') }}：</div>
-                    <input id="tagName" type="text" @input="filterChinese" v-model.trim="staticStateData.hostname"
-                        :placeholder="$gettext('请输入') + '...'" class="tag-input" />
+                    <div class="item_left">{{ $gettext('DHCP 主机名（可选）') }}：</div>
+                    <input id="dhcpHostname" type="text" v-model.trim="staticStateData.hostname" maxlength="63"
+                        autocomplete="off" autocapitalize="none" spellcheck="false"
+                        placeholder="living-room-tv" class="tag-input" />
                 </div>
+                <div class="field-help">{{ $gettext('用于局域网名称解析，仅支持英文、数字和中间连字符') }}</div>
                 <div class="item_box">
                     <div class="item_left">MAC：</div>
                     <input id="tagName" type="text" v-model.trim="staticStateData.assignedMac"
@@ -121,7 +123,7 @@
                     </div>
                     <div style="margin-bottom: 16px;flex: 1;">
                         <div class="item_box">
-                            <div class="item_left">{{ $gettext('名称') }}：</div>
+                            <div class="item_left">{{ $gettext('发现名称') }}：</div>
                             {{ openData.hostname || '-' }}
                         </div>
                         <div class="item_box">
@@ -165,13 +167,9 @@ import ComputerIcon from "/@/components/svg/computer.vue";
 import LoadError from "./components/loadError.vue";
 import PageState from "./components/pageState.vue";
 import { requestErrorMessage } from "./requestError";
+import { normalizeDhcpHostname, validDhcpHostname } from './devicePolicy'
 const { $gettext } = useGettext()
 const emit = defineEmits(['openGloba'])
-
-const filterChinese = (e: any) => {
-    // 移除中文字符与空白字符，避免名称中出现空格
-    staticStateData.hostname = e.target.value.replace(/[\u4e00-\u9fa5\s]/g, '');
-};
 
 const timer = ref<NodeJS.Timeout | null>(null)
 // 启动定时器
@@ -226,7 +224,7 @@ const showPlaceholder = computed(() => !staticStateData.dhcpGateway)
 
 const columns = ref([
     // { label: '设备图片', prop: 'hostImg', width: '120px' },
-    { label: '主机名称', prop: 'hostname' },
+    { label: '发现名称', prop: 'hostname' },
     { label: 'IP地址', prop: 'ip' },
     { label: 'MAC地址', prop: 'mac' },
     { label: '上传速度', prop: 'uploadSpeedStr' },
@@ -436,9 +434,10 @@ const validatePositiveNumberRegex = (value: string | number) => {
 }
 //静态分配确认按钮
 const staticStateConfirm = async () => {
-    if (!staticStateData.hostname) {
-        return Toast.Warning(`${$gettext('请输入')}${$gettext('名称')}`);
+    if (!validDhcpHostname(staticStateData.hostname)) {
+        return Toast.Warning($gettext('DHCP 主机名仅支持 1～63 位英文、数字或中间连字符'));
     }
+    staticStateData.hostname = normalizeDhcpHostname(staticStateData.hostname)
     if (!staticStateData.assignedMac) {
         return Toast.Warning(`${$gettext('请输入')}${$gettext('MAC')}`);
     }
@@ -615,6 +614,14 @@ const handleBatchDelete = () => {
         text-align: center;
         margin-top: 16px;
         font-size: 12px;
+    }
+
+    .field-help {
+        margin: 5px 0 0 140px;
+        max-width: 260px;
+        color: #6b7280;
+        font-size: 12px;
+        line-height: 1.45;
     }
 
     .item_box {

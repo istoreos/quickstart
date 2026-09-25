@@ -1,12 +1,14 @@
 package service
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
 	"net/netip"
 	"os"
 	"sort"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -16,7 +18,10 @@ import (
 
 const (
 	defaultDeviceInventoryHistoryPath = "/tmp/quickstart-device-inventory-v2.json"
+	defaultManualDevicePath           = "/etc/quickstart/manual-devices.json"
 	defaultDeviceInventoryLimit       = 2048
+	defaultDeviceInventoryCacheTTL    = 10 * time.Second
+	deviceInventoryPersistDebounce    = 10 * time.Minute
 )
 
 type deviceInventoryObservation struct {
@@ -58,6 +63,16 @@ type deviceInventoryHistoryItem struct {
 	Addresses     []string `json:"addresses,omitempty"`
 }
 
+type manualDeviceDocument struct {
+	SchemaVersion int                           `json:"schemaVersion"`
+	Devices       map[string]manualDeviceRecord `json:"devices"`
+}
+
+type manualDeviceRecord struct {
+	MAC       string `json:"mac"`
+	CreatedAt string `json:"createdAt"`
+}
+
 type deviceInventoryAggregate struct {
 	DeviceID      string
 	MAC           string
@@ -73,37 +88,119 @@ type deviceInventoryAggregate struct {
 // inside its implementation.
 type DeviceInventoryModule struct {
 	mu                      sync.Mutex
+	cacheMu                 sync.Mutex
 	source                  deviceInventorySource
 	classifier              deviceClassifier
 	classificationOverrides *DeviceClassificationOverrideStore
 	historyPath             string
+	manualPath              string
 	bootID                  string
 	now                     func() time.Time
 	limit                   int
 	loaded                  bool
 	history                 deviceInventoryHistory
+	cacheTTL                time.Duration
+	cached                  *models.DeviceInventoryResponse
+	cachedAt                time.Time
+	refreshing              chan struct{}
+	refreshErr              error
+	lastPersisted           []byte
+	lastPersistAt           time.Time
 }
 
 func NewDeviceInventoryModule() *DeviceInventoryModule {
 	return &DeviceInventoryModule{
 		source:                  systemDeviceInventorySource{},
 		classifier:              NewDeviceClassifier(),
-		classificationOverrides: NewDeviceClassificationOverrideStore(defaultDeviceClassificationPath),
+		classificationOverrides: NewDeviceProfileStore(defaultDeviceProfilePath, defaultDeviceClassificationPath),
 		historyPath:             defaultDeviceInventoryHistoryPath,
+		manualPath:              defaultManualDevicePath,
 		bootID:                  readDeviceInventoryBootID(),
 		now:                     time.Now,
 		limit:                   defaultDeviceInventoryLimit,
+		cacheTTL:                defaultDeviceInventoryCacheTTL,
 	}
 }
 
 func newDeviceInventoryModuleForTest(source deviceInventorySource, historyPath, bootID string, now func() time.Time, limit int) *DeviceInventoryModule {
-	return &DeviceInventoryModule{source: source, classifier: NewDeviceClassifier(), classificationOverrides: NewDeviceClassificationOverrideStore(historyPath + ".classifications"), historyPath: historyPath, bootID: bootID, now: now, limit: limit}
+	return &DeviceInventoryModule{source: source, classifier: NewDeviceClassifier(), classificationOverrides: NewDeviceClassificationOverrideStore(historyPath + ".classifications"), historyPath: historyPath, manualPath: historyPath + ".manual", bootID: bootID, now: now, limit: limit}
 }
 
 func (module *DeviceInventoryModule) Snapshot(ctx context.Context) (*models.DeviceInventoryResponse, error) {
 	if module == nil || module.source == nil {
 		return nil, errors.New("device inventory source is unavailable")
 	}
+	now := module.currentTime()
+	module.cacheMu.Lock()
+	if module.cached != nil && module.cacheTTL > 0 && now.Sub(module.cachedAt) < module.cacheTTL {
+		cached := module.cached
+		module.cacheMu.Unlock()
+		return cached, nil
+	}
+	if refresh := module.refreshing; refresh != nil {
+		module.cacheMu.Unlock()
+		select {
+		case <-ctx.Done():
+			return nil, ctx.Err()
+		case <-refresh:
+		}
+		module.cacheMu.Lock()
+		cached, err := module.cached, module.refreshErr
+		module.cacheMu.Unlock()
+		return cached, err
+	}
+	refresh := make(chan struct{})
+	module.refreshing = refresh
+	module.cacheMu.Unlock()
+
+	response, err := module.refreshSnapshot(ctx)
+	module.cacheMu.Lock()
+	if err == nil {
+		module.cached = response
+		module.cachedAt = module.currentTime()
+	}
+	module.refreshErr = err
+	module.refreshing = nil
+	close(refresh)
+	module.cacheMu.Unlock()
+	return response, err
+}
+
+func (module *DeviceInventoryModule) Invalidate() {
+	if module == nil {
+		return
+	}
+	module.cacheMu.Lock()
+	module.cached = nil
+	module.cachedAt = time.Time{}
+	module.cacheMu.Unlock()
+}
+
+func (module *DeviceInventoryModule) diagnostics() *models.DeviceInventoryRuntimeDiagnostics {
+	result := &models.DeviceInventoryRuntimeDiagnostics{HistoryLimit: defaultDeviceInventoryLimit}
+	if module == nil {
+		return result
+	}
+	result.HistoryLimit = int64(module.deviceLimit())
+	now := module.currentTime()
+	module.cacheMu.Lock()
+	result.CacheReady = module.cached != nil
+	result.RefreshInFlight = module.refreshing != nil
+	result.CacheTTLMS = module.cacheTTL.Milliseconds()
+	if !module.cachedAt.IsZero() {
+		result.CacheAgeMS = max(now.Sub(module.cachedAt).Milliseconds(), 0)
+	}
+	module.cacheMu.Unlock()
+	module.mu.Lock()
+	result.HistoryEntries = int64(len(module.history.Devices))
+	if !module.lastPersistAt.IsZero() {
+		result.LastPersistAgeMS = max(now.Sub(module.lastPersistAt).Milliseconds(), 0)
+	}
+	module.mu.Unlock()
+	return result
+}
+
+func (module *DeviceInventoryModule) refreshSnapshot(ctx context.Context) (*models.DeviceInventoryResponse, error) {
 	source := module.source.Read(ctx)
 	if err := ctx.Err(); err != nil {
 		return nil, err
@@ -137,25 +234,44 @@ func (module *DeviceInventoryModule) Snapshot(ctx context.Context) (*models.Devi
 		historicalAddresses := historicalInventoryAddresses(module.history.Devices[deviceID], observation.Addresses)
 		manufacturer := GomanufSearch(observation.MAC)
 		classification := module.classifier.Classify(DeviceClassificationInput{DisplayName: hostname, Hostname: hostname, Manufacturer: manufacturer})
+		displayName := hostname
+		profile := deviceProfileRecord{}
 		if module.classificationOverrides != nil {
-			category, ok, err := module.classificationOverrides.Get(deviceID, observation.IdentityScope)
+			storedProfile, ok, err := module.classificationOverrides.GetProfile(deviceID, observation.IdentityScope)
 			if err != nil {
-				source.Reasons = append(source.Reasons, "classification_override_store_invalid")
+				source.Reasons = append(source.Reasons, "device_profile_store_invalid")
 			} else if ok {
-				classification.Category = category
-				classification.Source = "manual"
-				classification.Confidence = "high"
+				profile = storedProfile
+				if profile.Alias != "" {
+					displayName = profile.Alias
+				}
+				if profile.Brand != "" {
+					classification.Brand = profile.Brand
+					classification.Source = "manual"
+					classification.Confidence = "high"
+				}
+				if profile.Category != "" {
+					classification.Category = profile.Category
+					classification.Source = "manual"
+					classification.Confidence = "high"
+				}
 			}
+		}
+		presenceState := "offline"
+		if observation.Online {
+			presenceState = "online"
 		}
 		items[deviceID] = &models.DeviceInventoryItem{
 			DeviceID:       deviceID,
-			DisplayName:    hostname,
+			DisplayName:    displayName,
 			Hostname:       hostname,
 			Online:         observation.Online,
+			PresenceState:  presenceState,
 			LastSeenAt:     lastSeen.Format(time.RFC3339),
 			Mac:            observation.MAC,
 			Vendor:         manufacturer,
 			Classification: classification,
+			Icon:           deviceIconForProfile(classification, profile),
 			Identity:       &models.DeviceInventoryIdentity{Kind: observation.IdentityKind, Scope: observation.IdentityScope},
 			Addresses: &models.DeviceInventoryAddresses{
 				Current:    currentAddresses,
@@ -171,9 +287,39 @@ func (module *DeviceInventoryModule) Snapshot(ctx context.Context) (*models.Devi
 		}
 		item, overrideErr := historyItemToOfflineDevice(previous, module.classifier, module.classificationOverrides)
 		if overrideErr != nil {
-			source.Reasons = append(source.Reasons, "classification_override_store_invalid")
+			source.Reasons = append(source.Reasons, "device_profile_store_invalid")
 		}
 		items[deviceID] = item
+	}
+	for deviceID, manual := range module.readManualDevices() {
+		if _, exists := items[deviceID]; exists {
+			continue
+		}
+		classification := module.classifier.Classify(DeviceClassificationInput{})
+		displayName := ""
+		profile := deviceProfileRecord{}
+		if module.classificationOverrides != nil {
+			stored, ok, profileErr := module.classificationOverrides.GetProfile(deviceID, "persistent")
+			if profileErr != nil {
+				source.Reasons = append(source.Reasons, "device_profile_store_invalid")
+			} else if ok {
+				profile = stored
+				displayName = stored.Alias
+				if stored.Brand != "" {
+					classification.Brand, classification.Source, classification.Confidence = stored.Brand, "manual", "high"
+				}
+				if stored.Category != "" {
+					classification.Category, classification.Source, classification.Confidence = stored.Category, "manual", "high"
+				}
+			}
+		}
+		items[deviceID] = &models.DeviceInventoryItem{
+			DeviceID: deviceID, DisplayName: displayName, Online: false, PresenceState: "never_seen", LastSeenAt: manual.CreatedAt,
+			Mac: manual.MAC, Classification: classification, Icon: deviceIconForProfile(classification, profile),
+			Identity:   &models.DeviceInventoryIdentity{Kind: "mac", Scope: "persistent"},
+			Addresses:  &models.DeviceInventoryAddresses{Current: []*models.DeviceInventoryAddress{}, Historical: []*models.DeviceInventoryAddress{}},
+			Connection: &models.DeviceInventoryConnection{Kind: "unknown"},
+		}
 	}
 
 	devices := sortedDeviceInventoryItems(items)
@@ -182,7 +328,7 @@ func (module *DeviceInventoryModule) Snapshot(ctx context.Context) (*models.Devi
 		source.Reasons = append(source.Reasons, "inventory_capacity_reached")
 	}
 	module.replaceHistory(devices)
-	if err := module.persistHistory(); err != nil {
+	if err := module.persistHistory(now); err != nil {
 		source.Reasons = append(source.Reasons, "history_persist_failed")
 	}
 
@@ -311,24 +457,39 @@ func historyItemToOfflineDevice(item *deviceInventoryHistoryItem, classifier dev
 	manufacturer := GomanufSearch(item.MAC)
 	classification := classifier.Classify(DeviceClassificationInput{DisplayName: item.Hostname, Hostname: item.Hostname, Manufacturer: manufacturer})
 	var overrideErr error
+	displayName := item.Hostname
+	profile := deviceProfileRecord{}
 	if overrides != nil {
-		category, ok, err := overrides.Get(item.DeviceID, identityScope)
+		storedProfile, ok, err := overrides.GetProfile(item.DeviceID, identityScope)
 		overrideErr = err
 		if err == nil && ok {
-			classification.Category = category
-			classification.Source = "manual"
-			classification.Confidence = "high"
+			profile = storedProfile
+			if profile.Alias != "" {
+				displayName = profile.Alias
+			}
+			if profile.Brand != "" {
+				classification.Brand = profile.Brand
+				classification.Source = "manual"
+				classification.Confidence = "high"
+			}
+			if profile.Category != "" {
+				classification.Category = profile.Category
+				classification.Source = "manual"
+				classification.Confidence = "high"
+			}
 		}
 	}
 	return &models.DeviceInventoryItem{
 		DeviceID:       item.DeviceID,
-		DisplayName:    item.Hostname,
+		DisplayName:    displayName,
 		Hostname:       item.Hostname,
 		Online:         false,
+		PresenceState:  "offline",
 		LastSeenAt:     item.LastSeenAt,
 		Mac:            item.MAC,
 		Vendor:         manufacturer,
 		Classification: classification,
+		Icon:           deviceIconForProfile(classification, profile),
 		Identity:       &models.DeviceInventoryIdentity{Kind: identityKind, Scope: identityScope},
 		Addresses:      &models.DeviceInventoryAddresses{Current: []*models.DeviceInventoryAddress{}, Historical: inventoryAddresses(addresses, false)},
 		Connection:     &models.DeviceInventoryConnection{Kind: "unknown"},
@@ -355,6 +516,9 @@ func sortedDeviceInventoryItems(items map[string]*models.DeviceInventoryItem) []
 func (module *DeviceInventoryModule) replaceHistory(devices []*models.DeviceInventoryItem) {
 	next := make(map[string]*deviceInventoryHistoryItem, len(devices))
 	for _, device := range devices {
+		if device.PresenceState == "never_seen" {
+			continue
+		}
 		addresses := make([]string, 0)
 		for _, address := range device.Addresses.Current {
 			addresses = append(addresses, address.Address)
@@ -369,6 +533,61 @@ func (module *DeviceInventoryModule) replaceHistory(devices []*models.DeviceInve
 		}
 	}
 	module.history = deviceInventoryHistory{BootID: module.bootID, Devices: next}
+}
+
+func (module *DeviceInventoryModule) AddManual(ctx context.Context, request *models.DeviceInventoryAddRequest) (*models.DeviceInventoryResponse, error) {
+	if request == nil {
+		return nil, errors.New("manual device request is required")
+	}
+	mac := normalizeInventoryMAC(request.MAC)
+	firstOctet, _ := strconv.ParseUint(strings.TrimSpace(strings.Split(mac, ":")[0]), 16, 8)
+	if mac == "" || firstOctet&1 != 0 {
+		return nil, errors.New("a valid unicast MAC address is required")
+	}
+	alias, err := normalizeDeviceAlias(request.Alias)
+	if err != nil {
+		return nil, err
+	}
+	deviceID := "mac:" + strings.ToLower(mac)
+	module.mu.Lock()
+	document := module.readManualDeviceDocument()
+	if _, exists := document.Devices[deviceID]; !exists && len(document.Devices) >= module.deviceLimit() {
+		module.mu.Unlock()
+		return nil, errors.New("manual device limit reached")
+	}
+	document.Devices[deviceID] = manualDeviceRecord{MAC: mac, CreatedAt: module.currentTime().UTC().Format(time.RFC3339)}
+	raw, err := json.Marshal(document)
+	if err == nil {
+		err = persistClassificationOverrides(module.manualPath, raw)
+	}
+	module.mu.Unlock()
+	if err != nil {
+		return nil, err
+	}
+	if module.classificationOverrides != nil && alias != "" {
+		if _, err := module.classificationOverrides.PatchProfileFields(deviceID, "persistent", deviceProfilePatch{Alias: &alias}); err != nil {
+			return nil, err
+		}
+	}
+	module.Invalidate()
+	return module.Snapshot(ctx)
+}
+
+func (module *DeviceInventoryModule) readManualDevices() map[string]manualDeviceRecord {
+	return module.readManualDeviceDocument().Devices
+}
+
+func (module *DeviceInventoryModule) readManualDeviceDocument() manualDeviceDocument {
+	document := manualDeviceDocument{SchemaVersion: 1, Devices: map[string]manualDeviceRecord{}}
+	raw, err := os.ReadFile(module.manualPath)
+	if err != nil {
+		return document
+	}
+	var stored manualDeviceDocument
+	if json.Unmarshal(raw, &stored) != nil || stored.SchemaVersion != 1 || stored.Devices == nil {
+		return document
+	}
+	return stored
 }
 
 func (module *DeviceInventoryModule) loadHistory() {
@@ -386,18 +605,33 @@ func (module *DeviceInventoryModule) loadHistory() {
 		return
 	}
 	module.history = history
+	module.lastPersisted, _ = json.Marshal(history)
+	if info, statErr := os.Stat(module.historyPath); statErr == nil {
+		module.lastPersistAt = info.ModTime()
+	}
 }
 
-func (module *DeviceInventoryModule) persistHistory() error {
+func (module *DeviceInventoryModule) persistHistory(now time.Time) error {
 	data, err := json.Marshal(module.history)
 	if err != nil {
 		return err
+	}
+	if bytes.Equal(data, module.lastPersisted) {
+		return nil
+	}
+	if !module.lastPersistAt.IsZero() && now.Sub(module.lastPersistAt) < deviceInventoryPersistDebounce {
+		return nil
 	}
 	tmp := module.historyPath + ".tmp"
 	if err := os.WriteFile(tmp, data, 0600); err != nil {
 		return err
 	}
-	return os.Rename(tmp, module.historyPath)
+	if err := os.Rename(tmp, module.historyPath); err != nil {
+		return err
+	}
+	module.lastPersisted = append(module.lastPersisted[:0], data...)
+	module.lastPersistAt = now
+	return nil
 }
 
 func (module *DeviceInventoryModule) currentTime() time.Time {
