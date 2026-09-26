@@ -1,9 +1,9 @@
 package models
 
 type AdvancedCapability struct {
-	State  string `json:"state"`
-	Reason string `json:"reason,omitempty"`
-	Detail string `json:"detail,omitempty"`
+	State  CapabilityState `json:"state"`
+	Reason string          `json:"reason,omitempty"`
+	Detail string          `json:"detail,omitempty"`
 }
 
 type NetworkAuditEvent struct {

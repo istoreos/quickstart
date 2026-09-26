@@ -18,6 +18,10 @@ test('resolveCapability fails closed when the capability contract is absent', ()
     assert.deepEqual(resolveCapability({}, 'speedLimit'), { state: 'error', reason: 'capability_missing' })
 })
 
+test('resolveCapability fails closed for an unknown server state', () => {
+    assert.deepEqual(resolveCapability({ capabilities: { speedLimit: { state: 'future_state' } } }, 'speedLimit'), { state: 'error', reason: 'capability_state_unknown' })
+})
+
 test('only installed capabilities allow configuration', () => {
     assert.equal(capabilityAllowsConfiguration({ state: 'available' }), true)
     assert.equal(capabilityAllowsConfiguration({ state: 'disabled' }), true)

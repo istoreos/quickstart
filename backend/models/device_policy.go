@@ -1,5 +1,24 @@
 package models
 
+type CapabilityState string
+
+const (
+	CapabilityAvailable    CapabilityState = "available"
+	CapabilityDisabled     CapabilityState = "disabled"
+	CapabilityNotInstalled CapabilityState = "not_installed"
+	CapabilityUnsupported  CapabilityState = "unsupported"
+	CapabilityError        CapabilityState = "error"
+)
+
+func NormalizeCapabilityState(value CapabilityState) CapabilityState {
+	switch value {
+	case CapabilityAvailable, CapabilityDisabled, CapabilityNotInstalled, CapabilityUnsupported, CapabilityError:
+		return value
+	default:
+		return CapabilityError
+	}
+}
+
 type CapabilityAction struct {
 	Kind                 string `json:"kind"`
 	Target               string `json:"target,omitempty"`
@@ -8,7 +27,7 @@ type CapabilityAction struct {
 
 // Capability is the shared truth contract for optional device-management features.
 type Capability struct {
-	State           string              `json:"state"`
+	State           CapabilityState     `json:"state"`
 	Reason          string              `json:"reason,omitempty"`
 	Actions         []*CapabilityAction `json:"actions,omitempty"`
 	DesiredRetained bool                `json:"desiredRetained,omitempty"`

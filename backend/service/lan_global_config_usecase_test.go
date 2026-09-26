@@ -162,7 +162,7 @@ func TestBuildDeviceManagementCapabilityStates(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			got := buildDeviceManagementCapability(tt.installed, tt.enabled, tt.err)
-			if got.State != tt.wantState || got.Reason != tt.wantReason {
+			if string(got.State) != tt.wantState || got.Reason != tt.wantReason {
 				t.Fatalf("capability = %#v, want state=%q reason=%q", got, tt.wantState, tt.wantReason)
 			}
 		})

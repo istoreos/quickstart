@@ -530,7 +530,7 @@ func trafficInsightsCapabilities() (*models.TrafficInsightsCapability, *models.T
 	if _, err := os.Stat("/usr/bin/bandix"); err == nil {
 		bandix.State, bandix.Reason = "available", ""
 		if raw, readErr := os.ReadFile("/etc/config/firewall"); readErr == nil && (strings.Contains(string(raw), "option flow_offloading '1'") || strings.Contains(string(raw), "option flow_offloading_hw '1'")) {
-			bandix.State, bandix.Reason = "limited", "hardware_offload_enabled"
+			bandix.State, bandix.Reason = models.CapabilityAvailable, "hardware_offload_enabled"
 		}
 	}
 	return local, bandix

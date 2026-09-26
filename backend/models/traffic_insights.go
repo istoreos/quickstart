@@ -23,10 +23,10 @@ type TrafficQuotaStatus struct {
 }
 
 type TrafficInsightsCapability struct {
-	State       string   `json:"state"`
-	Adapter     string   `json:"adapter"`
-	Reason      string   `json:"reason,omitempty"`
-	Limitations []string `json:"limitations"`
+	State       CapabilityState `json:"state"`
+	Adapter     string          `json:"adapter"`
+	Reason      string          `json:"reason,omitempty"`
+	Limitations []string        `json:"limitations"`
 }
 
 type TrafficInsightsResult struct {

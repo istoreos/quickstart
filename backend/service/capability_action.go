@@ -56,7 +56,7 @@ func (module *CapabilityActionModule) Apply(ctx context.Context, request *models
 	if request == nil || !request.Confirm {
 		return capabilityActionResponse(plan, false, true, plan.Current, nil), nil
 	}
-	if request.ExpectedState != "" && request.ExpectedState != plan.Current.State {
+	if request.ExpectedState != "" && models.CapabilityState(request.ExpectedState) != plan.Current.State {
 		return capabilityActionResponse(plan, false, false, plan.Current, &models.DevicePolicyError{Code: "conflict", Message: "capability state changed; review the action again"}), nil
 	}
 	if !plan.CanApply {
