@@ -67,7 +67,7 @@ func (store *systemDevicePolicyStore) Get(ctx context.Context, deviceID string) 
 		},
 	}
 	accessCapability := firewallCapabilityAt(deviceRestrictionConfigDir())
-	policy.Capabilities["access"] = &models.DevicePolicyCapability{State: accessCapability.State, Reason: accessCapability.Reason}
+	policy.Capabilities["access"] = &models.DevicePolicyCapability{State: models.NormalizeCapabilityState(models.CapabilityState(accessCapability.State)), Reason: accessCapability.Reason}
 	if accessCapability.State == "error" {
 		policy.Capabilities["access"].Actions = []*models.CapabilityAction{{Kind: "retry"}}
 	}

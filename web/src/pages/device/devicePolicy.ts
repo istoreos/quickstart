@@ -1,11 +1,14 @@
-export type PolicyCapability = { state: 'available' | 'disabled' | 'not_installed' | 'error'; reason?: string }
+import type { CapabilityState } from './deviceCapabilities'
+import type { GatewayTargetKind } from './gatewayTargets'
+
+export type PolicyCapability = { state: CapabilityState; reason?: string }
 export type StaticPolicy = { enabled: boolean; assignedIP: string; bindIP: boolean; hostname: string; tagName: string; tagTitle?: string }
 export type SpeedPolicy = { enabled: boolean; uploadSpeed: number; downloadSpeed: number }
 export type AccessPolicy = { networkAccess: boolean }
 export type InternetPathTarget = {
     id: string
     name: string
-    kind: 'default' | 'self' | 'upstream' | 'bypass' | 'floating' | 'custom' | string
+    kind: GatewayTargetKind
     gateway?: string
     supported: boolean
     reasons?: string[]

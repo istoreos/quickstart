@@ -8,7 +8,7 @@ export interface LanDhcpSettings {
 
 export interface LanDhcpConflict {
     address: string
-    kind: 'router' | 'floating_gateway' | 'gateway_node' | 'address_reservation' | string
+    kind: 'router' | 'floating_gateway' | 'gateway_node' | 'address_reservation'
 }
 
 export interface LanDhcpSettingsResult {

@@ -3,6 +3,10 @@ package service
 import (
 	"bytes"
 	"context"
+	"crypto/hmac"
+	"crypto/rand"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"net/http"
@@ -34,6 +38,7 @@ type networkAuditDocument struct {
 	DeviceOnline   map[string]bool             `json:"deviceOnline"`
 	DeviceOrder    []string                    `json:"deviceOrder"`
 	FloatingHolder string                      `json:"floatingGatewayHolder,omitempty"`
+	WebhookSecret  string                      `json:"webhookSecret"`
 }
 
 type webhookDelivery struct {
@@ -66,15 +71,16 @@ func (sender *httpWebhookSender) Send(ctx context.Context, target string, event 
 }
 
 type NetworkAuditModule struct {
-	mu       sync.Mutex
-	path     string
-	document networkAuditDocument
-	loaded   bool
-	sender   webhookSender
-	queue    chan webhookDelivery
-	start    sync.Once
-	now      func() time.Time
-	persist  func(string, []byte) error
+	mu         sync.Mutex
+	path       string
+	document   networkAuditDocument
+	loaded     bool
+	sender     webhookSender
+	queue      chan webhookDelivery
+	start      sync.Once
+	now        func() time.Time
+	persist    func(string, []byte) error
+	retryDelay func(int) time.Duration
 }
 
 func NewNetworkAuditModule(path string, sender webhookSender) *NetworkAuditModule {
@@ -86,7 +92,10 @@ func NewNetworkAuditModule(path string, sender webhookSender) *NetworkAuditModul
 			},
 		}}
 	}
-	return &NetworkAuditModule{path: path, sender: sender, queue: make(chan webhookDelivery, webhookQueueLimit), now: time.Now, persist: persistClassificationOverrides}
+	return &NetworkAuditModule{
+		path: path, sender: sender, queue: make(chan webhookDelivery, webhookQueueLimit), now: time.Now, persist: persistClassificationOverrides,
+		retryDelay: func(attempt int) time.Duration { return time.Second << minInt(attempt-1, 5) },
+	}
 }
 
 func NewDefaultNetworkAuditModule() *NetworkAuditModule {
@@ -240,6 +249,9 @@ func (module *NetworkAuditModule) loadLocked() error {
 	module.document = networkAuditDocument{SchemaVersion: 1, Events: []*models.NetworkAuditEvent{}, Webhook: &models.WebhookConfig{Events: []string{}}, SeenDevices: map[string]bool{}, DeviceOnline: map[string]bool{}}
 	raw, err := os.ReadFile(module.path)
 	if errors.Is(err, os.ErrNotExist) {
+		if err := module.ensureWebhookSecretLocked(); err != nil {
+			return err
+		}
 		module.loaded = true
 		return nil
 	}
@@ -264,8 +276,23 @@ func (module *NetworkAuditModule) loadLocked() error {
 	if module.document.DeviceOnline == nil {
 		module.document.DeviceOnline = map[string]bool{}
 	}
+	if err := module.ensureWebhookSecretLocked(); err != nil {
+		return err
+	}
 	module.normalizeDeviceStateLocked()
 	module.loaded = true
+	return nil
+}
+
+func (module *NetworkAuditModule) ensureWebhookSecretLocked() error {
+	if module.document.WebhookSecret != "" {
+		return nil
+	}
+	secret := make([]byte, 32)
+	if _, err := rand.Read(secret); err != nil {
+		return err
+	}
+	module.document.WebhookSecret = hex.EncodeToString(secret)
 	return nil
 }
 
@@ -285,16 +312,17 @@ func (module *NetworkAuditModule) webhookWorker() {
 	for delivery := range module.queue {
 		module.mu.Lock()
 		webhook := cloneWebhookConfig(module.document.Webhook)
+		event := module.webhookEventLocked(delivery.event)
 		module.mu.Unlock()
 		if webhook == nil || !webhook.Enabled {
 			continue
 		}
 		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-		err := module.sender.Send(ctx, webhook.URL, delivery.event)
+		err := module.sender.Send(ctx, webhook.URL, event)
 		cancel()
 		if err != nil && delivery.attempt+1 < webhookAttemptLimit {
 			delivery.attempt++
-			delay := time.Second << minInt(delivery.attempt-1, 5)
+			delay := module.retryDelay(delivery.attempt)
 			timer := time.NewTimer(delay)
 			<-timer.C
 			select {
@@ -303,6 +331,21 @@ func (module *NetworkAuditModule) webhookWorker() {
 			}
 		}
 	}
+}
+
+func (module *NetworkAuditModule) webhookEventLocked(event *models.NetworkAuditEvent) *models.NetworkAuditEvent {
+	copyValue := *event
+	copyValue.Reason = ""
+	if event.DeviceID != "" {
+		key, err := hex.DecodeString(module.document.WebhookSecret)
+		if err != nil || len(key) == 0 {
+			key = []byte(module.document.WebhookSecret)
+		}
+		digest := hmac.New(sha256.New, key)
+		_, _ = digest.Write([]byte(event.DeviceID))
+		copyValue.DeviceID = "device_" + hex.EncodeToString(digest.Sum(nil)[:10])
+	}
+	return &copyValue
 }
 
 func (module *NetworkAuditModule) rememberDeviceLocked(deviceID string) {

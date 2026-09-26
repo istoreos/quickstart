@@ -15,6 +15,42 @@ import (
 	"github.com/istoreos/quickstart/backend/models"
 )
 
+type capturingWebhookSender struct {
+	events chan *models.NetworkAuditEvent
+}
+
+func (sender *capturingWebhookSender) Send(_ context.Context, _ string, event *models.NetworkAuditEvent) error {
+	copyValue := *event
+	sender.events <- &copyValue
+	return nil
+}
+
+type retryWebhookSender struct {
+	attempts int
+	events   chan *models.NetworkAuditEvent
+}
+
+func (sender *retryWebhookSender) Send(_ context.Context, _ string, event *models.NetworkAuditEvent) error {
+	sender.attempts++
+	copyValue := *event
+	sender.events <- &copyValue
+	if sender.attempts == 1 {
+		return errors.New("temporary failure")
+	}
+	return nil
+}
+
+func receiveWebhookEvent(t *testing.T, sender *capturingWebhookSender) *models.NetworkAuditEvent {
+	t.Helper()
+	select {
+	case event := <-sender.events:
+		return event
+	case <-time.After(time.Second):
+		t.Fatal("webhook event was not delivered")
+		return nil
+	}
+}
+
 type roundTripFunc func(*http.Request) (*http.Response, error)
 
 func (function roundTripFunc) RoundTrip(request *http.Request) (*http.Response, error) {
@@ -36,7 +72,7 @@ func advancedTestInventory(t *testing.T) (*DeviceInventoryModule, string) {
 func TestManagementProbeAllowsInventoryLANOnly(t *testing.T) {
 	inventory, deviceID := advancedTestInventory(t)
 	audit := NewNetworkAuditModule(filepath.Join(t.TempDir(), "audit.json"), nil)
-	module := NewAdvancedNetworkModule(inventory, nil, nil, audit)
+	module := NewManagementProbeModule(inventory, audit)
 	module.client = &http.Client{Transport: roundTripFunc(func(request *http.Request) (*http.Response, error) {
 		if request.URL.Host != "192.168.100.20:80" {
 			t.Fatalf("unexpected target %s", request.URL)
@@ -171,6 +207,53 @@ func TestWebhookValidationAndRedactedReadback(t *testing.T) {
 	}
 }
 
+func TestWebhookUsesStablePseudonymousDeviceIdentifiers(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "audit.json")
+	firstSender := &capturingWebhookSender{events: make(chan *models.NetworkAuditEvent, 2)}
+	first := NewNetworkAuditModule(path, firstSender)
+	if response, err := first.SetWebhook(&models.WebhookConfig{Enabled: true, URL: "https://example.com/hook", Events: []string{"policy_changed"}}); err != nil || response.Result.Error != nil {
+		t.Fatalf("enable webhook: response=%#v err=%v", response, err)
+	}
+	first.Record("mac:aa:bb:cc:dd:ee:01", "device_policy", "policy_changed", "success", "private detail")
+	firstEvent := receiveWebhookEvent(t, firstSender)
+	if firstEvent.DeviceID == "" || strings.Contains(firstEvent.DeviceID, "mac:") || strings.Contains(strings.ToLower(firstEvent.DeviceID), "aa:bb:cc") || firstEvent.Reason != "" {
+		t.Fatalf("webhook leaked local data: %#v", firstEvent)
+	}
+
+	secondSender := &capturingWebhookSender{events: make(chan *models.NetworkAuditEvent, 2)}
+	restarted := NewNetworkAuditModule(path, secondSender)
+	restarted.Record("mac:aa:bb:cc:dd:ee:01", "device_policy", "policy_changed", "success", "another private detail")
+	restarted.Record("mac:aa:bb:cc:dd:ee:02", "device_policy", "policy_changed", "success", "")
+	secondEvent := receiveWebhookEvent(t, secondSender)
+	thirdEvent := receiveWebhookEvent(t, secondSender)
+	if secondEvent.DeviceID != firstEvent.DeviceID {
+		t.Fatalf("pseudonym changed across restart: %q != %q", secondEvent.DeviceID, firstEvent.DeviceID)
+	}
+	if thirdEvent.DeviceID == secondEvent.DeviceID {
+		t.Fatalf("different devices share pseudonym: %#v %#v", secondEvent, thirdEvent)
+	}
+
+	local, err := restarted.List("mac:aa:bb:cc:dd:ee:01", 10)
+	if err != nil || len(local.Result.Events) == 0 || local.Result.Events[0].DeviceID != "mac:aa:bb:cc:dd:ee:01" {
+		t.Fatalf("local audit association was lost: response=%#v err=%v", local, err)
+	}
+}
+
+func TestWebhookRetryKeepsTheSamePrivatePayload(t *testing.T) {
+	sender := &retryWebhookSender{events: make(chan *models.NetworkAuditEvent, 2)}
+	module := NewNetworkAuditModule(filepath.Join(t.TempDir(), "audit.json"), sender)
+	module.retryDelay = func(int) time.Duration { return 0 }
+	if response, err := module.SetWebhook(&models.WebhookConfig{Enabled: true, URL: "https://example.com/hook", Events: []string{"policy_changed"}}); err != nil || response.Result.Error != nil {
+		t.Fatalf("enable webhook: response=%#v err=%v", response, err)
+	}
+	module.Record("mac:aa:bb:cc:dd:ee:01", "device_policy", "policy_changed", "success", "private detail")
+	first := receiveWebhookEvent(t, &capturingWebhookSender{events: sender.events})
+	second := receiveWebhookEvent(t, &capturingWebhookSender{events: sender.events})
+	if first.DeviceID != second.DeviceID || first.Reason != "" || second.Reason != "" || sender.attempts != 2 {
+		t.Fatalf("unsafe or inconsistent retry: first=%#v second=%#v attempts=%d", first, second, sender.attempts)
+	}
+}
+
 func TestDefaultWebhookClientDoesNotFollowRedirects(t *testing.T) {
 	module := NewNetworkAuditModule(filepath.Join(t.TempDir(), "audit.json"), nil)
 	sender, ok := module.sender.(*httpWebhookSender)
@@ -204,7 +287,7 @@ func TestPolicyBundleDryRunApplyRestartAndRollback(t *testing.T) {
 	traffic := NewTrafficInsightsModule(trafficStore, nil)
 	audit := NewNetworkAuditModule(filepath.Join(directory, "audit.json"), nil)
 	audit.persist = func(string, []byte) error { return nil }
-	module := NewAdvancedNetworkModule(nil, groups, traffic, audit)
+	module := NewPolicyBundleModule(groups, traffic, audit)
 	bundle := &models.PolicyBundle{SchemaVersion: 1, Scope: "device_groups_and_quotas", Groups: []*models.DeviceGroup{{ID: "new", Name: "New", Members: []string{}, Policy: &models.GroupPolicy{}}}, DevicePolicies: map[string]*models.GroupPolicy{}, Quotas: map[string]*models.TrafficQuota{"mac:a": {DeviceID: "mac:a", Enabled: true, Period: "monthly", LimitBytes: 1000, Action: "notify"}}}
 	plan, err := module.ImportPlan(context.Background(), &models.PolicyImportRequest{Bundle: bundle})
 	if err != nil || plan.Result.Error != nil || !plan.Result.Plan.CanApply {

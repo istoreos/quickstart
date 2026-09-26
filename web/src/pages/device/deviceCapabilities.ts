@@ -1,5 +1,7 @@
 export type CapabilityState = 'available' | 'disabled' | 'not_installed' | 'unsupported' | 'error'
 
+const capabilityStates = new Set<CapabilityState>(['available', 'disabled', 'not_installed', 'unsupported', 'error'])
+
 export type CapabilityAction = {
     kind: 'install' | 'enable' | 'retry'
     target?: string
@@ -30,7 +32,9 @@ type GlobalConfigLike = {
 
 export const resolveCapability = (config: GlobalConfigLike | null | undefined, key: CapabilityKey): DeviceCapability => {
     const capability = config?.capabilities?.items?.[canonicalKey[key]] ?? config?.capabilities?.[key]
-    return capability?.state ? capability : { state: 'error', reason: 'capability_missing' }
+    if (!capability?.state) return { state: 'error', reason: 'capability_missing' }
+    if (!capabilityStates.has(capability.state)) return { state: 'error', reason: 'capability_state_unknown' }
+    return capability
 }
 
 export const capabilityAllowsConfiguration = (capability: DeviceCapability): boolean => {
