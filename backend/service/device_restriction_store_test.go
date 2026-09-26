@@ -3,6 +3,7 @@ package service
 import (
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 )
 
@@ -24,6 +25,14 @@ func TestAccessPolicyDoesNotDependOnOrModifyEqos(t *testing.T) {
 	if err := writeDeviceAccessPolicyAt(dir, mac, false); err != nil {
 		t.Fatal(err)
 	}
+	include, err := os.ReadFile(filepath.Join(dir, "quickstart-access.nft"))
+	if err != nil || string(include) != "ether saddr aa:bb:cc:dd:ee:25 jump reject_to_wan comment \"QuickStart pause AA:BB:CC:DD:EE:25\"\n" {
+		t.Fatalf("immediate access include = %q, %v", include, err)
+	}
+	firewall, err := os.ReadFile(filepath.Join(dir, "firewall"))
+	if err != nil || !strings.Contains(string(firewall), "option position 'chain-prepend'") || !strings.Contains(string(firewall), "option chain 'forward'") {
+		t.Fatalf("firewall include registration = %q, %v", firewall, err)
+	}
 	allowed, err := readDeviceAccessPolicyAt(dir, mac)
 	if err != nil || allowed {
 		t.Fatalf("blocked policy = %v, %v", allowed, err)
@@ -34,6 +43,10 @@ func TestAccessPolicyDoesNotDependOnOrModifyEqos(t *testing.T) {
 	}
 	if err := writeDeviceAccessPolicyAt(dir, mac, true); err != nil {
 		t.Fatal(err)
+	}
+	include, err = os.ReadFile(filepath.Join(dir, "quickstart-access.nft"))
+	if err != nil || len(include) != 0 {
+		t.Fatalf("cleared immediate access include = %q, %v", include, err)
 	}
 	allowed, err = readDeviceAccessPolicyAt(dir, mac)
 	if err != nil || !allowed {

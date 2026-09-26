@@ -3,18 +3,25 @@ package service
 import (
 	"context"
 	"errors"
+	"fmt"
+	"net"
 	"os"
 	"path/filepath"
+	"sort"
 	"strconv"
 	"strings"
 
 	"github.com/digineo/go-uci"
+	"github.com/istoreos/quickstart/backend/utils"
 )
 
 var (
 	deviceRestrictionConfigDir = func() string { return filepath.Dir(dhcpConfigPath) }
 	deviceRestrictionApply     = func(ctx context.Context, configs []string) error {
 		return NewDefaultLanSpeedLimitApply().Apply(ctx, configs)
+	}
+	deviceAccessRestrictionApply = func(ctx context.Context) error {
+		return utils.BatchRun(ctx, []string{"uci commit firewall", "/etc/init.d/firewall restart"}, 0)
 	}
 )
 
@@ -48,6 +55,9 @@ func writeDeviceAccessPolicyAt(configDir, mac string, networkAccess bool) error 
 	if err := mutateDeviceAccessPolicyTree(tree, mac, networkAccess); err != nil {
 		return err
 	}
+	if err := syncImmediateAccessRules(tree, immediateAccessIncludePath(configDir)); err != nil {
+		return err
+	}
 	return tree.Commit()
 }
 
@@ -64,7 +74,64 @@ func writeDeviceAccessPolicyBatchAt(configDir string, changes []groupBatchRestri
 			return err
 		}
 	}
+	if err := syncImmediateAccessRules(tree, immediateAccessIncludePath(configDir)); err != nil {
+		return err
+	}
 	return tree.Commit()
+}
+
+func immediateAccessIncludePath(configDir string) string {
+	return filepath.Join(configDir, "quickstart-access.nft")
+}
+
+func syncImmediateAccessRules(tree uci.Tree, path string) error {
+	const section = "quickstart_access_prepend"
+	tree.DelSection("firewall", section)
+	if err := tree.AddSection("firewall", section, "include"); err != nil {
+		return err
+	}
+	if !tree.Set("firewall", section, "type", "nftables") || !tree.Set("firewall", section, "path", path) ||
+		!tree.Set("firewall", section, "position", "chain-prepend") || !tree.Set("firewall", section, "chain", "forward") {
+		return errors.New("register immediate access policy")
+	}
+
+	sections, _ := tree.GetSections("firewall", "rule")
+	macs := make([]string, 0)
+	seen := map[string]bool{}
+	for _, ruleSection := range sections {
+		name, _ := tree.GetLast("firewall", ruleSection, "name")
+		sourceMAC, _ := tree.GetLast("firewall", ruleSection, "src_mac")
+		target, _ := tree.GetLast("firewall", ruleSection, "target")
+		if _, recognized := buildBlockedDeviceRule(sourceMAC, name, target); !recognized {
+			continue
+		}
+		hardware, err := net.ParseMAC(normalizeLanSpeedLimitedDeviceMAC(sourceMAC))
+		if err != nil || len(hardware) != 6 {
+			continue
+		}
+		normalized := strings.ToLower(hardware.String())
+		if !seen[normalized] {
+			seen[normalized] = true
+			macs = append(macs, normalized)
+		}
+	}
+	sort.Strings(macs)
+	var content strings.Builder
+	for _, mac := range macs {
+		content.WriteString(fmt.Sprintf("ether saddr %s jump reject_to_wan comment \"QuickStart pause %s\"\n", mac, strings.ToUpper(mac)))
+	}
+	if err := os.MkdirAll(filepath.Dir(path), 0755); err != nil {
+		return err
+	}
+	temporary := path + ".tmp"
+	if err := os.WriteFile(temporary, []byte(content.String()), 0600); err != nil {
+		return err
+	}
+	if err := os.Rename(temporary, path); err != nil {
+		_ = os.Remove(temporary)
+		return err
+	}
+	return nil
 }
 
 func mutateDeviceAccessPolicyTree(tree uci.Tree, mac string, networkAccess bool) error {
