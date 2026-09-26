@@ -6677,3 +6677,10 @@ msgstr "Default path"
 
 #~ msgid "配置"
 #~ msgstr "Configure"
+#: src/pages/device/components/deviceProfileEditor.vue:22
+msgid "自动推荐"
+msgstr "Automatic"
+
+#: src/pages/device/components/deviceProfileEditor.vue:23
+msgid "自行选择"
+msgstr "Choose manually"

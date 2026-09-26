@@ -2,10 +2,12 @@ const { chromium } = require('playwright')
 const fs = require('node:fs')
 
 const target = process.env.M40_UI_URL || 'http://192.168.30.1/cgi-bin/luci/admin/quickstart/devicemanagement'
+const targetURL = new URL(target)
 const cookie = process.env.M40_LUCI_COOKIE
 const output = process.env.M40_UI_OUTPUT || '/tmp/quickstart-ui-audit'
 if (!cookie) throw new Error('M40_LUCI_COOKIE is required')
 fs.mkdirSync(output, { recursive: true })
+let browser
 
 const viewports = [
   { name: 'desktop', width: 1440, height: 900 },
@@ -42,7 +44,11 @@ const inspectPage = page => page.evaluate(() => {
   const controls = [...document.querySelectorAll('.device-management button,.device-management input,.device-management select,.device-management summary')].filter(visible)
   const unnamed = controls.filter(element => !(element.innerText || element.getAttribute('aria-label') || element.getAttribute('title') || element.getAttribute('placeholder') || element.getAttribute('name')))
   const small = controls.map(details).filter(item => item.rect.width < 32 || item.rect.height < 32)
-  const builtInChinese = ['跟随网络默认', '设置速度上限', '设置流量额度', '自定义网关', '本机路由']
+  const builtInChinese = [
+    '跟随网络默认', '设置速度上限', '设置流量额度', '自定义网关', '本机路由', '自动推荐', '自行选择',
+    '当前无法确认地址分配设备', '本机 DHCP 服务异常', '检测到本机和外部 DHCP 证据', '请在主路由的 DHCP 设置中调整路线',
+    '检测到多个 DHCP 服务证据', '暂时无法判断 DHCP 分配权',
+  ]
     .filter(label => document.querySelector('.device-management')?.innerText.includes(label))
   return {
     url: location.href,
@@ -65,10 +71,10 @@ const inspectPage = page => page.evaluate(() => {
 
 ;(async () => {
   const report = { target, generatedAt: new Date().toISOString(), views: [], consoleErrors: [], requestFailures: [], interactionFailures: [], blockers: [] }
-  const browser = await chromium.launch({ headless: true, args: ['--no-proxy-server'] })
+  browser = await chromium.launch({ headless: true, args: ['--no-proxy-server'] })
   for (const viewport of viewports) {
     const context = await browser.newContext({ viewport: { width: viewport.width, height: viewport.height } })
-    await context.addCookies([{ name: 'sysauth_http', value: cookie, domain: '192.168.30.1', path: '/cgi-bin/luci/' }])
+    await context.addCookies([{ name: 'sysauth_http', value: cookie, domain: targetURL.hostname, path: '/cgi-bin/luci/' }])
     const page = await context.newPage()
     page.on('console', message => { if (message.type() === 'error') report.consoleErrors.push(`${viewport.name}: ${message.text()}`) })
     page.on('pageerror', error => report.consoleErrors.push(`${viewport.name}: ${error.message}`))
@@ -116,10 +122,15 @@ const inspectPage = page => page.evaluate(() => {
     await capture('settings-services')
     await page.locator('.settings-nav button').nth(1).click()
     await capture('settings-routes')
-    await clickOrRecord(page.locator('.settings-stack .setting-card').first().locator('.card-heading button'), 'add route button blocked')
-    await page.locator('.route-form').waitFor()
-    await capture('settings-route-editor')
-    await clickOrRecord(page.locator('.settings-stack .setting-card').first().locator('.card-heading button'), 'cancel route editor button blocked')
+    const routeButton = page.locator('.settings-stack .setting-card').first().locator('.card-heading button')
+    if (await routeButton.isEnabled()) {
+      await clickOrRecord(routeButton, 'add route button blocked')
+      await page.locator('.route-form').waitFor()
+      await capture('settings-route-editor')
+      await clickOrRecord(routeButton, 'cancel route editor button blocked')
+    } else {
+      await capture('settings-route-readonly')
+    }
     await page.locator('.settings-nav button').nth(2).click()
     await page.locator('.rules-hub').waitFor()
     await capture('settings-rules')
@@ -150,4 +161,4 @@ const inspectPage = page => page.evaluate(() => {
   fs.writeFileSync(`${output}/report.json`, JSON.stringify(report, null, 2))
   console.log(JSON.stringify({ output, views: report.views.length, blockers: report.blockers, consoleErrors: report.consoleErrors, requestFailures: report.requestFailures, interactionFailures: report.interactionFailures }, null, 2))
   if (report.blockers.length) process.exitCode = 1
-})().catch(error => { console.error(error); process.exitCode = 1 })
+})().catch(async error => { if (browser) await browser.close().catch(() => {}); console.error(error); process.exitCode = 1 })

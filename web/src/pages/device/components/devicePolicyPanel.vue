@@ -17,7 +17,7 @@
                 <div class="policy-card__heading"><div><strong>{{ $gettext('地址与上网路线') }}</strong><small>{{ $gettext('固定设备地址，并选择它通过哪台路由器上网') }}</small></div>
                     <label class="policy-toggle"><input v-model="staticForm.enabled" type="checkbox" :disabled="!available('static') || routeLocked" /><span>{{ $gettext('地址预留') }} · {{ staticForm.enabled ? $gettext('已启用') : $gettext('未启用') }}</span></label>
                 </div>
-                <p v-if="routeLocked" class="policy-reason">{{ routerContext?.routeEditability?.guidance || $gettext('本机当前不负责地址分配，请到实际分配地址的路由器上修改。') }}</p>
+                <p v-if="routeLocked" class="policy-reason">{{ routeLockGuidance }}</p>
                 <p v-if="reason('static')" class="policy-reason">{{ reason('static') }}</p>
                 <template v-else>
                     <label><span>{{ $gettext('上网路线') }}</span>
@@ -179,6 +179,14 @@ const available = (kind: 'static' | 'speed' | 'access') => policyAvailable(polic
 const reason = (kind: 'static' | 'speed' | 'access') => translatePolicyMessage(policyUnavailableReason(policy.value, kind))
 const hostnameInvalid = computed(() => !validDhcpHostname(staticForm.hostname))
 const routeLocked = computed(() => routerContext.value?.routeEditability?.editable === false)
+const routeLockGuidance = computed(() => ({
+    external_dhcp_authority: $gettext('本机当前不负责地址分配，请到实际分配地址的路由器上修改。'),
+    multiple_dhcp_evidence: $gettext('局域网角色需要确认'),
+    multiple_external_dhcp_servers: $gettext('局域网角色需要确认'),
+    dhcp_authority_not_detected: $gettext('当前仅提供查看与引导，不会自动修改其他设备。'),
+    local_dhcp_unhealthy: $gettext('当前无法读取地址分配状态，其他设置仍可使用。'),
+    router_context_unavailable: $gettext('暂时无法判断局域网角色'),
+} as Record<string,string>)[routerContext.value?.routeEditability?.reason] || $gettext('本机当前不负责地址分配，请到实际分配地址的路由器上修改。'))
 const gatewayTargetLabel = (target: any) => {
     if (target.kind === 'default' || target.name === '跟随网络默认') return $gettext('默认路线')
     if (target.kind === 'self' && target.name === '本机路由') return $gettext('本机路由')

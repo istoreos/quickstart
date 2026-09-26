@@ -21,6 +21,8 @@ test('M40 English catalog covers every device-management message', async () => {
     assert.equal(translations['使用管理'], 'Usage controls')
     assert.equal(translations['计划与额度'], 'Schedule & quota')
     assert.equal(translations['已设置'], 'Configured')
+    assert.equal(translations['自动推荐'], 'Automatic')
+    assert.equal(translations['自行选择'], 'Choose manually')
 })
 
 test('M37 device details use four summary-first sections and have no classic escape hatch', async () => {

@@ -6182,3 +6182,10 @@ msgstr ""
 #: src/pages/device/components/devicePolicyPanel.vue:183
 msgid "默认路线"
 msgstr ""
+#: src/pages/device/components/deviceProfileEditor.vue:22
+msgid "自动推荐"
+msgstr ""
+
+#: src/pages/device/components/deviceProfileEditor.vue:23
+msgid "自行选择"
+msgstr ""
