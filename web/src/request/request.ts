@@ -1095,13 +1095,20 @@ export const DeviceMangement = {
         method: "GET",
       });
     },
-    POST(data: { [key: string]: any }) {
-      return Request<any>("/lanctrl/v2/device-network-policy/", {
+    PLAN(data: { [key: string]: any }) {
+      return Request<any>("/lanctrl/v2/device-network-policy/plan/", {
         method: "POST",
         headers: { "Content-Type": "application/json;charset=utf-8" },
         body: JSON.stringify(data),
       });
     },
+    APPLY(data: { [key: string]: any }) {
+      return Request<any>("/lanctrl/v2/device-network-policy/apply/", { method: "POST", headers: { "Content-Type": "application/json;charset=utf-8" }, body: JSON.stringify(data) });
+    },
+  },
+  deviceRestrictionsV2: {
+    PLAN(data: { [key: string]: any }) { return Request<any>("/lanctrl/v2/device-restrictions/plan/", { method: "POST", headers: { "Content-Type": "application/json;charset=utf-8" }, body: JSON.stringify(data) }); },
+    APPLY(data: { [key: string]: any }) { return Request<any>("/lanctrl/v2/device-restrictions/apply/", { method: "POST", headers: { "Content-Type": "application/json;charset=utf-8" }, body: JSON.stringify(data) }); },
   },
   gatewayTargetsV2: {
     GET() { return Request<any>("/lanctrl/v2/gateway-targets/", { method: "GET" }); },

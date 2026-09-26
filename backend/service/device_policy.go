@@ -2,6 +2,8 @@ package service
 
 import (
 	"context"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"net/netip"
@@ -68,6 +70,57 @@ func (module *DevicePolicyModule) ListRules(ctx context.Context) (*models.Device
 	return &models.DevicePolicyRulesResponse{Result: rules}, nil
 }
 
+func (module *DevicePolicyModule) Plan(ctx context.Context, request *models.DevicePolicyApplyRequest) (*models.DeviceRestrictionPlanResponse, error) {
+	result := &models.DeviceRestrictionPlanResult{Changes: []*models.PolicyPlanChange{}, ReloadServices: []string{}, RecoveryAction: "restore_task_snapshot"}
+	if policyErr := validateDevicePolicyRequest(request); policyErr != nil {
+		result.Error = &models.DevicePolicyError{Code: policyErr.Code, Message: policyErr.Message}
+		return &models.DeviceRestrictionPlanResponse{Result: result}, nil
+	}
+	result.DeviceID, result.Kind = request.DeviceID, request.Kind
+	current, err := module.store.Get(ctx, request.DeviceID)
+	if err != nil {
+		result.Error = &models.DevicePolicyError{Code: "validation_failed", Message: err.Error()}
+		return &models.DeviceRestrictionPlanResponse{Result: result}, nil
+	}
+	result.Version = devicePolicyVersion(current)
+	result.RollbackPoint = result.Version
+	if capability := current.Capabilities[request.Kind]; capability == nil || capability.State != "available" {
+		code, reason := "validation_failed", "this policy is unavailable"
+		if capability != nil && capability.Reason != "" {
+			reason = capability.Reason
+		}
+		if capability != nil && capability.State == "not_installed" {
+			code = "dependency_not_installed"
+		} else if capability != nil && capability.State == "error" {
+			code = "apply_failed"
+		}
+		result.Error = &models.DevicePolicyError{Code: code, Message: reason}
+		return &models.DeviceRestrictionPlanResponse{Result: result}, nil
+	}
+	if conflict := module.validateConflict(ctx, request, current); conflict != nil {
+		result.Error = &models.DevicePolicyError{Code: conflict.Code, Message: conflict.Message}
+		return &models.DeviceRestrictionPlanResponse{Result: result}, nil
+	}
+	switch request.Kind {
+	case "speed":
+		currentValue, desiredValue := *current.Speed, *request.Speed
+		result.CurrentSpeed, result.DesiredSpeed = &currentValue, &desiredValue
+		result.ReloadServices = []string{"eqos"}
+	case "access":
+		currentValue, desiredValue := *current.Access, *request.Access
+		result.CurrentAccess, result.DesiredAccess = &currentValue, &desiredValue
+		result.ReloadServices = []string{"firewall"}
+	case "static":
+		result.Error = &models.DevicePolicyError{Code: "validation_failed", Message: "address reservations are planned through DeviceNetworkPolicy"}
+		return &models.DeviceRestrictionPlanResponse{Result: result}, nil
+	}
+	if !devicePolicyNoOp(request, current) {
+		result.Changes = append(result.Changes, &models.PolicyPlanChange{Kind: request.Kind, Description: "change device usage restriction"})
+	}
+	result.CanApply = true
+	return &models.DeviceRestrictionPlanResponse{Result: result}, nil
+}
+
 func (module *DevicePolicyModule) Apply(ctx context.Context, request *models.DevicePolicyApplyRequest) (*models.DevicePolicyResponse, error) {
 	if module == nil || module.store == nil {
 		return nil, errors.New("device policy module is unavailable")
@@ -84,6 +137,10 @@ func (module *DevicePolicyModule) Apply(ctx context.Context, request *models.Dev
 	current, err := module.store.Get(ctx, request.DeviceID)
 	if err != nil {
 		return attachDevicePolicyTransaction(devicePolicyFailure("validation_failed", err.Error()), rejectedTaskTransaction(devicePolicyTask(request), request.IdempotencyKey)), nil
+	}
+	currentVersion := devicePolicyVersion(current)
+	if request.ExpectedVersion != "" && request.ExpectedVersion != currentVersion {
+		return attachDevicePolicyTransaction(devicePolicyFailure("conflict", "device restrictions changed; plan again"), rejectedTaskTransaction(devicePolicyTask(request), request.IdempotencyKey)), nil
 	}
 	if capability := current.Capabilities[request.Kind]; capability == nil || capability.State != "available" {
 		reason := "this policy is unavailable"
@@ -233,7 +290,21 @@ func devicePolicyNoOp(request *models.DevicePolicyApplyRequest, current *models.
 }
 
 func devicePolicySuccess(policy *models.DevicePolicy, changed bool) *models.DevicePolicyResponse {
+	if policy != nil {
+		policy.Version = devicePolicyVersion(policy)
+	}
 	return &models.DevicePolicyResponse{Result: &models.DevicePolicyResult{Policy: policy, Changed: changed}}
+}
+
+func devicePolicyVersion(policy *models.DevicePolicy) string {
+	if policy == nil {
+		return ""
+	}
+	copyValue := *policy
+	copyValue.Version = ""
+	raw, _ := json.Marshal(copyValue)
+	sum := sha256.Sum256(raw)
+	return hex.EncodeToString(sum[:])
 }
 
 func attachDevicePolicyTransaction(response *models.DevicePolicyResponse, transaction *models.TaskTransaction) *models.DevicePolicyResponse {

@@ -36,6 +36,10 @@ type Backend interface {
 	PostGatewayTargetApplyV2(ctx context.Context, r *http.Request) (*models.GatewayTargetMutationApplyResponse, error)
 	GetDeviceNetworkPolicyV2(ctx context.Context, r *http.Request) (*models.DeviceNetworkPolicyResponse, error)
 	PostDeviceNetworkPolicyV2(ctx context.Context, r *http.Request) (*models.DeviceNetworkPolicyResponse, error)
+	PostDeviceNetworkPolicyPlanV2(ctx context.Context, r *http.Request) (*models.DeviceNetworkPolicyPlanResponse, error)
+	PostDeviceNetworkPolicyApplyV2(ctx context.Context, r *http.Request) (*models.DeviceNetworkPolicyResponse, error)
+	PostDeviceRestrictionsPlanV2(ctx context.Context, r *http.Request) (*models.DeviceRestrictionPlanResponse, error)
+	PostDeviceRestrictionsApplyV2(ctx context.Context, r *http.Request) (*models.DevicePolicyResponse, error)
 	GetFloatingGatewayV2(ctx context.Context) (*models.FloatingGatewayResponse, error)
 	PostFloatingGatewayPlanV2(ctx context.Context, r *http.Request) (*models.FloatingGatewayResponse, error)
 	PostFloatingGatewayApplyV2(ctx context.Context, r *http.Request) (*models.FloatingGatewayResponse, error)
@@ -165,6 +169,18 @@ func RegisterRoutes(router *httprouter.Router, backend Backend) {
 
 	httpapi.PostJSON(router, "/cgi-bin/luci/istore/lanctrl/v2/device-network-policy/", func(ctx context.Context, r *http.Request) (any, error) {
 		return backend.PostDeviceNetworkPolicyV2(ctx, r)
+	})
+	httpapi.PostJSON(router, "/cgi-bin/luci/istore/lanctrl/v2/device-network-policy/plan/", func(ctx context.Context, r *http.Request) (any, error) {
+		return backend.PostDeviceNetworkPolicyPlanV2(ctx, r)
+	})
+	httpapi.PostJSON(router, "/cgi-bin/luci/istore/lanctrl/v2/device-network-policy/apply/", func(ctx context.Context, r *http.Request) (any, error) {
+		return backend.PostDeviceNetworkPolicyApplyV2(ctx, r)
+	})
+	httpapi.PostJSON(router, "/cgi-bin/luci/istore/lanctrl/v2/device-restrictions/plan/", func(ctx context.Context, r *http.Request) (any, error) {
+		return backend.PostDeviceRestrictionsPlanV2(ctx, r)
+	})
+	httpapi.PostJSON(router, "/cgi-bin/luci/istore/lanctrl/v2/device-restrictions/apply/", func(ctx context.Context, r *http.Request) (any, error) {
+		return backend.PostDeviceRestrictionsApplyV2(ctx, r)
 	})
 
 	httpapi.GetJSON(router, "/cgi-bin/luci/istore/lanctrl/v2/floating-gateway/", func(ctx context.Context, r *http.Request) (any, error) {

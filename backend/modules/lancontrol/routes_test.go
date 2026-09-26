@@ -192,6 +192,26 @@ func (backend *fakeLanControlBackend) PostDeviceNetworkPolicyV2(ctx context.Cont
 	return &models.DeviceNetworkPolicyResponse{Result: &models.DeviceNetworkPolicyResult{Changed: true}}, backend.err
 }
 
+func (backend *fakeLanControlBackend) PostDeviceNetworkPolicyPlanV2(ctx context.Context, r *http.Request) (*models.DeviceNetworkPolicyPlanResponse, error) {
+	backend.recordRequest("planDeviceNetworkPolicyV2", r)
+	return &models.DeviceNetworkPolicyPlanResponse{Result: &models.DeviceNetworkPolicyPlanResult{}}, backend.err
+}
+
+func (backend *fakeLanControlBackend) PostDeviceNetworkPolicyApplyV2(ctx context.Context, r *http.Request) (*models.DeviceNetworkPolicyResponse, error) {
+	backend.recordRequest("applyDeviceNetworkPolicyV2", r)
+	return &models.DeviceNetworkPolicyResponse{Result: &models.DeviceNetworkPolicyResult{}}, backend.err
+}
+
+func (backend *fakeLanControlBackend) PostDeviceRestrictionsPlanV2(ctx context.Context, r *http.Request) (*models.DeviceRestrictionPlanResponse, error) {
+	backend.recordRequest("planDeviceRestrictionsV2", r)
+	return &models.DeviceRestrictionPlanResponse{Result: &models.DeviceRestrictionPlanResult{}}, backend.err
+}
+
+func (backend *fakeLanControlBackend) PostDeviceRestrictionsApplyV2(ctx context.Context, r *http.Request) (*models.DevicePolicyResponse, error) {
+	backend.recordRequest("applyDeviceRestrictionsV2", r)
+	return &models.DevicePolicyResponse{Result: &models.DevicePolicyResult{}}, backend.err
+}
+
 func (backend *fakeLanControlBackend) GetFloatingGatewayV2(ctx context.Context) (*models.FloatingGatewayResponse, error) {
 	backend.record("getFloatingGatewayV2")
 	return &models.FloatingGatewayResponse{Result: &models.FloatingGatewayResult{}}, backend.err
@@ -407,6 +427,10 @@ func TestRegisterLanControlRoutesMapsRoutesToBackendMethods(t *testing.T) {
 		{name: "gateway assignment apply v2", method: http.MethodPost, path: "/cgi-bin/luci/istore/lanctrl/v2/gateway-assignment/apply/", body: `{"action":"assign","deviceId":"mac:aa","targetId":"self"}`, wantCall: "gatewayAssignmentApplyV2"},
 		{name: "gateway target plan v2", method: http.MethodPost, path: "/cgi-bin/luci/istore/lanctrl/v2/gateway-target/plan/", body: `{"action":"create","name":"旁路由","kind":"bypass","gateway":"192.168.1.2"}`, wantCall: "gatewayTargetPlanV2"},
 		{name: "gateway target apply v2", method: http.MethodPost, path: "/cgi-bin/luci/istore/lanctrl/v2/gateway-target/apply/", body: `{"action":"delete","targetId":"custom:1","replacementTargetId":"self"}`, wantCall: "gatewayTargetApplyV2"},
+		{name: "device network plan v2", method: http.MethodPost, path: "/cgi-bin/luci/istore/lanctrl/v2/device-network-policy/plan/", body: `{"deviceId":"mac:aa","targetId":"self","static":{"enabled":false}}`, wantCall: "planDeviceNetworkPolicyV2"},
+		{name: "device network apply v2", method: http.MethodPost, path: "/cgi-bin/luci/istore/lanctrl/v2/device-network-policy/apply/", body: `{"deviceId":"mac:aa","targetId":"self","static":{"enabled":false}}`, wantCall: "applyDeviceNetworkPolicyV2"},
+		{name: "device restrictions plan v2", method: http.MethodPost, path: "/cgi-bin/luci/istore/lanctrl/v2/device-restrictions/plan/", body: `{"deviceId":"mac:aa","kind":"access","access":{"networkAccess":false}}`, wantCall: "planDeviceRestrictionsV2"},
+		{name: "device restrictions apply v2", method: http.MethodPost, path: "/cgi-bin/luci/istore/lanctrl/v2/device-restrictions/apply/", body: `{"deviceId":"mac:aa","kind":"access","access":{"networkAccess":false}}`, wantCall: "applyDeviceRestrictionsV2"},
 		{name: "gateway references v2", method: http.MethodGet, path: "/cgi-bin/luci/istore/lanctrl/v2/gateway-target-references/?targetId=self", wantCall: "gatewayReferencesV2"},
 		{name: "get device network policy v2", method: http.MethodGet, path: "/cgi-bin/luci/istore/lanctrl/v2/device-network-policy/?deviceId=mac%3Aaa", wantCall: "getDeviceNetworkPolicyV2"},
 		{name: "post device network policy v2", method: http.MethodPost, path: "/cgi-bin/luci/istore/lanctrl/v2/device-network-policy/", body: `{"deviceId":"mac:aa","targetId":"default","static":{"enabled":false}}`, wantCall: "postDeviceNetworkPolicyV2"},

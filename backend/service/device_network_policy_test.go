@@ -85,6 +85,20 @@ func TestDeviceNetworkPolicyReturnsOpaqueInternetPaths(t *testing.T) {
 	}
 }
 
+func TestDeviceNetworkPolicyPlanIsReadOnlyAndExplainsImpact(t *testing.T) {
+	module, writer, _, _ := deviceNetworkPolicyTestModule(t)
+	response, err := module.Plan(context.Background(), &models.DeviceNetworkPolicyApplyRequest{
+		DeviceID: "mac:aa:bb:cc:dd:ee:01", TargetID: "upstream",
+		Static: &models.DeviceAddressPolicy{Enabled: true, AssignedIP: "192.168.100.50", BindIP: true, Hostname: "living-room"},
+	})
+	if err != nil || response.Result.Error != nil || !response.Result.CanApply || !response.Result.RequiresRenewal || writer.calls != 0 {
+		t.Fatalf("plan=%#v calls=%d err=%v", response, writer.calls, err)
+	}
+	if len(response.Result.ReloadServices) != 1 || response.Result.ReloadServices[0] != "dnsmasq" || response.Result.Version == "" {
+		t.Fatalf("plan impact=%#v", response.Result)
+	}
+}
+
 func TestDeviceNetworkPolicyRejectsApplyWhenDHCPIsDisabled(t *testing.T) {
 	module, writer, _, gatewayStore := deviceNetworkPolicyTestModule(t)
 	gatewayStore.state.DHCP.DhcpIgnore = true
