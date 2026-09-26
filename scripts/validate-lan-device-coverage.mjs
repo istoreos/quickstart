@@ -13,7 +13,7 @@ const statuses = new Set(['not_started', 'partial', 'blocked', 'verified', 'not_
 const requiredScenarios = ['normal', 'missing', 'error', 'recovery', 'retry']
 
 function localRefExists(ref) {
-  if (ref.startsWith('planned:') || ref.startsWith('http://') || ref.startsWith('https://')) return true
+  if (ref.startsWith('http://') || ref.startsWith('https://')) return true
   const file = ref.split('#', 1)[0]
   return file.length > 0 && fs.existsSync(path.join(root, file))
 }
@@ -38,9 +38,10 @@ export function validate(matrix) {
         errors.push(`${item.id}: invalid or missing ${layer} status`)
         continue
       }
-      if (!Array.isArray(value.refs) || value.refs.length === 0) errors.push(`${item.id}: ${layer} needs evidence or a planned reference`)
-      if (value.status === 'verified') {
-        for (const ref of value.refs ?? []) if (!localRefExists(ref)) errors.push(`${item.id}: verified ${layer} evidence does not exist: ${ref}`)
+      if (!Array.isArray(value.refs) || value.refs.length === 0) errors.push(`${item.id}: ${layer} needs an evidence or milestone reference`)
+      for (const ref of value.refs ?? []) {
+        if (ref.startsWith('planned:')) errors.push(`${item.id}: stale planned reference is not allowed: ${ref}`)
+        else if (!localRefExists(ref)) errors.push(`${item.id}: ${value.status} ${layer} evidence does not exist: ${ref}`)
       }
     }
     if (!statuses.has(item.overall)) errors.push(`${item.id}: invalid overall status`)
@@ -87,7 +88,8 @@ function selfTest(matrix) {
     (copy) => { copy.requirements[1].id = copy.requirements[0].id },
     (copy) => { delete copy.requirements[0].frontend },
     (copy) => { copy.requirements[0].overall = 'done' },
-    (copy) => { copy.requirements[0].product.refs = ['docs/does-not-exist.md'] }
+    (copy) => { copy.requirements[0].product.refs = ['docs/does-not-exist.md'] },
+    (copy) => { copy.requirements[0].device.refs = ['planned:M99'] }
   ]
   for (const mutate of mutations) {
     const copy = structuredClone(matrix)
