@@ -37,6 +37,11 @@ const tabs = computed(() => [
 </style>
 
 <style lang="scss">
+.device-management header::before,
+.device-management header::after { content: none!important; display: none!important; pointer-events: none!important; }
+.device-management > .page-heading,
+.device-management .group-header,
+.device-management .lan-settings > header { color: var(--tit-color)!important; background: transparent!important; }
 @media(max-width:420px){a.btn[href="/cgi-bin/luci/admin/system/admin"]{max-width:140px;white-space:normal;overflow-wrap:anywhere;text-align:center}}
 @media(prefers-color-scheme:dark){body:not([theme="light"]){background:#151518}}
 body[theme="dark"]{background:#151518}

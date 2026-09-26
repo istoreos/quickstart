@@ -23,7 +23,7 @@
                     <label><span>{{ $gettext('上网路线') }}</span>
                         <select v-model="staticForm.targetId" :disabled="routeLocked || networkPolicy.targets.length === 0">
                             <option v-for="target in networkPolicy.targets" :key="target.id" :value="target.id" :disabled="!target.supported">
-                                {{ target.name }}{{ target.gateway ? ` · ${target.gateway}` : '' }}{{ target.supported ? '' : $gettext('（不可用）') }}
+                                {{ gatewayTargetLabel(target) }}{{ target.gateway ? ` · ${target.gateway}` : '' }}{{ target.supported ? '' : $gettext('（不可用）') }}
                             </option>
                         </select>
                     </label>
@@ -179,8 +179,25 @@ const available = (kind: 'static' | 'speed' | 'access') => policyAvailable(polic
 const reason = (kind: 'static' | 'speed' | 'access') => translatePolicyMessage(policyUnavailableReason(policy.value, kind))
 const hostnameInvalid = computed(() => !validDhcpHostname(staticForm.hostname))
 const routeLocked = computed(() => routerContext.value?.routeEditability?.editable === false)
+const gatewayTargetLabel = (target: any) => {
+    if (target.kind === 'default' || target.name === '跟随网络默认') return $gettext('默认路线')
+    if (target.kind === 'self' && target.name === '本机路由') return $gettext('本机路由')
+    if (target.kind === 'bypass' && target.name === '旁路由') return $gettext('旁路由')
+    if (target.kind === 'floating' && target.name === '浮动网关') return $gettext('浮动网关')
+    if (target.name === '自定义网关') return $gettext('自定义网关')
+    return target.name
+}
 const pathStateText = computed(() => translatePolicyMessage(internetPathStateLabel(networkPolicy.value.path.effect.observed.state)))
-const desiredPathText = computed(() => networkPolicy.value.targets.find(item => item.id === networkPolicy.value.path.effect.desired?.targetId)?.name || $gettext('默认路线'))
+const desiredPathText = computed(() => {
+    const target = networkPolicy.value.targets.find(item => item.id === networkPolicy.value.path.effect.desired?.targetId)
+    return target ? gatewayTargetLabel(target) : $gettext('默认路线')
+})
+const currentPolicyLabels = () => {
+    if (!policy.value) return []
+    const labels = policyLabelsFromPolicy(policy.value)
+    if (networkPolicy.value.path.targetId && networkPolicy.value.path.targetId !== 'default' && !labels.includes('route')) labels.splice(policy.value.static.enabled ? 1 : 0, 0, 'route')
+    return labels
+}
 const appliedPathText = computed(() => networkPolicy.value.path.effect.applied?.state === 'server_configuration_observed' ? $gettext('已写入') : $gettext('等待确认'))
 const draftKey = computed(() => `quickstart.device-policy-draft.${props.device.deviceId}`)
 const rememberDraft = () => sessionStorage.setItem(draftKey.value, JSON.stringify({ speed: { ...speedForm } }))
@@ -258,7 +275,7 @@ const applyPlannedChange = async () => {
             feedback.value=result.changed?$gettext('已保存并生效'):$gettext('设置没有变化')
         }
         feedbackKind.value='success';cancelPlan();syncForms()
-        if(policy.value)emit('saved',policyLabelsFromPolicy(policy.value))
+        if(policy.value)emit('saved',currentPolicyLabels())
     }catch(error:any){feedbackKind.value='error';feedback.value=translatePolicyMessage(policyErrorLabel(error?.code,error?.message))}finally{saving.value=''}
 }
 const saveSpeed = () => planRestriction('speed', { ...speedForm })

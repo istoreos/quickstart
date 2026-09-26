@@ -20,6 +20,7 @@ test('M40 English catalog covers every device-management message', async () => {
     assert.equal(translations['网络与上网'], 'Network & Internet')
     assert.equal(translations['使用管理'], 'Usage controls')
     assert.equal(translations['计划与额度'], 'Schedule & quota')
+    assert.equal(translations['已设置'], 'Configured')
 })
 
 test('M37 device details use four summary-first sections and have no classic escape hatch', async () => {
@@ -53,6 +54,39 @@ test('M30 profile editor supports brand type automatic recommendation and all 30
     assert.match(source, /iconMode/)
     assert.match(source, /iconKey/)
     assert.match(source, /role="radiogroup"/)
+    assert.match(source, /icon\.assetKey/)
+    assert.match(source, /isDeviceIconKey/)
+    assert.doesNotMatch(source, /icon\.resolvedKey\s*\|\|/)
+})
+
+test('M40 device management isolates semantic headers from LuCI theme decoration', async () => {
+    const source = await readFile(new URL('../src/pages/device/index.vue', import.meta.url), 'utf8')
+    assert.match(source, /\.device-management header::after/)
+    assert.match(source, /content:\s*none!important/)
+    assert.match(source, /pointer-events:\s*none!important/)
+    assert.match(source, /\.device-management \.group-header/)
+    assert.match(source, /\.device-management \.lan-settings > header/)
+})
+
+test('M40 follow-up keeps advanced workflows progressive and mobile rules readable', async () => {
+    const groups = await readFile(new URL('../src/pages/device/deviceGroupsPanel.vue', import.meta.url), 'utf8')
+    assert.match(groups, /class="advanced-group"/)
+    assert.match(groups, /已选择.*draft\.members\.length.*台设备/)
+    assert.doesNotMatch(groups, /draft\.members\.length \}\} \/ 2048/)
+    assert.match(groups, /gatewayTargetLabel\(target\)/)
+
+    const settings = await readFile(new URL('../src/pages/device/lanSettingsPanel.vue', import.meta.url), 'utf8')
+    assert.match(settings, /<details[^>]+class="migration-card"/)
+    assert.match(settings, /gatewayTargetLabel/)
+
+    const floating = await readFile(new URL('../src/pages/device/components/floatingGatewayWizard.vue', import.meta.url), 'utf8')
+    assert.match(floating, /configured && !editing/)
+    assert.match(floating, /startEditing/)
+
+    const rules = await readFile(new URL('../src/pages/device/networkRulesHub.vue', import.meta.url), 'utf8')
+    assert.match(rules, /class="rule-cards"/)
+    assert.match(rules, /ruleSummary\(rule\.summary\)/)
+    assert.match(rules, /\.rules-table-wrap\{display:none\}/)
 })
 
 test('M30 LAN settings use read-only role guidance local degradation and draft-preserving installation', async () => {
@@ -92,6 +126,8 @@ test('M30 detail policy shows desired applied observed states and locks route on
     for (const label of ['想要的路线', '路由器配置', '实际生效情况', 'routeEditability', '安装限速服务', '启用限速服务']) assert.match(source, new RegExp(label))
     assert.match(source, /routeLocked/)
     assert.match(source, /sessionStorage/)
+    assert.match(source, /currentPolicyLabels/)
+    assert.match(source, /labels\.includes\('route'\)/)
     assert.doesNotMatch(source, /tagName|dhcpOption|option 3|option 6|eqos|UCI/)
 })
 
