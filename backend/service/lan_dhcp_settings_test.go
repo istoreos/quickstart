@@ -83,6 +83,29 @@ func TestLanDHCPSettingsApplyRejectsExternalAuthorityAndStaleVersion(t *testing.
 	}
 }
 
+func TestLanDHCPSettingsKeepsKnownDownstreamRouterReadOnlyWithoutObservedAuthority(t *testing.T) {
+	state := testLanDHCPSettingsSnapshot()
+	state.Authority = "none_detected"
+	state.TopologyPosition = "downstream_router"
+	store := &fakeLanDHCPSettingsStore{snapshot: state}
+	module := NewLanDHCPSettingsModule(store)
+
+	read, err := module.Get(context.Background())
+	if err != nil || read.Result.Editable || read.Result.ReadOnlyReason == "" {
+		t.Fatalf("downstream read=%#v err=%v", read, err)
+	}
+	planned, err := module.Plan(context.Background(), &models.LanDHCPSettingsApplyRequest{Settings: state.Settings})
+	if err != nil || planned.Result.Error == nil || planned.Result.Error.Code != "dhcp_authority_unavailable" || store.applies != 0 {
+		t.Fatalf("downstream plan=%#v applies=%d err=%v", planned, store.applies, err)
+	}
+
+	store.snapshot.TopologyPosition = "lan_gateway_candidate"
+	read, err = module.Get(context.Background())
+	if err != nil || !read.Result.Editable {
+		t.Fatalf("gateway recovery should remain editable: read=%#v err=%v", read, err)
+	}
+}
+
 func TestLanDHCPSettingsStoreReportsRollbackFailure(t *testing.T) {
 	originalSnapshot, originalMutate, originalReload, originalRestore := lanDHCPSettingsTakeSnapshot, lanDHCPSettingsMutate, lanDHCPSettingsReload, lanDHCPSettingsRestore
 	t.Cleanup(func() {
