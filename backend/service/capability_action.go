@@ -22,6 +22,7 @@ type capabilityActionStore interface {
 	Read(context.Context, string) (*models.Capability, error)
 	AvailableBytes(context.Context) (int64, error)
 	Install(context.Context, string) error
+	Enable(context.Context, string) error
 }
 
 type CapabilityActionModule struct {
@@ -62,20 +63,26 @@ func (module *CapabilityActionModule) Apply(ctx context.Context, request *models
 	if !plan.CanApply {
 		return capabilityActionResponse(plan, false, false, plan.Current, plan.Error), nil
 	}
-	if err := module.store.Install(ctx, plan.Target); err != nil {
+	pendingState, pendingCode := models.CapabilityState("not_installed"), "install_pending"
+	if plan.Action == "enable" {
+		pendingState, pendingCode = "disabled", "enable_pending"
+		if err := module.store.Enable(ctx, plan.CapabilityKey); err != nil {
+			return capabilityActionResponse(plan, false, false, plan.Current, &models.DevicePolicyError{Code: "enable_failed", Message: err.Error()}), nil
+		}
+	} else if err := module.store.Install(ctx, plan.Target); err != nil {
 		return capabilityActionResponse(plan, false, false, plan.Current, &models.DevicePolicyError{Code: "install_failed", Message: err.Error()}), nil
 	}
-	current, pending, err := module.waitForInstallation(ctx, plan.CapabilityKey)
+	current, pending, err := module.waitForStateChange(ctx, plan.CapabilityKey, pendingState)
 	if err != nil {
 		return capabilityActionResponse(plan, false, false, nil, &models.DevicePolicyError{Code: "status_unavailable", Message: err.Error()}), nil
 	}
 	if pending {
-		return capabilityActionResponse(plan, false, false, current, &models.DevicePolicyError{Code: "install_pending", Message: "component installation is still running; check status again shortly"}), nil
+		return capabilityActionResponse(plan, false, false, current, &models.DevicePolicyError{Code: pendingCode, Message: "component state is still changing; check status again shortly"}), nil
 	}
 	return capabilityActionResponse(plan, true, false, current, nil), nil
 }
 
-func (module *CapabilityActionModule) waitForInstallation(ctx context.Context, capabilityKey string) (*models.Capability, bool, error) {
+func (module *CapabilityActionModule) waitForStateChange(ctx context.Context, capabilityKey string, pendingState models.CapabilityState) (*models.Capability, bool, error) {
 	interval, timeout := module.pollInterval, module.pollTimeout
 	if interval <= 0 {
 		interval = 500 * time.Millisecond
@@ -92,7 +99,7 @@ func (module *CapabilityActionModule) waitForInstallation(ctx context.Context, c
 		if err != nil {
 			return nil, false, err
 		}
-		if current.State != "not_installed" {
+		if current.State != pendingState {
 			return current, false, nil
 		}
 		select {
@@ -109,15 +116,20 @@ func (module *CapabilityActionModule) plan(ctx context.Context, request *models.
 	if module == nil || module.store == nil {
 		return nil, errors.New("capability action module is unavailable")
 	}
-	plan := &models.CapabilityActionPlan{RequiresConfirmation: true, RequiredFreeBytes: capabilityInstallRequiredFreeBytes}
-	if request == nil || request.Action != "install" || (request.DraftToken != "" && !capabilityDraftTokenPattern.MatchString(request.DraftToken)) {
+	plan := &models.CapabilityActionPlan{RequiresConfirmation: true}
+	if request == nil || (request.Action != "install" && request.Action != "enable") || (request.DraftToken != "" && !capabilityDraftTokenPattern.MatchString(request.DraftToken)) {
 		plan.Error = &models.DevicePolicyError{Code: "validation_failed", Message: "invalid capability action request"}
 		return plan, nil
 	}
 	plan.CapabilityKey, plan.Action, plan.DraftToken = request.CapabilityKey, request.Action, request.DraftToken
-	plan.Target = capabilityInstallTarget(request.CapabilityKey)
+	if request.Action == "install" {
+		plan.Target = capabilityInstallTarget(request.CapabilityKey)
+		plan.RequiredFreeBytes = capabilityInstallRequiredFreeBytes
+	} else if request.CapabilityKey == "device_speed_limit" {
+		plan.Target = request.CapabilityKey
+	}
 	if plan.Target == "" {
-		plan.Error = &models.DevicePolicyError{Code: "unsupported", Message: "this capability cannot be installed on this system"}
+		plan.Error = &models.DevicePolicyError{Code: "unsupported", Message: "this capability action is not supported on this system"}
 		return plan, nil
 	}
 	current, err := module.store.Read(ctx, request.CapabilityKey)
@@ -126,18 +138,25 @@ func (module *CapabilityActionModule) plan(ctx context.Context, request *models.
 		return plan, nil
 	}
 	plan.Current = current
+	if request.Action == "enable" {
+		if current.State != "disabled" {
+			plan.Error = &models.DevicePolicyError{Code: "conflict", Message: "capability is no longer waiting to be enabled"}
+		} else {
+			plan.CanApply = true
+		}
+		return plan, nil
+	}
 	available, err := module.store.AvailableBytes(ctx)
 	if err != nil {
 		plan.Error = &models.DevicePolicyError{Code: "status_unavailable", Message: "available storage could not be checked"}
 		return plan, nil
 	}
 	plan.AvailableFreeBytes = available
-	switch {
-	case current.State != "not_installed":
+	if current.State != "not_installed" {
 		plan.Error = &models.DevicePolicyError{Code: "conflict", Message: "capability is no longer waiting for installation"}
-	case available < capabilityInstallRequiredFreeBytes:
+	} else if available < capabilityInstallRequiredFreeBytes {
 		plan.Error = &models.DevicePolicyError{Code: "insufficient_space", Message: "not enough free storage to install this component"}
-	default:
+	} else {
 		plan.CanApply = true
 	}
 	return plan, nil
@@ -191,6 +210,35 @@ func (store *systemCapabilityActionStore) Install(ctx context.Context, target st
 		}
 		log.Printf("capability installation failed target=%s: %s", target, detail)
 		return errors.New("installation failed; check software sources and firmware compatibility")
+	}
+	return nil
+}
+
+func (store *systemCapabilityActionStore) Enable(ctx context.Context, capabilityKey string) error {
+	if capabilityKey != "device_speed_limit" {
+		return errors.New("this capability cannot be enabled from device management")
+	}
+	previous, err := exec.CommandContext(ctx, "uci", "get", "eqos.@eqos[0].enabled").Output()
+	if err != nil {
+		return errors.New("limit service configuration is unavailable")
+	}
+	oldValue := strings.TrimSpace(string(previous))
+	rollback := func() {
+		_ = exec.Command("uci", "set", "eqos.@eqos[0].enabled="+oldValue).Run()
+		_ = exec.Command("uci", "commit", "eqos").Run()
+		_ = exec.Command("/etc/init.d/eqos", "restart").Run()
+	}
+	if err := exec.CommandContext(ctx, "uci", "set", "eqos.@eqos[0].enabled=1").Run(); err != nil {
+		return errors.New("limit service could not be enabled")
+	}
+	if err := exec.CommandContext(ctx, "uci", "commit", "eqos").Run(); err != nil {
+		rollback()
+		return errors.New("limit service configuration could not be saved")
+	}
+	if output, err := exec.CommandContext(ctx, "/etc/init.d/eqos", "restart").CombinedOutput(); err != nil {
+		log.Printf("capability enable failed key=%s: %s", capabilityKey, strings.TrimSpace(string(output)))
+		rollback()
+		return errors.New("limit service could not be restarted; original setting was restored")
 	}
 	return nil
 }

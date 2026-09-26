@@ -37,11 +37,21 @@ func groupBatchDefersReload(ctx context.Context) bool {
 }
 
 var (
-	groupBatchReloadRestrictions = func(ctx context.Context, configs []string) error { return deviceRestrictionApply(ctx, configs) }
-	groupBatchReloadNetwork      = func(ctx context.Context) error { return deviceNetworkPolicyReload(ctx) }
-	groupBatchWriteAccess        = writeDeviceAccessPolicyBatchAt
-	groupBatchWriteSpeed         = writeDeviceSpeedPolicyBatchAt
-	groupBatchWriteNetwork       = mutateDeviceNetworkPoliciesConfigAt
+	groupBatchReloadRestrictions = func(ctx context.Context, configs []string) error {
+		if err := deviceRestrictionApply(ctx, configs); err != nil {
+			return err
+		}
+		for _, config := range configs {
+			if config == "firewall" {
+				return deviceAccessRestrictionApply(ctx)
+			}
+		}
+		return nil
+	}
+	groupBatchReloadNetwork = func(ctx context.Context) error { return deviceNetworkPolicyReload(ctx) }
+	groupBatchWriteAccess   = writeDeviceAccessPolicyBatchAt
+	groupBatchWriteSpeed    = writeDeviceSpeedPolicyBatchAt
+	groupBatchWriteNetwork  = mutateDeviceNetworkPoliciesConfigAt
 )
 
 type defaultGroupPolicyApplier struct {

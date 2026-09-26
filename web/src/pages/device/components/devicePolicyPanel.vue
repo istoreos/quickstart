@@ -46,7 +46,7 @@
                 <div class="policy-card__heading"><div><strong>{{ $gettext('设备限速') }}</strong><small>{{ $gettext('限制这台设备的最高速率') }}</small></div>
                     <label class="policy-toggle"><input v-model="speedForm.enabled" type="checkbox" :disabled="!available('speed')" /><span>{{ speedForm.enabled ? $gettext('已启用') : $gettext('未启用') }}</span></label>
                 </div>
-                <div v-if="reason('speed')" class="policy-reason"><span>{{ reason('speed') }}</span><button v-if="policy.capabilities.speed?.state === 'not_installed'" type="button" :disabled="saving !== ''" @click="installSpeed">{{ saving === 'install' ? $gettext('正在安装…') : $gettext('安装限速服务') }}</button></div>
+                <div v-if="reason('speed')" class="policy-reason"><span>{{ reason('speed') }}</span><button v-if="['not_installed','disabled'].includes(policy.capabilities.speed?.state || '')" type="button" :disabled="saving !== ''" @click="prepareSpeedService">{{ saving === 'capability' ? $gettext('正在处理…') : policy.capabilities.speed?.state === 'disabled' ? $gettext('启用限速服务') : $gettext('安装限速服务') }}</button></div>
                 <template v-else>
                     <div v-if="speedForm.enabled" class="field-grid">
                         <label><span>{{ $gettext('上传上限（Mbit/s）') }}</span><input v-model.number="speedForm.uploadSpeed" type="number" min="1" /></label>
@@ -242,18 +242,20 @@ const applyPlannedChange = async () => {
     }catch(error:any){feedbackKind.value='error';feedback.value=policyErrorLabel(error?.code,error?.message)}finally{saving.value=''}
 }
 const saveSpeed = () => planRestriction('speed', { ...speedForm })
-const installSpeed = async () => {
-    rememberDraft(); saving.value = 'install'; feedback.value = ''
+const prepareSpeedService = async () => {
+    const action = policy.value?.capabilities.speed?.state === 'disabled' ? 'enable' : 'install'
+    rememberDraft(); saving.value = 'capability'; feedback.value = ''
     try {
         const draftToken = `${props.device.deviceId}:restrictions`
-        const plan = (await request.DeviceMangement.capabilityActionV2.PLAN({ capabilityKey: 'device_speed_limit', action: 'install', draftToken })).data?.result?.plan
+        const plan = (await request.DeviceMangement.capabilityActionV2.PLAN({ capabilityKey: 'device_speed_limit', action, draftToken })).data?.result?.plan
         if (plan?.error) throw new Error(plan.error.message)
-        if (!plan?.canApply || !window.confirm(`${$gettext('安装限速服务？')}\n${$gettext('尚未保存的限速输入会保留。')}`)) return
-        const result = (await request.DeviceMangement.capabilityActionV2.APPLY({ capabilityKey: 'device_speed_limit', action: 'install', draftToken, confirm: true, expectedState: plan.current?.state })).data?.result
-        if (result?.error?.code === 'install_pending') throw new Error($gettext('组件仍在安装，稍后刷新即可继续，草稿已经保留。'))
+        const question = action === 'enable' ? $gettext('启用限速服务？') : $gettext('安装限速服务？')
+        if (!plan?.canApply || !window.confirm(`${question}\n${$gettext('尚未保存的限速输入会保留。')}`)) return
+        const result = (await request.DeviceMangement.capabilityActionV2.APPLY({ capabilityKey: 'device_speed_limit', action, draftToken, confirm: true, expectedState: plan.current?.state })).data?.result
+        if (['install_pending','enable_pending'].includes(result?.error?.code)) throw new Error($gettext('组件状态仍在更新，稍后刷新即可继续，草稿已经保留。'))
         if (result?.error) throw new Error(result.error.message)
-        feedbackKind.value = 'success'; feedback.value = $gettext('限速服务已安装，输入内容已恢复'); await load()
-    } catch (error: any) { feedbackKind.value = 'error'; feedback.value = error?.message || $gettext('安装失败，可稍后重试') }
+        feedbackKind.value = 'success'; feedback.value = action === 'enable' ? $gettext('限速服务已启用，输入内容已恢复') : $gettext('限速服务已安装，请继续启用，输入内容已恢复'); await load()
+    } catch (error: any) { feedbackKind.value = 'error'; feedback.value = error?.message || $gettext('限速服务准备失败，可稍后重试') }
     finally { saving.value = '' }
 }
 const toggleAccess = () => {

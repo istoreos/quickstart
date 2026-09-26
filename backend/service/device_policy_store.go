@@ -141,7 +141,7 @@ func (store *systemDevicePolicyStore) Backup(_ context.Context, kind string) (de
 		paths = []string{"/etc/config/eqos"}
 	}
 	if kind == "access" {
-		paths = []string{"/etc/config/firewall"}
+		paths = []string{"/etc/config/firewall", immediateAccessIncludePath(deviceRestrictionConfigDir())}
 	}
 	backup := &systemDevicePolicyBackup{Kind: kind, Files: make([]devicePolicyFileSnapshot, 0, len(paths))}
 	for _, path := range paths {
@@ -197,7 +197,7 @@ func (store *systemDevicePolicyStore) Apply(ctx context.Context, request *models
 		if groupBatchDefersReload(ctx) {
 			return nil
 		}
-		return deviceRestrictionApply(ctx, []string{"firewall"})
+		return deviceAccessRestrictionApply(ctx)
 	}
 	return errors.New("unsupported policy kind")
 }
@@ -227,7 +227,7 @@ func (store *systemDevicePolicyStore) Restore(ctx context.Context, raw devicePol
 	case "static":
 		commands = append(commands, "/etc/init.d/dnsmasq restart")
 	case "access":
-		commands = append(commands, "/etc/init.d/firewall reload")
+		commands = append(commands, "/etc/init.d/firewall restart")
 	case "speed":
 		if _, err := os.Stat("/etc/init.d/eqos"); err == nil {
 			commands = append(commands, "/etc/init.d/eqos restart")

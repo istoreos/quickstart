@@ -69,7 +69,7 @@ test('M35 DHCP settings expose a safe pool plan and recovery path', async () => 
 
 test('M30 detail policy shows desired applied observed states and locks route only by DHCP authority', async () => {
     const source = await readFile(new URL('../src/pages/device/components/devicePolicyPanel.vue', import.meta.url), 'utf8')
-    for (const label of ['想要的路线', '路由器配置', '实际生效情况', 'routeEditability', '安装限速服务']) assert.match(source, new RegExp(label))
+    for (const label of ['想要的路线', '路由器配置', '实际生效情况', 'routeEditability', '安装限速服务', '启用限速服务']) assert.match(source, new RegExp(label))
     assert.match(source, /routeLocked/)
     assert.match(source, /sessionStorage/)
     assert.doesNotMatch(source, /tagName|dhcpOption|option 3|option 6|eqos|UCI/)

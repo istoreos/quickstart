@@ -17,7 +17,9 @@ type fakeCapabilityActionStore struct {
 	readErr          error
 	spaceErr         error
 	installErr       error
+	enableErr        error
 	installs         []string
+	enables          []string
 	installDelay     time.Duration
 	stayNotInstalled bool
 }
@@ -51,6 +53,41 @@ func (store *fakeCapabilityActionStore) Install(_ context.Context, target string
 		}()
 	}
 	return store.installErr
+}
+
+func (store *fakeCapabilityActionStore) Enable(_ context.Context, capabilityKey string) error {
+	store.mu.Lock()
+	defer store.mu.Unlock()
+	store.enables = append(store.enables, capabilityKey)
+	if store.enableErr == nil {
+		store.capability = &models.Capability{State: "available"}
+	}
+	return store.enableErr
+}
+
+func TestCapabilityEnableRequiresPreviewAndEnablesInstalledService(t *testing.T) {
+	store := &fakeCapabilityActionStore{capability: &models.Capability{State: "disabled"}}
+	module := NewCapabilityActionModule(store)
+	request := &models.CapabilityActionRequest{CapabilityKey: "device_speed_limit", Action: "enable", DraftToken: "device-1:restrictions"}
+	preview, err := module.Plan(context.Background(), request)
+	if err != nil || preview.Result.Plan.Error != nil || !preview.Result.Plan.CanApply || preview.Result.Plan.RequiredFreeBytes != 0 {
+		t.Fatalf("enable preview = %#v, %v", preview, err)
+	}
+	cancelled, err := module.Apply(context.Background(), request)
+	if err != nil || !cancelled.Result.Cancelled || len(store.enables) != 0 {
+		t.Fatalf("enable cancel = %#v, %v", cancelled, err)
+	}
+	request.Confirm, request.ExpectedState = true, "disabled"
+	applied, err := module.Apply(context.Background(), request)
+	if err != nil || applied.Result.Error != nil || !applied.Result.Changed || applied.Result.Current.State != "available" || len(store.enables) != 1 {
+		t.Fatalf("enable apply = %#v, %v", applied, err)
+	}
+
+	store.capability = &models.Capability{State: "available"}
+	conflict, err := module.Plan(context.Background(), request)
+	if err != nil || conflict.Result.Plan.Error == nil || conflict.Result.Plan.Error.Code != "conflict" {
+		t.Fatalf("enable conflict = %#v, %v", conflict, err)
+	}
 }
 
 func TestCapabilityInstallWaitsForAsyncInstallerAndReportsBoundedPending(t *testing.T) {
