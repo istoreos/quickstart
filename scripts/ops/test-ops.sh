@@ -42,4 +42,9 @@ printf '%s\n' "$resolved_target" | grep -q '^SCP_EXTRA_OPTS=-O$' || {
     echo "OpenWrt target must use legacy SCP transport (-O)" >&2
     exit 1
 }
+
+grep -Fq 'cp '\''${REMOTE_BINARY}'\'' \"${REMOTE_BACKUP_DIR}/quickstart.\${stamp}.bak\"' "${SCRIPT_DIR}/deploy.sh" || {
+    echo "remote backup filename must expand the deployment timestamp" >&2
+    exit 1
+}
 echo "ops contract ok"
