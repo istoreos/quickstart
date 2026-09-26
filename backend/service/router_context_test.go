@@ -90,3 +90,24 @@ func TestRouterContextDisabledDHCPv4IsNotLocalAuthority(t *testing.T) {
 		t.Fatal("dhcpv4=disabled must not grant local DHCP authority")
 	}
 }
+
+func TestDHCPIPv4ServingEnabled(t *testing.T) {
+	tests := []struct {
+		name, ignore, mode string
+		want               bool
+	}{
+		{name: "legacy default", want: true},
+		{name: "server", mode: "server", want: true},
+		{name: "hybrid", mode: "hybrid", want: true},
+		{name: "ignored", ignore: "1", mode: "server"},
+		{name: "disabled", mode: "disabled"},
+		{name: "relay", mode: "relay"},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			if got := dhcpIPv4ServingEnabled(test.ignore, test.mode); got != test.want {
+				t.Fatalf("dhcpIPv4ServingEnabled(%q, %q) = %t, want %t", test.ignore, test.mode, got, test.want)
+			}
+		})
+	}
+}

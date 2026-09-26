@@ -109,6 +109,18 @@ func TestGatewayPolicyPlanIsReadOnlyAndApplyIsIdempotent(t *testing.T) {
 	}
 }
 
+func TestGatewayPolicyRejectsAssignmentWithoutLocalDHCPAuthority(t *testing.T) {
+	state := gatewayPolicyTestState()
+	state.DHCP.DhcpIgnore = true
+	store := &fakeGatewayPolicyStore{state: state}
+	planned, err := gatewayPolicyTestModule(t, store).PlanAssignment(context.Background(), &models.GatewayAssignmentRequest{
+		Action: "assign", DeviceID: "mac:aa:bb:cc:dd:ee:01", TargetID: "self",
+	})
+	if err != nil || planned.Result.Error == nil || planned.Result.Error.Code != "dhcp_authority_unavailable" || planned.Result.CanApply || store.applies != 0 {
+		t.Fatalf("plan = %#v, applies=%d, err=%v", planned, store.applies, err)
+	}
+}
+
 func TestGatewayPolicyRejectsReferencedDeleteAndStaleVersion(t *testing.T) {
 	store := &fakeGatewayPolicyStore{state: gatewayPolicyTestState()}
 	module := gatewayPolicyTestModule(t, store)
