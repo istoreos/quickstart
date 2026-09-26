@@ -27,7 +27,7 @@ if [ -x '${REMOTE_SERVICE}' ]; then
 fi
 
 if [ -f '${REMOTE_BINARY}' ]; then
-    cp '${REMOTE_BINARY}' '${REMOTE_BACKUP_DIR}/quickstart.\${stamp}.bak'
+    cp '${REMOTE_BINARY}' \"${REMOTE_BACKUP_DIR}/quickstart.\${stamp}.bak\"
 fi
 
 cp '${REMOTE_TMP}' '${REMOTE_BINARY}'
