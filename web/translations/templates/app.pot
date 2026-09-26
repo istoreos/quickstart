@@ -905,7 +905,7 @@ msgid "保存失败，请检查设备存储空间后重试"
 msgstr ""
 
 #: src/pages/device/components/deviceAliasEditor.vue:78
-#: src/pages/device/components/deviceProfileEditor.vue:92
+#: src/pages/device/components/deviceProfileEditor.vue:98
 msgid "保存失败，请稍后重试"
 msgstr ""
 
@@ -1890,7 +1890,7 @@ msgid "子网掩码: "
 msgstr ""
 
 #: src/pages/device/components/deviceClassificationEditor.vue:61
-#: src/pages/device/components/deviceProfileEditor.vue:64
+#: src/pages/device/components/deviceProfileEditor.vue:69
 #: src/pages/device/deviceCenterList.vue:304
 msgid "存储与服务器"
 msgstr ""
@@ -2242,7 +2242,7 @@ msgstr ""
 msgid "已开启"
 msgstr ""
 
-#: src/pages/device/components/deviceProfileEditor.vue:96
+#: src/pages/device/components/deviceProfileEditor.vue:102
 msgid "已恢复系统自动推荐"
 msgstr ""
 
@@ -2272,7 +2272,7 @@ msgid "已指定路线"
 msgstr ""
 
 #: src/pages/device/deviceCenterList.vue:252
-msgid "已控制"
+msgid "已设置"
 msgstr ""
 
 #: src/components/interfacer/item.vue:38
@@ -2357,7 +2357,7 @@ msgid "常规设置"
 msgstr ""
 
 #: src/pages/device/components/deviceClassificationEditor.vue:59
-#: src/pages/device/components/deviceProfileEditor.vue:64
+#: src/pages/device/components/deviceProfileEditor.vue:69
 #: src/pages/device/deviceCenterList.vue:298
 msgid "平板"
 msgstr ""
@@ -2682,13 +2682,13 @@ msgid "手工配置"
 msgstr ""
 
 #: src/pages/device/components/deviceClassificationEditor.vue:59
-#: src/pages/device/components/deviceProfileEditor.vue:64
+#: src/pages/device/components/deviceProfileEditor.vue:69
 #: src/pages/device/deviceCenterList.vue:296
 msgid "手机"
 msgstr ""
 
 #: src/pages/device/components/deviceClassificationEditor.vue:61
-#: src/pages/device/components/deviceProfileEditor.vue:64
+#: src/pages/device/components/deviceProfileEditor.vue:69
 #: src/pages/device/deviceCenterList.vue:305
 msgid "打印机"
 msgstr ""
@@ -2864,7 +2864,7 @@ msgid "搜索设备、MAC、IP 或规则"
 msgstr ""
 
 #: src/pages/device/components/deviceClassificationEditor.vue:60
-#: src/pages/device/components/deviceProfileEditor.vue:64
+#: src/pages/device/components/deviceProfileEditor.vue:69
 #: src/pages/device/deviceCenterList.vue:302
 msgid "摄像头"
 msgstr ""
@@ -3053,7 +3053,7 @@ msgid "智能内网穿透服务"
 msgstr ""
 
 #: src/pages/device/components/deviceClassificationEditor.vue:60
-#: src/pages/device/components/deviceProfileEditor.vue:64
+#: src/pages/device/components/deviceProfileEditor.vue:69
 #: src/pages/device/deviceCenterList.vue:301
 msgid "智能家居"
 msgstr ""
@@ -3277,7 +3277,7 @@ msgid "未知"
 msgstr ""
 
 #: src/pages/device/components/deviceClassificationEditor.vue:62
-#: src/pages/device/components/deviceProfileEditor.vue:64
+#: src/pages/device/components/deviceProfileEditor.vue:69
 #: src/pages/device/deviceCenterList.vue:307
 msgid "未知设备"
 msgstr ""
@@ -3971,7 +3971,7 @@ msgid "温馨提示：删除网关标签可能影响正在使用此标签的设�
 msgstr ""
 
 #: src/pages/device/components/deviceClassificationEditor.vue:61
-#: src/pages/device/components/deviceProfileEditor.vue:64
+#: src/pages/device/components/deviceProfileEditor.vue:69
 #: src/pages/device/deviceCenterList.vue:303
 msgid "游戏设备"
 msgstr ""
@@ -4112,13 +4112,13 @@ msgid "电源模式"
 msgstr ""
 
 #: src/pages/device/components/deviceClassificationEditor.vue:59
-#: src/pages/device/components/deviceProfileEditor.vue:64
+#: src/pages/device/components/deviceProfileEditor.vue:69
 #: src/pages/device/deviceCenterList.vue:299
 msgid "电视与影音"
 msgstr ""
 
 #: src/pages/device/components/deviceClassificationEditor.vue:59
-#: src/pages/device/components/deviceProfileEditor.vue:64
+#: src/pages/device/components/deviceProfileEditor.vue:69
 #: src/pages/device/deviceCenterList.vue:297
 msgid "电脑"
 msgstr ""
@@ -4357,7 +4357,7 @@ msgid "稍后提醒"
 msgstr ""
 
 #: src/pages/device/components/deviceClassificationEditor.vue:62
-#: src/pages/device/components/deviceProfileEditor.vue:64
+#: src/pages/device/components/deviceProfileEditor.vue:69
 #: src/pages/device/deviceCenterList.vue:306
 msgid "穿戴设备"
 msgstr ""
@@ -4667,7 +4667,7 @@ msgid "网络规则读取失败"
 msgstr ""
 
 #: src/pages/device/components/deviceClassificationEditor.vue:60
-#: src/pages/device/components/deviceProfileEditor.vue:64
+#: src/pages/device/components/deviceProfileEditor.vue:69
 #: src/pages/device/deviceCenterList.vue:300
 msgid "网络设备"
 msgstr ""
@@ -5031,11 +5031,11 @@ msgid "设备资料"
 msgstr ""
 
 #: src/pages/device/components/deviceAliasEditor.vue:42
-#: src/pages/device/components/deviceProfileEditor.vue:69
+#: src/pages/device/components/deviceProfileEditor.vue:74
 msgid "设备资料不可用"
 msgstr ""
 
-#: src/pages/device/components/deviceProfileEditor.vue:95
+#: src/pages/device/components/deviceProfileEditor.vue:101
 msgid "设备资料已更新"
 msgstr ""
 
@@ -5084,7 +5084,7 @@ msgstr ""
 #: src/pages/device/components/deviceClassificationEditor.vue:117
 #: src/pages/device/components/devicePolicyPanel.vue:252
 #: src/pages/device/components/devicePolicyPanel.vue:258
-#: src/pages/device/components/deviceProfileEditor.vue:91
+#: src/pages/device/components/deviceProfileEditor.vue:97
 #: src/pages/device/lanSettingsPanel.vue:177
 msgid "设置没有变化"
 msgstr ""
@@ -5508,7 +5508,7 @@ msgid "读取设备分组失败"
 msgstr ""
 
 #: src/pages/device/components/deviceAliasEditor.vue:56
-#: src/pages/device/components/deviceProfileEditor.vue:82
+#: src/pages/device/components/deviceProfileEditor.vue:88
 msgid "读取设备资料失败"
 msgstr ""
 

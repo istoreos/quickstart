@@ -28,7 +28,9 @@ msgstr "(not available)"
 #: src/pages/network/gateway/index.vue:107
 #: src/pages/network/gateway/index.vue:108
 msgid "（无DNS服务器，请之后自行填写公共DNS服务器，例如 223.5.5.5）"
-msgstr "(No DNS server, please fill in the public DNS server later, such as 223.5.5.5)"
+msgstr ""
+"(No DNS server, please fill in the public DNS server later, such as "
+"223.5.5.5)"
 
 #: src/components/action-disk-part/item.vue:5
 #: src/components/action-disk-part/item.vue:6
@@ -106,8 +108,13 @@ msgid "1、点击“提交”可将变更合并到非沙箱环境"
 msgstr "1. Click 'Submit' to merge changes into non-sandbox environment"
 
 #: src/pages/network/gateway/index.vue:101
-msgid "1. 满足上述条件以后，点击“当前 IPv4 上游信息”以刷新当前连接信息，成功以后，“自动填写”按钮将被激活。(失败可再次点击)"
-msgstr "1. After the above conditions are met, click 'Current IPv4 Upstream Information' to refresh the current connection information. After success, the 'Auto Fill' button will be activated. (Click again if failed)"
+msgid ""
+"1. 满足上述条件以后，点击“当前 IPv4 上游信息”以刷新当前连接信息，成功以"
+"后，“自动填写”按钮将被激活。(失败可再次点击)"
+msgstr ""
+"1. After the above conditions are met, click 'Current IPv4 Upstream "
+"Information' to refresh the current connection information. After success, "
+"the 'Auto Fill' button will be activated. (Click again if failed)"
 
 #: src/components/action-sandboxenvironment/index.vue:13
 msgid "2、点击“重置”可将沙箱恢复到初始状态"
@@ -116,7 +123,9 @@ msgstr "2. Click 'Reset' to restore the sandbox to its initial state"
 #: src/pages/network/gateway/index.vue:112
 #: src/pages/network/gateway/index.vue:113
 msgid "2. 点击“自动填写”，将切换到参数页并自动填写。此时依然可以自行调整参数。"
-msgstr "2. Click 'Auto-fill' to switch to the parameter page and auto-fill. Parameters can still be adjusted manually."
+msgstr ""
+"2. Click 'Auto-fill' to switch to the parameter page and auto-fill. "
+"Parameters can still be adjusted manually."
 
 #: src/pages/network/gateway/index.vue:59
 msgid "223.5.5.5"
@@ -124,7 +133,9 @@ msgstr "223.5.5.5"
 
 #: src/components/action-sandboxenvironment/index.vue:14
 msgid "3、点击“退出”可退出沙箱环境，并放弃沙箱中的数据"
-msgstr "3. Click 'Exit' to exit the sandbox environment and abandon the data in the sandbox"
+msgstr ""
+"3. Click 'Exit' to exit the sandbox environment and abandon the data in the "
+"sandbox"
 
 #: src/pages/index/service/DownloadService.vue:17
 msgid "Aria2高级配置"
@@ -143,8 +154,13 @@ msgid "DDNSTO"
 msgstr "DDNSTO"
 
 #: src/components/action-domain/setup-index.vue:12
-msgid "DDNSTO 是一个不需要公网IP也可以在外网访问的穿透域名服务，一个浏览器搞定内网穿透，远程访问Openwrt、远程终端、远程桌面..."
-msgstr "DDNSTO is a domain name penetration service that can be accessed from the Internet without a public IP. A browser can handle intranet penetration and remote access to Openwrt, remote terminal, remote desktop..."
+msgid ""
+"DDNSTO 是一个不需要公网IP也可以在外网访问的穿透域名服务，一个浏览器搞定内网穿"
+"透，远程访问Openwrt、远程终端、远程桌面..."
+msgstr ""
+"DDNSTO is a domain name penetration service that can be accessed from the "
+"Internet without a public IP. A browser can handle intranet penetration and "
+"remote access to Openwrt, remote terminal, remote desktop..."
 
 #: src/components/firstOpen/index.vue:97
 msgid "ddnsto.com"
@@ -165,7 +181,8 @@ msgstr "DHCP hostname (optional)"
 
 #: src/pages/device/deviceList.vue:438 src/pages/device/staticStateList.vue:322
 msgid "DHCP 主机名仅支持 1～63 位英文、数字或中间连字符"
-msgstr "DHCP hostnames only support 1-63 digits English, numbers or middle hyphens"
+msgstr ""
+"DHCP hostnames only support 1-63 digits English, numbers or middle hyphens"
 
 #: src/components/action-edit/index.vue:27
 msgid "DHCP客户端"
@@ -334,7 +351,9 @@ msgstr "LAN Interface Configuration Method"
 
 #: src/pages/interfaceconfig/index.vue:259
 msgid "LAN口未关联任何物理网口，可能导致路由器失联，是否继续操作？"
-msgstr "LAN port not associated with any physical network port, may cause router disconnection, continue?"
+msgstr ""
+"LAN port not associated with any physical network port, may cause router "
+"disconnection, continue?"
 
 #: src/pages/device/deviceList.vue:442 src/pages/device/speedLimitList.vue:327
 #: src/pages/device/staticStateList.vue:326
@@ -358,8 +377,15 @@ msgid "qBittorrent高级配置"
 msgstr "qBittorrent Adv."
 
 #: src/pages/raid/index/index.vue:6
-msgid "RAID （ Redundant Array of Independent Disks ）即独立磁盘冗余阵列，简称为「磁盘阵列」，就是用多个独立的磁盘组成在一起形成一个大的磁盘系统，从而实现比单块磁盘更好的存储性能和更高的可靠性。"
-msgstr "RAID (Redundant Array of Independent Disks) is a redundant array of independent disks, which uses multiple independent disks to form a large disk system, thereby achieving better storage performance and higher reliability than a single disk."
+msgid ""
+"RAID （ Redundant Array of Independent Disks ）即独立磁盘冗余阵列，简称为「磁"
+"盘阵列」，就是用多个独立的磁盘组成在一起形成一个大的磁盘系统，从而实现比单块"
+"磁盘更好的存储性能和更高的可靠性。"
+msgstr ""
+"RAID (Redundant Array of Independent Disks) is a redundant array of "
+"independent disks, which uses multiple independent disks to form a large "
+"disk system, thereby achieving better storage performance and higher "
+"reliability than a single disk."
 
 #: src/components/action-raid/setup-create.vue:125
 msgid "RAID 0 (条带)"
@@ -374,12 +400,21 @@ msgid "RAID创建向导"
 msgstr "RAID Creation Wizard"
 
 #: src/pages/raid/index/index.vue:10
-msgid "RAID功能正在公测中，使用过程中如造成数据丢失等问题，概不负责，请谨慎使用。"
-msgstr "The RAID function is currently in public beta testing. We are not responsible for any data loss or other issues caused during use. Please use it with caution."
+msgid ""
+"RAID功能正在公测中，使用过程中如造成数据丢失等问题，概不负责，请谨慎使用。"
+msgstr ""
+"The RAID function is currently in public beta testing. We are not "
+"responsible for any data loss or other issues caused during use. Please use "
+"it with caution."
 
 #: src/components/action-raid/setup-create.vue:8
-msgid "RAID磁盘阵列是用多个独立的磁盘组成在一起形成一个大的磁盘系统，从而实现比单块磁盘更好的存储性能和更高的可靠性。"
-msgstr "RAID disk array uses multiple independent disks together to form a large disk system, thereby achieving better storage performance and higher reliability than a single disk."
+msgid ""
+"RAID磁盘阵列是用多个独立的磁盘组成在一起形成一个大的磁盘系统，从而实现比单块"
+"磁盘更好的存储性能和更高的可靠性。"
+msgstr ""
+"RAID disk array uses multiple independent disks together to form a large "
+"disk system, thereby achieving better storage performance and higher "
+"reliability than a single disk."
 
 #: src/pages/index/info/DiskInfo.vue:16 src/pages/raid/index/index.vue:3
 msgid "RAID管理"
@@ -398,8 +433,13 @@ msgid "RPC 令牌："
 msgstr "RPC Token:"
 
 #: src/pages/smart/index.vue:6
-msgid "S.M.A.R.T.，全称为“Self-Monitoring Analysis and Reporting Technology”，即“自我监测、分析及报告技术”，"
-msgstr "S.M.A.R.T., the full name of which is 'Self-Monitoring Analysis and Reporting Technology', is an automatic hard disk status detection and early warning system and specification. "
+msgid ""
+"S.M.A.R.T.，全称为“Self-Monitoring Analysis and Reporting Technology”，即“自"
+"我监测、分析及报告技术”，"
+msgstr ""
+"S.M.A.R.T., the full name of which is 'Self-Monitoring Analysis and "
+"Reporting Technology', is an automatic hard disk status detection and early "
+"warning system and specification. "
 
 #: src/pages/index/components/DiskItem.vue:22
 msgid "S.M.A.R.T异常"
@@ -448,8 +488,13 @@ msgstr "Mon"
 
 #: src/components/action-sandbox/index.vue:9
 #: src/components/action-sandboxenvironment/index.vue:9
-msgid "一个简易沙箱，方便用来实验系统配置和程序，方便开发未完成的软件，但不保护 Docker 和硬盘的数据"
-msgstr "A simple sandbox, convenient for experimenting with system configuration and programs, and for developing unfinished software, but does not protect Docker and hard disk data"
+msgid ""
+"一个简易沙箱，方便用来实验系统配置和程序，方便开发未完成的软件，但不保护 "
+"Docker 和硬盘的数据"
+msgstr ""
+"A simple sandbox, convenient for experimenting with system configuration and "
+"programs, and for developing unfinished software, but does not protect "
+"Docker and hard disk data"
 
 #: src/pages/device/components/deviceUsagePolicyEditor.vue:64
 #: src/pages/device/deviceGroupsPanel.vue:52
@@ -580,7 +625,8 @@ msgstr ""
 
 #: src/pages/index/Storage/linkease.vue:23
 msgid "下载易有云客户端，随时随地相册备份、远程访问"
-msgstr "Download Linkease client for anytime, anywhere photo backup, remote access"
+msgstr ""
+"Download Linkease client for anytime, anywhere photo backup, remote access"
 
 #: src/pages/index/index.vue:345 src/pages/index/service/DownloadService.vue:2
 msgid "下载服务"
@@ -661,7 +707,9 @@ msgstr "No data quota"
 
 #: src/pages/device/components/floatingGatewayWizard.vue:25
 msgid "两台节点必须配置相同的虚拟 IP，并选择互补的职责。"
-msgstr "Both nodes must be configured with the same virtual IP and select complementary responsibilities."
+msgstr ""
+"Both nodes must be configured with the same virtual IP and select "
+"complementary responsibilities."
 
 #: src/components/firstOpen/index.vue:207
 msgid "两次密码不一致"
@@ -700,7 +748,9 @@ msgstr "Configure a fixed accessible domain name for hosts with dynamic IPs"
 
 #: src/pages/device/lanSettingsPanel.vue:46
 msgid "为设备设置最高上传和下载速度；联网权限不依赖此服务。"
-msgstr "Set the maximum upload and download speeds for your device; network permissions do not depend on this service."
+msgstr ""
+"Set the maximum upload and download speeds for your device; network "
+"permissions do not depend on this service."
 
 #: src/pages/device/deviceCenterList.vue:115
 msgid "主要地址"
@@ -708,7 +758,9 @@ msgstr "Primary address"
 
 #: src/pages/device/lanSettingsPanel.vue:82
 msgid "主路由与旁路由共享一个稳定入口，旁路由异常时自动切回主路由。"
-msgstr "The main route and the bypass route share a stable entrance, and when the bypass route is abnormal, the main route is automatically switched back."
+msgstr ""
+"The main route and the bypass route share a stable entrance, and when the "
+"bypass route is abnormal, the main route is automatically switched back."
 
 #: src/pages/device/components/deviceUsagePolicyEditor.vue:64
 #: src/pages/device/deviceGroupsPanel.vue:52
@@ -739,8 +791,12 @@ msgid "今天"
 msgstr "Today"
 
 #: src/components/action-sandboxenvironment/index.vue:16
-msgid "以上操作都将重启设备，设备重启完成后会自动刷新页面。如果 IP 变化可能需要"
-msgstr "The above operations will restart the device, and the page will automatically refresh after the device restarts. If the IP changes, you may need to "
+msgid ""
+"以上操作都将重启设备，设备重启完成后会自动刷新页面。如果 IP 变化可能需要"
+msgstr ""
+"The above operations will restart the device, and the page will "
+"automatically refresh after the device restarts. If the IP changes, you may "
+"need to "
 
 #: src/pages/device/components/deviceUsagePolicyEditor.vue:18
 #: src/pages/device/components/deviceUsagePolicyEditor.vue:76
@@ -824,7 +880,9 @@ msgstr "Ex: Bypass routing"
 
 #: src/pages/device/deviceGroupsPanel.vue:9
 msgid "例如创建“儿童设备”，设置晚间暂停联网和每月流量额度。"
-msgstr "For example, create a “child device” to set a nightly pause and monthly traffic limit."
+msgstr ""
+"For example, create a “child device” to set a nightly pause and monthly "
+"traffic limit."
 
 #: src/components/action-domain/setup-ddns.vue:96
 #: src/components/action-edit/index.vue:35
@@ -842,7 +900,9 @@ msgstr "Save"
 
 #: src/pages/device/deviceCenterList.vue:22
 msgid "保存 MAC 和备注，设备首次出现后会自动合并，不会创建孤立规则。"
-msgstr "Save the Mac and notes, the device will be merged automatically after the first appearance, and no orphan rules will be created."
+msgstr ""
+"Save the Mac and notes, the device will be merged automatically after the "
+"first appearance, and no orphan rules will be created."
 
 #: src/components/action-raid/setup-edit.vue:84
 #: src/components/action-raid/setup-recover.vue:84
@@ -862,7 +922,9 @@ msgstr "Review before saving"
 
 #: src/pages/device/components/devicePolicyPanel.vue:11
 msgid "保存后设备需要重新获取地址，实际生效前会保持等待状态。"
-msgstr "After saving, the device needs to get the address again, and it will remain in a waiting state until it actually takes effect."
+msgstr ""
+"After saving, the device needs to get the address again, and it will remain "
+"in a waiting state until it actually takes effect."
 
 #: src/pages/device/components/deviceAliasEditor.vue:13
 #: src/pages/device/components/deviceAliasEditor.vue:14
@@ -886,7 +948,7 @@ msgid "保存失败，请检查设备存储空间后重试"
 msgstr "Could not save. Check available device storage and try again."
 
 #: src/pages/device/components/deviceAliasEditor.vue:78
-#: src/pages/device/components/deviceProfileEditor.vue:92
+#: src/pages/device/components/deviceProfileEditor.vue:98
 msgid "保存失败，请稍后重试"
 msgstr "Save failed. Try again later."
 
@@ -993,7 +1055,9 @@ msgstr "Allow Internet"
 
 #: src/pages/device/lanSettingsPanel.vue:13
 msgid "先预览并接管现有设置，之后只使用当前设备管理界面维护。"
-msgstr "Preview and take over the existing settings before using only the current device management interface for maintenance."
+msgstr ""
+"Preview and take over the existing settings before using only the current "
+"device management interface for maintenance."
 
 #: src/pages/device/components/advancedNetworkTools.vue:29
 msgid "入口探测"
@@ -1301,7 +1365,9 @@ msgstr "Single Device Exceptions"
 
 #: src/pages/device/deviceGroupsPanel.vue:17
 msgid "单设备例外始终优先；多个分组冲突时，优先级较高的生效。"
-msgstr "Single-device exceptions always take precedence; when multiple groups conflict, the higher priority takes effect."
+msgstr ""
+"Single-device exceptions always take precedence; when multiple groups "
+"conflict, the higher priority takes effect."
 
 #: src/components/action-sandbox/index.vue:60
 msgid "即将重启设备"
@@ -1350,7 +1416,9 @@ msgstr ""
 
 #: src/pages/device/lanSettingsPanel.vue:16
 msgid "发现冲突或无法识别的设置，当前不会写入任何配置。请先在规则台账中处理。"
-msgstr "Conflicting or unrecognized settings were found and no configurations are currently being written.Please process it in the rules ledger first."
+msgstr ""
+"Conflicting or unrecognized settings were found and no configurations are "
+"currently being written.Please process it in the rules ledger first."
 
 #: src/pages/device/deviceList.vue:126
 msgid "发现名称"
@@ -1442,23 +1510,35 @@ msgstr "Restricted"
 
 #: src/pages/device/deviceGroupsPanel.vue:17
 msgid "只为没有更具体规则的设备提供默认值。"
-msgstr "Provide default values only for devices that do not have more specific rules."
+msgstr ""
+"Provide default values only for devices that do not have more specific rules."
 
 #: src/pages/device/components/deviceUsagePolicyEditor.vue:4
-msgid "只为这台设备设置休息时段和累计流量额度；单设备设置优先于分组和默认规则。"
-msgstr "Only set breaks and cumulative traffic limits for this device; single device settings take precedence over grouping and default rules."
+msgid ""
+"只为这台设备设置休息时段和累计流量额度；单设备设置优先于分组和默认规则。"
+msgstr ""
+"Only set breaks and cumulative traffic limits for this device; single device "
+"settings take precedence over grouping and default rules."
 
 #: src/pages/device/components/advancedNetworkTools.vue:31
-msgid "只会替换设备分组、设备例外与流量额度；地址、路线、限速和防火墙规则保持不变。"
-msgstr "Only replaces device groupings, device exceptions, and traffic limits; addresses, routes, speed limits, and firewall rules remain the same."
+msgid ""
+"只会替换设备分组、设备例外与流量额度；地址、路线、限速和防火墙规则保持不变。"
+msgstr ""
+"Only replaces device groupings, device exceptions, and traffic limits; "
+"addresses, routes, speed limits, and firewall rules remain the same."
 
 #: src/pages/device/components/advancedNetworkTools.vue:8
-msgid "只探测设备当前局域网地址和常用管理端口；不会扫描其他地址，也不会跟随跳转。"
-msgstr "Only the device's current LAN address and common management ports are probed; no other addresses are scanned and no jump is followed."
+msgid ""
+"只探测设备当前局域网地址和常用管理端口；不会扫描其他地址，也不会跟随跳转。"
+msgstr ""
+"Only the device's current LAN address and common management ports are "
+"probed; no other addresses are scanned and no jump is followed."
 
 #: src/pages/device/lanSettingsPanel.vue:83
 msgid "只有浮动网关功能会被锁定，设备和其他路线仍可管理。"
-msgstr "Only the floating gateway feature will be locked and devices and other routes can still be managed."
+msgstr ""
+"Only the floating gateway feature will be locked and devices and other "
+"routes can still be managed."
 
 #: src/components/action-disk-part/item.vue:33
 #: src/components/action-disk-part/item.vue:34
@@ -1472,7 +1552,9 @@ msgstr "Read-only bootstrap"
 
 #: src/pages/device/networkRulesHub.vue:13
 msgid "可从设备详情添加地址、路线和使用限制。"
-msgstr "You can add addresses, directions, and usage restrictions from your device details."
+msgstr ""
+"You can add addresses, directions, and usage restrictions from your device "
+"details."
 
 #: src/pages/device/deviceCenterList.vue:41
 msgid "可以切换到“全部”查看本次开机发现过的设备。"
@@ -1525,7 +1607,9 @@ msgstr ""
 
 #: src/pages/device/deviceGroupsPanel.vue:34
 msgid "台设备有单设备例外，最终值仍以例外为准。"
-msgstr "There are single-device exceptions for devices, and the final value is still subject to the exception."
+msgstr ""
+"There are single-device exceptions for devices, and the final value is still "
+"subject to the exception."
 
 #: src/pages/device/components/trafficInsightsPanel.vue:8
 msgid "合计"
@@ -1571,7 +1655,9 @@ msgstr "Enable"
 
 #: src/pages/network/dhcp/index.vue:80 src/pages/network/pppoe/index.vue:24
 msgid "启用LAN口DHCP服务（用于从旁路由模式恢复成默认状态）"
-msgstr "Enable LAN Port DHCP Service (Used to Restore from Bypass Routing Mode to Default State)"
+msgstr ""
+"Enable LAN Port DHCP Service (Used to Restore from Bypass Routing Mode to "
+"Default State)"
 
 #: src/components/firstOpen/form.vue:5
 #: src/pages/quickwifi/components/form.vue:5
@@ -1630,7 +1716,8 @@ msgstr "Reserved address"
 
 #: src/pages/device/components/devicePolicyPanel.vue:17
 msgid "固定设备地址，并选择它通过哪台路由器上网"
-msgstr "Fixed device address and select which router it uses to access the internet"
+msgstr ""
+"Fixed device address and select which router it uses to access the internet"
 
 #: src/pages/device/components/deviceProfileEditor.vue:7
 #: src/pages/device/components/deviceProfileEditor.vue:8
@@ -1748,7 +1835,9 @@ msgstr "Backup/Flash"
 
 #: src/pages/device/components/deviceAliasEditor.vue:10
 msgid "备注名最多 64 个字符，不能包含控制字符。"
-msgstr "The note name is a maximum of 64 characters and cannot contain control characters."
+msgstr ""
+"The note name is a maximum of 64 characters and cannot contain control "
+"characters."
 
 #: src/components/action-dns/index.vue:31
 msgid "备用DNS地址"
@@ -1817,24 +1906,42 @@ msgid "失败时恢复原设置"
 msgstr "Restore original settings on failure"
 
 #: src/pages/raid/index/index.vue:84
-msgid "如果您在RAID磁盘阵列中创建了文件系统，先卸载文件系统，后删除文件系统删除操作可能会导致数据丢失，请谨慎操作。"
-msgstr "If you have created a file system in the RAID disk array, uninstall the file system first and then delete the file system. Deleting the file system may result in data loss, so proceed with caution."
+msgid ""
+"如果您在RAID磁盘阵列中创建了文件系统，先卸载文件系统，后删除文件系统删除操作"
+"可能会导致数据丢失，请谨慎操作。"
+msgstr ""
+"If you have created a file system in the RAID disk array, uninstall the file "
+"system first and then delete the file system. Deleting the file system may "
+"result in data loss, so proceed with caution."
 
 #: src/components/smart/edit-disk.vue:50 src/pages/smart/index/index.vue:76
 msgid "如果温度大于或等于 N 摄氏度则报告."
 msgstr "Report if Temperature is Greater Than or Equal to N Degrees Celsius."
 
 #: src/pages/raid/index/index.vue:13
-msgid "如果由于系统重置或重启导致的RAID设备丢失可以尝试通过下方'扫描恢复RAID'按钮恢复"
-msgstr "If the RAID device is lost due to system reset or restart, you can try to recover it by clicking the 'Scan and Recover RAID' button below."
+msgid ""
+"如果由于系统重置或重启导致的RAID设备丢失可以尝试通过下方'扫描恢复RAID'按钮恢"
+"复"
+msgstr ""
+"If the RAID device is lost due to system reset or restart, you can try to "
+"recover it by clicking the 'Scan and Recover RAID' button below."
 
 #: src/components/action-sandboxenvironment/index.vue:18
-msgid "如需<b>临时</b>退出沙箱环境，请将设备关机后拔出相关磁盘，启动前插入相关磁盘可再次进入沙箱。<br/> 注意临时退出沙箱环境以后升级固件会导致之前的沙箱数据无效"
-msgstr "If you need to <b>temporarily</b> exit the sandbox environment, please shut down the device and unplug the relevant disk. Insert the relevant disk before starting to enter the sandbox again. <br/> Note that upgrading the firmware after temporarily exiting the sandbox environment will cause the previous sandbox data to become invalid"
+msgid ""
+"如需<b>临时</b>退出沙箱环境，请将设备关机后拔出相关磁盘，启动前插入相关磁盘可"
+"再次进入沙箱。<br/> 注意临时退出沙箱环境以后升级固件会导致之前的沙箱数据无效"
+msgstr ""
+"If you need to <b>temporarily</b> exit the sandbox environment, please shut "
+"down the device and unplug the relevant disk. Insert the relevant disk "
+"before starting to enter the sandbox again. <br/> Note that upgrading the "
+"firmware after temporarily exiting the sandbox environment will cause the "
+"previous sandbox data to become invalid"
 
 #: src/components/action-nas/index.vue:15
 msgid "如需对 Samba 或 WebDAV 进行更细致的权限控制，请使用“%{unishare}”"
-msgstr "For More Detailed Permission Control of Samba or WebDAV, Please Use '%{unishare}'"
+msgstr ""
+"For More Detailed Permission Control of Samba or WebDAV, Please Use "
+"'%{unishare}'"
 
 #: src/pages/network/dhcp/index.vue:32 src/pages/network/dhcp/index.vue:34
 #: src/pages/network/gateway/index.vue:45
@@ -1847,7 +1954,7 @@ msgid "子网掩码: "
 msgstr "Subnet Mask: "
 
 #: src/pages/device/components/deviceClassificationEditor.vue:61
-#: src/pages/device/components/deviceProfileEditor.vue:64
+#: src/pages/device/components/deviceProfileEditor.vue:69
 #: src/pages/device/deviceCenterList.vue:304
 msgid "存储与服务器"
 msgstr "Storage & servers"
@@ -1874,11 +1981,14 @@ msgstr "Available after installing compatible Bandix"
 
 #: src/pages/device/lanSettingsPanel.vue:47
 msgid "安装后会回到当前区域，尚未保存的输入会保留。"
-msgstr "After installation, it will return to the current area, and inputs that have not been saved will be retained."
+msgstr ""
+"After installation, it will return to the current area, and inputs that have "
+"not been saved will be retained."
 
 #: src/pages/device/components/floatingGatewayWizard.vue:8
 msgid "安装后可让两台路由器共同提供一个稳定的虚拟网关。"
-msgstr "Once installed, the two routers together provide a stable virtual gateway."
+msgstr ""
+"Once installed, the two routers together provide a stable virtual gateway."
 
 #: src/components/action-ddnsto/setup-ddnsto-install.vue:46
 msgid "安装失败"
@@ -1894,7 +2004,8 @@ msgstr "Installation failed. Try again later."
 
 #: src/pages/device/configure.vue:287 src/utils/app.ts:76
 msgid "安装失败或超时，请检查软件源或稍候重试"
-msgstr "Installation Failed or Timed Out, Please Check Software Source or Retry Later"
+msgstr ""
+"Installation Failed or Timed Out, Please Check Software Source or Retry Later"
 
 #: src/pages/device/components/dialog.vue:23
 msgid "安装成功"
@@ -1906,7 +2017,9 @@ msgstr "Install Floating Gateway"
 
 #: src/pages/device/speedLimitList.vue:11
 msgid "安装限速插件后，才能查看和配置设备限速。"
-msgstr "The device speed limit cannot be viewed and configured until the speed limit plugin is installed."
+msgstr ""
+"The device speed limit cannot be viewed and configured until the speed limit "
+"plugin is installed."
 
 #: src/pages/device/components/devicePolicyPanel.vue:46
 #: src/pages/device/components/devicePolicyPanel.vue:47
@@ -2010,8 +2123,12 @@ msgid "对设备开启限速"
 msgstr "Turn on the speed limit for the device"
 
 #: src/pages/device/components/advancedNetworkTools.vue:11
-msgid "导出和恢复设备分组、单设备例外与流量额度；地址、路线、限速和防火墙规则不会被替换。"
-msgstr "Export and restore device groupings, single-device exceptions, and traffic limits; addresses, routes, speed limits, and firewall rules are not replaced."
+msgid ""
+"导出和恢复设备分组、单设备例外与流量额度；地址、路线、限速和防火墙规则不会被"
+"替换。"
+msgstr ""
+"Export and restore device groupings, single-device exceptions, and traffic "
+"limits; addresses, routes, speed limits, and firewall rules are not replaced."
 
 #: src/pages/device/components/advancedNetworkTools.vue:36
 msgid "导出失败"
@@ -2031,7 +2148,9 @@ msgstr "The networking permissions for this device will be modified."
 
 #: src/pages/device/components/devicePolicyPanel.vue:189
 msgid "将同时检查地址、上网路线、DNS 和 DHCP 分配权。"
-msgstr "Addresses, internet routes, DNS and DHCP allocations will be checked simultaneously."
+msgstr ""
+"Addresses, internet routes, DNS and DHCP allocations will be checked "
+"simultaneously."
 
 #: src/pages/device/lanSettingsPanel.vue:136
 msgid "将安全整理"
@@ -2039,12 +2158,16 @@ msgstr "Organize security"
 
 #: src/pages/raid/index/index.vue:251
 msgid "将扫描磁盘里 RAID 的磁盘阵列配置并恢复，确定要恢复 RAID 磁盘阵列吗？"
-msgstr "Will Scan Disk RAID Array Configuration and Restore, Are You Sure to Restore RAID Array?"
+msgstr ""
+"Will Scan Disk RAID Array Configuration and Restore, Are You Sure to Restore "
+"RAID Array?"
 
 #: src/pages/device/lanSettingsPanel.vue:73
 #: src/pages/device/lanSettingsPanel.vue:74
 msgid "将更新路线名称和网关，已有引用会继续保留。"
-msgstr "Route names and gateways will be updated and existing references will continue to be retained."
+msgstr ""
+"Route names and gateways will be updated and existing references will "
+"continue to be retained."
 
 #: src/pages/device/lanSettingsPanel.vue:73
 #: src/pages/device/lanSettingsPanel.vue:74
@@ -2080,8 +2203,13 @@ msgid "尚未验证"
 msgstr "Not verified"
 
 #: src/pages/smart/index.vue:15
-msgid "就可以通过主机的监控硬件或软件自动向用户作出警告并进行轻微的自动修复，以提前保障硬盘数据的安全。"
-msgstr "the host's monitoring hardware or software can automatically warn the user and perform minor automatic repairs to ensure the safety of the hard disk data in advance."
+msgid ""
+"就可以通过主机的监控硬件或软件自动向用户作出警告并进行轻微的自动修复，以提前"
+"保障硬盘数据的安全。"
+msgstr ""
+"the host's monitoring hardware or software can automatically warn the user "
+"and perform minor automatic repairs to ensure the safety of the hard disk "
+"data in advance."
 
 #: src/pages/device/lanSettingsPanel.vue:135
 msgid "局域网主机名"
@@ -2189,7 +2317,7 @@ msgstr "Copied"
 msgid "已开启"
 msgstr "On"
 
-#: src/pages/device/components/deviceProfileEditor.vue:96
+#: src/pages/device/components/deviceProfileEditor.vue:102
 msgid "已恢复系统自动推荐"
 msgstr "System automatic recommendation restored"
 
@@ -2219,8 +2347,8 @@ msgid "已指定路线"
 msgstr "Routes Assigned"
 
 #: src/pages/device/deviceCenterList.vue:252
-msgid "已控制"
-msgstr "Managed"
+msgid "已设置"
+msgstr "Configured"
 
 #: src/components/interfacer/item.vue:38
 #: src/pages/index/network/NetworkInterface.vue:40
@@ -2245,15 +2373,21 @@ msgstr "Internet paused"
 
 #: src/pages/device/speedLimitList.vue:17
 msgid "已有规则会保留，但在全局限速开启前不会生效。"
-msgstr "Existing rules will be retained, but will not take effect until the global speed limit is turned on."
+msgstr ""
+"Existing rules will be retained, but will not take effect until the global "
+"speed limit is turned on."
 
 #: src/pages/device/components/floatingGatewayWizard.vue:47
 msgid "已有设备使用该虚拟网关，请先迁移这些设备。"
-msgstr "This virtual gateway is already in use by an existing device, please migrate these devices first."
+msgstr ""
+"This virtual gateway is already in use by an existing device, please migrate "
+"these devices first."
 
 #: src/pages/device/components/advancedNetworkTools.vue:28
 msgid "已检测到 Bandix，但当前固件尚未启用经验证的连接洞察适配器"
-msgstr "Bandix has been detected, but the current firmware has not enabled the Proven Connection Insight adapter"
+msgstr ""
+"Bandix has been detected, but the current firmware has not enabled the "
+"Proven Connection Insight adapter"
 
 #: src/components/action-disk-format/index.vue:127
 msgid "已经成功初始化分区"
@@ -2265,7 +2399,8 @@ msgstr "Disk Formatted Successfully"
 
 #: src/pages/device/components/devicePolicyPanel.vue:109
 msgid "已观察到新租约，终端网关与 DNS 无法验证"
-msgstr "A new lease was observed; the device gateway and DNS cannot be verified."
+msgstr ""
+"A new lease was observed; the device gateway and DNS cannot be verified."
 
 #: src/pages/device/components/trafficInsightsPanel.vue:10
 #: src/pages/device/components/trafficInsightsPanel.vue:11
@@ -2304,7 +2439,7 @@ msgid "常规设置"
 msgstr "General Settings"
 
 #: src/pages/device/components/deviceClassificationEditor.vue:59
-#: src/pages/device/components/deviceProfileEditor.vue:64
+#: src/pages/device/components/deviceProfileEditor.vue:69
 #: src/pages/device/deviceCenterList.vue:298
 msgid "平板"
 msgstr "Tablet"
@@ -2319,11 +2454,15 @@ msgstr "Serial Number"
 
 #: src/pages/device/components/deviceUsagePolicyEditor.vue:42
 msgid "应用后会立即重新计算这台设备的最终规则；失败时保留原设置。"
-msgstr "The final rule for this device will be recalculated as soon as it is applied; if it fails, the original settings will be preserved."
+msgstr ""
+"The final rule for this device will be recalculated as soon as it is "
+"applied; if it fails, the original settings will be preserved."
 
 #: src/pages/device/components/floatingGatewayWizard.vue:48
 msgid "应用后建议在维护窗口执行受控切换演练。"
-msgstr "After application, it is recommended to perform a controlled switching exercise in the maintenance window."
+msgstr ""
+"After application, it is recommended to perform a controlled switching "
+"exercise in the maintenance window."
 
 #: src/pages/index/index.vue:198
 msgid "应用商店"
@@ -2354,7 +2493,8 @@ msgstr "App Configuration"
 
 #: src/pages/network/gateway/index.vue:76
 msgid "开启 NAT（可修复某些无线热点不能访问外网问题）"
-msgstr "Enable NAT (Can Fix Some Wireless Hotspots Not Accessing the Internet Issue)"
+msgstr ""
+"Enable NAT (Can Fix Some Wireless Hotspots Not Accessing the Internet Issue)"
 
 #: src/components/action-sandbox/index.vue:66 src/pages/index/nav/Item.vue:54
 #: src/pages/index/nav/Item.vue:59
@@ -2399,7 +2539,9 @@ msgstr "Only built-in rollback rules are currently used"
 
 #: src/pages/device/lanSettingsPanel.vue:130
 msgid "当前仅提供查看与引导，不会自动修改其他设备。"
-msgstr "Currently only viewing and guiding are available, no other devices are automatically modified."
+msgstr ""
+"Currently only viewing and guiding are available, no other devices are "
+"automatically modified."
 
 #: src/pages/device/components/devicePolicyPanel.vue:57
 #: src/pages/device/components/devicePolicyPanel.vue:58
@@ -2410,7 +2552,8 @@ msgstr "Internet access is currently allowed"
 
 #: src/pages/device/components/advancedNetworkTools.vue:28
 msgid "当前固件尚未验证，未展示假控件"
-msgstr "The current firmware has not been verified, no fake controls are presented"
+msgstr ""
+"The current firmware has not been verified, no fake controls are presented"
 
 #: src/pages/device/deviceCenterList.vue:162
 msgid "当前地址"
@@ -2429,12 +2572,16 @@ msgstr "Currently disconnected from the internet"
 
 #: src/pages/device/lanSettingsPanel.vue:221
 msgid "当前无法安装，请检查存储空间和软件源。"
-msgstr "Unable to install at this time, please check storage space and software source."
+msgstr ""
+"Unable to install at this time, please check storage space and software "
+"source."
 
 #: src/pages/device/lanSettingsPanel.vue:52
 #: src/pages/device/lanSettingsPanel.vue:53
 msgid "当前无法读取限速服务状态，其他设置仍可使用。"
-msgstr "The speed limit service status cannot be read at this time, other settings are still available."
+msgstr ""
+"The speed limit service status cannot be read at this time, other settings "
+"are still available."
 
 #: src/pages/device/components/devicePolicyPanel.vue:99
 msgid "当前暂不可用"
@@ -2480,8 +2627,14 @@ msgid "当前速率"
 msgstr "Current rate"
 
 #: src/components/action-docker/index.vue:5
-msgid "当系统根目录空间不足时，可将Docker根目录迁移到外置硬盘，以保证系统的正常运行（目标分区不支持NTFS，FAT等文件系统）"
-msgstr "When the system root directory space is insufficient, you can migrate the Docker root directory to an external hard disk to ensure the normal operation of the system (the target partition does not support NTFS, FAT and other file systems)"
+msgid ""
+"当系统根目录空间不足时，可将Docker根目录迁移到外置硬盘，以保证系统的正常运行"
+"（目标分区不支持NTFS，FAT等文件系统）"
+msgstr ""
+"When the system root directory space is insufficient, you can migrate the "
+"Docker root directory to an external hard disk to ensure the normal "
+"operation of the system (the target partition does not support NTFS, FAT and "
+"other file systems)"
 
 #: src/pages/device/lanSettingsPanel.vue:72
 msgid "影响范围"
@@ -2500,8 +2653,13 @@ msgid "待机"
 msgstr "Standby"
 
 #: src/pages/smart/index/index.vue:43
-msgid "待机-处于待机和睡眠模式下不检查设备。此模式下磁盘一般不旋转，如果你不想每次检查都转动磁盘，那么这个模式比较适合。"
-msgstr "Standby - The device is not checked in standby and sleep mode. In this mode, the disk generally does not rotate. If you do not want to spin the disk every time you check, then this mode is more suitable."
+msgid ""
+"待机-处于待机和睡眠模式下不检查设备。此模式下磁盘一般不旋转，如果你不想每次检"
+"查都转动磁盘，那么这个模式比较适合。"
+msgstr ""
+"Standby - The device is not checked in standby and sleep mode. In this mode, "
+"the disk generally does not rotate. If you do not want to spin the disk "
+"every time you check, then this mode is more suitable."
 
 #: src/pages/index/index.vue:310
 msgid "快捷入口"
@@ -2520,8 +2678,12 @@ msgid "总是"
 msgstr "Always"
 
 #: src/pages/smart/index/index.vue:41
-msgid "总是-无论是什么功耗模式下都测试(检查)磁盘，当检查时，这可能会使停转的磁盘开始转动。"
-msgstr "Always - Tests (checks) the disk regardless of power mode. When checking, this may spin up a stalled disk."
+msgid ""
+"总是-无论是什么功耗模式下都测试(检查)磁盘，当检查时，这可能会使停转的磁盘开始"
+"转动。"
+msgstr ""
+"Always - Tests (checks) the disk regardless of power mode. When checking, "
+"this may spin up a stalled disk."
 
 #: src/components/action-raid/setup-recover.vue:4
 #: src/pages/raid/index/index.vue:77 src/pages/raid/index/index.vue:79
@@ -2551,11 +2713,20 @@ msgstr "Recovery path"
 
 #: src/pages/network/gateway/index.vue:6
 msgid "您可以用上一级路由（主路由）拨号，然后用本路由来实现一些高级功能。"
-msgstr "You can dial using the upper level router (main router), and then use this router to implement some advanced functions."
+msgstr ""
+"You can dial using the upper level router (main router), and then use this "
+"router to implement some advanced functions."
 
 #: src/pages/index/components/DiskItem.vue:52
-msgid "您的系统空间已不足，检测到您的Docker根目录位于系统根目录上，可能会影响系统的正常运行，建议使用Docker迁移向导将Docker根目录迁移到外置硬盘上。"
-msgstr "Your system space is insufficient. It is detected that your Docker root directory is located on the system root directory, which may affect the normal operation of the system. It is recommended to use the Docker Migration Wizard to migrate the Docker root directory to an external hard disk."
+msgid ""
+"您的系统空间已不足，检测到您的Docker根目录位于系统根目录上，可能会影响系统的"
+"正常运行，建议使用Docker迁移向导将Docker根目录迁移到外置硬盘上。"
+msgstr ""
+"Your system space is insufficient. It is detected that your Docker root "
+"directory is located on the system root directory, which may affect the "
+"normal operation of the system. It is recommended to use the Docker "
+"Migration Wizard to migrate the Docker root directory to an external hard "
+"disk."
 
 #: src/components/action-disk/index.vue:20
 msgid "想要更精确的配置？请前往"
@@ -2618,21 +2789,27 @@ msgid "手动配置..."
 msgstr "Manual..."
 
 #: src/pages/network/gateway/index.vue:10
-msgid "手动配置则需自行获取主路由器的IP地址（例如 192.168.2.1 ）和子网掩码，记录以备后续填写，点击“手动配置”按钮，切换到参数配置页，按实际情况自行填写。"
-msgstr "For manual configuration, you need to obtain the IP address of the main router (for example, 192.168.2.1) and subnet mask, record them for later filling, click the 'Manual' button, switch to the parameter configuration page, and fill in the information according to the actual situation."
+msgid ""
+"手动配置则需自行获取主路由器的IP地址（例如 192.168.2.1 ）和子网掩码，记录以备"
+"后续填写，点击“手动配置”按钮，切换到参数配置页，按实际情况自行填写。"
+msgstr ""
+"For manual configuration, you need to obtain the IP address of the main "
+"router (for example, 192.168.2.1) and subnet mask, record them for later "
+"filling, click the 'Manual' button, switch to the parameter configuration "
+"page, and fill in the information according to the actual situation."
 
 #: src/pages/network/dhcp/index.vue:52
 msgid "手工配置"
 msgstr "Manual configuration"
 
 #: src/pages/device/components/deviceClassificationEditor.vue:59
-#: src/pages/device/components/deviceProfileEditor.vue:64
+#: src/pages/device/components/deviceProfileEditor.vue:69
 #: src/pages/device/deviceCenterList.vue:296
 msgid "手机"
 msgstr "Phone"
 
 #: src/pages/device/components/deviceClassificationEditor.vue:61
-#: src/pages/device/components/deviceProfileEditor.vue:64
+#: src/pages/device/components/deviceProfileEditor.vue:69
 #: src/pages/device/deviceCenterList.vue:305
 msgid "打印机"
 msgstr "Printer"
@@ -2678,12 +2855,18 @@ msgid "批量规则未应用"
 msgstr "Bulk rule not applied"
 
 #: src/pages/device/lanSettingsPanel.vue:59
-msgid "把复杂网络工作交给旁路由或指定网关，设备可在详情中选择路线。DNS 跟随路线。"
-msgstr "Leave complex network work to the bypass or designated gateway, and the device can choose the route in the details.DNS follows the route."
+msgid ""
+"把复杂网络工作交给旁路由或指定网关，设备可在详情中选择路线。DNS 跟随路线。"
+msgstr ""
+"Leave complex network work to the bypass or designated gateway, and the "
+"device can choose the route in the details.DNS follows the route."
 
 #: src/pages/device/deviceGroupsPanel.vue:3
-msgid "把需要相同安排的设备放在一起，一次设置联网、速度、路线、时段或流量额度。"
-msgstr "Put together devices that need the same setup to set up networking, speeds, routes, time periods, or traffic limits all at once."
+msgid ""
+"把需要相同安排的设备放在一起，一次设置联网、速度、路线、时段或流量额度。"
+msgstr ""
+"Put together devices that need the same setup to set up networking, speeds, "
+"routes, time periods, or traffic limits all at once."
 
 #: src/pages/index/network/NetworkConnection.vue:229
 msgid "拨号上网"
@@ -2809,7 +2992,7 @@ msgid "搜索设备、MAC、IP 或规则"
 msgstr "Search for a device, Mac, IP or rule"
 
 #: src/pages/device/components/deviceClassificationEditor.vue:60
-#: src/pages/device/components/deviceProfileEditor.vue:64
+#: src/pages/device/components/deviceProfileEditor.vue:69
 #: src/pages/device/deviceCenterList.vue:302
 msgid "摄像头"
 msgstr "Camera"
@@ -2824,11 +3007,15 @@ msgstr "The operation failed. Please try again later."
 
 #: src/pages/device/components/deviceAliasEditor.vue:8
 msgid "支持中文，仅用于本页面显示，不会修改 DHCP 主机名。"
-msgstr "Chinese is supported, only for display on this page, and the DHCP hostname will not be modified."
+msgstr ""
+"Chinese is supported, only for display on this page, and the DHCP hostname "
+"will not be modified."
 
 #: src/pages/device/components/deviceProfileEditor.vue:12
 msgid "支持中文，只用于设备管理显示，不会写入网络主机名。"
-msgstr "Supports Chinese, only used for device management display, does not write network host name."
+msgstr ""
+"Supports Chinese, only used for device management display, does not write "
+"network host name."
 
 #: src/pages/device/components/trafficInsightsPanel.vue:3
 msgid "收起额度"
@@ -2968,8 +3155,13 @@ msgid "是"
 msgstr "Yes"
 
 #: src/pages/smart/index.vue:9
-msgid "是一种自动的硬盘状态检测与预警系统和规范。通过在硬盘硬件内的检测指令对硬盘的硬件如磁头、盘片、马达、"
-msgstr "Through the detection instructions in the hard disk hardware, the operation of the hard disk hardware such as the head, disk, motor, and circuit is monitored, recorded,"
+msgid ""
+"是一种自动的硬盘状态检测与预警系统和规范。通过在硬盘硬件内的检测指令对硬盘的"
+"硬件如磁头、盘片、马达、"
+msgstr ""
+"Through the detection instructions in the hard disk hardware, the operation "
+"of the hard disk hardware such as the head, disk, motor, and circuit is "
+"monitored, recorded,"
 
 #: src/components/action-disk-format/index.vue:242
 msgid "是否确定初始化?"
@@ -2980,8 +3172,13 @@ msgid "是否确定格式化 %{partname}?"
 msgstr "Are you sure to format %{partname}?"
 
 #: src/components/action-raid/setup-create.vue:211
-msgid "是否立即创建 %{name}？选择的硬盘所有分区将会被清除，此操作可能会导致硬盘数据丢失，请谨慎操作。"
-msgstr "Do you want to create %{name} now? All partitions of the selected hard disk will be cleared. This operation may cause hard disk data loss. Please operate with caution."
+msgid ""
+"是否立即创建 %{name}？选择的硬盘所有分区将会被清除，此操作可能会导致硬盘数据"
+"丢失，请谨慎操作。"
+msgstr ""
+"Do you want to create %{name} now? All partitions of the selected hard disk "
+"will be cleared. This operation may cause hard disk data loss. Please "
+"operate with caution."
 
 #: src/components/firstOpen/form.vue:90
 #: src/pages/quickwifi/components/form.vue:90
@@ -2994,7 +3191,7 @@ msgid "智能内网穿透服务"
 msgstr ""
 
 #: src/pages/device/components/deviceClassificationEditor.vue:60
-#: src/pages/device/components/deviceProfileEditor.vue:64
+#: src/pages/device/components/deviceProfileEditor.vue:69
 #: src/pages/device/deviceCenterList.vue:301
 msgid "智能家居"
 msgstr "Smart home"
@@ -3042,7 +3239,9 @@ msgstr "Cannot save safely right now. Try again later."
 
 #: src/pages/device/lanSettingsPanel.vue:19
 msgid "暂时无法检查现有设置，不影响其他局域网设置。"
-msgstr "Existing settings cannot be checked at this time and will not affect other LAN settings."
+msgstr ""
+"Existing settings cannot be checked at this time and will not affect other "
+"LAN settings."
 
 #: src/pages/device/components/devicePolicyPanel.vue:111
 msgid "暂时无法读取续租状态"
@@ -3050,7 +3249,9 @@ msgstr "Could not read the lease renewal state."
 
 #: src/components/action-docker/index.vue:68
 msgid "更换目录（不覆盖目标路径，仅将Docker目录修改为目标路径）"
-msgstr "Change directory (does not overwrite target path, only changes Docker directory to target path)"
+msgstr ""
+"Change directory (does not overwrite target path, only changes Docker "
+"directory to target path)"
 
 #: src/components/action-netip/index.vue:67
 msgid "更换配置"
@@ -3102,7 +3303,8 @@ msgstr "Service - Dynamic DNS"
 
 #: src/pages/device/components/devicePolicyPanel.vue:110
 msgid "服务器配置可读，终端效果无法验证"
-msgstr "Router configuration is readable; the device result cannot be verified."
+msgstr ""
+"Router configuration is readable; the device result cannot be verified."
 
 #: src/pages/index/Storage/linkease.vue:15
 msgid "服务地址:"
@@ -3211,7 +3413,7 @@ msgid "未知"
 msgstr "Unknown"
 
 #: src/pages/device/components/deviceClassificationEditor.vue:62
-#: src/pages/device/components/deviceProfileEditor.vue:64
+#: src/pages/device/components/deviceProfileEditor.vue:69
 #: src/pages/device/deviceCenterList.vue:307
 msgid "未知设备"
 msgstr "Unknown device"
@@ -3263,13 +3465,17 @@ msgstr "This month"
 #: src/pages/device/lanSettingsPanel.vue:59
 #: src/pages/device/lanSettingsPanel.vue:60
 msgid "本机不负责地址分配，上网路线当前为只读。"
-msgstr "The machine is not responsible for address assignment, and the Internet access route is currently read-only."
+msgstr ""
+"The machine is not responsible for address assignment, and the Internet "
+"access route is currently read-only."
 
 #: src/pages/device/components/devicePolicyPanel.vue:18
 #: src/pages/device/components/devicePolicyPanel.vue:19
 #: src/pages/device/components/devicePolicyPanel.vue:20
 msgid "本机当前不负责地址分配，请到实际分配地址的路由器上修改。"
-msgstr "This machine is not currently responsible for address assignment, please modify it on the router where the address is actually assigned."
+msgstr ""
+"This machine is not currently responsible for address assignment, please "
+"modify it on the router where the address is actually assigned."
 
 #: src/pages/device/lanSettingsPanel.vue:129
 msgid "本机负责局域网地址分配"
@@ -3384,7 +3590,9 @@ msgstr "No available RAID array members detected"
 
 #: src/components/action-sandbox/index.vue:21
 msgid "检测不到挂载的磁盘信息，请先插上磁盘，建议使用U盘或者移动硬盘，方便装卸"
-msgstr "No mounted disk information detected, please insert a disk, recommended to use a USB drive or external hard drive for easy mounting/unmounting"
+msgstr ""
+"No mounted disk information detected, please insert a disk, recommended to "
+"use a USB drive or external hard drive for easy mounting/unmounting"
 
 #: src/components/action-domain/setup-ddns.vue:139
 #: src/components/action-raid/setup-create.vue:30
@@ -3399,8 +3607,13 @@ msgid "检测到你尚未安装 %{name} 插件,是否安装？"
 msgstr "Detected that you have not installed %{name} plugin, install now?"
 
 #: src/components/action-domain/setup-ddns.vue:200
-msgid "检测到你有未保存的配置，可前往页面右上角点击查看，保存并应用或者恢复配置后继续"
-msgstr "It is detected that you have unsaved configuration. You can go to the upper right corner of the page and click View, Save and Apply, or Restore the configuration to continue"
+msgid ""
+"检测到你有未保存的配置，可前往页面右上角点击查看，保存并应用或者恢复配置后继"
+"续"
+msgstr ""
+"It is detected that you have unsaved configuration. You can go to the upper "
+"right corner of the page and click View, Save and Apply, or Restore the "
+"configuration to continue"
 
 #: src/pages/device/lanSettingsPanel.vue:129
 msgid "检测到其他设备负责地址分配"
@@ -3408,11 +3621,19 @@ msgstr "Additional Devices Detected for Address Assignment"
 
 #: src/components/action-domain/setup-ddns.vue:171
 msgid "检测到您的wan口没有公网IP或者IPv6地址，可以使用DDNSTO配置远程域名访问"
-msgstr "Detected that your WAN port has no public IP or IPv6 address, you can use DDNSTO to configure remote domain access"
+msgstr ""
+"Detected that your WAN port has no public IP or IPv6 address, you can use "
+"DDNSTO to configure remote domain access"
 
 #: src/components/action-docker/index.vue:35
-msgid "检测到您还没有挂载外置硬盘或分区小于8GB，需要您接上硬盘并格式化或手动挂载硬盘后，再执行Docker迁移向导，将Docker迁移到目标硬盘。"
-msgstr "It is detected that you have not mounted the external hard disk or the partition is less than 8GB. You need to connect the hard disk and format it or manually mount the hard disk, and then execute the Docker Migration Wizard to migrate Docker to the target hard disk."
+msgid ""
+"检测到您还没有挂载外置硬盘或分区小于8GB，需要您接上硬盘并格式化或手动挂载硬盘"
+"后，再执行Docker迁移向导，将Docker迁移到目标硬盘。"
+msgstr ""
+"It is detected that you have not mounted the external hard disk or the "
+"partition is less than 8GB. You need to connect the hard disk and format it "
+"or manually mount the hard disk, and then execute the Docker Migration "
+"Wizard to migrate Docker to the target hard disk."
 
 #: src/pages/index/components/SystemUpdateBanner.vue:9
 msgid "检测到新版本"
@@ -3586,7 +3807,8 @@ msgstr "Adding..."
 
 #: src/pages/device/components/trafficInsightsPanel.vue:10
 msgid "正在积累历史数据，首次使用后会按小时形成趋势。"
-msgstr "Historical data is accumulating and trending by the hour after first use."
+msgstr ""
+"Historical data is accumulating and trending by the hour after first use."
 
 #: src/pages/index/info/DiskInfo.vue:24
 msgid "正在获取磁盘信息..."
@@ -3665,20 +3887,32 @@ msgid "此操作会将会删除该分区全部数据"
 msgstr "This operation will delete all data on this partition"
 
 #: src/components/action-sandbox/index.vue:79
-msgid "此操作会将会删除该分区全部数据，并格式化成EXT4，随后自动重启进入沙箱模式，是否继续？"
-msgstr "This operation will delete all data on the partition and format it to EXT4, then automatically reboot into sandbox mode. Do you want to continue?"
+msgid ""
+"此操作会将会删除该分区全部数据，并格式化成EXT4，随后自动重启进入沙箱模式，是"
+"否继续？"
+msgstr ""
+"This operation will delete all data on the partition and format it to EXT4, "
+"then automatically reboot into sandbox mode. Do you want to continue?"
 
 #: src/components/action-disk-part/item.vue:48
 msgid "此文件系统不支持Docker等应用数据，建议格式化成EXT4文件系统"
-msgstr "This file system does not support Docker and other application data, it is recommended to format as EXT4 file system"
+msgstr ""
+"This file system does not support Docker and other application data, it is "
+"recommended to format as EXT4 file system"
 
 #: src/components/firstOpen/index.vue:69
-msgid "此设备还未设置密码，请先设置密码。如遗忘密码，可以通过重置设备恢复初始密码。"
+msgid ""
+"此设备还未设置密码，请先设置密码。如遗忘密码，可以通过重置设备恢复初始密码。"
 msgstr ""
 
 #: src/pages/device/components/advancedNetworkTools.vue:10
-msgid "此设置对本路由器全部设备生效。可选 Webhook 默认关闭，只发送事件类型、时间和设备标识，不发送 DNS 内容。"
-msgstr "This setting applies to all devices on this router.The optional webhook is turned off by default, only the event type, time, and device identity are sent, and DNS content is not sent."
+msgid ""
+"此设置对本路由器全部设备生效。可选 Webhook 默认关闭，只发送事件类型、时间和设"
+"备标识，不发送 DNS 内容。"
+msgstr ""
+"This setting applies to all devices on this router.The optional webhook is "
+"turned off by default, only the event type, time, and device identity are "
+"sent, and DNS content is not sent."
 
 #: src/pages/device/components/trafficInsightsPanel.vue:12
 msgid "每 5 分钟最多写入一次"
@@ -3744,8 +3978,13 @@ msgid "没有匹配的设备"
 msgstr "No matching devices"
 
 #: src/pages/device/components/dialog.vue:39
-msgid "注意：添加ID时，请勿将“odhcpd”或网络接口（例如“lan”,“wan”,“wan6”等）作为ID，此举将产生冲突。建议在ID前面加上前缀“t_”以杜绝此类冲突。"
-msgstr "Note: When adding an ID, do not use \"odhcpd\" or network interfaces (such as \"lan\", \"wan\", \"wan6\", etc.) as IDs, as this will cause conflicts.It is recommended to prefix the ID with “t_” to prevent such conflicts."
+msgid ""
+"注意：添加ID时，请勿将“odhcpd”或网络接口（例如“lan”,“wan”,“wan6”等）作为ID，"
+"此举将产生冲突。建议在ID前面加上前缀“t_”以杜绝此类冲突。"
+msgstr ""
+"Note: When adding an ID, do not use \"odhcpd\" or network interfaces (such "
+"as \"lan\", \"wan\", \"wan6\", etc.) as IDs, as this will cause conflicts.It "
+"is recommended to prefix the ID with “t_” to prevent such conflicts."
 
 #: src/pages/device/deviceList.vue:63 src/pages/device/speedLimitList.vue:90
 msgid "注解"
@@ -3765,7 +4004,9 @@ msgstr "Traffic"
 #: src/pages/device/deviceCenterList.vue:31
 #: src/pages/device/deviceCenterList.vue:32
 msgid "流量采样暂不可用，设备清单仍可正常使用"
-msgstr "Traffic sampling is temporarily unavailable, the device list can still be used normally"
+msgstr ""
+"Traffic sampling is temporarily unavailable, the device list can still be "
+"used normally"
 
 #: src/pages/device/components/advancedNetworkTools.vue:30
 #: src/pages/device/components/deviceUsagePolicyEditor.vue:31
@@ -3783,7 +4024,9 @@ msgstr "The data quota must be at least 0.1 GB."
 
 #: src/pages/smart/index/index.vue:40
 msgid "测试时磁盘会转动，请选择合适的模式来控制磁盘转动。"
-msgstr "Disk will spin during testing, please choose the appropriate mode to control disk spinning."
+msgstr ""
+"Disk will spin during testing, please choose the appropriate mode to control "
+"disk spinning."
 
 #: src/pages/networkSpeedTest/components/item.vue:53
 msgid "测速日志"
@@ -3885,25 +4128,35 @@ msgstr "Kind reminder"
 
 #: src/pages/device/configure.vue:335
 msgid "温馨提示：关闭DHCP可能影响局域网内设备的IP分配和联网，请谨慎操作！"
-msgstr "Reminder: Turning off DHCP may affect the IP allocation and networking of devices in the local area network, please be careful!"
+msgstr ""
+"Reminder: Turning off DHCP may affect the IP allocation and networking of "
+"devices in the local area network, please be careful!"
 
 #: src/pages/device/configure.vue:343
 msgid "温馨提示：关闭限速会让已配置限速的设备的带宽限制全部失效，请谨慎操作！"
-msgstr "Reminder: Turning off the speed limit will invalidate all bandwidth limits for devices that have been configured with the speed limit, please proceed with caution!"
+msgstr ""
+"Reminder: Turning off the speed limit will invalidate all bandwidth limits "
+"for devices that have been configured with the speed limit, please proceed "
+"with caution!"
 
 #: src/pages/device/configure.vue:351
 msgid "温馨提示：删除网关标签可能影响正在使用此标签的设备，请谨慎操作！"
-msgstr "Reminder: Deleting the gateway label may affect devices that are using this label, please proceed with caution!"
+msgstr ""
+"Reminder: Deleting the gateway label may affect devices that are using this "
+"label, please proceed with caution!"
 
 #: src/pages/device/components/deviceClassificationEditor.vue:61
-#: src/pages/device/components/deviceProfileEditor.vue:64
+#: src/pages/device/components/deviceProfileEditor.vue:69
 #: src/pages/device/deviceCenterList.vue:303
 msgid "游戏设备"
 msgstr "Gaming device"
 
 #: src/pages/device/components/floatingGatewayWizard.vue:58
 msgid "演练会短暂改变网关持有者，必须先完成双端配对校验。系统不会自动开始。"
-msgstr "The drill will change the gateway holder briefly, and the double-ended pairing check must be completed first.The system will not start automatically."
+msgstr ""
+"The drill will change the gateway holder briefly, and the double-ended "
+"pairing check must be completed first.The system will not start "
+"automatically."
 
 #: src/pages/device/components/floatingGatewayWizard.vue:95
 msgid "演练计划已就绪"
@@ -3937,8 +4190,13 @@ msgid "状态未知"
 msgstr "Unknown status"
 
 #: src/pages/network/gateway/index.vue:90
-msgid "现在，将本路由WAN口断开，将其中一个LAN口与主路由连接，并将当前浏览器设备连接到主路由。点击“进入控制台”浏览器将跳转到新的路由IP"
-msgstr "Now, disconnect the WAN port of this router, connect one of the LAN ports to the main router, and connect the current browser device to the main router. Click 'Enter Console' and the browser will redirect to the new router IP"
+msgid ""
+"现在，将本路由WAN口断开，将其中一个LAN口与主路由连接，并将当前浏览器设备连接"
+"到主路由。点击“进入控制台”浏览器将跳转到新的路由IP"
+msgstr ""
+"Now, disconnect the WAN port of this router, connect one of the LAN ports to "
+"the main router, and connect the current browser device to the main router. "
+"Click 'Enter Console' and the browser will redirect to the new router IP"
 
 #: src/pages/network/gateway/index.vue:22
 msgid "现在，请你配置旁路由信息"
@@ -3946,7 +4204,9 @@ msgstr "Now, please configure bypass routing information"
 
 #: src/pages/device/components/advancedNetworkTools.vue:10
 msgid "现有地址已隐藏；更换时需重新输入。"
-msgstr "The existing address is hidden; you will need to re-enter it when replacing it."
+msgstr ""
+"The existing address is hidden; you will need to re-enter it when replacing "
+"it."
 
 #: src/pages/device/lanSettingsPanel.vue:210
 msgid "现有设置已安全接管"
@@ -3959,7 +4219,9 @@ msgstr "Existing settings do not need to be taken over repeatedly"
 #: src/pages/device/components/devicePolicyPanel.vue:37
 #: src/pages/device/deviceList.vue:86 src/pages/device/staticStateList.vue:53
 msgid "用于局域网名称解析，仅支持英文、数字和中间连字符"
-msgstr "For LAN name resolution, only English, numbers and middle hyphens are supported"
+msgstr ""
+"For LAN name resolution, only English, numbers and middle hyphens are "
+"supported"
 
 #: src/components/action-download/index.vue:149
 #: src/components/action-download/index.vue:193
@@ -3968,16 +4230,28 @@ msgid "用于放置下载文件的目录。例如：/mnt/sda1/download"
 msgstr "Directory for placing download files. For example: /mnt/sda1/download"
 
 #: src/components/action-download/index.vue:40
-msgid "用于放置配置文件的目录。例如：/mnt/sda1/Configs/aria2；请勿使用 /tmp 或 /var ，以免重启以后任务丢失"
-msgstr "The directory for storing configuration files. For example: /mnt/sda1/Configs/aria2; do not use /tmp or /var to avoid losing tasks after reboot."
+msgid ""
+"用于放置配置文件的目录。例如：/mnt/sda1/Configs/aria2；请勿使用 /tmp 或 /"
+"var ，以免重启以后任务丢失"
+msgstr ""
+"The directory for storing configuration files. For example: /mnt/sda1/"
+"Configs/aria2; do not use /tmp or /var to avoid losing tasks after reboot."
 
 #: src/components/action-download/index.vue:130
-msgid "用于放置配置文件的目录。例如：/mnt/sda1/Configs/qb；请勿使用 /tmp 或 /var ，以免重启以后任务丢失"
-msgstr "The directory for storing configuration files. For example: /mnt/sda1/Configs/qb; do not use /tmp or /var to avoid losing tasks after reboot."
+msgid ""
+"用于放置配置文件的目录。例如：/mnt/sda1/Configs/qb；请勿使用 /tmp 或 /var ，"
+"以免重启以后任务丢失"
+msgstr ""
+"The directory for storing configuration files. For example: /mnt/sda1/"
+"Configs/qb; do not use /tmp or /var to avoid losing tasks after reboot."
 
 #: src/components/action-download/index.vue:174
-msgid "用于放置配置文件的目录。例如：/mnt/sda1/Configs/tr；请勿使用 /tmp 或 /var ，以免重启以后任务丢失"
-msgstr "The directory for storing configuration files. For example: /mnt/sda1/Configs/tr; do not use /tmp or /var to avoid losing tasks after reboot."
+msgid ""
+"用于放置配置文件的目录。例如：/mnt/sda1/Configs/tr；请勿使用 /tmp 或 /var ，"
+"以免重启以后任务丢失"
+msgstr ""
+"The directory for storing configuration files. For example: /mnt/sda1/"
+"Configs/tr; do not use /tmp or /var to avoid losing tasks after reboot."
 
 #: src/components/action-download/index.vue:79
 msgid "用于远程访问的令牌。"
@@ -4016,12 +4290,17 @@ msgid "用户名已存在，将复用原密码"
 msgstr ""
 
 #: src/pages/network/dhcp/index.vue:113 src/pages/network/pppoe/index.vue:59
-msgid "由于您的设备<span>没有 WAN 口</span>，无法使用本设置向导，具体请看%{link}"
-msgstr "Since your device <span>does not have a WAN port</span>, you cannot use this setup wizard. For details, please see %{link}"
+msgid ""
+"由于您的设备<span>没有 WAN 口</span>，无法使用本设置向导，具体请看%{link}"
+msgstr ""
+"Since your device <span>does not have a WAN port</span>, you cannot use this "
+"setup wizard. For details, please see %{link}"
 
 #: src/pages/device/lanSettingsPanel.vue:27
 msgid "由本机为局域网设备分配地址。关闭后，设备应由其他路由器分配地址。"
-msgstr "The LAN device is assigned an address by the machine.When turned off, the device should be assigned an address by another router."
+msgstr ""
+"The LAN device is assigned an address by the machine.When turned off, the "
+"device should be assigned an address by another router."
 
 #: src/pages/device/components/deviceClassificationEditor.vue:5
 #: src/pages/device/components/deviceClassificationEditor.vue:6
@@ -4033,20 +4312,25 @@ msgid "电源模式"
 msgstr "Power mode"
 
 #: src/pages/device/components/deviceClassificationEditor.vue:59
-#: src/pages/device/components/deviceProfileEditor.vue:64
+#: src/pages/device/components/deviceProfileEditor.vue:69
 #: src/pages/device/deviceCenterList.vue:299
 msgid "电视与影音"
 msgstr "TV & media"
 
 #: src/pages/device/components/deviceClassificationEditor.vue:59
-#: src/pages/device/components/deviceProfileEditor.vue:64
+#: src/pages/device/components/deviceProfileEditor.vue:69
 #: src/pages/device/deviceCenterList.vue:297
 msgid "电脑"
 msgstr "Computer"
 
 #: src/pages/smart/index.vue:12
-msgid "电路的运行情况进行监控、记录并与厂商所设定的预设安全值进行比较，若监控情况将要或已超出预设安全值的安全范围，"
-msgstr "and compared with the preset safety value set by the manufacturer. If the monitoring situation is about to or has exceeded the safety range of the preset safety value, "
+msgid ""
+"电路的运行情况进行监控、记录并与厂商所设定的预设安全值进行比较，若监控情况将"
+"要或已超出预设安全值的安全范围，"
+msgstr ""
+"and compared with the preset safety value set by the manufacturer. If the "
+"monitoring situation is about to or has exceeded the safety range of the "
+"preset safety value, "
 
 #: src/request/request.ts:22 src/request/request.ts:37
 msgid "登录过期，请重新登录"
@@ -4067,11 +4351,15 @@ msgstr "Target partition"
 
 #: src/components/action-sandbox/index.vue:41
 msgid "目标分区（分区大小须大于2G，将此分区作为外部 overlay 使用）"
-msgstr "Target partition (partition size must be greater than 2G, use this partition as an external overlay)"
+msgstr ""
+"Target partition (partition size must be greater than 2G, use this partition "
+"as an external overlay)"
 
 #: src/components/action-sandbox/index.vue:27
 msgid "目标磁盘（建议选择U盘或者移动硬盘，方便装卸）"
-msgstr "Target disk (recommended to use USB drive or external hard drive for easy mounting/unmounting)"
+msgstr ""
+"Target disk (recommended to use USB drive or external hard drive for easy "
+"mounting/unmounting)"
 
 #: src/pages/smart/index/index.vue:34
 msgid "睡眠"
@@ -4116,19 +4404,29 @@ msgstr "Confirm"
 
 #: src/components/action-raid/setup-create.vue:214
 msgid "确定创建 %{name}？该操作不可逆,请谨慎操作"
-msgstr "Confirm to create %{name}? This operation is irreversible, please proceed with caution"
+msgstr ""
+"Confirm to create %{name}? This operation is irreversible, please proceed "
+"with caution"
 
 #: src/components/action-sandboxenvironment/index.vue:109
 msgid "确定放弃沙箱中的数据？再次进入沙箱需要重新格式化相应磁盘分区"
-msgstr "Confirm to abandon data in the sandbox? Re-entering the sandbox requires reformatting the corresponding disk partition"
+msgstr ""
+"Confirm to abandon data in the sandbox? Re-entering the sandbox requires "
+"reformatting the corresponding disk partition"
 
 #: src/pages/raid/index/index.vue:194
 msgid "确定要删除 %{name} 吗?"
 msgstr "Are you sure to delete %{name}?"
 
 #: src/pages/raid/index/index.vue:191
-msgid "确定要删除 %{name} 该磁盘阵列吗？删除操作可能会导致数据丢失，请谨慎操作。删除成功后，如需另外组RAID，建议稍等几分钟后再试。"
-msgstr "Are you sure you want to delete the disk array %{name}? Deletion may result in data loss, so please proceed with caution. If you need to create another RAID after successful deletion, it is recommended that you wait a few minutes and try again."
+msgid ""
+"确定要删除 %{name} 该磁盘阵列吗？删除操作可能会导致数据丢失，请谨慎操作。删除"
+"成功后，如需另外组RAID，建议稍等几分钟后再试。"
+msgstr ""
+"Are you sure you want to delete the disk array %{name}? Deletion may result "
+"in data loss, so please proceed with caution. If you need to create another "
+"RAID after successful deletion, it is recommended that you wait a few "
+"minutes and try again."
 
 #: src/components/action-dns/index.vue:39
 #: src/components/action-netip/index.vue:59
@@ -4142,7 +4440,9 @@ msgstr "Are you sure you want to delete the selected rule?"
 
 #: src/pages/device/speedLimitList.vue:217
 msgid "确认删除此设备的限速配置？"
-msgstr "Are you sure you want to delete the speed limit configuration for this device?"
+msgstr ""
+"Are you sure you want to delete the speed limit configuration for this "
+"device?"
 
 #: src/pages/device/staticStateList.vue:218
 msgid "确认删除此设备的静态分配？"
@@ -4174,7 +4474,9 @@ msgstr "Confirm Recovery"
 
 #: src/pages/device/components/advancedNetworkTools.vue:38
 msgid "确认恢复这个策略包？现有分组和额度会被替换。"
-msgstr "Are you sure you want to restore this tactical package?Existing groups and credits will be replaced."
+msgstr ""
+"Are you sure you want to restore this tactical package?Existing groups and "
+"credits will be replaced."
 
 #: src/pages/device/speedLimitList.vue:255
 msgid "确认批量删除限速配置？"
@@ -4191,7 +4493,9 @@ msgstr "Confirm takeover of existing settings"
 
 #: src/pages/device/lanSettingsPanel.vue:205
 msgid "确认接管现有设置？接管前会创建快照，失败时自动恢复。"
-msgstr "Are you sure you want to take over the existing settings?A snapshot is created before takeover and automatically recovered if it fails."
+msgstr ""
+"Are you sure you want to take over the existing settings?A snapshot is "
+"created before takeover and automatically recovered if it fails."
 
 #: src/pages/device/deviceCenterList.vue:22
 msgid "确认添加"
@@ -4262,7 +4566,7 @@ msgid "稍后提醒"
 msgstr ""
 
 #: src/pages/device/components/deviceClassificationEditor.vue:62
-#: src/pages/device/components/deviceProfileEditor.vue:64
+#: src/pages/device/components/deviceProfileEditor.vue:69
 #: src/pages/device/deviceCenterList.vue:306
 msgid "穿戴设备"
 msgstr "Wearable"
@@ -4343,7 +4647,9 @@ msgstr "Manage Entry Probes"
 
 #: src/pages/device/lanSettingsPanel.vue:3
 msgid "管理本机提供的网络服务，并集中处理需要维护的设备规则。"
-msgstr "Manage the network services provided by the machine and centrally handle the device rules that need to be maintained."
+msgstr ""
+"Manage the network services provided by the machine and centrally handle the "
+"device rules that need to be maintained."
 
 #: src/pages/index/index.vue:158
 msgid "管理网络中的所有设备"
@@ -4397,7 +4703,9 @@ msgstr "Level"
 
 #: src/pages/device/lanSettingsPanel.vue:224
 msgid "组件仍在安装，稍后刷新即可继续，草稿已经保留。"
-msgstr "Component is still being installed, refresh later to continue, draft has been retained."
+msgstr ""
+"Component is still being installed, refresh later to continue, draft has "
+"been retained."
 
 #: src/pages/device/lanSettingsPanel.vue:226
 msgid "组件安装完成，草稿已恢复"
@@ -4405,7 +4713,9 @@ msgstr "Component installed, draft restored"
 
 #: src/pages/device/components/devicePolicyPanel.vue:275
 msgid "组件状态仍在更新，稍后刷新即可继续，草稿已经保留。"
-msgstr "The component state is still updating. Refresh later to continue; your draft is preserved."
+msgstr ""
+"The component state is still updating. Refresh later to continue; your draft "
+"is preserved."
 
 #: src/pages/index/nav/Item.vue:9
 msgid "终端"
@@ -4419,7 +4729,9 @@ msgstr "End"
 #: src/pages/device/components/deviceUsagePolicyEditor.vue:26
 #: src/pages/device/deviceGroupsPanel.vue:32
 msgid "结束时间早于开始时间时，会自动跨到第二天。"
-msgstr "When the end time is earlier than the start time, it automatically spans to the next day."
+msgstr ""
+"When the end time is earlier than the start time, it automatically spans to "
+"the next day."
 
 #: src/pages/device/components/dialog.vue:19
 msgid "结果"
@@ -4562,7 +4874,7 @@ msgid "网络规则读取失败"
 msgstr "Network rule read failed"
 
 #: src/pages/device/components/deviceClassificationEditor.vue:60
-#: src/pages/device/components/deviceProfileEditor.vue:64
+#: src/pages/device/components/deviceProfileEditor.vue:69
 #: src/pages/device/deviceCenterList.vue:300
 msgid "网络设备"
 msgstr "Network device"
@@ -4601,7 +4913,8 @@ msgstr "Capabilities and compatibility"
 
 #: src/components/smart/edit-disk.vue:33 src/pages/smart/index/index.vue:60
 msgid "自上次报告以来温度变化至少 N 度，则需报告."
-msgstr "Report if temperature changes by at least N degrees since the last report."
+msgstr ""
+"Report if temperature changes by at least N degrees since the last report."
 
 #: src/components/firstOpen/form.vue:159 src/components/firstOpen/form.vue:163
 #: src/pages/quickwifi/components/form.vue:159
@@ -4676,28 +4989,56 @@ msgid "至少保留一个网络接口！"
 msgstr ""
 
 #: src/components/action-raid/setup-create.vue:126
-msgid "至少需要2块硬盘，“区块延展”功能是将数据分成多个块，并将数据块分散到组成的多个硬盘上以提高性能的过程。不提供数据冗余。"
-msgstr "At least 2 hard disks are required. The 'Block Stretch' function is the process of dividing data into multiple blocks and spreading the data blocks across multiple hard disks to improve performance. No data redundancy is provided."
+msgid ""
+"至少需要2块硬盘，“区块延展”功能是将数据分成多个块，并将数据块分散到组成的多个"
+"硬盘上以提高性能的过程。不提供数据冗余。"
+msgstr ""
+"At least 2 hard disks are required. The 'Block Stretch' function is the "
+"process of dividing data into multiple blocks and spreading the data blocks "
+"across multiple hard disks to improve performance. No data redundancy is "
+"provided."
 
 #: src/components/action-raid/setup-create.vue:132
 msgid "至少需要2块硬盘，同时向所有硬盘写入相同的数据。提供数据冗余。"
-msgstr "At least 2 hard drives are required, write the same data to all drives. Provides data redundancy."
+msgstr ""
+"At least 2 hard drives are required, write the same data to all drives. "
+"Provides data redundancy."
 
 #: src/components/action-raid/setup-create.vue:120
-msgid "至少需要2块硬盘，将多个硬盘合并为单个存储空间，其容量等于所有硬盘容量的总和。不提供数据冗余。"
-msgstr "At least 2 hard disks are required to combine multiple hard disks into a single storage space with a capacity equal to the sum of all hard disk capacities. No data redundancy is provided."
+msgid ""
+"至少需要2块硬盘，将多个硬盘合并为单个存储空间，其容量等于所有硬盘容量的总和。"
+"不提供数据冗余。"
+msgstr ""
+"At least 2 hard disks are required to combine multiple hard disks into a "
+"single storage space with a capacity equal to the sum of all hard disk "
+"capacities. No data redundancy is provided."
 
 #: src/components/action-raid/setup-create.vue:138
-msgid "至少需要3块硬盘，执行段落分块延展，并对分布到所有组成硬盘上的数据执行奇偶校验，从而提供比 RAID 1 更有效的数据冗余。"
-msgstr "Requires at least 3 hard disks, performs block stretching, and performs parity checking on data distributed across all component hard disks, providing more effective data redundancy than RAID 1."
+msgid ""
+"至少需要3块硬盘，执行段落分块延展，并对分布到所有组成硬盘上的数据执行奇偶校"
+"验，从而提供比 RAID 1 更有效的数据冗余。"
+msgstr ""
+"Requires at least 3 hard disks, performs block stretching, and performs "
+"parity checking on data distributed across all component hard disks, "
+"providing more effective data redundancy than RAID 1."
 
 #: src/components/action-raid/setup-create.vue:144
-msgid "至少需要4块硬盘，执行两个层级的数据奇偶校验以存储等于 2 个硬盘容量的冗余数据，提供比 RAID 5 更大程度的数据冗余。"
-msgstr "Requires at least 4 hard drives, performs two levels of data parity to store redundant data equal to the capacity of 2 hard drives, and provides a greater degree of data redundancy than RAID 5."
+msgid ""
+"至少需要4块硬盘，执行两个层级的数据奇偶校验以存储等于 2 个硬盘容量的冗余数"
+"据，提供比 RAID 5 更大程度的数据冗余。"
+msgstr ""
+"Requires at least 4 hard drives, performs two levels of data parity to store "
+"redundant data equal to the capacity of 2 hard drives, and provides a "
+"greater degree of data redundancy than RAID 5."
 
 #: src/components/action-raid/setup-create.vue:150
-msgid "至少需要4块硬盘，提供 RAID 0 的性能和 RAID 1 的数据保护级别，将硬盘组合进镜像数据的由两个硬盘组成的组。"
-msgstr "Requires at least 4 hard drives, provides the performance of RAID 0 and the data protection level of RAID 1, combining the hard drives into groups of two hard drives that mirror data."
+msgid ""
+"至少需要4块硬盘，提供 RAID 0 的性能和 RAID 1 的数据保护级别，将硬盘组合进镜像"
+"数据的由两个硬盘组成的组。"
+msgstr ""
+"Requires at least 4 hard drives, provides the performance of RAID 0 and the "
+"data protection level of RAID 1, combining the hard drives into groups of "
+"two hard drives that mirror data."
 
 #: src/pages/device/lanSettingsPanel.vue:222
 msgid "至少需要可用空间"
@@ -4747,7 +5088,9 @@ msgstr "Virtual Gateway IPv4"
 
 #: src/components/action-docker/index.vue:72
 msgid "覆盖迁移（覆盖目标路径，继续迁移会清空该目标路径下的文件）"
-msgstr "Overwrite migration (overwrite target path, continuing migration will clear files under the target path)"
+msgstr ""
+"Overwrite migration (overwrite target path, continuing migration will clear "
+"files under the target path)"
 
 #: src/pages/device/lanSettingsPanel.vue:123
 #: src/pages/device/networkRulesHub.vue:3
@@ -4780,7 +5123,9 @@ msgstr "Authentication failed?"
 
 #: src/pages/device/index.vue:4
 msgid "认识每台设备，并用简单的方式安排它如何连接和上网。"
-msgstr "Know every device and easily decide how it connects and accesses the internet."
+msgstr ""
+"Know every device and easily decide how it connects and accesses the "
+"internet."
 
 #: src/components/action-raid/setup-edit.vue:9
 #: src/components/action-raid/setup-recover.vue:9
@@ -4804,7 +5149,9 @@ msgstr "Device Info"
 
 #: src/pages/device/speedLimitList.vue:14
 msgid "设备信息仍可使用，请重试或检查插件状态。"
-msgstr "Device information is still available, please try again or check plugin status."
+msgstr ""
+"Device information is still available, please try again or check plugin "
+"status."
 
 #: src/pages/device/components/advancedNetworkTools.vue:30
 #: src/pages/device/components/deviceUsagePolicyEditor.vue:71
@@ -4859,7 +5206,9 @@ msgstr "Device list unavailable"
 
 #: src/pages/device/deviceCenterList.vue:38
 msgid "设备清单仍可使用，缺失的信息会在数据源恢复后自动补齐。"
-msgstr "The list of devices is still available, and the missing information will be automatically filled in when the data source is restored."
+msgstr ""
+"The list of devices is still available, and the missing information will be "
+"automatically filled in when the data source is restored."
 
 #: src/pages/device/components/advancedNetworkTools.vue:30
 msgid "设备状态"
@@ -4924,11 +5273,11 @@ msgid "设备资料"
 msgstr "Device profile"
 
 #: src/pages/device/components/deviceAliasEditor.vue:42
-#: src/pages/device/components/deviceProfileEditor.vue:69
+#: src/pages/device/components/deviceProfileEditor.vue:74
 msgid "设备资料不可用"
 msgstr "Device data not available"
 
-#: src/pages/device/components/deviceProfileEditor.vue:95
+#: src/pages/device/components/deviceProfileEditor.vue:101
 msgid "设备资料已更新"
 msgstr "Device information updated"
 
@@ -4943,7 +5292,9 @@ msgstr "Device rebooting..."
 #: src/components/action-sandboxenvironment/index.vue:116
 #: src/components/action-sandboxenvironment/index.vue:96
 msgid "设备重启中... 若页面长时间未刷新可能需要手动填写地址"
-msgstr "Device rebooting... If the page does not refresh for a long time, you may need to manually enter the address"
+msgstr ""
+"Device rebooting... If the page does not refresh for a long time, you may "
+"need to manually enter the address"
 
 #: src/pages/device/components/devicePolicyPanel.vue:191
 #: src/pages/device/components/devicePolicyPanel.vue:46
@@ -4959,11 +5310,14 @@ msgstr "Device speed limit service"
 
 #: src/pages/device/lanSettingsPanel.vue:70
 msgid "设备默认通过本机上网；需要时再添加旁路由或指定网关。"
-msgstr "The device is connected to the Internet by default, and bypass routes or designated gateways are added when necessary."
+msgstr ""
+"The device is connected to the Internet by default, and bypass routes or "
+"designated gateways are added when necessary."
 
 #: src/components/action-domain/setup-ddns.vue:63
 msgid "设定哪一个 IP 地址（IPv4 或 IPv6）会被发送给 DDNS 提供商"
-msgstr "Specify which IP address (IPv4 or IPv6) will be sent to the DDNS provider"
+msgstr ""
+"Specify which IP address (IPv4 or IPv6) will be sent to the DDNS provider"
 
 #: src/pages/device/lanSettingsPanel.vue:21
 msgid "设置区域"
@@ -4971,13 +5325,15 @@ msgstr "Set up area"
 
 #: src/pages/device/components/devicePolicyPanel.vue:31
 msgid "设置已保存，但设备可能需要断开并重新连接后才会使用新路线。"
-msgstr "The settings have been saved, but the device may need to be disconnected and reconnected before the new route can be used."
+msgstr ""
+"The settings have been saved, but the device may need to be disconnected and "
+"reconnected before the new route can be used."
 
 #: src/pages/device/components/deviceAliasEditor.vue:75
 #: src/pages/device/components/deviceClassificationEditor.vue:117
 #: src/pages/device/components/devicePolicyPanel.vue:252
 #: src/pages/device/components/devicePolicyPanel.vue:258
-#: src/pages/device/components/deviceProfileEditor.vue:91
+#: src/pages/device/components/deviceProfileEditor.vue:97
 #: src/pages/device/lanSettingsPanel.vue:177
 msgid "设置没有变化"
 msgstr "No changes"
@@ -5044,15 +5400,21 @@ msgstr "The target path is not empty"
 
 #: src/pages/device/components/deviceClassificationEditor.vue:13
 msgid "该设备身份仅本次开机有效，修改会在路由器重启后自动清除。"
-msgstr "This device identity is valid for this boot only. The change will be cleared after the router restarts."
+msgstr ""
+"This device identity is valid for this boot only. The change will be cleared "
+"after the router restarts."
 
 #: src/pages/device/components/deviceAliasEditor.vue:9
 msgid "该设备身份仅本次开机有效，备注会在路由器重启后清除。"
-msgstr "This device identity is valid only for this boot; its name is cleared after the router restarts."
+msgstr ""
+"This device identity is valid only for this boot; its name is cleared after "
+"the router restarts."
 
 #: src/pages/device/components/deviceProfileEditor.vue:13
 msgid "该设备身份仅本次开机有效，重启后资料可能需要重新确认。"
-msgstr "This device identity is valid only for this boot; its profile may need confirmation after restart."
+msgstr ""
+"This device identity is valid only for this boot; its profile may need "
+"confirmation after restart."
 
 #: src/pages/device/components/devicePolicyPanel.vue:100
 msgid "该设置与现有规则冲突"
@@ -5095,7 +5457,9 @@ msgstr "Select the data to delete."
 
 #: src/pages/interfaceconfig/index.vue:175
 msgid "请在保存以后前往'网络-接口'页面配置接口详细参数"
-msgstr "Please go to the 'Network - Interface' page to configure interface details after saving"
+msgstr ""
+"Please go to the 'Network - Interface' page to configure interface details "
+"after saving"
 
 #: src/pages/device/components/deviceUsagePolicyEditor.vue:101
 msgid "请填写完整时间"
@@ -5119,11 +5483,14 @@ msgstr "Check the entered values."
 
 #: src/pages/network/dhcp/index.vue:5
 msgid "请确保您已将本设备 WAN 口连接到上级路由器局域网（ LAN ）接口"
-msgstr "Please ensure that the WAN port of this device is connected to the LAN port of the upstream router"
+msgstr ""
+"Please ensure that the WAN port of this device is connected to the LAN port "
+"of the upstream router"
 
 #: src/pages/network/pppoe/index.vue:4
 msgid "请确保您已将路由 WAN 口连接到光猫"
-msgstr "Please ensure that the router's WAN port is connected to the optical modem"
+msgstr ""
+"Please ensure that the router's WAN port is connected to the optical modem"
 
 #: src/pages/device/configure.vue:10 src/pages/device/deviceList.vue:7
 #: src/pages/device/speedLimitList.vue:8 src/pages/device/staticStateList.vue:8
@@ -5175,7 +5542,9 @@ msgstr "Enter a value"
 
 #: src/pages/device/components/devicePolicyPanel.vue:38
 msgid "请输入 1～63 位英文、数字或中间连字符，不能以连字符开头或结尾"
-msgstr "Please enter 1-63 digits English, number or middle hyphen, cannot start or end with a hyphen"
+msgstr ""
+"Please enter 1-63 digits English, number or middle hyphen, cannot start or "
+"end with a hyphen"
 
 #: src/components/editable-select/index.vue:13
 msgid "请输入%{title}"
@@ -5183,7 +5552,9 @@ msgstr "Please enter %{title}"
 
 #: src/components/action-download/index.vue:113
 msgid "请输入BT Tracker服务器地址，多个地址使用换行或者英文逗号分隔"
-msgstr "Please enter the BT Tracker server address, use newline or comma to separate multiple addresses"
+msgstr ""
+"Please enter the BT Tracker server address, use newline or comma to separate "
+"multiple addresses"
 
 #: src/components/action-dns/index.vue:25
 msgid "请输入DNS地址"
@@ -5367,7 +5738,7 @@ msgid "读取设备分组失败"
 msgstr "Failed to read device group"
 
 #: src/pages/device/components/deviceAliasEditor.vue:56
-#: src/pages/device/components/deviceProfileEditor.vue:82
+#: src/pages/device/components/deviceProfileEditor.vue:88
 msgid "读取设备资料失败"
 msgstr "Failed to read device data"
 
@@ -5381,11 +5752,15 @@ msgstr "Debug"
 
 #: src/components/action-disk-format/index.vue:227
 msgid "警告：格式化会清空 %{partname} 分区数据，请你谨慎操作"
-msgstr "Warning: Formatting will clear all data on %{partname} partition, please proceed with caution"
+msgstr ""
+"Warning: Formatting will clear all data on %{partname} partition, please "
+"proceed with caution"
 
 #: src/components/action-disk-format/index.vue:239
 msgid "警告：该操作将初始化 %{model} 硬盘并创建分区，请你谨慎操作"
-msgstr "Warning: This operation will initialize %{model} hard drive and create partitions, please proceed with caution"
+msgstr ""
+"Warning: This operation will initialize %{model} hard drive and create "
+"partitions, please proceed with caution"
 
 #: src/pages/network/pppoe/index.vue:107
 msgid "账号不能为空"
@@ -5400,8 +5775,12 @@ msgid "跨设备共享（易有云）"
 msgstr "Cross-device sharing (Linkease)"
 
 #: src/components/action-netip/index.vue:119
-msgid "路由器 IP 可能已经修改成功。若刷新页面失败，请重新连接路由器，否则请尝试重新配置。"
-msgstr "The router IP may have been modified successfully. If refreshing the page fails, please reconnect to the router, otherwise try to reconfigure it."
+msgid ""
+"路由器 IP 可能已经修改成功。若刷新页面失败，请重新连接路由器，否则请尝试重新"
+"配置。"
+msgstr ""
+"The router IP may have been modified successfully. If refreshing the page "
+"fails, please reconnect to the router, otherwise try to reconfigure it."
 
 #: src/pages/device/lanSettingsPanel.vue:133
 msgid "路由器地址"
@@ -5585,8 +5964,12 @@ msgid "选择一种连接方式以开始"
 msgstr "Choose a connection method to start"
 
 #: src/components/action-raid/setup-create.vue:48
-msgid "选择将要用于创建 RAID 的硬盘，通过 USB 接入的设备不会在列表中显示（USB接入不稳定）。"
-msgstr "Select the hard disk that will be used to create the RAID. Devices connected via USB will not be displayed in the list (USB connection is unstable)."
+msgid ""
+"选择将要用于创建 RAID 的硬盘，通过 USB 接入的设备不会在列表中显示（USB接入不"
+"稳定）。"
+msgstr ""
+"Select the hard disk that will be used to create the RAID. Devices connected "
+"via USB will not be displayed in the list (USB connection is unstable)."
 
 #: src/pages/device/networkRulesHub.vue:14
 msgid "选择当前结果"
@@ -5610,7 +5993,8 @@ msgstr "Choose a hard drive (select the hard drive to be added to RAID):"
 
 #: src/components/action-raid/setup-remove.vue:21
 msgid "选择硬盘（选择要从RAID阵列中删除的硬盘）："
-msgstr "Choose a hard drive (select the hard drive to be removed from RAID array):"
+msgstr ""
+"Choose a hard drive (select the hard drive to be removed from RAID array):"
 
 #: src/components/smart/add-task.vue:17
 msgid "选择磁盘"
@@ -5653,8 +6037,11 @@ msgid "通过安全加密通道，随时随地远程管理你的iStoreOS"
 msgstr ""
 
 #: src/pages/device/lanSettingsPanel.vue:38
-msgid "通过路由器局域网地址重新进入，并重新开启地址分配；或先确认外部 DHCP 已就绪。"
-msgstr "Re-enter with the router LAN address and reopen the address assignment; or confirm that the external DHCP is ready."
+msgid ""
+"通过路由器局域网地址重新进入，并重新开启地址分配；或先确认外部 DHCP 已就绪。"
+msgstr ""
+"Re-enter with the router LAN address and reopen the address assignment; or "
+"confirm that the external DHCP is ready."
 
 #: src/pages/device/deviceGroupsPanel.vue:62
 msgid "速度上限"
@@ -5729,7 +6116,9 @@ msgstr "Configuration saved, waiting for device to reacquire address"
 
 #: src/pages/device/components/floatingGatewayWizard.vue:94
 msgid "配置已保存，请在双端完成后验证实际持有者"
-msgstr "The configuration has been saved, please verify the actual holder after the two-end completion"
+msgstr ""
+"The configuration has been saved, please verify the actual holder after the "
+"two-end completion"
 
 #: src/pages/device/components/devicePolicyPanel.vue:106
 msgid "配置已写入，但状态记录需要恢复"
@@ -5857,8 +6246,12 @@ msgid "闲置"
 msgstr "Idle"
 
 #: src/pages/smart/index/index.vue:44
-msgid "闲置-处于待机、睡眠、闲置模式下不检查设备，在闲置状态下，大多数磁盘还在转动，所以这可能不适合你。"
-msgstr "Idle - Does not check devices in standby, sleep, or idle modes. Most disks are still spinning in idle mode, so this may not be suitable for you."
+msgid ""
+"闲置-处于待机、睡眠、闲置模式下不检查设备，在闲置状态下，大多数磁盘还在转动，"
+"所以这可能不适合你。"
+msgstr ""
+"Idle - Does not check devices in standby, sleep, or idle modes. Most disks "
+"are still spinning in idle mode, so this may not be suitable for you."
 
 #: src/components/action-domain/setup-ddns.vue:10
 #: src/components/action-domain/setup-index.vue:17
@@ -5891,7 +6284,9 @@ msgstr "Speed limit service enabled; your input was restored."
 
 #: src/pages/device/components/devicePolicyPanel.vue:277
 msgid "限速服务已安装，请继续启用，输入内容已恢复"
-msgstr "Speed limit service installed. Enable it to continue; your input was restored."
+msgstr ""
+"Speed limit service installed. Enable it to continue; your input was "
+"restored."
 
 #: src/pages/device/lanSettingsPanel.vue:178
 msgid "限速服务设置已保存"
@@ -5908,7 +6303,9 @@ msgstr ""
 
 #: src/pages/device/networkRulesHub.vue:3
 msgid "集中检查离线、孤立或需要修复的规则；新设置请从对应设备详情进入。"
-msgstr "Focus on checking for rules that are offline, orphaned, or need to be fixed; new settings can be accessed from the corresponding device details."
+msgstr ""
+"Focus on checking for rules that are offline, orphaned, or need to be fixed; "
+"new settings can be accessed from the corresponding device details."
 
 #: src/pages/device/networkRulesHub.vue:10
 #: src/pages/device/networkRulesHub.vue:31
@@ -6055,8 +6452,16 @@ msgid "额度已用尽"
 msgstr "Quota exhausted"
 
 #: src/pages/network/gateway/index.vue:99
-msgid "首先确认主路由开启了 DHCP 服务，确认本路由 WAN 口是 DHCP 客户端模式（默认即是，如果不是可使用“连接现有路由器”向导改成 DHCP 客户端），然后将本路由 WAN 口与主路由的 LAN 连接，以自动获取配置。"
-msgstr "First, make sure that the DHCP service is turned on on the main router, and confirm that the WAN port of this router is in DHCP client mode (it is by default. If not, you can use the 'Connect to an Existing Router' wizard to change it to DHCP client). Then connect the WAN port of this router to the LAN of the main router to automatically obtain the configuration."
+msgid ""
+"首先确认主路由开启了 DHCP 服务，确认本路由 WAN 口是 DHCP 客户端模式（默认即"
+"是，如果不是可使用“连接现有路由器”向导改成 DHCP 客户端），然后将本路由 WAN 口"
+"与主路由的 LAN 连接，以自动获取配置。"
+msgstr ""
+"First, make sure that the DHCP service is turned on on the main router, and "
+"confirm that the WAN port of this router is in DHCP client mode (it is by "
+"default. If not, you can use the 'Connect to an Existing Router' wizard to "
+"change it to DHCP client). Then connect the WAN port of this router to the "
+"LAN of the main router to automatically obtain the configuration."
 
 #: src/pages/device/index.vue:3 src/pages/networkSpeedTest/index.vue:5
 msgid "首页"
@@ -6140,7 +6545,9 @@ msgstr "Default path"
 #~ msgstr "Save Speed Limit"
 
 #~ msgid "关闭地址分配服务后，新设备可能无法联网。确定继续吗？"
-#~ msgstr "When the address assignment service is turned off, new devices may not be able to connect to the internet.Are you sure you want to continue?"
+#~ msgstr ""
+#~ "When the address assignment service is turned off, new devices may not be "
+#~ "able to connect to the internet.Are you sure you want to continue?"
 
 #~ msgid "删除上网路线"
 #~ msgstr "Remove Internet Directions"
@@ -6258,7 +6665,9 @@ msgstr "Default path"
 #~ msgstr "Webdav Share Configuration"
 
 #~ msgid "如需对raid设备进行读写操作，需要对raid设备格式化并挂载文件系统"
-#~ msgstr "To Perform Read-Write Operations on RAID Devices, Format and Mount the RAID Device File System"
+#~ msgstr ""
+#~ "To Perform Read-Write Operations on RAID Devices, Format and Mount the "
+#~ "RAID Device File System"
 
 #~ msgid "进行挂载"
 #~ msgstr " to mount"

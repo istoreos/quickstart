@@ -20,6 +20,9 @@ export const deviceIconKeys = [
 
 export type DeviceIconKey = typeof deviceIconKeys[number]
 
+export const isDeviceIconKey = (value: unknown): value is DeviceIconKey =>
+    typeof value === 'string' && (deviceIconKeys as readonly string[]).includes(value)
+
 export const deviceIconLabels: Record<DeviceIconKey, string> = {
     computer: '通用电脑', phone: '手机', tablet: '平板电脑', tv: '电视', network: '无线路由器',
     'smart-home': '智能家居', camera: '摄像头', gaming: '游戏设备', storage: '网络存储', printer: '打印机', wearable: '穿戴设备', unknown: '未知设备',

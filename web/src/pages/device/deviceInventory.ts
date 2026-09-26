@@ -48,6 +48,13 @@ export type DevicePolicyRules = {
     speed?: Array<{ mac?: string; ip?: string; enabled?: boolean; networkAccess?: boolean }>
 }
 
+export type DeviceNetworkRule = {
+    kind: 'static' | 'route' | 'speed' | 'access' | string
+    deviceId?: string
+    mac?: string
+    ip?: string
+}
+
 export type DeviceListItem = InventoryDevice & {
     scene: DeviceScene
     brand: string
@@ -177,14 +184,45 @@ const policyLabelsFromRules = (device: InventoryDevice, rules?: DevicePolicyRule
     return labels
 }
 
-export const buildDeviceListItems = (devices: InventoryDevice[], legacyDevices: LegacyDevice[] = [], rules?: DevicePolicyRules): DeviceListItem[] => {
+type NetworkRuleIndex = Map<string, Set<string>>
+
+const indexNetworkRules = (rules: DeviceNetworkRule[]): NetworkRuleIndex => {
+    const index: NetworkRuleIndex = new Map()
+    const add = (key: string, kind: string) => {
+        if (!key) return
+        const kinds = index.get(key) || new Set<string>()
+        kinds.add(kind)
+        index.set(key, kinds)
+    }
+    for (const rule of rules) {
+        add(rule.deviceId ? `device:${rule.deviceId}` : '', rule.kind)
+        add(rule.mac ? `mac:${normalized(rule.mac)}` : '', rule.kind)
+        add(rule.ip ? `ip:${normalized(rule.ip)}` : '', rule.kind)
+    }
+    return index
+}
+
+const policyLabelsFromNetworkRules = (device: InventoryDevice, index: NetworkRuleIndex): string[] => {
+    const kinds = new Set<string>()
+    const keys = [`device:${device.deviceId}`, `mac:${normalized(device.mac)}`, ...device.addresses.current.map(item => `ip:${normalized(item.address)}`)]
+    for (const key of keys) for (const kind of index.get(key) || []) kinds.add(kind)
+    const labels: string[] = []
+    if (kinds.has('static')) labels.push('static')
+    if (kinds.has('route')) labels.push('route')
+    if (kinds.has('speed')) labels.push('limited')
+    if (kinds.has('access')) labels.push('blocked')
+    return labels
+}
+
+export const buildDeviceListItems = (devices: InventoryDevice[], legacyDevices: LegacyDevice[] = [], rules?: DevicePolicyRules, networkRules?: DeviceNetworkRule[]): DeviceListItem[] => {
     const legacyByMac = new Map(legacyDevices.map(device => [normalized(device.mac), device]))
+    const networkRuleIndex = networkRules ? indexNetworkRules(networkRules) : undefined
     return devices.map(device => {
         const legacy = legacyByMac.get(normalized(device.mac))
         const primary = device.addresses.current.find(address => address.primary)
             || device.addresses.current[0]
             || device.addresses.historical[0]
-        const labels = rules ? policyLabelsFromRules(device, rules) : policyLabels(legacy)
+        const labels = networkRuleIndex ? policyLabelsFromNetworkRules(device, networkRuleIndex) : rules ? policyLabelsFromRules(device, rules) : policyLabels(legacy)
         const classification = resolveDeviceClassification(device)
         return {
             ...device,

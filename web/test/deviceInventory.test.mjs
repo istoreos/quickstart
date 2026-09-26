@@ -38,6 +38,17 @@ test('v2 policy rules replace the legacy device list dependency', () => {
     assert.equal(result[0].legacy, undefined)
 })
 
+test('unified network rules keep list summaries consistent with routes and the rules ledger', () => {
+    const result = buildDeviceListItems(inventory, [], undefined, [
+        { kind: 'static', deviceId: inventory[0].deviceId },
+        { kind: 'route', mac: 'aa:bb:cc:dd:ee:01' },
+        { kind: 'speed', ip: '192.168.100.20' },
+    ])
+    assert.deepEqual(result[0].policyLabels, ['static', 'route', 'limited'])
+    assert.equal(result[0].controlled, true)
+    assert.deepEqual(result[1].policyLabels, [])
+})
+
 test('selectDeviceListItems filters, searches all identity fields and sorts without mutating', () => {
     const items = buildDeviceListItems(inventory, [])
     assert.deepEqual(selectDeviceListItems(items, 'online', '', 'recent').map(item => item.deviceId), [inventory[0].deviceId])

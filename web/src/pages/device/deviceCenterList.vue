@@ -210,7 +210,7 @@ import {
     type DeviceListItem,
     type DeviceSort,
     type InventoryDevice,
-    type DevicePolicyRules,
+    type DeviceNetworkRule,
 } from './deviceInventory'
 import type { DeviceScene } from './deviceScene'
 import type { DeviceIconKey } from './deviceScene'
@@ -249,7 +249,7 @@ const visibleDevices = computed(() => selectDeviceListItems(devices.value, filte
 const filters = computed(() => [
     { value: 'online' as DeviceFilter, label: $gettext('在线') },
     { value: 'all' as DeviceFilter, label: $gettext('全部') },
-    { value: 'controlled' as DeviceFilter, label: $gettext('已控制') },
+    { value: 'controlled' as DeviceFilter, label: $gettext('已设置') },
 ])
 const detailTabs = computed(() => [
     { id: 'overview' as const, label: $gettext('概览') },
@@ -262,15 +262,15 @@ const load = async () => {
     loading.value = true
     loadError.value = ''
     try {
-        const [inventoryResponse, policyRulesResponse] = await Promise.all([
+        const [inventoryResponse, networkRulesResponse] = await Promise.all([
             request.DeviceMangement.deviceInventoryV2.GET(),
-            request.DeviceMangement.devicePolicyRulesV2.GET().catch(() => null),
+            request.DeviceMangement.networkRulesV2.GET().catch(() => null),
         ])
         const inventoryData = inventoryResponse.data
         if (!inventoryData?.result) throw inventoryData?.error || $gettext('设备清单不可用')
         const inventoryDevices: InventoryDevice[] = inventoryData.result.devices || []
-        const policyRules: DevicePolicyRules = policyRulesResponse?.data?.result || {}
-        devices.value = buildDeviceListItems(inventoryDevices, [], policyRules)
+        const networkRules: DeviceNetworkRule[] | undefined = networkRulesResponse?.data?.result?.rules
+        devices.value = buildDeviceListItems(inventoryDevices, [], undefined, networkRules)
         applyTelemetry(telemetryItems.value)
         health.value = inventoryData.result.health || { state: 'ready', reasons: [] }
         if (selected.value) {
@@ -325,7 +325,7 @@ const confidenceLabel = (confidence: DeviceListItem['classification']['confidenc
     medium: $gettext('中'),
     low: $gettext('低'),
 }[confidence])
-const policyLabel = (policy: string) => ({ static: $gettext('静态地址'), limited: $gettext('已限速'), blocked: $gettext('已断网') }[policy] || policy)
+const policyLabel = (policy: string) => ({ static: $gettext('静态地址'), route: $gettext('已指定路线'), limited: $gettext('已限速'), blocked: $gettext('已断网') }[policy] || policy)
 const trafficLabel = (device: DeviceListItem, direction: 'up' | 'down') => telemetrySpeedLabel(device.telemetry, direction)
 const trafficTotal = (device: DeviceListItem, direction: 'up' | 'down') => {
     if (!device.telemetry || device.telemetry.state === 'warming_up') return $gettext('采集中')

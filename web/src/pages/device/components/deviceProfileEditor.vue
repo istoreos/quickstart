@@ -47,7 +47,7 @@ import PageState from './pageState.vue'
 import DeviceSceneIcon from './deviceSceneIcon.vue'
 import type { DeviceClassification, DeviceListItem } from '../deviceInventory'
 import { editableDeviceCategories } from '../deviceClassification'
-import { deviceIconKeys, deviceIconLabels, type DeviceIconKey, type DeviceScene } from '../deviceScene'
+import { deviceIconKeys, deviceIconLabels, isDeviceIconKey, type DeviceIconKey, type DeviceScene } from '../deviceScene'
 import { validDeviceAlias, type DeviceProfileResult } from '../deviceProfile'
 
 const props = defineProps<{ device: DeviceListItem }>()
@@ -59,8 +59,13 @@ const loading = ref(true), saving = ref(false), loadError = ref(''), feedback = 
 const alias = ref(''), brand = ref(''), category = ref<DeviceScene>('computer'), iconMode = ref<'auto'|'manual'>('auto'), iconKey = ref<DeviceIconKey>('computer'), scope = ref<'persistent'|'boot'>('persistent')
 const invalid = computed(() => !validDeviceAlias(alias.value) || Array.from(brand.value).length > 64)
 const effectiveBrand = computed(() => brand.value || profile.value?.classification.brand || '')
-const previewIcon = computed(() => iconMode.value === 'manual' ? iconKey.value : (profile.value?.icon?.resolvedKey || category.value) as DeviceIconKey)
-const iconLabel = (key: DeviceIconKey) => $gettext(deviceIconLabels[key])
+const automaticIcon = computed<DeviceIconKey>(() => {
+    const assetKey = profile.value?.icon?.assetKey
+    if (isDeviceIconKey(assetKey)) return assetKey
+    return isDeviceIconKey(category.value) ? category.value : 'computer'
+})
+const previewIcon = computed<DeviceIconKey>(() => iconMode.value === 'manual' ? iconKey.value : automaticIcon.value)
+const iconLabel = (key: DeviceIconKey) => $gettext(deviceIconLabels[key] || deviceIconLabels.computer)
 const sceneLabel = (scene: DeviceScene) => ({ phone: $gettext('手机'), computer: $gettext('电脑'), tablet: $gettext('平板'), tv: $gettext('电视与影音'), network: $gettext('网络设备'), 'smart-home': $gettext('智能家居'), camera: $gettext('摄像头'), gaming: $gettext('游戏设备'), storage: $gettext('存储与服务器'), printer: $gettext('打印机'), wearable: $gettext('穿戴设备'), unknown: $gettext('未知设备') }[scene])
 const iconScene = (key: DeviceIconKey): DeviceScene => ({ desktop: 'computer', laptop: 'computer', 'smart-speaker': 'smart-home', 'smart-bulb': 'smart-home', thermostat: 'smart-home', sensor: 'smart-home', 'door-lock': 'smart-home', 'robot-vacuum': 'smart-home', 'air-conditioner': 'smart-home', projector: 'tv', 'set-top-box': 'tv', 'game-console': 'gaming', 'handheld-game': 'gaming', 'home-server': 'storage', 'network-switch': 'network', 'access-point': 'network', 'network-bridge': 'network', 'e-reader': 'tablet' } as Partial<Record<DeviceIconKey, DeviceScene>>)[key] || key as DeviceScene
 
@@ -72,7 +77,8 @@ const applyResult = (result: DeviceProfileResult) => {
     brand.value = result.profile.manualBrand || ''
     category.value = (result.profile.manualCategory || result.profile.classification.category) as DeviceScene
     iconMode.value = result.profile.icon.mode
-    iconKey.value = (result.profile.icon.preferenceKey || result.profile.icon.resolvedKey || 'computer') as DeviceIconKey
+    const preferredIcon = result.profile.icon.preferenceKey || result.profile.icon.assetKey
+    iconKey.value = isDeviceIconKey(preferredIcon) ? preferredIcon : 'computer'
     scope.value = result.profile.scope
     emit('saved', { alias: alias.value, classification: result.profile.classification as DeviceClassification, iconKey: result.profile.icon.assetKey as DeviceIconKey })
 }
