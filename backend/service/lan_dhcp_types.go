@@ -20,6 +20,8 @@ type DhcpTagRecord struct {
 	AutoCreated bool
 	Gateway     string
 	DhcpOption  []string
+	TargetID    string
+	TargetKind  string
 }
 
 type LanStatusSnapshot struct {

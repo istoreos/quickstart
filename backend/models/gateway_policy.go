@@ -27,7 +27,15 @@ type GatewayTargetListResponse struct {
 
 type GatewayReference struct {
 	DeviceID string `json:"deviceId,omitempty"`
+	GroupID  string `json:"groupId,omitempty"`
 	Scope    string `json:"scope"`
+}
+
+type GatewayReferenceSummary struct {
+	Devices      int64 `json:"devices"`
+	Groups       int64 `json:"groups"`
+	GlobalPolicy int64 `json:"globalPolicy"`
+	LanDefault   int64 `json:"lanDefault"`
 }
 
 type GatewayReferencesResult struct {
@@ -81,4 +89,46 @@ type GatewayAssignmentApplyResult struct {
 type GatewayAssignmentApplyResponse struct {
 	JSONResponse
 	Result *GatewayAssignmentApplyResult `json:"result,omitempty"`
+}
+
+// GatewayTargetMutationRequest manages a user-facing Internet Path. DHCP tags
+// and options intentionally remain private to the GatewayPolicy module.
+type GatewayTargetMutationRequest struct {
+	Action              string `json:"action"`
+	TargetID            string `json:"targetId,omitempty"`
+	Name                string `json:"name,omitempty"`
+	Kind                string `json:"kind,omitempty"`
+	Gateway             string `json:"gateway,omitempty"`
+	ReplacementTargetID string `json:"replacementTargetId,omitempty"`
+	ExpectedVersion     string `json:"expectedVersion,omitempty"`
+	IdempotencyKey      string `json:"idempotencyKey,omitempty"`
+}
+
+type GatewayTargetMutationPlan struct {
+	Action              string                   `json:"action"`
+	Target              *GatewayTarget           `json:"target,omitempty"`
+	ReplacementTargetID string                   `json:"replacementTargetId,omitempty"`
+	ReferenceSummary    *GatewayReferenceSummary `json:"referenceSummary"`
+	AffectedDevices     []string                 `json:"affectedDevices"`
+	Version             string                   `json:"version"`
+	RollbackPoint       string                   `json:"rollbackPoint"`
+	CanApply            bool                     `json:"canApply"`
+	Error               *DevicePolicyError       `json:"error,omitempty"`
+}
+
+type GatewayTargetMutationPlanResponse struct {
+	JSONResponse
+	Result *GatewayTargetMutationPlan `json:"result,omitempty"`
+}
+
+type GatewayTargetMutationApplyResult struct {
+	Plan        *GatewayTargetMutationPlan `json:"plan"`
+	Changed     bool                       `json:"changed"`
+	Transaction *TaskTransaction           `json:"transaction,omitempty"`
+	Error       *DevicePolicyError         `json:"error,omitempty"`
+}
+
+type GatewayTargetMutationApplyResponse struct {
+	JSONResponse
+	Result *GatewayTargetMutationApplyResult `json:"result,omitempty"`
 }

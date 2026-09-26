@@ -67,12 +67,16 @@ func NewDeviceGroupModule(store deviceGroupStore, applier groupPolicyApplier) *D
 }
 
 func NewDefaultDeviceGroupModule(policy *DevicePolicyModule, network *DeviceNetworkPolicyModule, traffic ...*TrafficInsightsModule) *DeviceGroupModule {
+	return newDefaultDeviceGroupModuleWithStore(newJSONDeviceGroupStore(defaultDeviceGroupStorePath), policy, network, traffic...)
+}
+
+func newDefaultDeviceGroupModuleWithStore(store *jsonDeviceGroupStore, policy *DevicePolicyModule, network *DeviceNetworkPolicyModule, traffic ...*TrafficInsightsModule) *DeviceGroupModule {
 	var insights *TrafficInsightsModule
 	if len(traffic) > 0 {
 		insights = traffic[0]
 	}
 	module := NewDeviceGroupModule(
-		newJSONDeviceGroupStore(defaultDeviceGroupStorePath),
+		store,
 		&defaultGroupPolicyApplier{policy: policy, network: network, traffic: insights},
 	)
 	if network != nil {

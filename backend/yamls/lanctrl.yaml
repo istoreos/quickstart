@@ -766,6 +766,29 @@ definitions:
     allOf: [{ $ref: "common.yaml#/definitions/JsonResponse" }]
     properties:
       result: { type: object }
+  GatewayTargetMutationRequest:
+    type: object
+    required: [action]
+    description: "Create, update, or safely replace and delete a user-facing Internet Path; DHCP implementation fields are intentionally absent"
+    properties:
+      action: { type: string, enum: [create, update, delete] }
+      targetId: { type: string }
+      name: { type: string, maxLength: 64 }
+      kind: { type: string, enum: [bypass, custom] }
+      gateway: { type: string }
+      replacementTargetId: { type: string }
+      expectedVersion: { type: string }
+      idempotencyKey: { type: string, maxLength: 128 }
+  GatewayTargetMutationPlanResponse:
+    type: object
+    allOf: [{ $ref: "common.yaml#/definitions/JsonResponse" }]
+    properties:
+      result: { type: object }
+  GatewayTargetMutationApplyResponse:
+    type: object
+    allOf: [{ $ref: "common.yaml#/definitions/JsonResponse" }]
+    properties:
+      result: { type: object }
   DeviceAddressPolicy:
     type: object
     required: [enabled, bindIP]

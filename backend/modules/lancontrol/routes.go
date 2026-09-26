@@ -32,6 +32,8 @@ type Backend interface {
 	PostGatewayAssignmentPlanV2(ctx context.Context, r *http.Request) (*models.GatewayAssignmentPlanResponse, error)
 	PostGatewayAssignmentApplyV2(ctx context.Context, r *http.Request) (*models.GatewayAssignmentApplyResponse, error)
 	GetGatewayReferencesV2(ctx context.Context, r *http.Request) (*models.GatewayReferencesResponse, error)
+	PostGatewayTargetPlanV2(ctx context.Context, r *http.Request) (*models.GatewayTargetMutationPlanResponse, error)
+	PostGatewayTargetApplyV2(ctx context.Context, r *http.Request) (*models.GatewayTargetMutationApplyResponse, error)
 	GetDeviceNetworkPolicyV2(ctx context.Context, r *http.Request) (*models.DeviceNetworkPolicyResponse, error)
 	PostDeviceNetworkPolicyV2(ctx context.Context, r *http.Request) (*models.DeviceNetworkPolicyResponse, error)
 	GetFloatingGatewayV2(ctx context.Context) (*models.FloatingGatewayResponse, error)
@@ -149,6 +151,12 @@ func RegisterRoutes(router *httprouter.Router, backend Backend) {
 
 	httpapi.GetJSON(router, "/cgi-bin/luci/istore/lanctrl/v2/gateway-target-references/", func(ctx context.Context, r *http.Request) (any, error) {
 		return backend.GetGatewayReferencesV2(ctx, r)
+	})
+	httpapi.PostJSON(router, "/cgi-bin/luci/istore/lanctrl/v2/gateway-target/plan/", func(ctx context.Context, r *http.Request) (any, error) {
+		return backend.PostGatewayTargetPlanV2(ctx, r)
+	})
+	httpapi.PostJSON(router, "/cgi-bin/luci/istore/lanctrl/v2/gateway-target/apply/", func(ctx context.Context, r *http.Request) (any, error) {
+		return backend.PostGatewayTargetApplyV2(ctx, r)
 	})
 
 	httpapi.GetJSON(router, "/cgi-bin/luci/istore/lanctrl/v2/device-network-policy/", func(ctx context.Context, r *http.Request) (any, error) {

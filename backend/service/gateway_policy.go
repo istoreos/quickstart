@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/netip"
@@ -43,22 +44,37 @@ type gatewayPolicyExecutionPlan struct {
 	Target *gatewayTargetDescriptor
 }
 
+type gatewayTargetMutationExecutionPlan struct {
+	Public       *models.GatewayTargetMutationPlan
+	State        gatewayPolicySnapshot
+	Target       *gatewayTargetDescriptor
+	Replacement  *gatewayTargetDescriptor
+	GroupVersion string
+}
+
 type gatewayPolicyStore interface {
 	ReadState(context.Context) (gatewayPolicySnapshot, error)
 	Apply(context.Context, gatewayPolicyExecutionPlan) error
+	ApplyTargetMutation(context.Context, gatewayTargetMutationExecutionPlan) error
 }
 
 type GatewayPolicyModule struct {
-	inventory *DeviceInventoryModule
-	store     gatewayPolicyStore
+	inventory    *DeviceInventoryModule
+	store        gatewayPolicyStore
+	groups       *jsonDeviceGroupStore
+	transactions *TaskTransactionJournal
 }
 
 func NewGatewayPolicyModule(inventory *DeviceInventoryModule, store gatewayPolicyStore) *GatewayPolicyModule {
-	return &GatewayPolicyModule{inventory: inventory, store: store}
+	return &GatewayPolicyModule{inventory: inventory, store: store, transactions: newMemoryTaskTransactionJournal()}
 }
 
 func NewDefaultGatewayPolicyModule(inventory *DeviceInventoryModule) *GatewayPolicyModule {
-	return NewGatewayPolicyModule(inventory, NewDefaultGatewayPolicyStore())
+	groups := newJSONDeviceGroupStore(defaultDeviceGroupStorePath)
+	module := NewGatewayPolicyModule(inventory, newDefaultGatewayPolicyStore(groups))
+	module.groups = groups
+	module.transactions = NewDefaultTaskTransactionJournal()
+	return module
 }
 
 func (module *GatewayPolicyModule) ListTargets(ctx context.Context) (*models.GatewayTargetListResponse, error) {
@@ -68,6 +84,7 @@ func (module *GatewayPolicyModule) ListTargets(ctx context.Context) (*models.Gat
 	}
 	index := buildGatewayTargetIndex(state)
 	countGatewayReferences(index, state.Hosts)
+	module.countManagedGatewayReferences(ctx, index, state)
 	targets := make([]*models.GatewayTarget, 0, len(index.targets))
 	for _, target := range index.targets {
 		targets = append(targets, target.Public)
@@ -154,8 +171,308 @@ func (module *GatewayPolicyModule) References(ctx context.Context, targetID stri
 		}
 		references = append(references, reference)
 	}
+	if module.groups != nil {
+		groupReferences, _, _, groupErr := module.groups.GatewayReferences(targetID)
+		if groupErr != nil {
+			return nil, groupErr
+		}
+		references = append(references, groupReferences...)
+	}
+	if target := index.targets[targetID]; gatewayTargetIsLanDefault(target, state) {
+		references = append(references, &models.GatewayReference{Scope: "lan_default"})
+	}
 	sort.Slice(references, func(i, j int) bool { return references[i].DeviceID < references[j].DeviceID })
 	return &models.GatewayReferencesResponse{Result: &models.GatewayReferencesResult{TargetID: targetID, References: references}}, nil
+}
+
+func (module *GatewayPolicyModule) countManagedGatewayReferences(ctx context.Context, index gatewayTargetIndex, state gatewayPolicySnapshot) {
+	for _, target := range index.targets {
+		if gatewayTargetIsLanDefault(target, state) {
+			target.Public.ReferenceCount++
+		}
+	}
+	if module.groups == nil {
+		return
+	}
+	groupState, err := module.groups.Read(ctx)
+	if err != nil {
+		return
+	}
+	increment := func(policy *models.GroupPolicy) {
+		if policy != nil && policy.TargetID != "" {
+			if target := index.targets[policy.TargetID]; target != nil {
+				target.Public.ReferenceCount++
+			}
+		}
+	}
+	increment(groupState.GlobalPolicy)
+	for _, group := range groupState.Groups {
+		if group != nil {
+			increment(group.Policy)
+		}
+	}
+	for _, policy := range groupState.DevicePolicies {
+		increment(policy)
+	}
+}
+
+func (module *GatewayPolicyModule) PlanTargetMutation(ctx context.Context, request *models.GatewayTargetMutationRequest) (*models.GatewayTargetMutationPlanResponse, error) {
+	plan, err := module.planTargetMutation(ctx, request)
+	if err != nil {
+		return nil, err
+	}
+	return &models.GatewayTargetMutationPlanResponse{Result: plan.Public}, nil
+}
+
+func (module *GatewayPolicyModule) ApplyTargetMutation(ctx context.Context, request *models.GatewayTargetMutationRequest) (*models.GatewayTargetMutationApplyResponse, error) {
+	if request == nil {
+		return &models.GatewayTargetMutationApplyResponse{Result: &models.GatewayTargetMutationApplyResult{
+			Plan:  &models.GatewayTargetMutationPlan{ReferenceSummary: &models.GatewayReferenceSummary{}},
+			Error: &models.DevicePolicyError{Code: "validation_failed", Message: "request is required"},
+		}}, nil
+	}
+	fingerprint, _ := json.Marshal(request)
+	begin, beginErr := module.transactions.Begin(ctx, "gateway_target", request.IdempotencyKey, string(fingerprint))
+	if beginErr != nil {
+		return &models.GatewayTargetMutationApplyResponse{Result: &models.GatewayTargetMutationApplyResult{
+			Plan:  &models.GatewayTargetMutationPlan{Action: request.Action, ReferenceSummary: &models.GatewayReferenceSummary{}},
+			Error: &models.DevicePolicyError{Code: "transaction_unavailable", Message: "could not create transaction record"},
+		}}, nil
+	}
+	if begin.Conflict {
+		return &models.GatewayTargetMutationApplyResponse{Result: &models.GatewayTargetMutationApplyResult{
+			Plan: &models.GatewayTargetMutationPlan{Action: request.Action, ReferenceSummary: &models.GatewayReferenceSummary{}}, Transaction: begin.Transaction,
+			Error: &models.DevicePolicyError{Code: "conflict", Message: "idempotency key was already used for a different change"},
+		}}, nil
+	}
+	if begin.Replay {
+		return &models.GatewayTargetMutationApplyResponse{Result: &models.GatewayTargetMutationApplyResult{
+			Plan: replayedGatewayTargetPlan(request), Transaction: begin.Transaction,
+		}}, nil
+	}
+	plan, err := module.planTargetMutation(ctx, request)
+	if err != nil {
+		return nil, err
+	}
+	result := &models.GatewayTargetMutationApplyResult{Plan: plan.Public, Transaction: begin.Transaction}
+	if plan.Public.Error != nil || !plan.Public.CanApply {
+		result.Error = plan.Public.Error
+		_ = module.transactions.Advance(ctx, begin.Transaction, "validate", "rejected", "")
+		return &models.GatewayTargetMutationApplyResponse{Result: result}, nil
+	}
+	if request.ExpectedVersion != "" && request.ExpectedVersion != plan.State.Version {
+		result.Error = &models.DevicePolicyError{Code: "conflict", Message: "gateway targets changed; plan again"}
+		_ = module.transactions.Advance(ctx, begin.Transaction, "validate", "rejected", "reload_and_plan")
+		return &models.GatewayTargetMutationApplyResponse{Result: result}, nil
+	}
+	if err := module.store.ApplyTargetMutation(ctx, plan); err != nil {
+		result.Error = &models.DevicePolicyError{Code: "apply_failed", Message: err.Error()}
+		_ = module.transactions.Advance(ctx, begin.Transaction, "rollback", "rolled_back", "retry")
+		return &models.GatewayTargetMutationApplyResponse{Result: result}, nil
+	}
+	result.Changed = true
+	_ = module.transactions.Advance(ctx, begin.Transaction, "verify", "committed", "")
+	return &models.GatewayTargetMutationApplyResponse{Result: result}, nil
+}
+
+func replayedGatewayTargetPlan(request *models.GatewayTargetMutationRequest) *models.GatewayTargetMutationPlan {
+	targetID := request.TargetID
+	if request.Action == "create" && targetID == "" {
+		targetID = gatewayOpaqueID(strings.TrimSpace(request.Kind), strings.TrimSpace(request.Name)+"|"+strings.TrimSpace(request.Gateway))
+	}
+	return &models.GatewayTargetMutationPlan{
+		Action: request.Action, Target: &models.GatewayTarget{ID: targetID, Name: strings.TrimSpace(request.Name), Kind: strings.TrimSpace(request.Kind), Gateway: strings.TrimSpace(request.Gateway)},
+		ReplacementTargetID: request.ReplacementTargetID, ReferenceSummary: &models.GatewayReferenceSummary{}, AffectedDevices: []string{}, CanApply: true,
+	}
+}
+
+func (module *GatewayPolicyModule) planTargetMutation(ctx context.Context, request *models.GatewayTargetMutationRequest) (gatewayTargetMutationExecutionPlan, error) {
+	if module == nil || module.store == nil {
+		return gatewayTargetMutationExecutionPlan{}, errors.New("gateway policy module is unavailable")
+	}
+	state, err := module.store.ReadState(ctx)
+	if err != nil {
+		return gatewayTargetMutationExecutionPlan{}, err
+	}
+	index := buildGatewayTargetIndex(state)
+	countGatewayReferences(index, state.Hosts)
+	public := &models.GatewayTargetMutationPlan{
+		AffectedDevices: []string{}, ReferenceSummary: &models.GatewayReferenceSummary{},
+		Version: state.Version, RollbackPoint: state.Version,
+	}
+	plan := gatewayTargetMutationExecutionPlan{Public: public, State: state}
+	if request == nil {
+		public.Error = &models.DevicePolicyError{Code: "validation_failed", Message: "request is required"}
+		return plan, nil
+	}
+	public.Action = request.Action
+	switch request.Action {
+	case "create", "update":
+		name, kind, gateway, validation := validateGatewayTargetInput(request.Name, request.Kind, request.Gateway, state.Prefixes)
+		if validation != nil {
+			public.Error = validation
+			return plan, nil
+		}
+		targetID := request.TargetID
+		var existing *gatewayTargetDescriptor
+		if request.Action == "create" {
+			if targetID != "" {
+				public.Error = &models.DevicePolicyError{Code: "validation_failed", Message: "targetId must be empty when creating a route"}
+				return plan, nil
+			}
+			targetID = gatewayOpaqueID(kind, name+"|"+gateway)
+			if index.targets[targetID] != nil {
+				public.Error = &models.DevicePolicyError{Code: "conflict", Message: "an equivalent gateway target already exists"}
+				return plan, nil
+			}
+		} else {
+			existing = index.targets[targetID]
+			if existing == nil {
+				public.Error = &models.DevicePolicyError{Code: "not_found", Message: "gateway target was not found"}
+				return plan, nil
+			}
+			if !existing.Stored || !gatewayTargetEditable(existing.Public.Kind) {
+				public.Error = &models.DevicePolicyError{Code: "validation_failed", Message: "built-in gateway target cannot be edited"}
+				return plan, nil
+			}
+		}
+		tagName := quickstartGatewayTag(targetID)
+		if existing != nil && existing.TagName != "" {
+			tagName = existing.TagName
+		}
+		plan.Target = &gatewayTargetDescriptor{Public: &models.GatewayTarget{
+			ID: targetID, Name: name, Kind: kind, Gateway: gateway, DNS: []string{gateway}, Supported: true,
+			DesiredState: "available", EffectState: "unverified", Version: state.Version,
+		}, TagName: tagName, TagTitle: name, Options: gatewayAndDNSOptions(gateway), Materialize: true, Stored: existing != nil}
+		public.Target = plan.Target.Public
+		public.CanApply = true
+		return plan, nil
+	case "delete":
+		target := index.targets[request.TargetID]
+		if target == nil {
+			public.Error = &models.DevicePolicyError{Code: "not_found", Message: "gateway target was not found"}
+			return plan, nil
+		}
+		if !target.Stored || !gatewayTargetEditable(target.Public.Kind) {
+			public.Error = &models.DevicePolicyError{Code: "validation_failed", Message: "built-in gateway target cannot be deleted"}
+			return plan, nil
+		}
+		plan.Target, public.Target = target, target.Public
+		for _, host := range state.Hosts {
+			if index.targetIDForTag(host.TagName) != request.TargetID {
+				continue
+			}
+			public.ReferenceSummary.Devices++
+			if deviceID := module.deviceIDForMAC(ctx, host.MAC); deviceID != "" {
+				public.AffectedDevices = append(public.AffectedDevices, deviceID)
+			}
+		}
+		if gatewayTargetIsLanDefault(target, state) {
+			public.ReferenceSummary.LanDefault = 1
+		}
+		if module.groups != nil {
+			groupReferences, groupDevices, groupVersion, groupErr := module.groups.GatewayReferences(request.TargetID)
+			if groupErr != nil {
+				return gatewayTargetMutationExecutionPlan{}, groupErr
+			}
+			plan.GroupVersion = groupVersion
+			seenDevices := map[string]bool{}
+			for _, deviceID := range public.AffectedDevices {
+				seenDevices[deviceID] = true
+			}
+			for _, reference := range groupReferences {
+				switch reference.Scope {
+				case "group":
+					public.ReferenceSummary.Groups++
+				case "global_policy":
+					public.ReferenceSummary.GlobalPolicy++
+				case "device_policy":
+					if !seenDevices[reference.DeviceID] {
+						public.ReferenceSummary.Devices++
+					}
+				}
+			}
+			for _, deviceID := range groupDevices {
+				if !seenDevices[deviceID] {
+					public.AffectedDevices = append(public.AffectedDevices, deviceID)
+					seenDevices[deviceID] = true
+				}
+			}
+		}
+		sort.Strings(public.AffectedDevices)
+		public.ReplacementTargetID = request.ReplacementTargetID
+		totalReferences := public.ReferenceSummary.Devices + public.ReferenceSummary.Groups + public.ReferenceSummary.GlobalPolicy + public.ReferenceSummary.LanDefault
+		if totalReferences > 0 && request.ReplacementTargetID == "" {
+			public.Error = &models.DevicePolicyError{Code: "replacement_required", Message: "select a replacement for devices using this route"}
+			return plan, nil
+		}
+		if request.ReplacementTargetID != "" {
+			replacement := index.targets[request.ReplacementTargetID]
+			if replacement == nil || replacement == target || !replacement.Public.Supported {
+				public.Error = &models.DevicePolicyError{Code: "validation_failed", Message: "replacement gateway target is unavailable"}
+				return plan, nil
+			}
+			plan.Replacement = replacement
+		}
+		public.CanApply = true
+		return plan, nil
+	default:
+		public.Error = &models.DevicePolicyError{Code: "validation_failed", Message: "action must be create, update or delete"}
+		return plan, nil
+	}
+}
+
+func gatewayTargetIsLanDefault(target *gatewayTargetDescriptor, state gatewayPolicySnapshot) bool {
+	if target == nil || target.Public == nil || state.DHCP == nil {
+		return false
+	}
+	return target.Public.Gateway != "" && detectDhcpGateway(state.LAN, state.DHCP.DhcpOptions) == target.Public.Gateway
+}
+
+func validateGatewayTargetInput(name, kind, gateway string, prefixes []netip.Prefix) (string, string, string, *models.DevicePolicyError) {
+	name, kind, gateway = strings.TrimSpace(name), strings.TrimSpace(kind), strings.TrimSpace(gateway)
+	if name == "" || len([]rune(name)) > 64 || strings.ContainsAny(name, "\r\n\x00") {
+		return "", "", "", &models.DevicePolicyError{Code: "validation_failed", Message: "route name must contain 1 to 64 visible characters"}
+	}
+	if kind != "bypass" && kind != "custom" {
+		return "", "", "", &models.DevicePolicyError{Code: "validation_failed", Message: "route kind must be bypass or custom"}
+	}
+	address, err := netip.ParseAddr(gateway)
+	if err != nil || !address.Is4() || !gatewayInPrefixes(gateway, prefixes) {
+		return "", "", "", &models.DevicePolicyError{Code: "validation_failed", Message: "gateway must be an IPv4 address in the selected LAN"}
+	}
+	return name, kind, address.String(), nil
+}
+
+func gatewayTargetEditable(kind string) bool { return kind == "bypass" || kind == "custom" }
+
+func quickstartGatewayTag(targetID string) string {
+	sum := sha256.Sum256([]byte(targetID))
+	return "qs_route_" + hex.EncodeToString(sum[:6])
+}
+
+func (module *GatewayPolicyModule) deviceIDForMAC(ctx context.Context, mac string) string {
+	if module.inventory == nil {
+		return ""
+	}
+	device, err := findGatewayPolicyDeviceByMAC(ctx, module.inventory, mac)
+	if err != nil || device == nil {
+		return ""
+	}
+	return device.DeviceID
+}
+
+func findGatewayPolicyDeviceByMAC(ctx context.Context, inventory *DeviceInventoryModule, mac string) (*models.DeviceInventoryItem, error) {
+	snapshot, err := inventory.Snapshot(ctx)
+	if err != nil || snapshot == nil || snapshot.Result == nil {
+		return nil, err
+	}
+	for _, device := range snapshot.Result.Devices {
+		if device != nil && normalizeInventoryMAC(device.Mac) == normalizeInventoryMAC(mac) {
+			return device, nil
+		}
+	}
+	return nil, nil
 }
 
 func (module *GatewayPolicyModule) plan(ctx context.Context, request *models.GatewayAssignmentRequest) (gatewayPolicyExecutionPlan, error) {
@@ -298,16 +615,20 @@ func buildGatewayTargetIndex(state gatewayPolicySnapshot) gatewayTargetIndex {
 	if state.LAN.Nexthop != "" && state.LAN.Nexthop != state.LAN.LanAddr {
 		addBuiltIn("upstream", "上级路由", "upstream", state.LAN.Nexthop)
 	}
-	stored := map[string]bool{}
+	stored := map[string]DhcpTagRecord{}
 	if state.DHCP != nil {
 		for _, record := range state.DHCP.Tags {
-			stored[record.TagName] = true
+			stored[record.TagName] = record
 		}
 		for _, tag := range buildGlobalDhcpTags(state.LAN, state.DHCP) {
 			if tag == nil || tag.TagName == "" {
 				continue
 			}
 			targetID, kind, name := gatewayTargetIdentity(tag.TagTitle, tag.Gateway, state.LAN)
+			storedRecord, isStored := stored[tag.TagName]
+			if storedRecord.TargetID != "" && (storedRecord.TargetKind == "bypass" || storedRecord.TargetKind == "custom") {
+				targetID, kind, name = storedRecord.TargetID, storedRecord.TargetKind, gatewayTargetCustomName(tag.TagTitle)
+			}
 			if targetID == "default" {
 				index.tagToID[tag.TagName] = targetID
 				continue
@@ -322,7 +643,7 @@ func buildGatewayTargetIndex(state gatewayPolicySnapshot) gatewayTargetIndex {
 				index.targets[targetID] = descriptor
 			}
 			index.tagToID[tag.TagName] = targetID
-			if descriptor.TagName == "" || stored[tag.TagName] {
+			if descriptor.TagName == "" || isStored {
 				descriptor.TagName = tag.TagName
 				descriptor.TagTitle = tag.TagTitle
 				canonical := gatewayAndDNSOptions(tag.Gateway)
@@ -332,8 +653,8 @@ func buildGatewayTargetIndex(state gatewayPolicySnapshot) gatewayTargetIndex {
 				} else {
 					descriptor.Options = append([]string(nil), tag.DhcpOption...)
 				}
-				descriptor.Stored = stored[tag.TagName]
-				descriptor.Materialize = !stored[tag.TagName] || (descriptor.Public.Supported && !sameStringSet(tag.DhcpOption, canonical))
+				descriptor.Stored = isStored
+				descriptor.Materialize = !isStored || (descriptor.Public.Supported && !sameStringSet(tag.DhcpOption, canonical))
 			}
 		}
 	}

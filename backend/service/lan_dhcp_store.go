@@ -77,6 +77,8 @@ func (store *defaultDhcpConfigStore) LoadLanState(ctx context.Context) (*LanDhcp
 	for _, name := range tagSecs {
 		tag := DhcpTagRecord{TagName: name}
 		tag.TagTitle, _ = uci.GetLast("dhcp", name, "tag_title")
+		tag.TargetID, _ = uci.GetLast("dhcp", name, "quickstart_target_id")
+		tag.TargetKind, _ = uci.GetLast("dhcp", name, "quickstart_target_kind")
 		listValues, _ := uci.Get("dhcp", name, "dhcp_option")
 		sort.Strings(listValues)
 		tag.DhcpOption = listValues
