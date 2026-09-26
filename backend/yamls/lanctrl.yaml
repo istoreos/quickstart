@@ -877,6 +877,28 @@ definitions:
     allOf: [{ $ref: "common.yaml#/definitions/JsonResponse" }]
     properties:
       result: { type: object }
+  LanDHCPSettings:
+    type: object
+    required: [enabled, poolStart, poolEnd, leaseTime, defaultTargetId]
+    properties:
+      enabled: { type: boolean }
+      poolStart: { type: string }
+      poolEnd: { type: string }
+      leaseTime: { type: string }
+      defaultTargetId: { type: string }
+  LanDHCPSettingsApplyRequest:
+    type: object
+    required: [settings]
+    properties:
+      settings: { $ref: "#/definitions/LanDHCPSettings" }
+      confirmDisable: { type: boolean }
+      expectedVersion: { type: string }
+      idempotencyKey: { type: string, maxLength: 128 }
+  LanDHCPSettingsResponse:
+    type: object
+    allOf: [{ $ref: "common.yaml#/definitions/JsonResponse" }]
+    properties:
+      result: { type: object }
   FloatingGatewayConfig:
     type: object
     required: [enabled, peerIPs]

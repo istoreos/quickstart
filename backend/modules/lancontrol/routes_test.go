@@ -270,6 +270,21 @@ func (backend *fakeLanControlBackend) GetRouterContextV2(ctx context.Context, r 
 	return &models.RouterContextResponse{Result: &models.RouterContext{LAN: r.URL.Query().Get("lan")}}, backend.err
 }
 
+func (backend *fakeLanControlBackend) GetLanDHCPSettingsV2(ctx context.Context) (*models.LanDHCPSettingsResponse, error) {
+	backend.record("getLanDHCPSettingsV2")
+	return &models.LanDHCPSettingsResponse{Result: &models.LanDHCPSettingsResult{}}, backend.err
+}
+
+func (backend *fakeLanControlBackend) PostLanDHCPSettingsPlanV2(ctx context.Context, r *http.Request) (*models.LanDHCPSettingsResponse, error) {
+	backend.recordRequest("planLanDHCPSettingsV2", r)
+	return &models.LanDHCPSettingsResponse{Result: &models.LanDHCPSettingsResult{}}, backend.err
+}
+
+func (backend *fakeLanControlBackend) PostLanDHCPSettingsApplyV2(ctx context.Context, r *http.Request) (*models.LanDHCPSettingsResponse, error) {
+	backend.recordRequest("applyLanDHCPSettingsV2", r)
+	return &models.LanDHCPSettingsResponse{Result: &models.LanDHCPSettingsResult{}}, backend.err
+}
+
 func (backend *fakeLanControlBackend) GetDeviceGroupsV2(ctx context.Context) (*models.DeviceGroupsResponse, error) {
 	backend.record("getDeviceGroupsV2")
 	return &models.DeviceGroupsResponse{Result: &models.DeviceGroupsResult{}}, backend.err
@@ -446,6 +461,9 @@ func TestRegisterLanControlRoutesMapsRoutesToBackendMethods(t *testing.T) {
 		{name: "plan capability install v2", method: http.MethodPost, path: "/cgi-bin/luci/istore/lanctrl/v2/capability-action/plan/", body: `{"capabilityKey":"device_speed_limit","action":"install","draftToken":"draft-1"}`, wantCall: "postCapabilityActionPlanV2"},
 		{name: "apply capability install v2", method: http.MethodPost, path: "/cgi-bin/luci/istore/lanctrl/v2/capability-action/apply/", body: `{"capabilityKey":"device_speed_limit","action":"install","draftToken":"draft-1","confirm":true}`, wantCall: "postCapabilityActionApplyV2"},
 		{name: "get router context v2", method: http.MethodGet, path: "/cgi-bin/luci/istore/lanctrl/v2/router-context/?lan=guest_20", wantCall: "getRouterContextV2"},
+		{name: "get LAN DHCP settings v2", method: http.MethodGet, path: "/cgi-bin/luci/istore/lanctrl/v2/lan-dhcp-settings/", wantCall: "getLanDHCPSettingsV2"},
+		{name: "plan LAN DHCP settings v2", method: http.MethodPost, path: "/cgi-bin/luci/istore/lanctrl/v2/lan-dhcp-settings/plan/", body: `{"settings":{"enabled":true,"poolStart":"192.168.1.100","poolEnd":"192.168.1.200","leaseTime":"12h","defaultTargetId":"self"}}`, wantCall: "planLanDHCPSettingsV2"},
+		{name: "apply LAN DHCP settings v2", method: http.MethodPost, path: "/cgi-bin/luci/istore/lanctrl/v2/lan-dhcp-settings/apply/", body: `{"settings":{"enabled":true,"poolStart":"192.168.1.100","poolEnd":"192.168.1.200","leaseTime":"12h","defaultTargetId":"self"}}`, wantCall: "applyLanDHCPSettingsV2"},
 		{name: "get device groups v2", method: http.MethodGet, path: "/cgi-bin/luci/istore/lanctrl/v2/device-groups/", wantCall: "getDeviceGroupsV2"},
 		{name: "post device groups v2", method: http.MethodPost, path: "/cgi-bin/luci/istore/lanctrl/v2/device-groups/", body: `{"action":"delete_group","groupId":"kids"}`, wantCall: "postDeviceGroupsV2"},
 		{name: "get traffic insights v2", method: http.MethodGet, path: "/cgi-bin/luci/istore/lanctrl/v2/traffic-insights/?deviceId=mac%3Aaa&range=month", wantCall: "getTrafficInsightsV2"},

@@ -52,6 +52,9 @@ type Backend interface {
 	PostCapabilityActionPlanV2(ctx context.Context, r *http.Request) (*models.CapabilityActionResponse, error)
 	PostCapabilityActionApplyV2(ctx context.Context, r *http.Request) (*models.CapabilityActionResponse, error)
 	GetRouterContextV2(ctx context.Context, r *http.Request) (*models.RouterContextResponse, error)
+	GetLanDHCPSettingsV2(ctx context.Context) (*models.LanDHCPSettingsResponse, error)
+	PostLanDHCPSettingsPlanV2(ctx context.Context, r *http.Request) (*models.LanDHCPSettingsResponse, error)
+	PostLanDHCPSettingsApplyV2(ctx context.Context, r *http.Request) (*models.LanDHCPSettingsResponse, error)
 	GetDeviceGroupsV2(ctx context.Context) (*models.DeviceGroupsResponse, error)
 	PostDeviceGroupsV2(ctx context.Context, r *http.Request) (*models.DeviceGroupsResponse, error)
 	GetTrafficInsightsV2(ctx context.Context, r *http.Request) (*models.TrafficInsightsResponse, error)
@@ -214,6 +217,15 @@ func RegisterRoutes(router *httprouter.Router, backend Backend) {
 	})
 	httpapi.GetJSON(router, "/cgi-bin/luci/istore/lanctrl/v2/router-context/", func(ctx context.Context, r *http.Request) (any, error) {
 		return backend.GetRouterContextV2(ctx, r)
+	})
+	httpapi.GetJSON(router, "/cgi-bin/luci/istore/lanctrl/v2/lan-dhcp-settings/", func(ctx context.Context, _ *http.Request) (any, error) {
+		return backend.GetLanDHCPSettingsV2(ctx)
+	})
+	httpapi.PostJSON(router, "/cgi-bin/luci/istore/lanctrl/v2/lan-dhcp-settings/plan/", func(ctx context.Context, r *http.Request) (any, error) {
+		return backend.PostLanDHCPSettingsPlanV2(ctx, r)
+	})
+	httpapi.PostJSON(router, "/cgi-bin/luci/istore/lanctrl/v2/lan-dhcp-settings/apply/", func(ctx context.Context, r *http.Request) (any, error) {
+		return backend.PostLanDHCPSettingsApplyV2(ctx, r)
 	})
 	httpapi.GetJSON(router, "/cgi-bin/luci/istore/lanctrl/v2/device-groups/", func(ctx context.Context, r *http.Request) (any, error) {
 		return backend.GetDeviceGroupsV2(ctx)

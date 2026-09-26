@@ -24,9 +24,22 @@
 
             <div v-if="section === 'services'" class="settings-stack">
                 <article class="setting-card">
-                    <div class="card-heading"><div><h3>{{ $gettext('地址分配服务') }}</h3><p>{{ $gettext('由本机为局域网设备分配地址。关闭后，设备应由其他路由器分配地址。') }}</p></div><label class="switch-line"><input v-model="dhcp.enabled" type="checkbox" />{{ dhcp.enabled ? $gettext('已开启') : $gettext('已关闭') }}</label></div>
-                    <label><span>{{ $gettext('默认上网出口') }}</span><select v-model="dhcp.gateway"><option v-for="gateway in gateways" :key="gateway.gateway" :value="gateway.gateway">{{ gatewayLabel(gateway) }}</option></select></label>
-                    <button class="primary" type="button" :disabled="saving === 'dhcp'" @click="saveDhcp">{{ saving === 'dhcp' ? $gettext('正在保存…') : $gettext('保存地址分配设置') }}</button>
+                    <div class="card-heading"><div><h3>{{ $gettext('地址分配服务') }}</h3><p>{{ $gettext('由本机为局域网设备分配地址。关闭后，设备应由其他路由器分配地址。') }}</p></div><label class="switch-line"><input v-model="dhcp.enabled" type="checkbox" :disabled="!dhcpEditable" />{{ dhcp.enabled ? $gettext('已开启') : $gettext('已关闭') }}</label></div>
+                    <p v-if="!dhcpEditable" class="state-message">{{ dhcpState?.readOnlyReason || $gettext('当前由其他设备负责地址分配，本页只读。') }}</p>
+                    <fieldset :disabled="!dhcpEditable">
+                        <div class="two-columns"><label><span>{{ $gettext('地址池起始地址') }}</span><input v-model.trim="dhcp.poolStart" inputmode="decimal" placeholder="192.168.1.100" /></label><label><span>{{ $gettext('地址池结束地址') }}</span><input v-model.trim="dhcp.poolEnd" inputmode="decimal" placeholder="192.168.1.249" /></label></div>
+                        <label><span>{{ $gettext('地址租期') }}</span><input v-model.trim="dhcp.leaseTime" placeholder="12h" /></label>
+                        <label><span>{{ $gettext('默认上网路线') }}</span><select v-model="dhcp.defaultTargetId"><option v-for="target in gatewayTargets.filter(item => item.supported && item.id !== 'default' && item.gateway)" :key="target.id" :value="target.id">{{ target.name }}{{ target.gateway ? ` · ${target.gateway}` : '' }}</option></select></label>
+                    </fieldset>
+                    <button class="primary" type="button" :disabled="!dhcpEditable || saving === 'dhcp-plan'" @click="planDhcp">{{ saving === 'dhcp-plan' ? $gettext('正在检查…') : $gettext('预览地址分配设置') }}</button>
+                    <section v-if="pendingDhcpPlan" class="impact-preview" aria-live="polite">
+                        <h4>{{ $gettext('地址分配影响') }}</h4>
+                        <p v-if="!dhcp.enabled">{{ $gettext('关闭后预计影响设备') }}：{{ pendingDhcpPlan.affectedDevices }}</p>
+                        <p v-if="pendingDhcpPlan.recoveryGuidance">{{ $gettext('恢复路径') }}：{{ $gettext('通过路由器局域网地址重新进入，并重新开启地址分配；或先确认外部 DHCP 已就绪。') }}</p>
+                        <ul v-if="pendingDhcpPlan.conflicts.length"><li v-for="conflict in pendingDhcpPlan.conflicts" :key="`${conflict.kind}:${conflict.address}`">{{ conflict.address }} · {{ dhcpConflictLabel(conflict.kind) }}</li></ul>
+                        <p v-if="pendingDhcpPlan.error && pendingDhcpPlan.error.code !== 'confirmation_required'" class="field-error">{{ pendingDhcpPlan.error.message }}</p>
+                        <div class="preview-actions"><button type="button" @click="cancelDhcpPlan">{{ $gettext('取消') }}</button><button v-if="pendingDhcpPlan.error?.code === 'confirmation_required'" class="danger-link" type="button" @click="confirmDhcpDisable">{{ $gettext('我已了解影响，继续') }}</button><button v-else class="primary" type="button" :disabled="!pendingDhcpPlan.canApply || saving === 'dhcp-apply'" @click="applyDhcp">{{ saving === 'dhcp-apply' ? $gettext('正在应用…') : $gettext('确认应用') }}</button></div>
+                    </section>
                 </article>
 
                 <article class="setting-card">
@@ -88,6 +101,7 @@ import FloatingGatewayWizard from './components/floatingGatewayWizard.vue'
 import NetworkRulesHub from './networkRulesHub.vue'
 import { resolveCapability, type DeviceCapability } from './deviceCapabilities'
 import type { GatewayTarget, GatewayTargetMutationPlan, GatewayTargetMutationRequest } from './gatewayTargets'
+import type { LanDhcpSettingsResult } from './lanDhcpSettings'
 
 const { $gettext } = useGettext()
 const draftKey = 'quickstart.lan-settings-draft.v1'
@@ -96,7 +110,9 @@ const loading = ref(true), error = ref(''), saving = ref(''), installing = ref(f
 const section = ref<'services'|'routes'|'rules'>(['services','routes','rules'].includes(restored.section) ? restored.section : 'services')
 const routerContext = ref<any>(), globalData = ref<any>({}), speedCapability = ref<DeviceCapability>({ state: 'error' }), floatCapability = ref<DeviceCapability>({ state: 'error' })
 const migrationPlan = ref<any>(), migrationError = ref(false)
-const dhcp = reactive({ enabled: true, gateway: '' }), speed = reactive({ enabled: false, upload: 100, download: 1000 })
+const dhcp = reactive({ enabled: true, poolStart: '', poolEnd: '', leaseTime: '12h', defaultTargetId: 'self' }), speed = reactive({ enabled: false, upload: 100, download: 1000 })
+const dhcpState = ref<LanDhcpSettingsResult>()
+const pendingDhcpPlan = ref<LanDhcpSettingsResult>()
 const routeEditor = ref(Boolean(restored.routeEditor))
 const routeDraft = reactive<{ targetId: string; name: string; kind: 'bypass'|'custom'; gateway: string }>({ targetId: '', name: restored.routeName || '', kind: restored.routeKind === 'custom' ? 'custom' : 'bypass', gateway: restored.routeGateway || '' })
 const gatewayTargets = ref<GatewayTarget[]>([])
@@ -104,7 +120,7 @@ const pendingRoutePlan = ref<GatewayTargetMutationPlan>()
 const pendingRouteRequest = ref<GatewayTargetMutationRequest>()
 const replacementTargetId = ref('')
 const sections = computed(() => [{ id: 'services' as const, label: $gettext('网络服务') }, { id: 'routes' as const, label: $gettext('上网路线') }, { id: 'rules' as const, label: $gettext('规则台账') }])
-const gateways = computed<any[]>(() => globalData.value?.dhcpGlobal?.gatewaySels || [])
+const dhcpEditable = computed(() => Boolean(dhcpState.value?.editable))
 const routes = computed(() => gatewayTargets.value.filter(target => target.kind === 'bypass' || target.kind === 'custom'))
 const routeEditable = computed(() => Boolean(routerContext.value?.routeEditability?.editable))
 const replacementRequired = computed(() => pendingRoutePlan.value?.error?.code === 'replacement_required')
@@ -112,8 +128,8 @@ const replacementTargets = computed(() => gatewayTargets.value.filter(target => 
 const contextTitle = computed(() => ({ local: $gettext('本机负责局域网地址分配'), external_observed: $gettext('检测到其他设备负责地址分配'), none_detected: $gettext('尚未检测到地址分配服务'), ambiguous: $gettext('局域网角色需要确认'), error: $gettext('暂时无法判断局域网角色') } as Record<string,string>)[routerContext.value?.dhcpAuthority] || $gettext('局域网角色待确认'))
 const contextDescription = computed(() => routerContext.value?.routeEditability?.guidance || (routerContext.value?.routeEditability?.editable ? $gettext('可在设备详情中设置上网路线。') : $gettext('当前仅提供查看与引导，不会自动修改其他设备。')))
 const routeEditability = computed(() => routerContext.value?.routeEditability?.editable ? $gettext('路线可编辑') : $gettext('只读引导'))
-const gatewayLabel = (value: any) => `${value.gateway} · ${({ default: $gettext('默认出口'), parent: $gettext('上级路由'), myself: $gettext('本设备'), bypass: $gettext('旁路由'), floatip: $gettext('浮动网关') } as Record<string,string>)[value.title] || value.title || $gettext('指定网关')}`
 const routeKindLabel = (value: string) => ({ bypass: $gettext('旁路由'), custom: $gettext('指定网关') } as Record<string,string>)[value] || $gettext('自定义路线')
+const dhcpConflictLabel = (value:string) => ({router:$gettext('路由器地址'),floating_gateway:$gettext('浮动网关'),gateway_node:$gettext('网关节点'),address_reservation:$gettext('固定地址')} as Record<string,string>)[value] || $gettext('受保护地址')
 const capabilityLabel = (state: string) => ({ available: $gettext('可用'), disabled: $gettext('未启用'), not_installed: $gettext('未安装'), unsupported: $gettext('不支持'), error: $gettext('需要检查') } as Record<string,string>)[state] || $gettext('未知')
 const migrationKind = (kind:string) => ({ alias:$gettext('设备资料'), hostname:$gettext('局域网主机名'), static:$gettext('地址预留'), route:$gettext('上网路线'), speed:$gettext('设备限速'), access:$gettext('联网权限'), floating_gateway:$gettext('浮动网关') } as Record<string,string>)[kind] || $gettext('设备规则')
 const migrationDisposition = (value:string) => ({ adopt:$gettext('可以接管'), normalize:$gettext('将安全整理'), conflict:$gettext('存在冲突'), unresolved:$gettext('需要确认') } as Record<string,string>)[value] || $gettext('需要确认')
@@ -123,23 +139,27 @@ watch([section, routeEditor, () => routeDraft.name, () => routeDraft.kind, () =>
 const load = async () => {
     loading.value = true; error.value = ''
     try {
-        const [contextResponse, globalResponse, targetResponse, migrationResponse] = await Promise.all([request.DeviceMangement.routerContextV2.GET(), request.DeviceMangement.globalConfigs.GET(), request.DeviceMangement.gatewayTargetsV2.GET(), request.DeviceMangement.lanDeviceMigrationV2.PLAN().catch(() => undefined)])
+        const [contextResponse, globalResponse, targetResponse, dhcpResponse, migrationResponse] = await Promise.all([request.DeviceMangement.routerContextV2.GET(), request.DeviceMangement.globalConfigs.GET(), request.DeviceMangement.gatewayTargetsV2.GET(), request.DeviceMangement.lanDhcpSettingsV2.GET(), request.DeviceMangement.lanDeviceMigrationV2.PLAN().catch(() => undefined)])
         routerContext.value = contextResponse.data?.result
         globalData.value = globalResponse.data?.result || {}
         gatewayTargets.value = targetResponse.data?.result?.targets || []
+        dhcpState.value = dhcpResponse.data?.result
         migrationPlan.value = migrationResponse?.data?.result?.plan
         migrationError.value = !migrationResponse
         speedCapability.value = resolveCapability(globalData.value, 'speedLimit')
         floatCapability.value = resolveCapability(globalData.value, 'floatGateway')
-        dhcp.enabled = Boolean(globalData.value?.dhcpGlobal?.dhcpEnabled)
-        dhcp.gateway = globalData.value?.dhcpGlobal?.dhcpGateway || gateways.value[0]?.gateway || ''
+        if (dhcpState.value?.settings) Object.assign(dhcp, dhcpState.value.settings)
         speed.enabled = Boolean(globalData.value?.speedLimit?.enabled)
         speed.upload = globalData.value?.speedLimit?.uploadSpeed || 100
         speed.download = globalData.value?.speedLimit?.downloadSpeed || 1000
     } catch (reason: any) { error.value = reason?.message || $gettext('读取结果失败') }
     finally { loading.value = false }
 }
-const saveDhcp = async () => { if (!dhcp.enabled && !window.confirm($gettext('关闭地址分配服务后，新设备可能无法联网。确定继续吗？'))) return; saving.value = 'dhcp'; try { await request.DeviceMangement.dhcpGatewayConfig.POST({ dhcpEnabled: dhcp.enabled, dhcpGateway: dhcp.gateway }); feedbackKind.value = 'success'; feedback.value = $gettext('地址分配设置已保存'); await load() } catch (reason:any) { feedbackKind.value='error'; feedback.value=reason?.message||$gettext('保存失败') } finally { saving.value='' } }
+const cancelDhcpPlan=()=>{pendingDhcpPlan.value=undefined}
+const requestDhcpPlan=async(confirmDisable=false)=>{saving.value='dhcp-plan';feedback.value='';try{const result=(await request.DeviceMangement.lanDhcpSettingsV2.PLAN({settings:{...dhcp},confirmDisable,idempotencyKey:`lan-dhcp-${Date.now().toString(36)}`})).data?.result as LanDhcpSettingsResult;pendingDhcpPlan.value=result;if(result?.error&&result.error.code!=='confirmation_required'){feedbackKind.value='error';feedback.value=result.error.message}}catch(reason:any){feedbackKind.value='error';feedback.value=reason?.message||$gettext('无法预览地址分配设置')}finally{saving.value=''}}
+const planDhcp=()=>requestDhcpPlan(false)
+const confirmDhcpDisable=()=>requestDhcpPlan(true)
+const applyDhcp=async()=>{if(!pendingDhcpPlan.value?.canApply)return;saving.value='dhcp-apply';feedback.value='';try{const result=(await request.DeviceMangement.lanDhcpSettingsV2.APPLY({settings:{...dhcp},confirmDisable:!dhcp.enabled,expectedVersion:pendingDhcpPlan.value.version,idempotencyKey:`lan-dhcp-${pendingDhcpPlan.value.version}`})).data?.result;if(result?.error)throw new Error(result.error.message);feedbackKind.value='success';feedback.value=result.changed?$gettext('地址分配设置已保存'):$gettext('设置没有变化');cancelDhcpPlan();await load()}catch(reason:any){feedbackKind.value='error';feedback.value=reason?.message||$gettext('应用失败，原设置已恢复')}finally{saving.value=''}}
 const saveSpeed = async () => { if (speed.enabled && (!speed.upload || !speed.download)) return; saving.value='speed'; try { await request.DeviceMangement.enableSpeedLimit.POST({ enabled:speed.enabled, uploadSpeed:speed.enabled?speed.upload:0, downloadSpeed:speed.enabled?speed.download:0 }); feedbackKind.value='success'; feedback.value=$gettext('限速服务设置已保存'); await load() } catch(reason:any){ feedbackKind.value='error'; feedback.value=reason?.message||$gettext('保存失败') } finally{ saving.value='' } }
 const resetRouteEditor = () => { routeEditor.value=false;routeDraft.targetId='';routeDraft.name='';routeDraft.kind='bypass';routeDraft.gateway='' }
 const cancelRoutePlan = () => { pendingRoutePlan.value=undefined;pendingRouteRequest.value=undefined;replacementTargetId.value='' }
@@ -195,6 +215,7 @@ load()
 </script>
 
 <style lang="scss" scoped>
+.lan-settings fieldset{min-width:0;margin:0;padding:0;border:0}
 .lan-settings { color: var(--tit-color); }.lan-settings header h2,.setting-card h3,.migration-card h3 { margin:0;padding:0;color:inherit;background:none!important;text-align:left }.lan-settings header h2{font-size:20px}.lan-settings header p,.card-heading p{margin:5px 0 0;opacity:.65}.context-card{display:flex;justify-content:space-between;gap:14px;align-items:center;margin:16px 0 12px;padding:13px 14px;background:rgba(85,58,254,.06);border:1px solid rgba(85,58,254,.14);border-radius:9px}.context-card>div{display:grid;gap:4px}.context-card span{opacity:.68}.context-state{flex:none;padding:4px 8px;background:var(--card-bg-color);border-radius:999px;font-size:12px}.migration-card{margin:0 0 13px;padding:13px 14px;border:1px solid rgba(85,58,254,.18);border-radius:9px;background:rgba(85,58,254,.045)}.migration-heading,.migration-actions{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.migration-heading h3{font-size:16px}.migration-heading p{margin:4px 0 0;opacity:.67}.migration-heading>strong{flex:none;padding:4px 8px;background:var(--card-bg-color);border-radius:999px;font-size:12px}.migration-card ul{display:grid;gap:5px;margin:11px 0;padding:0;list-style:none}.migration-card li{display:grid;grid-template-columns:minmax(100px,.7fr) minmax(120px,1.4fr) auto;gap:8px;align-items:center;padding:7px 8px;background:rgba(127,127,127,.05);border-radius:6px}.migration-card li b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.migration-card li em{font-size:12px;font-style:normal}.migration-card li em.conflict,.migration-card li em.unresolved,.migration-warning{color:#9b3b16}.migration-more,.migration-warning,.migration-read-error{margin:8px 0;font-size:12px}.migration-actions{justify-content:flex-end}.migration-actions button{min-height:34px;padding:6px 11px;color:var(--device-accent);background:transparent;border:1px solid rgba(85,58,254,.34);border-radius:7px;cursor:pointer}.migration-actions .primary{color:#fff;background:#553afe;border-color:#553afe}.settings-nav{display:flex;gap:5px;margin-bottom:13px;border-bottom:1px solid rgba(127,127,127,.14)}.settings-nav button{padding:9px 12px;color:inherit;background:transparent;border:0;border-bottom:2px solid transparent;cursor:pointer}.settings-nav button.active{color:var(--device-accent);border-color:var(--device-accent);font-weight:600}.settings-stack{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.setting-card{min-width:0;padding:14px;border:1px solid rgba(127,127,127,.15);border-radius:9px}.setting-card h3{font-size:16px}.card-heading{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:13px}.setting-card label:not(.switch-line){display:grid;gap:5px;margin:10px 0;font-size:12px}.setting-card input:not([type=checkbox]),.setting-card select{box-sizing:border-box;width:100%;min-width:0;min-height:36px;padding:7px 9px;color:inherit;background:transparent;border:1px solid rgba(127,127,127,.28);border-radius:7px}.switch-line{display:flex;align-items:center;gap:7px;white-space:nowrap}.two-columns,.route-form{display:grid;grid-template-columns:1fr 1fr;gap:9px}.route-form button{grid-column:1/-1}.setting-card button{min-height:34px;padding:6px 11px;color:var(--device-accent);background:transparent;border:1px solid rgba(85,58,254,.34);border-radius:7px;cursor:pointer}.setting-card .primary{color:#fff;background:#553afe;border-color:#553afe}.capability-pill{flex:none;padding:4px 8px;border-radius:999px;background:rgba(127,127,127,.08);font-size:12px}.capability-pill.available{color:#176b45;background:rgba(38,162,105,.1)}.capability-pill.not_installed,.capability-pill.error{color:#9b3b16;background:#fff1e8}.capability-action,.state-message{padding:10px;background:rgba(127,127,127,.06);border-radius:8px}.capability-action p{margin:0 0 9px}.route-list{display:grid;gap:6px;margin-top:12px}.route-list>div{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:9px;background:rgba(127,127,127,.05);border-radius:7px}.route-list span{display:grid;gap:2px}.route-list small{opacity:.62}.route-actions,.preview-actions{display:flex;gap:6px;align-items:center}.impact-preview{margin-top:12px;padding:12px;border:1px solid rgba(85,58,254,.2);border-radius:8px;background:rgba(85,58,254,.05)}.impact-preview h4{margin:0 0 6px}.impact-preview p{margin:5px 0}.preview-actions{justify-content:flex-end;margin-top:10px}.field-error{color:#9b3b16}.danger-link{color:#a13c3c!important;border-color:rgba(161,60,60,.3)!important}.feedback{margin:12px 0 0;padding:9px;border-radius:7px}.feedback.success{color:#176b45;background:rgba(38,162,105,.1)}.feedback.error{color:#9b3b16;background:#fff1e8}button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--device-accent);outline-offset:2px}button:disabled{opacity:.55;cursor:not-allowed}
 @media(max-width:900px){.settings-stack{grid-template-columns:1fr}}
 @media(max-width:520px){.context-card,.card-heading,.migration-heading{align-items:flex-start;flex-direction:column}.migration-card li{grid-template-columns:1fr auto}.migration-card li b{grid-column:1/-1;grid-row:2}.settings-nav{overflow-x:auto}.settings-nav button{flex:none}.two-columns,.route-form{grid-template-columns:1fr}.route-list>div{align-items:flex-start;flex-direction:column}.route-actions{width:100%;justify-content:flex-end}.setting-card{padding:12px}}
