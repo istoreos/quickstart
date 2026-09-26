@@ -16,7 +16,10 @@
 
             <fieldset>
                 <legend>{{ $gettext('休息时段') }}</legend>
-                <label class="check"><input v-model="draft.scheduleEnabled" type="checkbox" />{{ $gettext('在指定时段暂停联网') }}</label>
+                <label class="check">
+                    <input v-model="draft.scheduleEnabled" type="checkbox" />
+                    {{ scheduleToggleLabel }}
+                </label>
                 <div v-if="draft.scheduleEnabled" class="schedule-editor">
                     <div class="days" role="group" :aria-label="$gettext('执行日期')"><label v-for="day in dayOptions" :key="day.value" :class="{ selected: draft.days.includes(day.value) }"><input v-model="draft.days" type="checkbox" :value="day.value" />{{ day.label }}</label></div>
                     <div class="columns"><label><span>{{ $gettext('开始') }}</span><input v-model="draft.start" type="time" /></label><label><span>{{ $gettext('结束') }}</span><input v-model="draft.end" type="time" /></label></div>
@@ -26,7 +29,10 @@
 
             <fieldset>
                 <legend>{{ $gettext('流量额度') }}</legend>
-                <label class="check"><input v-model="draft.quotaEnabled" type="checkbox" />{{ $gettext('限制累计用量') }}</label>
+                <label class="check">
+                    <input v-model="draft.quotaEnabled" type="checkbox" />
+                    {{ quotaToggleLabel }}
+                </label>
                 <div v-if="draft.quotaEnabled" class="quota-editor"><label><span>{{ $gettext('周期') }}</span><select v-model="draft.quotaPeriod"><option value="daily">{{ $gettext('每天') }}</option><option value="weekly">{{ $gettext('每周') }}</option><option value="monthly">{{ $gettext('每月') }}</option></select></label><label><span>{{ $gettext('额度 GB') }}</span><input v-model.number="draft.quotaGB" type="number" min="0.1" max="100000" step="0.1" /></label><label><span>{{ $gettext('达到后') }}</span><select v-model="draft.quotaAction"><option value="notify">{{ $gettext('仅提醒') }}</option><option value="block">{{ $gettext('暂停联网') }}</option></select></label></div>
             </fieldset>
 
@@ -50,6 +56,8 @@ import PageState from './pageState.vue'
 
 const props = defineProps<{ deviceId: string }>()
 const { $gettext } = useGettext()
+const scheduleToggleLabel = $gettext('在指定时段暂停联网')
+const quotaToggleLabel = $gettext('限制累计用量')
 const loading = ref(true), saving = ref(false), error = ref(''), feedback = ref(''), feedbackKind = ref<'success'|'error'>('success'), previewing = ref(false)
 const version = ref(''), timezone = ref(''), policyBase = ref<Record<string, any>>({}), effective = ref<any>(null), groups = ref<any[]>([]), managedScheduleId = ref('device-rest')
 const draft = reactive({ scheduleEnabled: false, days: [1,2,3,4,5] as number[], start: '22:00', end: '07:00', quotaEnabled: false, quotaPeriod: 'monthly', quotaGB: 10, quotaAction: 'notify' })

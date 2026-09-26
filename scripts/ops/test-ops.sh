@@ -47,4 +47,19 @@ grep -Fq 'cp '\''${REMOTE_BINARY}'\'' \"${REMOTE_BACKUP_DIR}/quickstart.\${stamp
     echo "remote backup filename must expand the deployment timestamp" >&2
     exit 1
 }
+soak_script="${SCRIPT_DIR}/lan-device-topology-soak.sh"
+grep -Fq 'b_pid' "$soak_script" && grep -Fq 'b_start_ticks' "$soak_script" && grep -Fq 'b_rss_kb' "$soak_script" || {
+    echo "topology soak must sample both Quickstart processes" >&2
+    exit 1
+}
+grep -Fq 'a_fd' "$soak_script" && grep -Fq 'b_fd' "$soak_script" || {
+    echo "topology soak must sample file descriptors" >&2
+    exit 1
+}
+
+release_script="${SCRIPT_DIR}/release.sh"
+grep -Fq -- '--sort=name' "$release_script" && grep -Fq 'gzip -n' "$release_script" || {
+    echo "release archive must be reproducible" >&2
+    exit 1
+}
 echo "ops contract ok"

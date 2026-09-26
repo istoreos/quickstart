@@ -23,7 +23,14 @@
                     <label class="check"><input v-model="draft.speedEnabled" type="checkbox" />{{ $gettext('设置速度上限') }}</label><div v-if="draft.speedEnabled" class="inline-fields"><label><span>{{ $gettext('上传 Mbit/s') }}</span><input v-model.number="draft.upload" type="number" min="1" /></label><label><span>{{ $gettext('下载 Mbit/s') }}</span><input v-model.number="draft.download" type="number" min="1" /></label></div>
                     <label class="check"><input v-model="draft.quotaEnabled" type="checkbox" />{{ $gettext('设置流量额度') }}</label><div v-if="draft.quotaEnabled" class="inline-fields quota"><label><span>{{ $gettext('周期') }}</span><select v-model="draft.quotaPeriod"><option value="daily">{{ $gettext('每天') }}</option><option value="weekly">{{ $gettext('每周') }}</option><option value="monthly">{{ $gettext('每月') }}</option></select></label><label><span>{{ $gettext('额度 GB') }}</span><input v-model.number="draft.quotaGB" type="number" min="0.1" step="0.1" /></label><label><span>{{ $gettext('达到后') }}</span><select v-model="draft.quotaAction"><option value="notify">{{ $gettext('仅提醒') }}</option><option value="block">{{ $gettext('暂停联网') }}</option></select></label></div>
                 </div></fieldset>
-                <fieldset><legend>{{ $gettext('休息时段') }}</legend><label class="check"><input v-model="draft.scheduleEnabled" type="checkbox" />{{ $gettext('在指定时段暂停联网') }}</label><div v-if="draft.scheduleEnabled" class="schedule-box"><div class="days"><label v-for="day in dayOptions" :key="day.value" :class="{selected:draft.days.includes(day.value)}"><input v-model="draft.days" type="checkbox" :value="day.value" />{{ day.label }}</label></div><div class="inline-fields"><label><span>{{ $gettext('开始') }}</span><input v-model="draft.start" type="time" /></label><label><span>{{ $gettext('结束') }}</span><input v-model="draft.end" type="time" /></label></div><small>{{ $gettext('结束时间早于开始时间时，会自动跨到第二天。') }}</small></div></fieldset>
+                <fieldset>
+                    <legend>{{ $gettext('休息时段') }}</legend>
+                    <label class="check">
+                        <input v-model="draft.scheduleEnabled" type="checkbox" />
+                        {{ scheduleToggleLabel }}
+                    </label>
+                    <div v-if="draft.scheduleEnabled" class="schedule-box"><div class="days"><label v-for="day in dayOptions" :key="day.value" :class="{selected:draft.days.includes(day.value)}"><input v-model="draft.days" type="checkbox" :value="day.value" />{{ day.label }}</label></div><div class="inline-fields"><label><span>{{ $gettext('开始') }}</span><input v-model="draft.start" type="time" /></label><label><span>{{ $gettext('结束') }}</span><input v-model="draft.end" type="time" /></label></div><small>{{ $gettext('结束时间早于开始时间时，会自动跨到第二天。') }}</small></div>
+                </fieldset>
                 <div v-if="previewing" class="preview-card" role="dialog" :aria-label="$gettext('保存前预览')"><strong>{{ $gettext('确认这次调整') }}</strong><span v-if="!editingGlobal">{{ $gettext('影响设备') }}：{{ draft.members.length }}</span><span>{{ previewSummary }}</span><p v-if="overrideCount">{{ overrideCount }} {{ $gettext('台设备有单设备例外，最终值仍以例外为准。') }}</p><div><button type="button" @click="previewing=false">{{ $gettext('返回修改') }}</button><button type="button" class="primary" :disabled="saving" @click="save">{{ saving ? $gettext('正在应用…') : $gettext('确认并应用') }}</button></div></div>
                 <p v-if="feedback" class="feedback error">{{ feedback }}</p><div v-if="!previewing" class="editor-actions"><button type="button" @click="cancelEdit">{{ $gettext('取消') }}</button><button class="primary" type="submit">{{ $gettext('预览影响') }}</button></div>
             </form>
@@ -37,6 +44,7 @@ import { useGettext } from '/@/plugins/i18n'
 import request from '/@/request'
 import PageState from './components/pageState.vue'
 const { $gettext } = useGettext()
+const scheduleToggleLabel = $gettext('在指定时段暂停联网')
 const loading=ref(true),saving=ref(false),error=ref(''),feedback=ref(''),version=ref(''),timezone=ref(''),nextEvaluationAt=ref(''),editing=ref(false),editingExisting=ref(false),editingGlobal=ref(false),deviceQuery=ref(''),previewing=ref(false)
 const groups=ref<any[]>([]),devices=ref<any[]>([]),effective=ref<any[]>([]),targets=ref<any[]>([]),lastBatch=ref<any>()
 const blank=()=>({id:'',name:'',priority:10,access:'inherit',members:[] as string[],targetId:'',speedEnabled:false,upload:100,download:1000,quotaEnabled:false,quotaPeriod:'monthly',quotaGB:10,quotaAction:'notify',scheduleEnabled:false,days:[1,2,3,4,5] as number[],start:'22:00',end:'07:00'})

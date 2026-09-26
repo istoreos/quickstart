@@ -11,7 +11,7 @@
 
             <article v-if="migrationPlan && !migrationPlan.alreadyApplied && migrationPlan.items?.length" class="migration-card" aria-labelledby="migration-title">
                 <div class="migration-heading"><div><h3 id="migration-title">{{ $gettext('发现现有设备设置') }}</h3><p>{{ $gettext('先预览并接管现有设置，之后只使用当前设备管理界面维护。') }}</p></div><strong>{{ migrationPlan.items.length }} {{ $gettext('项') }}</strong></div>
-                <ul><li v-for="item in migrationPlan.items.slice(0, 5)" :key="item.id"><span>{{ migrationKind(item.kind) }}</span><b>{{ item.summary || '—' }}</b><em :class="item.disposition">{{ migrationDisposition(item.disposition) }}</em></li></ul>
+                <ul><li v-for="item in migrationPlan.items.slice(0, 5)" :key="item.id"><span>{{ migrationKind(item.kind) }}</span><b>{{ migrationSummary(item.summary) }}</b><em :class="item.disposition">{{ migrationDisposition(item.disposition) }}</em></li></ul>
                 <p v-if="migrationPlan.items.length > 5" class="migration-more">{{ $gettext('其余设置会在同一次安全接管中处理。') }}</p>
                 <p v-if="!migrationPlan.canApply" class="migration-warning">{{ $gettext('发现冲突或无法识别的设置，当前不会写入任何配置。请先在规则台账中处理。') }}</p>
                 <div class="migration-actions"><button type="button" @click="section = 'rules'">{{ $gettext('查看规则台账') }}</button><button class="primary" type="button" :disabled="!migrationPlan.canApply || migrating" @click="applyMigration">{{ migrating ? $gettext('正在接管…') : $gettext('确认接管现有设置') }}</button></div>
@@ -29,7 +29,7 @@
                     <fieldset :disabled="!dhcpEditable">
                         <div class="two-columns"><label><span>{{ $gettext('地址池起始地址') }}</span><input v-model.trim="dhcp.poolStart" inputmode="decimal" placeholder="192.168.1.100" /></label><label><span>{{ $gettext('地址池结束地址') }}</span><input v-model.trim="dhcp.poolEnd" inputmode="decimal" placeholder="192.168.1.249" /></label></div>
                         <label><span>{{ $gettext('地址租期') }}</span><input v-model.trim="dhcp.leaseTime" placeholder="12h" /></label>
-                        <label><span>{{ $gettext('默认上网路线') }}</span><select v-model="dhcp.defaultTargetId"><option v-for="target in gatewayTargets.filter(item => item.supported && item.id !== 'default' && item.gateway)" :key="target.id" :value="target.id">{{ target.name }}{{ target.gateway ? ` · ${target.gateway}` : '' }}</option></select></label>
+                        <label><span>{{ $gettext('默认上网路线') }}</span><select v-model="dhcp.defaultTargetId"><option v-for="target in gatewayTargets.filter(item => item.supported && item.id !== 'default' && item.gateway)" :key="target.id" :value="target.id">{{ gatewayTargetLabel(target) }}{{ target.gateway ? ` · ${target.gateway}` : '' }}</option></select></label>
                     </fieldset>
                     <button class="primary" type="button" :disabled="!dhcpEditable || saving === 'dhcp-plan'" @click="planDhcp">{{ saving === 'dhcp-plan' ? $gettext('正在检查…') : $gettext('预览地址分配设置') }}</button>
                     <section v-if="pendingDhcpPlan" class="impact-preview" aria-live="polite">
@@ -46,7 +46,7 @@
                     <div class="card-heading"><div><h3>{{ $gettext('设备限速服务') }}</h3><p>{{ $gettext('为设备设置最高上传和下载速度；联网权限不依赖此服务。') }}</p></div><span class="capability-pill" :class="speedCapability.state">{{ capabilityLabel(speedCapability.state) }}</span></div>
                     <div v-if="speedCapability.state === 'not_installed'" class="capability-action"><p>{{ $gettext('安装后会回到当前区域，尚未保存的输入会保留。') }}</p><button class="primary" type="button" :disabled="installing" @click="installCapability('device_speed_limit')">{{ installing ? $gettext('正在安装…') : $gettext('安装限速服务') }}</button></div>
                     <template v-else-if="speedCapability.state === 'available' || speedCapability.state === 'disabled'">
-                        <label class="switch-line"><input v-model="speed.enabled" type="checkbox" />{{ $gettext('启用设备限速') }}</label>
+                        <label class="switch-line"><input v-model="speed.enabled" type="checkbox" />{{ enableSpeedLabel }}</label>
                         <div v-if="speed.enabled" class="two-columns"><label><span>{{ $gettext('总上传带宽（Mbit/s）') }}</span><input v-model.number="speed.upload" type="number" min="1" /></label><label><span>{{ $gettext('总下载带宽（Mbit/s）') }}</span><input v-model.number="speed.download" type="number" min="1" /></label></div>
                         <button class="primary" type="button" :disabled="saving === 'speed'" @click="saveSpeed">{{ saving === 'speed' ? $gettext('正在保存…') : $gettext('保存限速服务设置') }}</button>
                     </template>
@@ -65,7 +65,7 @@
                         <button class="primary" type="submit" :disabled="saving === 'route-plan'">{{ saving === 'route-plan' ? $gettext('正在检查…') : routeDraft.targetId ? $gettext('预览修改') : $gettext('预览添加') }}</button>
                     </form>
                     <div v-if="routes.length" class="route-list">
-                        <div v-for="route in routes" :key="route.id"><span><strong>{{ route.name }}</strong><small>{{ route.gateway || '—' }} · {{ routeKindLabel(route.kind) }}</small></span><div class="route-actions"><button type="button" :disabled="!routeEditable" @click="startEditRoute(route)">{{ $gettext('编辑') }}</button><button type="button" class="danger-link" :disabled="!routeEditable" @click="planRouteDelete(route)">{{ $gettext('删除') }}</button></div></div>
+                        <div v-for="route in routes" :key="route.id"><span><strong>{{ gatewayTargetLabel(route) }}</strong><small>{{ route.gateway || '—' }} · {{ routeKindLabel(route.kind) }}</small></span><div class="route-actions"><button type="button" :disabled="!routeEditable" @click="startEditRoute(route)">{{ $gettext('编辑') }}</button><button type="button" class="danger-link" :disabled="!routeEditable" @click="planRouteDelete(route)">{{ $gettext('删除') }}</button></div></div>
                     </div>
                     <PageState v-else kind="empty" :title="$gettext('还没有自定义上网路线')" :description="$gettext('设备默认通过本机上网；需要时再添加旁路由或指定网关。')" />
                     <section v-if="pendingRoutePlan" class="impact-preview" aria-live="polite">
@@ -73,7 +73,7 @@
                         <p v-if="pendingRoutePlan.action === 'delete'">{{ $gettext('受影响设备') }}：{{ pendingRoutePlan.referenceSummary.devices }} · {{ $gettext('受影响分组') }}：{{ pendingRoutePlan.referenceSummary.groups }}</p>
                         <p v-else>{{ pendingRoutePlan.action === 'create' ? $gettext('将添加一条可供设备和分组选择的路线。') : $gettext('将更新路线名称和网关，已有引用会继续保留。') }}</p>
                         <p v-if="pendingRoutePlan.referenceSummary.globalPolicy || pendingRoutePlan.referenceSummary.lanDefault">{{ $gettext('同时影响全局或局域网默认路线。') }}</p>
-                        <label v-if="replacementRequired"><span>{{ $gettext('替代路线') }}</span><select v-model="replacementTargetId" @change="replanRouteDelete"><option value="">{{ $gettext('请选择') }}</option><option v-for="target in replacementTargets" :key="target.id" :value="target.id">{{ target.name }}{{ target.gateway ? ` · ${target.gateway}` : '' }}</option></select></label>
+                        <label v-if="replacementRequired"><span>{{ $gettext('替代路线') }}</span><select v-model="replacementTargetId" @change="replanRouteDelete"><option value="">{{ $gettext('请选择') }}</option><option v-for="target in replacementTargets" :key="target.id" :value="target.id">{{ gatewayTargetLabel(target) }}{{ target.gateway ? ` · ${target.gateway}` : '' }}</option></select></label>
                         <p v-if="pendingRoutePlan.error && !replacementRequired" class="field-error">{{ pendingRoutePlan.error.message }}</p>
                         <div class="preview-actions"><button type="button" @click="cancelRoutePlan">{{ $gettext('取消') }}</button><button class="primary" type="button" :disabled="!pendingRoutePlan.canApply || saving === 'route-apply'" @click="applyRoutePlan">{{ saving === 'route-apply' ? $gettext('正在应用…') : $gettext('确认应用') }}</button></div>
                     </section>
@@ -104,6 +104,7 @@ import type { GatewayTarget, GatewayTargetMutationPlan, GatewayTargetMutationReq
 import type { LanDhcpSettingsResult } from './lanDhcpSettings'
 
 const { $gettext } = useGettext()
+const enableSpeedLabel = $gettext('启用设备限速')
 const draftKey = 'quickstart.lan-settings-draft.v1'
 const restored = (() => { try { return JSON.parse(sessionStorage.getItem(draftKey) || '{}') } catch { return {} } })()
 const loading = ref(true), error = ref(''), saving = ref(''), installing = ref(false), migrating = ref(false), feedback = ref(''), feedbackKind = ref<'success'|'error'>('success')
@@ -133,6 +134,20 @@ const dhcpConflictLabel = (value:string) => ({router:$gettext('路由器地址')
 const capabilityLabel = (state: string) => ({ available: $gettext('可用'), disabled: $gettext('未启用'), not_installed: $gettext('未安装'), unsupported: $gettext('不支持'), error: $gettext('需要检查') } as Record<string,string>)[state] || $gettext('未知')
 const migrationKind = (kind:string) => ({ alias:$gettext('设备资料'), hostname:$gettext('局域网主机名'), static:$gettext('地址预留'), route:$gettext('上网路线'), speed:$gettext('设备限速'), access:$gettext('联网权限'), floating_gateway:$gettext('浮动网关') } as Record<string,string>)[kind] || $gettext('设备规则')
 const migrationDisposition = (value:string) => ({ adopt:$gettext('可以接管'), normalize:$gettext('将安全整理'), conflict:$gettext('存在冲突'), unresolved:$gettext('需要确认') } as Record<string,string>)[value] || $gettext('需要确认')
+const gatewayTargetLabel = (target: GatewayTarget) => {
+    if (target.kind === 'self') return $gettext('本机路由')
+    if (target.kind === 'bypass' && target.name === '旁路由') return $gettext('旁路由')
+    if (target.kind === 'floating' && target.name === '浮动网关') return $gettext('浮动网关')
+    if (target.name === '自定义网关') return $gettext('自定义网关')
+    return target.name
+}
+const migrationSummary = (value:string) => {
+    if (!value) return '—'
+    for (const [source, label] of [['本机路由', $gettext('本机路由')], ['旁路由', $gettext('旁路由')], ['浮动网关', $gettext('浮动网关')], ['自定义网关', $gettext('自定义网关')]]) {
+        if (value === source || value.startsWith(`${source} ·`)) return value.replace(source, label)
+    }
+    return value
+}
 const rememberDraft = () => sessionStorage.setItem(draftKey, JSON.stringify({ section: section.value, routeEditor: routeEditor.value, routeName: routeDraft.name, routeKind: routeDraft.kind, routeGateway: routeDraft.gateway }))
 watch([section, routeEditor, () => routeDraft.name, () => routeDraft.kind, () => routeDraft.gateway], rememberDraft)
 
