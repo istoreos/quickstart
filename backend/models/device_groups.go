@@ -40,15 +40,16 @@ type DeviceGroup struct {
 }
 
 type EffectiveGroupPolicy struct {
-	DeviceID      string            `json:"deviceId"`
-	NetworkAccess bool              `json:"networkAccess"`
-	Speed         *GroupSpeedPolicy `json:"speed"`
-	TargetID      string            `json:"targetId"`
-	Quota         *GroupQuotaPolicy `json:"quota,omitempty"`
-	Managed       []string          `json:"managed"`
-	Sources       []string          `json:"sources"`
-	Reasons       []string          `json:"reasons"`
-	EvaluatedAt   string            `json:"evaluatedAt"`
+	DeviceID       string            `json:"deviceId"`
+	NetworkAccess  bool              `json:"networkAccess"`
+	Speed          *GroupSpeedPolicy `json:"speed"`
+	TargetID       string            `json:"targetId"`
+	Quota          *GroupQuotaPolicy `json:"quota,omitempty"`
+	Managed        []string          `json:"managed"`
+	Sources        []string          `json:"sources"`
+	Reasons        []string          `json:"reasons"`
+	EvaluatedAt    string            `json:"evaluatedAt"`
+	NextScheduleAt string            `json:"nextScheduleAt,omitempty"`
 }
 
 type DeviceGroupEvent struct {

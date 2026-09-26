@@ -228,6 +228,9 @@ func applyGroupPolicy(result *models.EffectiveGroupPolicy, policy *models.GroupP
 		if schedule == nil || !schedule.Enabled {
 			continue
 		}
+		if boundary := nextGroupScheduleBoundary(schedule, now); !boundary.IsZero() && (result.NextScheduleAt == "" || boundary.Before(mustParseScheduleTime(result.NextScheduleAt))) {
+			result.NextScheduleAt = boundary.Format(time.RFC3339)
+		}
 		switch schedule.Action {
 		case "block":
 			result.Managed = append(result.Managed, "access")
@@ -256,6 +259,49 @@ func applyGroupPolicy(result *models.EffectiveGroupPolicy, policy *models.GroupP
 	if changed {
 		result.Sources = append(result.Sources, source)
 	}
+}
+
+func nextGroupScheduleBoundary(schedule *models.GroupSchedule, now time.Time) time.Time {
+	if schedule == nil || !schedule.Enabled || len(schedule.Days) == 0 || schedule.StartMinute < 0 || schedule.StartMinute > 1439 || schedule.EndMinute < 0 || schedule.EndMinute > 1439 {
+		return time.Time{}
+	}
+	days := map[int]bool{}
+	for _, day := range schedule.Days {
+		if day >= 0 && day <= 6 {
+			days[day] = true
+		}
+	}
+	if len(days) == 0 {
+		return time.Time{}
+	}
+	local := now.In(now.Location())
+	midnight := time.Date(local.Year(), local.Month(), local.Day(), 0, 0, 0, 0, local.Location())
+	next := time.Time{}
+	consider := func(candidate time.Time) {
+		if candidate.After(local) && (next.IsZero() || candidate.Before(next)) {
+			next = candidate
+		}
+	}
+	for offset := -1; offset <= 7; offset++ {
+		day := midnight.AddDate(0, 0, offset)
+		if !days[int(day.Weekday())] {
+			continue
+		}
+		start := time.Date(day.Year(), day.Month(), day.Day(), schedule.StartMinute/60, schedule.StartMinute%60, 0, 0, local.Location())
+		endDay := day
+		if schedule.StartMinute >= schedule.EndMinute {
+			endDay = day.AddDate(0, 0, 1)
+		}
+		end := time.Date(endDay.Year(), endDay.Month(), endDay.Day(), schedule.EndMinute/60, schedule.EndMinute%60, 0, 0, local.Location())
+		consider(start)
+		consider(end)
+	}
+	return next
+}
+
+func mustParseScheduleTime(value string) time.Time {
+	parsed, _ := time.Parse(time.RFC3339, value)
+	return parsed
 }
 
 func groupScheduleActive(schedule *models.GroupSchedule, now time.Time) bool {
@@ -592,7 +638,11 @@ func effectiveGroupPolicySignature(effective *models.EffectiveGroupPolicy) strin
 	if speed == nil {
 		speed = &models.GroupSpeedPolicy{}
 	}
-	return fmt.Sprintf("%t|%t:%d:%d|%s|%s|%s", effective.NetworkAccess, speed.Enabled, speed.UploadSpeed, speed.DownloadSpeed, effective.TargetID, strings.Join(effective.Managed, ","), strings.Join(effective.Reasons, ","))
+	quota := effective.Quota
+	if quota == nil {
+		quota = &models.GroupQuotaPolicy{}
+	}
+	return fmt.Sprintf("%t|%t:%d:%d|%s|%t:%s:%d:%s|%s|%s", effective.NetworkAccess, speed.Enabled, speed.UploadSpeed, speed.DownloadSpeed, effective.TargetID, quota.Enabled, quota.Period, quota.LimitBytes, quota.Action, strings.Join(effective.Managed, ","), strings.Join(effective.Reasons, ","))
 }
 
 func (module *DeviceGroupModule) recordEvent(event *models.DeviceGroupEvent) {
