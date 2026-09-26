@@ -91,7 +91,7 @@ func TestDeviceNetworkPolicyRejectsApplyWhenDHCPIsDisabled(t *testing.T) {
 	response, err := module.Apply(context.Background(), &models.DeviceNetworkPolicyApplyRequest{
 		DeviceID: "mac:aa:bb:cc:dd:ee:01", TargetID: "default", Static: &models.DeviceAddressPolicy{},
 	})
-	if err != nil || response.Result.Error == nil || response.Result.Error.Code != "validation_failed" || writer.calls != 0 {
+	if err != nil || response.Result.Error == nil || response.Result.Error.Code != "dhcp_authority_unavailable" || writer.calls != 0 {
 		t.Fatalf("response=%#v calls=%d err=%v", response, writer.calls, err)
 	}
 }
