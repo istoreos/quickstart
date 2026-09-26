@@ -57,6 +57,16 @@ grep -Fq 'a_fd' "$soak_script" && grep -Fq 'b_fd' "$soak_script" || {
     exit 1
 }
 
+smoke_script="${SCRIPT_DIR}/lan-device-topology-smoke.sh"
+for token in A_HOST B_HOST C_HOST D_HOST EXPECTED_PACKAGE_VERSION REQUIRE_PACKAGE_COHERENCE \
+    'A is LAN gateway with local DHCP authority' 'B is downstream and route editing is fail-closed' \
+    'VIP must have exactly one owner' 'C default route uses B' 'D default route uses A'; do
+    grep -Fq "$token" "$smoke_script" || {
+        echo "topology smoke missing contract: $token" >&2
+        exit 1
+    }
+done
+
 release_script="${SCRIPT_DIR}/release.sh"
 grep -Fq -- '--sort=name' "$release_script" && grep -Fq 'gzip -n' "$release_script" || {
     echo "release archive must be reproducible" >&2
