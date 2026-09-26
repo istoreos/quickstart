@@ -67,3 +67,27 @@ type DeviceNetworkPolicyApplyRequest struct {
 	TargetID        string               `json:"targetId"`
 	ExpectedVersion string               `json:"expectedVersion,omitempty"`
 }
+
+type PolicyPlanChange struct {
+	Kind        string `json:"kind"`
+	Description string `json:"description"`
+}
+
+type DeviceNetworkPolicyPlanResult struct {
+	DeviceID        string                `json:"deviceId"`
+	Current         *DesiredNetworkPolicy `json:"current"`
+	Desired         *DesiredNetworkPolicy `json:"desired"`
+	Changes         []*PolicyPlanChange   `json:"changes"`
+	ReloadServices  []string              `json:"reloadServices"`
+	RequiresRenewal bool                  `json:"requiresRenewal"`
+	RecoveryAction  string                `json:"recoveryAction"`
+	Version         string                `json:"version"`
+	RollbackPoint   string                `json:"rollbackPoint"`
+	CanApply        bool                  `json:"canApply"`
+	Error           *DevicePolicyError    `json:"error,omitempty"`
+}
+
+type DeviceNetworkPolicyPlanResponse struct {
+	JSONResponse
+	Result *DeviceNetworkPolicyPlanResult `json:"result,omitempty"`
+}

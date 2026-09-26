@@ -36,6 +36,18 @@ export type DevicePolicy = {
     speed: SpeedPolicy
     access: AccessPolicy
     capabilities: Record<'static' | 'speed' | 'access', PolicyCapability>
+    version: string
+}
+
+export type PolicyPlan = {
+    kind?: 'speed' | 'access'
+    changes: Array<{ kind: string; description: string }>
+    reloadServices: string[]
+    requiresRenewal?: boolean
+    recoveryAction: string
+    version: string
+    canApply: boolean
+    error?: { code: string; message: string }
 }
 
 export const policyAvailable = (policy: DevicePolicy | null, kind: 'static' | 'speed' | 'access'): boolean =>

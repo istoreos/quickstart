@@ -45,8 +45,18 @@ test('M33 Internet Path editor uses the domain plan and apply contract without D
 
 test('M30 detail policy shows desired applied observed states and locks route only by DHCP authority', async () => {
     const source = await readFile(new URL('../src/pages/device/components/devicePolicyPanel.vue', import.meta.url), 'utf8')
-    for (const label of ['想要的路线', '路由器配置', '设备当前状态', 'routeEditability', '安装限速服务']) assert.match(source, new RegExp(label))
+    for (const label of ['想要的路线', '路由器配置', '实际生效情况', 'routeEditability', '安装限速服务']) assert.match(source, new RegExp(label))
     assert.match(source, /routeLocked/)
     assert.match(source, /sessionStorage/)
     assert.doesNotMatch(source, /tagName|dhcpOption|option 3|option 6|eqos|UCI/)
+})
+
+test('M34 network and restriction writes require visible plan before apply', async () => {
+    const source = await readFile(new URL('../src/pages/device/components/devicePolicyPanel.vue', import.meta.url), 'utf8')
+    for (const label of ['确认这次修改', '预计重载', '失败时恢复原设置', '确认应用']) assert.match(source, new RegExp(label))
+    assert.match(source, /deviceNetworkPolicyV2\.PLAN/)
+    assert.match(source, /deviceNetworkPolicyV2\.APPLY/)
+    assert.match(source, /deviceRestrictionsV2\.PLAN/)
+    assert.match(source, /deviceRestrictionsV2\.APPLY/)
+    assert.doesNotMatch(source, /devicePolicyV2\.POST|deviceNetworkPolicyV2\.POST/)
 })

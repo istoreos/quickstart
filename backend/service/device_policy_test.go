@@ -95,6 +95,23 @@ func TestDevicePolicyAppliesAndReturnsAuthoritativePolicy(t *testing.T) {
 	}
 }
 
+func TestDeviceRestrictionsPlanIsReadOnlyAndVersionGuardsApply(t *testing.T) {
+	store := availablePolicyStore()
+	module := newDevicePolicyModuleForTest(store)
+	request := &models.DevicePolicyApplyRequest{
+		DeviceID: store.policy.DeviceID, Kind: "access", Access: &models.DeviceAccessPolicy{NetworkAccess: false},
+	}
+	planned, err := module.Plan(context.Background(), request)
+	if err != nil || planned.Result.Error != nil || !planned.Result.CanApply || store.applyCalls != 0 || planned.Result.Version == "" {
+		t.Fatalf("plan=%#v apply=%d err=%v", planned, store.applyCalls, err)
+	}
+	request.ExpectedVersion = "stale"
+	applied, err := module.Apply(context.Background(), request)
+	if err != nil || applied.Result.Error == nil || applied.Result.Error.Code != "conflict" || store.applyCalls != 0 {
+		t.Fatalf("apply=%#v calls=%d err=%v", applied, store.applyCalls, err)
+	}
+}
+
 func TestDevicePolicyRejectsStaticAddressConflictBeforeWrite(t *testing.T) {
 	t.Parallel()
 	store := availablePolicyStore()

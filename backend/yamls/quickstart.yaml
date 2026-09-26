@@ -1741,6 +1741,42 @@ paths:
         200:
           description: "Atomically applied device network policy"
           schema: { $ref: "lanctrl.yaml#/definitions/DeviceNetworkPolicyResponse" }
+  /cgi-bin/luci/istore/lanctrl/v2/device-network-policy/plan/:
+    post:
+      tags: ["lanctrl"]
+      parameters:
+        - { name: body, in: body, required: true, schema: { $ref: "lanctrl.yaml#/definitions/DeviceNetworkPolicyApplyRequest" } }
+      responses:
+        200:
+          description: "Read-only address and Internet Path impact plan"
+          schema: { $ref: "lanctrl.yaml#/definitions/DeviceNetworkPolicyPlanResponse" }
+  /cgi-bin/luci/istore/lanctrl/v2/device-network-policy/apply/:
+    post:
+      tags: ["lanctrl"]
+      parameters:
+        - { name: body, in: body, required: true, schema: { $ref: "lanctrl.yaml#/definitions/DeviceNetworkPolicyApplyRequest" } }
+      responses:
+        200:
+          description: "Confirmed transactional address and Internet Path result"
+          schema: { $ref: "lanctrl.yaml#/definitions/DeviceNetworkPolicyResponse" }
+  /cgi-bin/luci/istore/lanctrl/v2/device-restrictions/plan/:
+    post:
+      tags: ["lanctrl"]
+      parameters:
+        - { name: body, in: body, required: true, schema: { $ref: "lanctrl.yaml#/definitions/DevicePolicyApplyRequest" } }
+      responses:
+        200:
+          description: "Read-only access or speed impact plan"
+          schema: { $ref: "lanctrl.yaml#/definitions/DeviceRestrictionPlanResponse" }
+  /cgi-bin/luci/istore/lanctrl/v2/device-restrictions/apply/:
+    post:
+      tags: ["lanctrl"]
+      parameters:
+        - { name: body, in: body, required: true, schema: { $ref: "lanctrl.yaml#/definitions/DevicePolicyApplyRequest" } }
+      responses:
+        200:
+          description: "Confirmed transactional access or speed result"
+          schema: { $ref: "lanctrl.yaml#/definitions/DevicePolicyResponse" }
   /cgi-bin/luci/istore/lanctrl/v2/floating-gateway/:
     get:
       tags: ["lanctrl"]

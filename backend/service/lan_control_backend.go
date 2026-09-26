@@ -517,6 +517,21 @@ func (backend *ServiceBackend) GetDeviceNetworkPolicyV2(ctx context.Context, r *
 }
 
 func (backend *ServiceBackend) PostDeviceNetworkPolicyV2(ctx context.Context, r *http.Request) (*models.DeviceNetworkPolicyResponse, error) {
+	return backend.PostDeviceNetworkPolicyApplyV2(ctx, r)
+}
+
+func (backend *ServiceBackend) PostDeviceNetworkPolicyPlanV2(ctx context.Context, r *http.Request) (*models.DeviceNetworkPolicyPlanResponse, error) {
+	var request models.DeviceNetworkPolicyApplyRequest
+	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
+		return &models.DeviceNetworkPolicyPlanResponse{Result: &models.DeviceNetworkPolicyPlanResult{
+			Changes: []*models.PolicyPlanChange{}, ReloadServices: []string{}, CanApply: false,
+			Error: &models.DevicePolicyError{Code: "validation_failed", Message: "invalid device network policy request"},
+		}}, nil
+	}
+	return backend.deviceNetworkPolicyModule().Plan(ctx, &request)
+}
+
+func (backend *ServiceBackend) PostDeviceNetworkPolicyApplyV2(ctx context.Context, r *http.Request) (*models.DeviceNetworkPolicyResponse, error) {
 	var request models.DeviceNetworkPolicyApplyRequest
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		return deviceNetworkPolicyFailure(&models.DevicePolicyError{Code: "validation_failed", Message: "invalid device network policy request"}), nil
@@ -526,6 +541,29 @@ func (backend *ServiceBackend) PostDeviceNetworkPolicyV2(ctx context.Context, r 
 		backend.auditModule().Record(request.DeviceID, "device_network_policy", "policy_changed", "success", "")
 	} else if err == nil && response != nil && response.Result != nil && isAddressConflict(response.Result.Error) {
 		backend.auditModule().Record(request.DeviceID, "address_reservation", "address_conflict", "rejected", "")
+	}
+	return response, err
+}
+
+func (backend *ServiceBackend) PostDeviceRestrictionsPlanV2(ctx context.Context, r *http.Request) (*models.DeviceRestrictionPlanResponse, error) {
+	var request models.DevicePolicyApplyRequest
+	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
+		return &models.DeviceRestrictionPlanResponse{Result: &models.DeviceRestrictionPlanResult{
+			Changes: []*models.PolicyPlanChange{}, ReloadServices: []string{}, CanApply: false,
+			Error: &models.DevicePolicyError{Code: "validation_failed", Message: "invalid device restrictions request"},
+		}}, nil
+	}
+	return backend.devicePolicyModule().Plan(ctx, &request)
+}
+
+func (backend *ServiceBackend) PostDeviceRestrictionsApplyV2(ctx context.Context, r *http.Request) (*models.DevicePolicyResponse, error) {
+	var request models.DevicePolicyApplyRequest
+	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
+		return devicePolicyFailure("validation_failed", "invalid device restrictions request"), nil
+	}
+	response, err := backend.devicePolicyModule().Apply(ctx, &request)
+	if err == nil && response != nil && response.Result != nil && response.Result.Error == nil && response.Result.Changed {
+		backend.auditModule().Record(request.DeviceID, "device_restrictions", "policy_changed", "success", request.Kind)
 	}
 	return response, err
 }

@@ -70,6 +70,70 @@ func (module *DeviceNetworkPolicyModule) Get(ctx context.Context, deviceID strin
 	}}}, nil
 }
 
+func (module *DeviceNetworkPolicyModule) Plan(ctx context.Context, request *models.DeviceNetworkPolicyApplyRequest) (*models.DeviceNetworkPolicyPlanResponse, error) {
+	result := &models.DeviceNetworkPolicyPlanResult{
+		Changes: []*models.PolicyPlanChange{}, ReloadServices: []string{}, RecoveryAction: "restore_task_snapshot",
+	}
+	if request == nil || request.DeviceID == "" || request.Static == nil || request.TargetID == "" {
+		result.Error = &models.DevicePolicyError{Code: "validation_failed", Message: "deviceId, static and targetId are required"}
+		return &models.DeviceNetworkPolicyPlanResponse{Result: result}, nil
+	}
+	result.DeviceID = request.DeviceID
+	currentResponse, err := module.devicePolicy.Get(ctx, request.DeviceID)
+	if err != nil {
+		return nil, err
+	}
+	if currentResponse.Result == nil || currentResponse.Result.Error != nil || currentResponse.Result.Policy == nil {
+		result.Error = currentResponse.Result.Error
+		return &models.DeviceNetworkPolicyPlanResponse{Result: result}, nil
+	}
+	current := currentResponse.Result.Policy
+	_, previousTarget, err := module.currentTarget(ctx, current.MAC)
+	if err != nil {
+		return nil, err
+	}
+	routePlan, err := module.gateway.plan(ctx, &models.GatewayAssignmentRequest{Action: "assign", DeviceID: request.DeviceID, TargetID: request.TargetID})
+	if err != nil {
+		return nil, err
+	}
+	result.Version, result.RollbackPoint = routePlan.State.Version, routePlan.State.Version
+	result.Current = &models.DesiredNetworkPolicy{TargetID: previousTarget, Static: publicAddressPolicy(current.Static)}
+	result.Desired = &models.DesiredNetworkPolicy{TargetID: request.TargetID, Static: request.Static}
+	if routePlan.Public.Error != nil || !routePlan.Public.CanApply {
+		result.Error = routePlan.Public.Error
+		return &models.DeviceNetworkPolicyPlanResponse{Result: result}, nil
+	}
+	if request.ExpectedVersion != "" && request.ExpectedVersion != routePlan.State.Version {
+		result.Error = &models.DevicePolicyError{Code: "conflict", Message: "network configuration changed; plan again"}
+		return &models.DeviceNetworkPolicyPlanResponse{Result: result}, nil
+	}
+	input := StaticAssignmentWriteInput{Action: "add", AssignedMAC: current.MAC, AssignedIP: request.Static.AssignedIP, BindIP: request.Static.BindIP, Hostname: request.Static.Hostname}
+	if !request.Static.Enabled {
+		input.AssignedIP, input.Hostname, input.BindIP = "", "", false
+	}
+	input, normalizeErr := normalizeStaticAssignmentInput(input)
+	if normalizeErr != nil {
+		result.Error = &models.DevicePolicyError{Code: "validation_failed", Message: normalizeErr.Error()}
+		return &models.DeviceNetworkPolicyPlanResponse{Result: result}, nil
+	}
+	if conflict := networkPolicyStaticIPConflict(current.MAC, input, module.devicePolicy, ctx); conflict != nil {
+		result.Error = conflict
+		return &models.DeviceNetworkPolicyPlanResponse{Result: result}, nil
+	}
+	if !deviceStaticPolicyEqual(current.Static, request.Static) {
+		result.Changes = append(result.Changes, &models.PolicyPlanChange{Kind: "address", Description: "change address reservation"})
+	}
+	if len(routePlan.Public.Changes) > 0 {
+		result.Changes = append(result.Changes, &models.PolicyPlanChange{Kind: "internet_path", Description: "change device internet path"})
+	}
+	if len(result.Changes) > 0 {
+		result.ReloadServices = []string{"dnsmasq"}
+		result.RequiresRenewal = true
+	}
+	result.CanApply = true
+	return &models.DeviceNetworkPolicyPlanResponse{Result: result}, nil
+}
+
 func (module *DeviceNetworkPolicyModule) Apply(ctx context.Context, request *models.DeviceNetworkPolicyApplyRequest) (*models.DeviceNetworkPolicyResponse, error) {
 	module.mu.Lock()
 	defer module.mu.Unlock()

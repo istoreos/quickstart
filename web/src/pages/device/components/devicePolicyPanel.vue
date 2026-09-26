@@ -5,6 +5,13 @@
             :action-label="$gettext('重新加载')" @action="load" />
         <template v-else-if="policy">
             <div v-if="feedback" class="policy-feedback" :class="feedbackKind" role="status">{{ feedback }}</div>
+            <section v-if="pendingPlan" class="policy-plan" aria-live="polite">
+                <div><strong>{{ $gettext('确认这次修改') }}</strong><small>{{ planSummary }}</small></div>
+                <ul><li v-for="change in pendingPlan.changes" :key="change.kind">{{ planChangeLabel(change.kind) }}</li></ul>
+                <p v-if="pendingPlan.requiresRenewal">{{ $gettext('保存后设备需要重新获取地址，实际生效前会保持等待状态。') }}</p>
+                <p>{{ $gettext('预计重载') }}：{{ pendingPlan.reloadServices.join('、') || $gettext('无需重载服务') }} · {{ $gettext('失败时恢复原设置') }}</p>
+                <div><button type="button" class="secondary" @click="cancelPlan">{{ $gettext('取消') }}</button><button type="button" :disabled="saving !== ''" @click="applyPlannedChange">{{ saving ? $gettext('正在应用…') : $gettext('确认应用') }}</button></div>
+            </section>
 
             <section v-if="mode === 'all' || mode === 'network'" class="policy-card">
                 <div class="policy-card__heading"><div><strong>{{ $gettext('地址与上网路线') }}</strong><small>{{ $gettext('固定设备地址，并选择它通过哪台路由器上网') }}</small></div>
@@ -20,7 +27,7 @@
                             </option>
                         </select>
                     </label>
-                    <div class="effect-flow" :aria-label="$gettext('上网路线状态')"><span><small>{{ $gettext('想要的路线') }}</small>{{ desiredPathText }}</span><span><small>{{ $gettext('路由器配置') }}</small>{{ appliedPathText }}</span><span><small>{{ $gettext('设备当前状态') }}</small>{{ pathStateText }}</span></div>
+                    <div class="effect-flow" :aria-label="$gettext('上网路线状态')"><span><small>{{ $gettext('想要的路线') }}</small>{{ desiredPathText }}</span><span><small>{{ $gettext('路由器配置') }}</small>{{ appliedPathText }}</span><span><small>{{ $gettext('实际生效情况') }}</small>{{ pathStateText }}</span></div>
                     <small v-if="networkPolicy.path.effect.needsAttention" class="attention" role="status">{{ $gettext('设置已保存，但设备可能需要断开并重新连接后才会使用新路线。') }}</small>
                     <label v-if="staticForm.enabled"><span>{{ $gettext('IPv4 地址') }}</span><input v-model.trim="staticForm.assignedIP" inputmode="decimal" placeholder="192.168.100.50" :disabled="routeLocked" /></label>
                     <details>
@@ -31,7 +38,7 @@
                         <small v-if="hostnameInvalid" class="field-error" role="alert">{{ $gettext('请输入 1～63 位英文、数字或中间连字符，不能以连字符开头或结尾') }}</small>
                         <label class="checkbox-line"><input v-model="staticForm.bindIP" type="checkbox" />{{ $gettext('绑定 MAC 与 IPv4') }}</label>
                     </details>
-                    <button type="button" :disabled="routeLocked || saving !== '' || hostnameInvalid || !staticForm.targetId" @click="saveNetworkPolicy">{{ saving === 'static' ? $gettext('正在保存…') : $gettext('保存地址与上网路线') }}</button>
+                    <button type="button" :disabled="routeLocked || saving !== '' || hostnameInvalid || !staticForm.targetId" @click="saveNetworkPolicy">{{ saving === 'network-plan' ? $gettext('正在检查…') : $gettext('预览地址与上网路线') }}</button>
                 </template>
             </section>
 
@@ -45,7 +52,7 @@
                         <label><span>{{ $gettext('上传上限（Mbit/s）') }}</span><input v-model.number="speedForm.uploadSpeed" type="number" min="1" /></label>
                         <label><span>{{ $gettext('下载上限（Mbit/s）') }}</span><input v-model.number="speedForm.downloadSpeed" type="number" min="1" /></label>
                     </div>
-                    <button type="button" :disabled="saving !== ''" @click="saveSpeed">{{ saving === 'speed' ? $gettext('正在保存…') : $gettext('保存限速') }}</button>
+                    <button type="button" :disabled="saving !== ''" @click="saveSpeed">{{ saving === 'restriction-plan' ? $gettext('正在检查…') : $gettext('预览限速') }}</button>
                 </template>
             </section>
 
@@ -55,7 +62,7 @@
                 </div>
                 <p v-if="reason('access')" class="policy-reason">{{ reason('access') }}</p>
                 <button v-else type="button" :class="{ danger: policy.access.networkAccess }" :disabled="saving !== ''" @click="toggleAccess">
-                    {{ saving === 'access' ? $gettext('正在应用…') : policy.access.networkAccess ? $gettext('断开网络') : $gettext('恢复联网') }}
+                    {{ saving === 'restriction-plan' ? $gettext('正在检查…') : policy.access.networkAccess ? $gettext('预览断开网络') : $gettext('预览恢复联网') }}
                 </button>
             </section>
         </template>
@@ -72,13 +79,13 @@ import {
     policyAvailable,
     policyErrorLabel,
     policyLabelsFromPolicy,
-    policyMacSuffix,
     policyUnavailableReason,
     normalizeDhcpHostname,
     validDhcpHostname,
     internetPathStateLabel,
     type DevicePolicy,
     type DeviceNetworkPolicy,
+    type PolicyPlan,
 } from '../devicePolicy'
 
 const props = withDefaults(defineProps<{ device: DeviceListItem; mode?: 'all' | 'network' | 'restrictions' }>(), { mode: 'all' })
@@ -92,6 +99,9 @@ const saving = ref('')
 const feedback = ref('')
 const feedbackKind = ref<'success' | 'error'>('success')
 const policy = ref<DevicePolicy | null>(null)
+const pendingPlan = ref<PolicyPlan>()
+const pendingRequest = ref<Record<string, unknown>>()
+const pendingTask = ref<'network' | 'restrictions'>()
 const emptyAddress = { enabled: false, assignedIP: '', bindIP: false, hostname: '' }
 const networkPolicy = ref<DeviceNetworkPolicy>({
     deviceId: '', static: { ...emptyAddress },
@@ -155,23 +165,25 @@ const appliedPathText = computed(() => networkPolicy.value.path.effect.applied?.
 const draftKey = computed(() => `quickstart.device-policy-draft.${props.device.deviceId}`)
 const rememberDraft = () => sessionStorage.setItem(draftKey.value, JSON.stringify({ speed: { ...speedForm } }))
 const restoreDraft = () => { try { const draft = JSON.parse(sessionStorage.getItem(draftKey.value) || '{}'); if (draft.speed) Object.assign(speedForm, draft.speed) } catch (_) {} }
-const apply = async (kind: 'static' | 'speed' | 'access', value: Record<string, unknown>) => {
-    saving.value = kind
+const planSummary = computed(() => pendingTask.value === 'network'
+    ? $gettext('将同时检查地址、上网路线、DNS 和 DHCP 分配权。')
+    : pendingRequest.value?.kind === 'access' ? $gettext('将修改这台设备的联网权限。') : $gettext('将修改这台设备的最高速度。'))
+const planChangeLabel = (kind:string) => ({address:$gettext('地址预留'),internet_path:$gettext('上网路线'),speed:$gettext('设备限速'),access:$gettext('联网权限')} as Record<string,string>)[kind] || kind
+const cancelPlan = () => { pendingPlan.value=undefined;pendingRequest.value=undefined;pendingTask.value=undefined }
+const planRestriction = async (kind: 'speed' | 'access', value: Record<string, unknown>) => {
+    saving.value = 'restriction-plan'
     feedback.value = ''
     try {
-        const response = await request.DeviceMangement.devicePolicyV2.POST({
+        const payload = {
             deviceId: props.device.deviceId,
             kind,
             idempotencyKey: `${props.device.deviceId}:${kind}:${Date.now()}`,
             [kind]: value,
-        })
-        const result = response.data?.result
-        if (result?.error) throw Object.assign(new Error(result.error.message), { code: result.error.code })
-        policy.value = result.policy
-        syncForms()
-        feedbackKind.value = 'success'
-        feedback.value = result.changed ? $gettext('已保存并生效') : $gettext('设置没有变化')
-        emit('saved', policyLabelsFromPolicy(result.policy))
+        }
+        const plan = (await request.DeviceMangement.deviceRestrictionsV2.PLAN(payload)).data?.result as PolicyPlan
+        if (plan?.error) throw Object.assign(new Error(plan.error.message), { code: plan.error.code })
+        if (!plan?.canApply) throw new Error($gettext('当前不能应用这项修改'))
+        pendingPlan.value=plan;pendingRequest.value=payload;pendingTask.value='restrictions'
     } catch (error: any) {
         feedbackKind.value = 'error'
         feedback.value = policyErrorLabel(error?.code, error?.message)
@@ -181,10 +193,10 @@ const apply = async (kind: 'static' | 'speed' | 'access', value: Record<string, 
 }
 const saveNetworkPolicy = async () => {
     if (hostnameInvalid.value) return
-    saving.value = 'static'
+    saving.value = 'network-plan'
     feedback.value = ''
     try {
-        const response = await request.DeviceMangement.deviceNetworkPolicyV2.POST({
+        const payload = {
             deviceId: props.device.deviceId,
             idempotencyKey: `${props.device.deviceId}:network:${Date.now()}`,
             static: {
@@ -194,19 +206,11 @@ const saveNetworkPolicy = async () => {
                 hostname: staticForm.enabled ? normalizeDhcpHostname(staticForm.hostname) : '',
             },
             targetId: staticForm.targetId,
-            expectedVersion: networkPolicy.value.version,
-        })
-        const result = response.data?.result
-        if (result?.error) throw Object.assign(new Error(result.error.message), { code: result.error.code })
-        if (!result?.policy) throw new Error($gettext('设备策略不可用'))
-        networkPolicy.value = result.policy
-        if (policy.value) Object.assign(policy.value.static, result.policy.static)
-        syncForms()
-        feedbackKind.value = 'success'
-        feedback.value = result.changed
-            ? $gettext('配置已保存，等待设备重新获取地址')
-            : $gettext('设置没有变化')
-        if (policy.value) emit('saved', policyLabelsFromPolicy(policy.value))
+        }
+        const plan = (await request.DeviceMangement.deviceNetworkPolicyV2.PLAN(payload)).data?.result as PolicyPlan
+        if (plan?.error) throw Object.assign(new Error(plan.error.message), { code: plan.error.code })
+        if (!plan?.canApply) throw new Error($gettext('当前不能应用这项修改'))
+        pendingPlan.value=plan;pendingRequest.value=payload;pendingTask.value='network'
     } catch (error: any) {
         feedbackKind.value = 'error'
         feedback.value = policyErrorLabel(error?.code, error?.message)
@@ -214,7 +218,30 @@ const saveNetworkPolicy = async () => {
         saving.value = ''
     }
 }
-const saveSpeed = () => apply('speed', { ...speedForm })
+const applyPlannedChange = async () => {
+    if(!pendingPlan.value||!pendingRequest.value||!pendingTask.value)return
+    saving.value='apply';feedback.value=''
+    try{
+        const payload={...pendingRequest.value,expectedVersion:pendingPlan.value.version}
+        if(pendingTask.value==='network'){
+            const result=(await request.DeviceMangement.deviceNetworkPolicyV2.APPLY(payload)).data?.result
+            if(result?.error)throw Object.assign(new Error(result.error.message),{code:result.error.code})
+            if(!result?.policy)throw new Error($gettext('设备策略不可用'))
+            networkPolicy.value=result.policy
+            if(policy.value)Object.assign(policy.value.static,result.policy.static)
+            feedback.value=result.changed?$gettext('配置已保存，等待设备重新获取地址'):$gettext('设置没有变化')
+        }else{
+            const result=(await request.DeviceMangement.deviceRestrictionsV2.APPLY(payload)).data?.result
+            if(result?.error)throw Object.assign(new Error(result.error.message),{code:result.error.code})
+            if(!result?.policy)throw new Error($gettext('设备策略不可用'))
+            policy.value=result.policy
+            feedback.value=result.changed?$gettext('已保存并生效'):$gettext('设置没有变化')
+        }
+        feedbackKind.value='success';cancelPlan();syncForms()
+        if(policy.value)emit('saved',policyLabelsFromPolicy(policy.value))
+    }catch(error:any){feedbackKind.value='error';feedback.value=policyErrorLabel(error?.code,error?.message)}finally{saving.value=''}
+}
+const saveSpeed = () => planRestriction('speed', { ...speedForm })
 const installSpeed = async () => {
     rememberDraft(); saving.value = 'install'; feedback.value = ''
     try {
@@ -232,12 +259,7 @@ const installSpeed = async () => {
 const toggleAccess = () => {
     if (!policy.value) return
     const next = !policy.value.access.networkAccess
-    if (!next) {
-        const name = policy.value.displayName || props.device.displayName || props.device.hostname || $gettext('未命名设备')
-        const suffix = policyMacSuffix(props.device.mac)
-        if (!window.confirm(`${$gettext('确认断开设备网络？')}\n${name} · MAC …${suffix}`)) return
-    }
-    apply('access', { networkAccess: next })
+    planRestriction('access', { networkAccess: next })
 }
 
 watch(() => props.device.deviceId, load, { immediate: true })
@@ -248,6 +270,8 @@ watch(() => props.device.deviceId, load, { immediate: true })
 .policy-feedback { padding: 9px 11px; border-radius: 7px; font-size: 13px; }
 .policy-feedback.success { color: #176b45; background: rgba(38, 162, 105, .1); }
 .policy-feedback.error { color: #9b3b16; background: #fff1e8; }
+.policy-plan { padding: 12px; border: 1px solid rgba(85,58,254,.22); border-radius: 8px; background: rgba(85,58,254,.05); }
+.policy-plan>div:first-child { display: grid; gap: 3px; }.policy-plan small,.policy-plan p{opacity:.68}.policy-plan ul{margin:8px 0;padding-left:20px}.policy-plan>div:last-child{display:flex;justify-content:flex-end;gap:7px}.policy-plan button{min-height:34px;padding:6px 12px;color:#fff;background:#553afe;border:1px solid #553afe;border-radius:6px;cursor:pointer}.policy-plan button.secondary{color:inherit;background:transparent;border-color:rgba(127,127,127,.3)}
 .policy-card { padding: 13px; border: 1px solid rgba(127, 127, 127, .16); border-radius: 8px; }
 .policy-card__heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
 .policy-card__heading > div { display: flex; flex-direction: column; gap: 3px; }

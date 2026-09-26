@@ -48,6 +48,7 @@ type DevicePolicy struct {
 	Speed        *DeviceSpeedPolicy                 `json:"speed"`
 	Access       *DeviceAccessPolicy                `json:"access"`
 	Capabilities map[string]*DevicePolicyCapability `json:"capabilities"`
+	Version      string                             `json:"version"`
 }
 
 // swagger:model devicePolicyError
@@ -72,12 +73,34 @@ type DevicePolicyResponse struct {
 
 // swagger:model devicePolicyApplyRequest
 type DevicePolicyApplyRequest struct {
+	DeviceID        string              `json:"deviceId"`
+	Kind            string              `json:"kind"`
+	IdempotencyKey  string              `json:"idempotencyKey,omitempty"`
+	Static          *DeviceStaticPolicy `json:"static,omitempty"`
+	Speed           *DeviceSpeedPolicy  `json:"speed,omitempty"`
+	Access          *DeviceAccessPolicy `json:"access,omitempty"`
+	ExpectedVersion string              `json:"expectedVersion,omitempty"`
+}
+
+type DeviceRestrictionPlanResult struct {
 	DeviceID       string              `json:"deviceId"`
 	Kind           string              `json:"kind"`
-	IdempotencyKey string              `json:"idempotencyKey,omitempty"`
-	Static         *DeviceStaticPolicy `json:"static,omitempty"`
-	Speed          *DeviceSpeedPolicy  `json:"speed,omitempty"`
-	Access         *DeviceAccessPolicy `json:"access,omitempty"`
+	CurrentSpeed   *DeviceSpeedPolicy  `json:"currentSpeed,omitempty"`
+	DesiredSpeed   *DeviceSpeedPolicy  `json:"desiredSpeed,omitempty"`
+	CurrentAccess  *DeviceAccessPolicy `json:"currentAccess,omitempty"`
+	DesiredAccess  *DeviceAccessPolicy `json:"desiredAccess,omitempty"`
+	Changes        []*PolicyPlanChange `json:"changes"`
+	ReloadServices []string            `json:"reloadServices"`
+	RecoveryAction string              `json:"recoveryAction"`
+	Version        string              `json:"version"`
+	RollbackPoint  string              `json:"rollbackPoint"`
+	CanApply       bool                `json:"canApply"`
+	Error          *DevicePolicyError  `json:"error,omitempty"`
+}
+
+type DeviceRestrictionPlanResponse struct {
+	JSONResponse
+	Result *DeviceRestrictionPlanResult `json:"result,omitempty"`
 }
 
 // swagger:model devicePolicyRulesResult
