@@ -3,7 +3,11 @@ package service
 import (
 	"context"
 	"errors"
+	"os"
+	"path/filepath"
 	"testing"
+
+	"github.com/digineo/go-uci"
 )
 
 type fakeRouterContextProbe struct {
@@ -69,5 +73,20 @@ func TestRouterContextRejectsUnsafeLANIdentifier(t *testing.T) {
 	module := NewRouterContextModule(&fakeRouterContextProbe{facts: &RouterContextFacts{}})
 	if _, err := module.Get(context.Background(), "lan;reboot"); err == nil {
 		t.Fatal("expected invalid LAN identifier error")
+	}
+}
+
+func TestRouterContextDisabledDHCPv4IsNotLocalAuthority(t *testing.T) {
+	directory := t.TempDir()
+	raw := "config dhcp 'lan'\n\toption interface 'lan'\n\toption dhcpv4 'disabled'\n"
+	if err := os.WriteFile(filepath.Join(directory, "dhcp"), []byte(raw), 0600); err != nil {
+		t.Fatal(err)
+	}
+	tree := uci.NewTree(directory)
+	if err := tree.LoadConfig("dhcp", true); err != nil {
+		t.Fatal(err)
+	}
+	if routerContextLocalDHCPConfigured(tree, "lan") {
+		t.Fatal("dhcpv4=disabled must not grant local DHCP authority")
 	}
 }

@@ -177,6 +177,14 @@ func (probe *defaultRouterContextProbe) Probe(ctx context.Context, lan string) (
 	if err := tree.LoadConfig("dhcp", true); err != nil {
 		return nil, err
 	}
+	facts.LocalDHCPConfigured = routerContextLocalDHCPConfigured(tree, lan)
+	if facts.LocalDHCPConfigured {
+		facts.LocalDHCPHealthy = routerContextDnsmasqHealthy(ctx)
+	}
+	return facts, nil
+}
+
+func routerContextLocalDHCPConfigured(tree uci.Tree, lan string) bool {
 	sections, _ := tree.GetSections("dhcp", "dhcp")
 	for _, section := range sections {
 		boundLAN, _ := tree.GetLast("dhcp", section, "interface")
@@ -184,11 +192,18 @@ func (probe *defaultRouterContextProbe) Probe(ctx context.Context, lan string) (
 			continue
 		}
 		ignore, _ := tree.GetLast("dhcp", section, "ignore")
-		facts.LocalDHCPConfigured = ignore != "1"
-		break
+		if ignore == "1" {
+			return false
+		}
+		dhcpv4, _ := tree.GetLast("dhcp", section, "dhcpv4")
+		switch strings.ToLower(strings.TrimSpace(dhcpv4)) {
+		case "disabled", "relay":
+			return false
+		default:
+			// An omitted mode is the dnsmasq-compatible legacy default;
+			// server and hybrid modes both provide local DHCPv4 service.
+			return true
+		}
 	}
-	if facts.LocalDHCPConfigured {
-		facts.LocalDHCPHealthy = routerContextDnsmasqHealthy(ctx)
-	}
-	return facts, nil
+	return false
 }
