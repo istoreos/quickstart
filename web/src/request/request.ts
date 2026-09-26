@@ -1106,6 +1106,11 @@ export const DeviceMangement = {
   gatewayTargetsV2: {
     GET() { return Request<any>("/lanctrl/v2/gateway-targets/", { method: "GET" }); },
   },
+  gatewayTargetV2: {
+    PLAN(data: { [key: string]: any }) { return Request<any>("/lanctrl/v2/gateway-target/plan/", { method: "POST", headers: { "Content-Type": "application/json;charset=utf-8" }, body: JSON.stringify(data) }); },
+    APPLY(data: { [key: string]: any }) { return Request<any>("/lanctrl/v2/gateway-target/apply/", { method: "POST", headers: { "Content-Type": "application/json;charset=utf-8" }, body: JSON.stringify(data) }); },
+    REFERENCES(targetId: string) { return Request<any>(`/lanctrl/v2/gateway-target-references/?targetId=${encodeURIComponent(targetId)}`, { method: "GET" }); },
+  },
   floatingGatewayV2: {
     GET() { return Request<any>("/lanctrl/v2/floating-gateway/", { method: "GET" }); },
     PLAN(data: { [key: string]: any }) { return Request<any>("/lanctrl/v2/floating-gateway/plan/", { method: "POST", headers: { "Content-Type": "application/json;charset=utf-8" }, body: JSON.stringify(data) }); },
