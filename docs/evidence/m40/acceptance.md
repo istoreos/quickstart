@@ -28,6 +28,13 @@
 - A/B 降级到 M39 后端与 Web 备份后 API 返回 200；重新恢复 M40 候选后 API 返回 200。
 - 设备分组、策略效果、任务事务和审计配置在整个生命周期中哈希不变。`traffic-insights.json` 是运行时遥测，会随采样自然变化，不作为配置丢失判据。
 
+## 四机 SMOKE 与有界负载
+
+- `scripts/ops/lan-device-topology-smoke.sh` 是只读、失败关闭的一键四机检查；覆盖 A/B SSH 与单进程、后端和静态资源哈希、页面资产版本、软件包版本、Quickstart/dnsmasq/floatip、8 组 GET API、路由角色与 DHCP 权限、VIP 单主，以及 C/D 默认路线、公网、VIP 和 ARP 所有者。
+- 候选运行时模式 `REQUIRE_PACKAGE_COHERENCE=0`：48/48 通过。A 为 `lan_gateway_candidate + local` 且可编辑；B 为 `downstream_router + none_detected` 且失败关闭；VIP 仅由 B 持有；C 经 B、D 经 A，二者公网和 VIP 可达。
+- 正式软件包模式：52 项中 4 项失败。A 的 `quickstart/luci-app-quickstart` 仍登记为 `0.11.6-r1`，B 分别为 `0.9.9-r1`、`0.8.17-r1`，而验收要求是 `0.14.0-r12`。因此只能确认 M40 候选文件已部署，不能确认 r12 软件包安装完成。
+- A/B 各执行 4 个只读接口、每接口 100 次、4 worker 的有界并发，共 800 次请求，HTTP 错误为 0；A/B PID 与启动时钟前后不变。单次最慢请求 A 为 `0.0419s`、B 为 `0.0240s`。负载后的 RSS 回落和长期趋势继续由 24 小时门禁判定。
+
 ## 浮动网关受控切换
 
 - 初始由 B 持有 `192.168.30.3`。停止 B 的 floatip 并仅阻断其探测响应后，A 在 3 次检查后接管；恢复 B 后 A 释放、B 重新持有。
