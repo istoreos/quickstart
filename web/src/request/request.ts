@@ -1118,6 +1118,11 @@ export const DeviceMangement = {
     APPLY(data: { [key: string]: any }) { return Request<any>("/lanctrl/v2/gateway-target/apply/", { method: "POST", headers: { "Content-Type": "application/json;charset=utf-8" }, body: JSON.stringify(data) }); },
     REFERENCES(targetId: string) { return Request<any>(`/lanctrl/v2/gateway-target-references/?targetId=${encodeURIComponent(targetId)}`, { method: "GET" }); },
   },
+  lanDhcpSettingsV2: {
+    GET() { return Request<any>("/lanctrl/v2/lan-dhcp-settings/", { method: "GET" }); },
+    PLAN(data: { [key: string]: any }) { return Request<any>("/lanctrl/v2/lan-dhcp-settings/plan/", { method: "POST", headers: { "Content-Type": "application/json;charset=utf-8" }, body: JSON.stringify(data) }); },
+    APPLY(data: { [key: string]: any }) { return Request<any>("/lanctrl/v2/lan-dhcp-settings/apply/", { method: "POST", headers: { "Content-Type": "application/json;charset=utf-8" }, body: JSON.stringify(data) }); },
+  },
   floatingGatewayV2: {
     GET() { return Request<any>("/lanctrl/v2/floating-gateway/", { method: "GET" }); },
     PLAN(data: { [key: string]: any }) { return Request<any>("/lanctrl/v2/floating-gateway/plan/", { method: "POST", headers: { "Content-Type": "application/json;charset=utf-8" }, body: JSON.stringify(data) }); },

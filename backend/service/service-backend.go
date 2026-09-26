@@ -39,6 +39,7 @@ type ServiceBackend struct {
 	lanDeviceMigration   *LanDeviceMigrationModule
 	capabilityActions    *CapabilityActionModule
 	routerContext        *RouterContextModule
+	lanDHCPSettings      *LanDHCPSettingsModule
 	deviceGroups         *DeviceGroupModule
 	trafficInsights      *TrafficInsightsModule
 	networkAudit         *NetworkAuditModule
@@ -164,6 +165,8 @@ func NewServiceBackend() *ServiceBackend {
 	backend.lanDeviceMigration = NewDefaultLanDeviceMigrationModule(backend.networkRules)
 	backend.capabilityActions = NewDefaultCapabilityActionModule()
 	backend.routerContext = NewDefaultRouterContextModule()
+	backend.lanDHCPSettings = NewDefaultLanDHCPSettingsModule(backend.gatewayPolicy, backend.routerContext)
+	backend.lanDHCPSettings.transactions = transactions
 	backend.trafficInsights = NewDefaultTrafficInsightsModule(backend.devicePolicy)
 	if backend.gatewayPolicy.groups != nil {
 		backend.deviceGroups = newDefaultDeviceGroupModuleWithStore(backend.gatewayPolicy.groups, backend.devicePolicy, backend.deviceNetworkPolicy, backend.trafficInsights)

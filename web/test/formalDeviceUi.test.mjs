@@ -43,6 +43,15 @@ test('M33 Internet Path editor uses the domain plan and apply contract without D
     assert.doesNotMatch(source, /dhcpTagsConfig|tagName|dhcpOption/)
 })
 
+test('M35 DHCP settings expose a safe pool plan and recovery path', async () => {
+    const source = await readFile(new URL('../src/pages/device/lanSettingsPanel.vue', import.meta.url), 'utf8')
+    for (const label of ['地址池起始地址', '地址池结束地址', '地址租期', '关闭后预计影响设备', '恢复路径', '我已了解影响，继续']) assert.match(source, new RegExp(label))
+    assert.match(source, /lanDhcpSettingsV2\.GET/)
+    assert.match(source, /lanDhcpSettingsV2\.PLAN/)
+    assert.match(source, /lanDhcpSettingsV2\.APPLY/)
+    assert.doesNotMatch(source, /dhcpGatewayConfig\.POST/)
+})
+
 test('M30 detail policy shows desired applied observed states and locks route only by DHCP authority', async () => {
     const source = await readFile(new URL('../src/pages/device/components/devicePolicyPanel.vue', import.meta.url), 'utf8')
     for (const label of ['想要的路线', '路由器配置', '实际生效情况', 'routeEditability', '安装限速服务']) assert.match(source, new RegExp(label))
