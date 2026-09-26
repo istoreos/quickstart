@@ -36,7 +36,7 @@
 
 ## 24 小时稳定性
 
-- 原始采样：`/tmp/quickstart-m40-topology-soak-final.tsv`，间隔 300 秒，起点 `2026-09-26T05:19:03Z`。
+- 原始采样：`/tmp/quickstart-m40-topology-soak-final.tsv`，间隔 300 秒，起点 `2026-09-26T05:28:26Z`。采样器运行在持久 tmux 会话中，不依赖当前交互连接。
 - 每个样本记录 A/B PID、启动时钟、RSS、线程、FD、API 状态与耗时、VIP 持有者，以及 C/D 默认网关、DNS 和公网连通性。
 - `scripts/analyze-lan-device-soak.mjs` 失败关闭地检查真实时长、进程重启、API 错误、双主/无主、路线漂移和持续 RSS 增长。
 - 当前结论：**待 24 小时结束后填写**。
