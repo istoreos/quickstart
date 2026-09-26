@@ -31,6 +31,7 @@ type lanDHCPSettingsSnapshot struct {
 	Prefix             netip.Prefix
 	RouterAddress      string
 	Authority          string
+	TopologyPosition   string
 	Version            string
 	AffectedDevices    int64
 	ProtectedAddresses map[string]string
@@ -70,7 +71,7 @@ func (module *LanDHCPSettingsModule) Get(ctx context.Context) (*models.LanDHCPSe
 	if err != nil {
 		return nil, err
 	}
-	editable := state.Authority == "local" || state.Authority == "none_detected"
+	editable := lanDHCPSettingsEditable(state)
 	result := &models.LanDHCPSettingsResult{
 		Settings: state.Settings, Version: state.Version, Editable: editable, AffectedDevices: state.AffectedDevices,
 		Conflicts: []*models.LanDHCPConflict{}, ReloadServices: []string{},
@@ -144,7 +145,7 @@ func (module *LanDHCPSettingsModule) plan(ctx context.Context, request *models.L
 		return lanDHCPSettingsExecutionPlan{}, err
 	}
 	result := &models.LanDHCPSettingsResult{
-		Settings: state.Settings, Version: state.Version, Editable: state.Authority == "local" || state.Authority == "none_detected",
+		Settings: state.Settings, Version: state.Version, Editable: lanDHCPSettingsEditable(state),
 		AffectedDevices: state.AffectedDevices, Conflicts: []*models.LanDHCPConflict{}, ReloadServices: []string{"dnsmasq"},
 	}
 	plan := lanDHCPSettingsExecutionPlan{Public: result, State: state}
@@ -209,6 +210,10 @@ func (module *LanDHCPSettingsModule) plan(ctx context.Context, request *models.L
 	return plan, nil
 }
 
+func lanDHCPSettingsEditable(state lanDHCPSettingsSnapshot) bool {
+	return state.Authority == "local" || (state.Authority == "none_detected" && state.TopologyPosition != "downstream_router")
+}
+
 func addressInRange(raw string, start, end netip.Addr) bool {
 	address, err := netip.ParseAddr(raw)
 	return err == nil && address.Is4() && address.Compare(start) >= 0 && address.Compare(end) <= 0
@@ -256,9 +261,11 @@ func (store *defaultLanDHCPSettingsStore) Read(ctx context.Context) (lanDHCPSett
 	ignore, _ := tree.GetLast("dhcp", "lan", "ignore")
 	dhcpv4, _ := tree.GetLast("dhcp", "lan", "dhcpv4")
 	authority := "local"
+	topologyPosition := ""
 	if store.routerContext != nil {
 		if response, contextErr := store.routerContext.Get(ctx, "lan"); contextErr == nil && response != nil && response.Result != nil {
 			authority = response.Result.DHCPAuthority
+			topologyPosition = response.Result.TopologyPosition
 		}
 	}
 	targets := map[string]string{"self": lanAddress}
@@ -311,7 +318,7 @@ func (store *defaultLanDHCPSettingsStore) Read(ctx context.Context) (lanDHCPSett
 	sum := sha256.Sum256(raw)
 	return lanDHCPSettingsSnapshot{
 		Settings: &models.LanDHCPSettings{Enabled: dhcpIPv4ServingEnabled(ignore, dhcpv4), PoolStart: poolStart, PoolEnd: poolEnd, LeaseTime: leaseTime, DefaultTargetID: defaultTarget},
-		Prefix:   prefix, RouterAddress: lanAddress, Authority: authority, Version: hex.EncodeToString(sum[:]), AffectedDevices: countDHCPLeases("/tmp/dhcp.leases"), ProtectedAddresses: protected, Targets: targets,
+		Prefix:   prefix, RouterAddress: lanAddress, Authority: authority, TopologyPosition: topologyPosition, Version: hex.EncodeToString(sum[:]), AffectedDevices: countDHCPLeases("/tmp/dhcp.leases"), ProtectedAddresses: protected, Targets: targets,
 	}, nil
 }
 
