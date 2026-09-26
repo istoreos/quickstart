@@ -18,6 +18,7 @@ type floatingGatewaySnapshot struct {
 	UsedIPs     map[string]bool
 	Running     bool
 	LocalHolder bool
+	PeerHolder  bool
 	Version     string
 }
 
@@ -285,6 +286,7 @@ func floatingGatewayResponse(state floatingGatewaySnapshot, plan *models.Floatin
 	capability := "available"
 	status := "disabled"
 	holder := "none"
+	peerState := "unverifiable"
 	reason := ""
 	if !state.Installed {
 		capability, status, reason = "not_installed", "disabled", "dependency_not_installed"
@@ -292,10 +294,12 @@ func floatingGatewayResponse(state floatingGatewaySnapshot, plan *models.Floatin
 		status, reason = "error", "service_not_running"
 	} else if state.Config.Enabled && state.LocalHolder {
 		status, holder = "healthy", "local"
+	} else if state.Config.Enabled && state.PeerHolder {
+		status, holder, peerState = "healthy", "peer", "healthy"
 	} else if state.Config.Enabled {
 		status, holder = "starting", "unknown"
 	}
 	return &models.FloatingGatewayResponse{Result: &models.FloatingGatewayResult{Config: state.Config, Status: &models.FloatingGatewayStatus{
-		Capability: capability, State: status, Holder: holder, ServiceRunning: state.Running, PeerState: "unverifiable", ExternalState: "unverifiable", Reason: reason,
+		Capability: capability, State: status, Holder: holder, ServiceRunning: state.Running, PeerState: peerState, ExternalState: "unverifiable", Reason: reason,
 	}, Plan: plan, Changed: changed}}
 }
