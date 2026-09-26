@@ -2,13 +2,28 @@ import assert from 'node:assert/strict'
 import { readFile } from 'node:fs/promises'
 import test from 'node:test'
 
-test('M30 device details are summary-first accessible and have no classic escape hatch', async () => {
+test('M37 device details use four summary-first sections and have no classic escape hatch', async () => {
     const source = await readFile(new URL('../src/pages/device/deviceCenterList.vue', import.meta.url), 'utf8')
-    for (const label of ['资料', '网络与上网', '使用限制', '用量', '诊断', '识别与技术信息', '添加尚未上线的设备']) assert.match(source, new RegExp(label))
+    for (const label of ['概览', '设备资料', '网络与上网', '使用管理', '识别与技术信息', '添加尚未上线的设备']) assert.match(source, new RegExp(label))
+    const tabs = source.match(/const detailTabs[\s\S]*?\]\)/)?.[0] || ''
+    assert.deepEqual([...tabs.matchAll(/id: '([^']+)'/g)].map(match => match[1]), ['overview', 'profile', 'network', 'management'])
     assert.match(source, /tabindex="0"/)
     assert.match(source, /@keydown\.esc/)
     assert.match(source, /DeviceProfileEditor/)
+    assert.match(source, /DeviceUsagePolicyEditor/)
     assert.doesNotMatch(source, /经典列表|use-legacy|DeviceAliasEditor|DeviceClassificationEditor/)
+})
+
+test('M37 single-device usage management previews schedules and quotas without duplicating quota controls', async () => {
+    const source = await readFile(new URL('../src/pages/device/components/deviceUsagePolicyEditor.vue', import.meta.url), 'utf8')
+    for (const label of ['休息时段', '流量额度', '当前生效', '规则来源', '下次变化', '预览影响', '确认并应用', '自动跨到第二天']) assert.match(source, new RegExp(label))
+    assert.match(source, /deviceGroupsV2\.GET/)
+    assert.match(source, /action:'set_device_policy'/)
+    assert.match(source, /expectedVersion:version\.value/)
+    assert.match(source, /previewing/)
+
+    const traffic = await readFile(new URL('../src/pages/device/components/trafficInsightsPanel.vue', import.meta.url), 'utf8')
+    assert.match(traffic, /quotaEditable/)
 })
 
 test('M30 profile editor supports brand type automatic recommendation and all 30 manual icons', async () => {

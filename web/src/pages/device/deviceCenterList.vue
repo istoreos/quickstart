@@ -118,6 +118,26 @@
                 <nav class="drawer-tabs" :aria-label="$gettext('设备详情区域')">
                     <button v-for="tab in detailTabs" :key="tab.id" type="button" :class="{ active: detailTab === tab.id }" @click="detailTab = tab.id">{{ tab.label }}</button>
                 </nav>
+                <div v-if="detailTab === 'overview'" class="drawer-section">
+                    <h4>{{ $gettext('概览') }}</h4>
+                    <dl>
+                        <div><dt>{{ $gettext('当前速率') }}</dt><dd>↑ {{ trafficLabel(selected, 'up') }} · ↓ {{ trafficLabel(selected, 'down') }}</dd></div>
+                        <div><dt>{{ $gettext('本次开机') }}</dt><dd>↑ {{ trafficTotal(selected, 'up') }} · ↓ {{ trafficTotal(selected, 'down') }}</dd></div>
+                        <div><dt>{{ $gettext('连接数') }}</dt><dd>{{ selected.telemetry?.state === 'warming_up' || !selected.telemetry ? $gettext('采集中') : selected.telemetry.connectionCount }}</dd></div>
+                    </dl>
+                    <div v-if="trafficHistory[selected.deviceId]?.length" class="traffic-chart" :aria-label="$gettext('近期流量趋势')">
+                        <span v-for="(point, index) in trafficHistory[selected.deviceId]" :key="index" class="traffic-chart__bar">
+                            <i class="upload" :style="{ height: `${chartHeight(selected.deviceId, point.up)}%` }"></i>
+                            <i class="download" :style="{ height: `${chartHeight(selected.deviceId, point.down)}%` }"></i>
+                        </span>
+                    </div>
+                    <small class="chart-legend"><span>↑ {{ $gettext('上传') }}</span><span>↓ {{ $gettext('下载') }}</span></small>
+                    <TrafficInsightsPanel :key="selected.deviceId" :device-id="selected.deviceId" :quota-editable="false" />
+                    <details class="technical-details">
+                        <summary>{{ $gettext('诊断与高级工具') }}</summary>
+                        <AdvancedNetworkTools :key="`advanced-${selected.deviceId}`" :device="selected" />
+                    </details>
+                </div>
                 <div v-if="detailTab === 'profile'" class="drawer-section">
                     <h4>{{ $gettext('设备资料') }}</h4>
                     <DeviceProfileEditor :device="selected" @saved="handleProfileSaved" />
@@ -156,29 +176,10 @@
                     </div>
                     </details>
                 </div>
-                <div v-if="detailTab === 'restrictions'" class="drawer-section">
-                    <h4>{{ $gettext('使用限制') }}</h4>
+                <div v-if="detailTab === 'management'" class="drawer-section">
+                    <h4>{{ $gettext('使用管理') }}</h4>
                     <DevicePolicyPanel :key="`restrictions-${selected.deviceId}`" :device="selected" mode="restrictions" @saved="handlePolicySaved" />
-                </div>
-                <div v-if="detailTab === 'usage'" class="drawer-section">
-                    <h4>{{ $gettext('用量') }}</h4>
-                    <dl>
-                        <div><dt>{{ $gettext('当前速率') }}</dt><dd>↑ {{ trafficLabel(selected, 'up') }} · ↓ {{ trafficLabel(selected, 'down') }}</dd></div>
-                        <div><dt>{{ $gettext('本次开机') }}</dt><dd>↑ {{ trafficTotal(selected, 'up') }} · ↓ {{ trafficTotal(selected, 'down') }}</dd></div>
-                        <div><dt>{{ $gettext('连接数') }}</dt><dd>{{ selected.telemetry?.state === 'warming_up' || !selected.telemetry ? $gettext('采集中') : selected.telemetry.connectionCount }}</dd></div>
-                    </dl>
-                    <div v-if="trafficHistory[selected.deviceId]?.length" class="traffic-chart" :aria-label="$gettext('近期流量趋势')">
-                        <span v-for="(point, index) in trafficHistory[selected.deviceId]" :key="index" class="traffic-chart__bar">
-                            <i class="upload" :style="{ height: `${chartHeight(selected.deviceId, point.up)}%` }"></i>
-                            <i class="download" :style="{ height: `${chartHeight(selected.deviceId, point.down)}%` }"></i>
-                        </span>
-                    </div>
-                    <small class="chart-legend"><span>↑ {{ $gettext('上传') }}</span><span>↓ {{ $gettext('下载') }}</span></small>
-                    <TrafficInsightsPanel :key="selected.deviceId" :device-id="selected.deviceId" />
-                </div>
-                <div v-if="detailTab === 'diagnostics'" class="drawer-section">
-                    <h4>{{ $gettext('诊断') }}</h4>
-                    <AdvancedNetworkTools :key="`advanced-${selected.deviceId}`" :device="selected" />
+                    <DeviceUsagePolicyEditor :key="`usage-policy-${selected.deviceId}`" :device-id="selected.deviceId" />
                 </div>
             </aside>
         </div>
@@ -193,6 +194,7 @@ import LoadError from './components/loadError.vue'
 import PageState from './components/pageState.vue'
 import DeviceProfileEditor from './components/deviceProfileEditor.vue'
 import DevicePolicyPanel from './components/devicePolicyPanel.vue'
+import DeviceUsagePolicyEditor from './components/deviceUsagePolicyEditor.vue'
 import DeviceSceneIcon from './components/deviceSceneIcon.vue'
 import TrafficInsightsPanel from './components/trafficInsightsPanel.vue'
 import AdvancedNetworkTools from './components/advancedNetworkTools.vue'
@@ -234,7 +236,7 @@ const sort = ref<DeviceSort>('recent')
 const query = ref('')
 const selected = ref<DeviceListItem | null>(null)
 const drawer = ref<HTMLElement | null>(null)
-const detailTab = ref<'profile'|'network'|'restrictions'|'usage'|'diagnostics'>('profile')
+const detailTab = ref<'overview'|'profile'|'network'|'management'>('overview')
 const copiedAddress = ref('')
 const telemetryItems = ref(new Map<string, DeviceTelemetryItem>())
 const telemetryHealth = ref<DeviceTelemetryState>('warming_up')
@@ -250,11 +252,10 @@ const filters = computed(() => [
     { value: 'controlled' as DeviceFilter, label: $gettext('已控制') },
 ])
 const detailTabs = computed(() => [
-    { id: 'profile' as const, label: $gettext('资料') },
+    { id: 'overview' as const, label: $gettext('概览') },
+    { id: 'profile' as const, label: $gettext('设备资料') },
     { id: 'network' as const, label: $gettext('网络与上网') },
-    { id: 'restrictions' as const, label: $gettext('限制') },
-    { id: 'usage' as const, label: $gettext('用量') },
-    { id: 'diagnostics' as const, label: $gettext('诊断') },
+    { id: 'management' as const, label: $gettext('使用管理') },
 ])
 
 const load = async () => {
@@ -336,7 +337,7 @@ const chartHeight = (deviceId: string, value: number) => {
     return Math.max(3, Math.round(value * 100 / max))
 }
 const highlight = (value: string) => splitHighlight(value, query.value)
-const openDetails = async (device: DeviceListItem) => { selected.value = device; detailTab.value = 'profile'; await nextTick(); drawer.value?.focus() }
+const openDetails = async (device: DeviceListItem) => { selected.value = device; detailTab.value = 'overview'; await nextTick(); drawer.value?.focus() }
 const handlePolicySaved = (labels: string[]) => {
     if (!selected.value) return
     selected.value.policyLabels = labels

@@ -1,6 +1,6 @@
 <template>
     <div class="insights-panel">
-        <div class="insights-heading"><div><strong>{{ $gettext('历史用量') }}</strong><small>{{ $gettext('这是累计流量额度，不是速度上限或定时限速。') }}</small></div><button type="button" @click="quotaOpen = !quotaOpen">{{ quotaOpen ? $gettext('收起额度') : $gettext('设置额度') }}</button></div>
+        <div class="insights-heading"><div><strong>{{ $gettext('历史用量') }}</strong><small>{{ $gettext('这是累计流量额度，不是速度上限或定时限速。') }}</small></div><button v-if="props.quotaEditable" type="button" @click="quotaOpen = !quotaOpen">{{ quotaOpen ? $gettext('收起额度') : $gettext('设置额度') }}</button></div>
         <div class="range-tabs" role="tablist"><button v-for="option in ranges" :key="option.value" type="button" :class="{ active: range === option.value }" @click="selectRange(option.value)">{{ option.label }}</button></div>
         <PageState v-if="loading" kind="loading" :title="$gettext('正在读取历史用量')" />
         <p v-else-if="error" class="message error">{{ error }} <button type="button" @click="load">{{ $gettext('重试') }}</button></p>
@@ -11,7 +11,7 @@
             <div v-if="result.quota?.quota" class="quota-status" :class="{ exceeded: result.quota.exceeded }"><span>{{ quotaLabel(result.quota.quota.period) }} · {{ bytes(result.quota.usedBytes) }} / {{ bytes(result.quota.quota.limitBytes) }}</span><strong>{{ result.quota.exceeded ? $gettext('已达到额度') : quotaPercent + '%' }}</strong></div>
             <p class="capability">{{ $gettext('本地轻量统计') }} · {{ $gettext('每 5 分钟最多写入一次') }}<template v-if="result.bandix?.state !== 'not_installed'"> · Bandix: {{ capabilityLabel(result.bandix) }}</template></p>
         </template>
-        <form v-if="quotaOpen" class="quota-form" @submit.prevent="saveQuota">
+        <form v-if="props.quotaEditable && quotaOpen" class="quota-form" @submit.prevent="saveQuota">
             <label class="enable"><input v-model="quota.enabled" type="checkbox" />{{ $gettext('启用流量额度') }}</label>
             <template v-if="quota.enabled"><label><span>{{ $gettext('周期') }}</span><select v-model="quota.period"><option value="daily">{{ $gettext('每天') }}</option><option value="weekly">{{ $gettext('每周') }}</option><option value="monthly">{{ $gettext('每月') }}</option></select></label><label><span>{{ $gettext('额度（GB）') }}</span><input v-model.number="quota.gigabytes" type="number" min="0.1" max="100000" step="0.1" required /></label><label><span>{{ $gettext('达到后') }}</span><select v-model="quota.action"><option value="notify">{{ $gettext('仅提醒') }}</option><option value="block">{{ $gettext('暂停联网') }}</option></select></label></template>
             <button class="save" type="submit" :disabled="saving">{{ saving ? $gettext('正在保存…') : $gettext('保存额度') }}</button>
@@ -27,7 +27,7 @@ import request from '/@/request'
 import PageState from './pageState.vue'
 import { formatTrafficBytes } from '../deviceTelemetry'
 
-const props = defineProps<{ deviceId: string }>()
+const props = withDefaults(defineProps<{ deviceId: string; quotaEditable?: boolean }>(), { quotaEditable: true })
 const { $gettext } = useGettext()
 const range = ref('today'), loading = ref(true), saving = ref(false), error = ref(''), result = ref<any>({}), quotaOpen = ref(false), quotaFeedback = ref(''), quotaFeedbackKind = ref<'success'|'error'>('success')
 const quota = reactive({ enabled: false, period: 'monthly', gigabytes: 10, action: 'notify' })

@@ -35,6 +35,14 @@ func TestDeviceGroupPolicyPrecedenceAndExplanation(t *testing.T) {
 	}
 }
 
+func TestEffectivePolicySignatureChangesWhenOnlyQuotaChanges(t *testing.T) {
+	first := &models.EffectiveGroupPolicy{NetworkAccess: true, Speed: &models.GroupSpeedPolicy{}, TargetID: "default", Managed: []string{"quota"}, Quota: &models.GroupQuotaPolicy{Enabled: true, Period: "monthly", LimitBytes: 1 << 30, Action: "notify"}}
+	second := &models.EffectiveGroupPolicy{NetworkAccess: true, Speed: &models.GroupSpeedPolicy{}, TargetID: "default", Managed: []string{"quota"}, Quota: &models.GroupQuotaPolicy{Enabled: true, Period: "monthly", LimitBytes: 2 << 30, Action: "notify"}}
+	if effectiveGroupPolicySignature(first) == effectiveGroupPolicySignature(second) {
+		t.Fatal("quota-only change was invisible to reconciliation")
+	}
+}
+
 func TestDeviceGroupScheduleWeekdayAndCrossMidnight(t *testing.T) {
 	schedule := &models.GroupSchedule{ID: "bedtime", Enabled: true, Days: []int{1}, StartMinute: 22 * 60, EndMinute: 7 * 60, Action: "block"}
 	tests := []struct {
@@ -78,6 +86,28 @@ func TestDeviceGroupScheduleSundayMondayAndDST(t *testing.T) {
 	}
 }
 
+func TestDeviceScheduleReportsNextBoundaryInRouterTimezone(t *testing.T) {
+	location := time.FixedZone("UTC+8", 8*60*60)
+	schedule := &models.GroupSchedule{ID: "device-rest", Enabled: true, Days: []int{1}, StartMinute: 22 * 60, EndMinute: 7 * 60, Action: "block"}
+	state := deviceGroupState{Groups: []*models.DeviceGroup{}, DevicePolicies: map[string]*models.GroupPolicy{
+		"mac:a": {Schedules: []*models.GroupSchedule{schedule}},
+	}}
+
+	before := resolveDeviceGroupPolicy(state, "mac:a", time.Date(2026, 9, 21, 21, 30, 0, 0, location))
+	if !before.NetworkAccess || before.NextScheduleAt != "2026-09-21T22:00:00+08:00" || len(before.Reasons) != 0 {
+		t.Fatalf("before schedule=%#v", before)
+	}
+	during := resolveDeviceGroupPolicy(state, "mac:a", time.Date(2026, 9, 21, 23, 0, 0, 0, location))
+	if during.NetworkAccess || during.NextScheduleAt != "2026-09-22T07:00:00+08:00" || fmt.Sprint(during.Reasons) != "[schedule:device-rest]" || fmt.Sprint(during.Sources) != "[system_default device]" {
+		t.Fatalf("active schedule=%#v", during)
+	}
+
+	without := resolveDeviceGroupPolicy(deviceGroupState{Groups: []*models.DeviceGroup{}, DevicePolicies: map[string]*models.GroupPolicy{}}, "mac:b", time.Date(2026, 9, 21, 23, 0, 0, 0, location))
+	if without.NextScheduleAt != "" {
+		t.Fatalf("schedule-free policy has boundary: %#v", without)
+	}
+}
+
 func TestDeviceGroupStorePersistsAcrossRestartAndDeleteKeepsOverrides(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "groups.json")
 	first := newJSONDeviceGroupStore(path)
@@ -111,6 +141,35 @@ func TestDeviceGroupStorePersistsAcrossRestartAndDeleteKeepsOverrides(t *testing
 	}
 	if len(deleted.Groups) != 0 || deleted.DevicePolicies["mac:a"] == nil {
 		t.Fatalf("delete removed device override: %#v", deleted)
+	}
+}
+
+func TestSingleDeviceScheduleAndQuotaMutationIsEffectiveImmediately(t *testing.T) {
+	mondayNight := time.Date(2026, 9, 21, 23, 0, 0, 0, time.UTC)
+	store := newJSONDeviceGroupStore(filepath.Join(t.TempDir(), "device-groups.json"))
+	applier := &countingGroupPolicyApplier{}
+	module := NewDeviceGroupModule(store, applier)
+	module.now = func() time.Time { return mondayNight }
+	state, err := store.Read(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	response, err := module.Mutate(context.Background(), &models.DeviceGroupMutationRequest{
+		Action: "set_device_policy", DeviceID: "mac:a", ExpectedVersion: state.Version,
+		DevicePolicy: &models.GroupPolicy{
+			Quota:     &models.GroupQuotaPolicy{Enabled: true, Period: "monthly", LimitBytes: 10 << 30, Action: "notify"},
+			Schedules: []*models.GroupSchedule{{ID: "device-rest", Enabled: true, Days: []int{1}, StartMinute: 22 * 60, EndMinute: 7 * 60, Action: "block"}},
+		},
+	})
+	if err != nil || response.Result.Error != nil || len(response.Result.Effective) != 1 {
+		t.Fatalf("response=%#v err=%v", response, err)
+	}
+	effective := response.Result.Effective[0]
+	if effective.NetworkAccess || effective.Quota == nil || effective.Quota.LimitBytes != 10<<30 || effective.NextScheduleAt != "2026-09-22T07:00:00Z" || fmt.Sprint(effective.Sources) != "[system_default device]" {
+		t.Fatalf("effective=%#v", effective)
+	}
+	if applier.calls != 1 || applier.policies[0].DeviceID != "mac:a" {
+		t.Fatalf("policy was not applied immediately: %#v", applier.policies)
 	}
 }
 
