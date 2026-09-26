@@ -487,6 +487,31 @@ func (backend *ServiceBackend) GetGatewayReferencesV2(ctx context.Context, r *ht
 	return backend.gatewayPolicyModule().References(ctx, r.URL.Query().Get("targetId"))
 }
 
+func (backend *ServiceBackend) PostGatewayTargetPlanV2(ctx context.Context, r *http.Request) (*models.GatewayTargetMutationPlanResponse, error) {
+	var request models.GatewayTargetMutationRequest
+	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
+		return &models.GatewayTargetMutationPlanResponse{Result: &models.GatewayTargetMutationPlan{
+			CanApply: false, ReferenceSummary: &models.GatewayReferenceSummary{},
+			Error: &models.DevicePolicyError{Code: "validation_failed", Message: "invalid gateway target request"},
+		}}, nil
+	}
+	return backend.gatewayPolicyModule().PlanTargetMutation(ctx, &request)
+}
+
+func (backend *ServiceBackend) PostGatewayTargetApplyV2(ctx context.Context, r *http.Request) (*models.GatewayTargetMutationApplyResponse, error) {
+	var request models.GatewayTargetMutationRequest
+	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
+		return &models.GatewayTargetMutationApplyResponse{Result: &models.GatewayTargetMutationApplyResult{
+			Error: &models.DevicePolicyError{Code: "validation_failed", Message: "invalid gateway target request"},
+		}}, nil
+	}
+	response, err := backend.gatewayPolicyModule().ApplyTargetMutation(ctx, &request)
+	if err == nil && response != nil && response.Result != nil && response.Result.Error == nil && response.Result.Changed {
+		backend.auditModule().Record("", "gateway_target", "policy_changed", "success", request.Action)
+	}
+	return response, err
+}
+
 func (backend *ServiceBackend) GetDeviceNetworkPolicyV2(ctx context.Context, r *http.Request) (*models.DeviceNetworkPolicyResponse, error) {
 	return backend.deviceNetworkPolicyModule().Get(ctx, r.URL.Query().Get("deviceId"))
 }

@@ -1702,6 +1702,24 @@ paths:
         200:
           description: "Devices and orphaned rules referencing a gateway target"
           schema: { $ref: "lanctrl.yaml#/definitions/GatewayReferencesResponse" }
+  /cgi-bin/luci/istore/lanctrl/v2/gateway-target/plan/:
+    post:
+      tags: ["lanctrl"]
+      parameters:
+        - { name: body, in: body, required: true, schema: { $ref: "lanctrl.yaml#/definitions/GatewayTargetMutationRequest" } }
+      responses:
+        200:
+          description: "Read-only impact plan for creating, updating, or deleting an Internet Path"
+          schema: { $ref: "lanctrl.yaml#/definitions/GatewayTargetMutationPlanResponse" }
+  /cgi-bin/luci/istore/lanctrl/v2/gateway-target/apply/:
+    post:
+      tags: ["lanctrl"]
+      parameters:
+        - { name: body, in: body, required: true, schema: { $ref: "lanctrl.yaml#/definitions/GatewayTargetMutationRequest" } }
+      responses:
+        200:
+          description: "Transactional Internet Path mutation with reference replacement"
+          schema: { $ref: "lanctrl.yaml#/definitions/GatewayTargetMutationApplyResponse" }
   /cgi-bin/luci/istore/lanctrl/v2/device-network-policy/:
     get:
       tags: ["lanctrl"]

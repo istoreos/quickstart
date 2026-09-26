@@ -47,6 +47,44 @@ func (store *fakeGatewayPolicyStore) Apply(_ context.Context, plan gatewayPolicy
 	return nil
 }
 
+func (store *fakeGatewayPolicyStore) ApplyTargetMutation(_ context.Context, plan gatewayTargetMutationExecutionPlan) error {
+	if store.err != nil {
+		return store.err
+	}
+	store.applies++
+	switch plan.Public.Action {
+	case "create":
+		store.state.DHCP.Tags = append(store.state.DHCP.Tags, DhcpTagRecord{
+			TagName: plan.Target.TagName, TagTitle: plan.Target.TagTitle, Gateway: plan.Target.Public.Gateway,
+			DhcpOption: append([]string(nil), plan.Target.Options...), AutoCreated: true, TargetID: plan.Target.Public.ID, TargetKind: plan.Target.Public.Kind,
+		})
+	case "update":
+		for index := range store.state.DHCP.Tags {
+			if store.state.DHCP.Tags[index].TagName == plan.Target.TagName {
+				store.state.DHCP.Tags[index].TagTitle = plan.Target.TagTitle
+				store.state.DHCP.Tags[index].Gateway = plan.Target.Public.Gateway
+				store.state.DHCP.Tags[index].DhcpOption = append([]string(nil), plan.Target.Options...)
+				store.state.DHCP.Tags[index].TargetID = plan.Target.Public.ID
+				store.state.DHCP.Tags[index].TargetKind = plan.Target.Public.Kind
+			}
+		}
+	case "delete":
+		for index := range store.state.Hosts {
+			if store.state.Hosts[index].TagName == plan.Target.TagName {
+				store.state.Hosts[index].TagName = plan.Replacement.TagName
+			}
+		}
+		kept := store.state.DHCP.Tags[:0]
+		for _, tag := range store.state.DHCP.Tags {
+			if tag.TagName != plan.Target.TagName {
+				kept = append(kept, tag)
+			}
+		}
+		store.state.DHCP.Tags = kept
+	}
+	return nil
+}
+
 func gatewayPolicyTestState() gatewayPolicySnapshot {
 	prefix := netip.MustParsePrefix("192.168.100.0/24")
 	return gatewayPolicySnapshot{
@@ -140,6 +178,88 @@ func TestGatewayPolicyRejectsReferencedDeleteAndStaleVersion(t *testing.T) {
 	})
 	if err != nil || stale.Result.Error == nil || stale.Result.Error.Code != "conflict" || store.applies != 0 {
 		t.Fatalf("stale apply = %#v, %v", stale, err)
+	}
+}
+
+func TestGatewayPolicyDeleteTargetRequiresAndAppliesReplacement(t *testing.T) {
+	store := &fakeGatewayPolicyStore{state: gatewayPolicyTestState()}
+	module := gatewayPolicyTestModule(t, store)
+	list, _ := module.ListTargets(context.Background())
+	var referenced string
+	for _, target := range list.Result.Targets {
+		if target.Gateway == "192.168.100.2" {
+			referenced = target.ID
+		}
+	}
+	withoutReplacement, err := module.PlanTargetMutation(context.Background(), &models.GatewayTargetMutationRequest{
+		Action: "delete", TargetID: referenced,
+	})
+	if err != nil || withoutReplacement.Result.Error == nil || withoutReplacement.Result.Error.Code != "replacement_required" || store.applies != 0 {
+		t.Fatalf("delete without replacement = %#v, applies=%d, err=%v", withoutReplacement, store.applies, err)
+	}
+	planned, err := module.PlanTargetMutation(context.Background(), &models.GatewayTargetMutationRequest{
+		Action: "delete", TargetID: referenced, ReplacementTargetID: "self",
+	})
+	if err != nil || planned.Result.Error != nil || !planned.Result.CanApply || planned.Result.ReferenceSummary.Devices != 1 || len(planned.Result.AffectedDevices) != 1 || store.applies != 0 {
+		t.Fatalf("delete plan = %#v, applies=%d, err=%v", planned, store.applies, err)
+	}
+	applied, err := module.ApplyTargetMutation(context.Background(), &models.GatewayTargetMutationRequest{
+		Action: "delete", TargetID: referenced, ReplacementTargetID: "self", ExpectedVersion: planned.Result.Version,
+	})
+	if err != nil || applied.Result.Error != nil || !applied.Result.Changed || store.applies != 1 {
+		t.Fatalf("delete apply = %#v, applies=%d, err=%v", applied, store.applies, err)
+	}
+	if got := store.state.Hosts[0].TagName; got != ipToDhcpTag("192.168.100.1") {
+		t.Fatalf("replacement tag = %q", got)
+	}
+	for _, tag := range store.state.DHCP.Tags {
+		if tag.TagName == "legacy_route" {
+			t.Fatalf("deleted target remains in state: %#v", store.state.DHCP.Tags)
+		}
+	}
+}
+
+func TestGatewayPolicyCreatesAndEditsTargetWithoutExposingDHCPImplementation(t *testing.T) {
+	store := &fakeGatewayPolicyStore{state: gatewayPolicyTestState()}
+	module := gatewayPolicyTestModule(t, store)
+	planned, err := module.PlanTargetMutation(context.Background(), &models.GatewayTargetMutationRequest{
+		Action: "create", Name: "工作路线", Kind: "bypass", Gateway: "192.168.100.9",
+	})
+	if err != nil || planned.Result.Error != nil || !planned.Result.CanApply || planned.Result.Target == nil || planned.Result.Target.ID == "" {
+		t.Fatalf("create plan = %#v, err=%v", planned, err)
+	}
+	encoded, _ := json.Marshal(planned)
+	if strings.Contains(string(encoded), "tagName") || strings.Contains(string(encoded), "dhcpOption") {
+		t.Fatalf("DHCP implementation leaked: %s", encoded)
+	}
+	created, err := module.ApplyTargetMutation(context.Background(), &models.GatewayTargetMutationRequest{
+		Action: "create", Name: "工作路线", Kind: "bypass", Gateway: "192.168.100.9", ExpectedVersion: planned.Result.Version,
+	})
+	if err != nil || created.Result.Error != nil || !created.Result.Changed {
+		t.Fatalf("create apply = %#v, err=%v", created, err)
+	}
+	targetID := created.Result.Plan.Target.ID
+	edited, err := module.ApplyTargetMutation(context.Background(), &models.GatewayTargetMutationRequest{
+		Action: "update", TargetID: targetID, Name: "工作路线 2", Kind: "custom", Gateway: "192.168.100.10",
+	})
+	if err != nil || edited.Result.Error != nil || !edited.Result.Changed || edited.Result.Plan.Target.ID != targetID {
+		t.Fatalf("update apply = %#v, err=%v", edited, err)
+	}
+}
+
+func TestGatewayPolicyTargetMutationIdempotencyDoesNotDuplicateWrites(t *testing.T) {
+	store := &fakeGatewayPolicyStore{state: gatewayPolicyTestState()}
+	module := gatewayPolicyTestModule(t, store)
+	request := &models.GatewayTargetMutationRequest{
+		Action: "create", Name: "工作路线", Kind: "bypass", Gateway: "192.168.100.9", IdempotencyKey: "create-work-route",
+	}
+	first, err := module.ApplyTargetMutation(context.Background(), request)
+	if err != nil || first.Result.Error != nil || !first.Result.Changed || store.applies != 1 {
+		t.Fatalf("first apply = %#v, applies=%d, err=%v", first, store.applies, err)
+	}
+	replayed, err := module.ApplyTargetMutation(context.Background(), request)
+	if err != nil || replayed.Result.Error != nil || replayed.Result.Changed || !replayed.Result.Transaction.Replayed || store.applies != 1 {
+		t.Fatalf("replayed apply = %#v, applies=%d, err=%v", replayed, store.applies, err)
 	}
 }
 

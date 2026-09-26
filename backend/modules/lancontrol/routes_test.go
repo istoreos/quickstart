@@ -172,6 +172,16 @@ func (backend *fakeLanControlBackend) GetGatewayReferencesV2(ctx context.Context
 	return &models.GatewayReferencesResponse{Result: &models.GatewayReferencesResult{}}, backend.err
 }
 
+func (backend *fakeLanControlBackend) PostGatewayTargetPlanV2(ctx context.Context, r *http.Request) (*models.GatewayTargetMutationPlanResponse, error) {
+	backend.recordRequest("gatewayTargetPlanV2", r)
+	return &models.GatewayTargetMutationPlanResponse{Result: &models.GatewayTargetMutationPlan{}}, backend.err
+}
+
+func (backend *fakeLanControlBackend) PostGatewayTargetApplyV2(ctx context.Context, r *http.Request) (*models.GatewayTargetMutationApplyResponse, error) {
+	backend.recordRequest("gatewayTargetApplyV2", r)
+	return &models.GatewayTargetMutationApplyResponse{Result: &models.GatewayTargetMutationApplyResult{}}, backend.err
+}
+
 func (backend *fakeLanControlBackend) GetDeviceNetworkPolicyV2(ctx context.Context, r *http.Request) (*models.DeviceNetworkPolicyResponse, error) {
 	backend.recordRequest("getDeviceNetworkPolicyV2", r)
 	return &models.DeviceNetworkPolicyResponse{Result: &models.DeviceNetworkPolicyResult{Policy: &models.DeviceNetworkPolicy{DeviceID: r.URL.Query().Get("deviceId")}}}, backend.err
@@ -395,6 +405,8 @@ func TestRegisterLanControlRoutesMapsRoutesToBackendMethods(t *testing.T) {
 		{name: "gateway targets v2", method: http.MethodGet, path: "/cgi-bin/luci/istore/lanctrl/v2/gateway-targets/", wantCall: "gatewayTargetsV2"},
 		{name: "gateway assignment plan v2", method: http.MethodPost, path: "/cgi-bin/luci/istore/lanctrl/v2/gateway-assignment/plan/", body: `{"action":"assign","deviceId":"mac:aa","targetId":"self"}`, wantCall: "gatewayAssignmentPlanV2"},
 		{name: "gateway assignment apply v2", method: http.MethodPost, path: "/cgi-bin/luci/istore/lanctrl/v2/gateway-assignment/apply/", body: `{"action":"assign","deviceId":"mac:aa","targetId":"self"}`, wantCall: "gatewayAssignmentApplyV2"},
+		{name: "gateway target plan v2", method: http.MethodPost, path: "/cgi-bin/luci/istore/lanctrl/v2/gateway-target/plan/", body: `{"action":"create","name":"旁路由","kind":"bypass","gateway":"192.168.1.2"}`, wantCall: "gatewayTargetPlanV2"},
+		{name: "gateway target apply v2", method: http.MethodPost, path: "/cgi-bin/luci/istore/lanctrl/v2/gateway-target/apply/", body: `{"action":"delete","targetId":"custom:1","replacementTargetId":"self"}`, wantCall: "gatewayTargetApplyV2"},
 		{name: "gateway references v2", method: http.MethodGet, path: "/cgi-bin/luci/istore/lanctrl/v2/gateway-target-references/?targetId=self", wantCall: "gatewayReferencesV2"},
 		{name: "get device network policy v2", method: http.MethodGet, path: "/cgi-bin/luci/istore/lanctrl/v2/device-network-policy/?deviceId=mac%3Aaa", wantCall: "getDeviceNetworkPolicyV2"},
 		{name: "post device network policy v2", method: http.MethodPost, path: "/cgi-bin/luci/istore/lanctrl/v2/device-network-policy/", body: `{"deviceId":"mac:aa","targetId":"default","static":{"enabled":false}}`, wantCall: "postDeviceNetworkPolicyV2"},

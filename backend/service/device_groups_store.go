@@ -124,6 +124,92 @@ func (store *jsonDeviceGroupStore) Replace(document deviceGroupDocument, expecte
 	return documentDeviceGroupState(document, nextRaw), nil
 }
 
+func (store *jsonDeviceGroupStore) GatewayReferences(targetID string) ([]*models.GatewayReference, []string, string, error) {
+	store.mu.Lock()
+	defer store.mu.Unlock()
+	document, raw, err := store.readDocument()
+	if err != nil {
+		return nil, nil, "", err
+	}
+	references := make([]*models.GatewayReference, 0)
+	devices := map[string]bool{}
+	if document.GlobalPolicy != nil && document.GlobalPolicy.TargetID == targetID {
+		references = append(references, &models.GatewayReference{Scope: "global_policy"})
+	}
+	for _, group := range document.Groups {
+		if group != nil && group.Policy != nil && group.Policy.TargetID == targetID {
+			references = append(references, &models.GatewayReference{Scope: "group", GroupID: group.ID})
+			for _, deviceID := range group.Members {
+				devices[deviceID] = true
+			}
+		}
+	}
+	for deviceID, policy := range document.DevicePolicies {
+		if policy != nil && policy.TargetID == targetID {
+			references = append(references, &models.GatewayReference{Scope: "device_policy", DeviceID: deviceID})
+			devices[deviceID] = true
+		}
+	}
+	deviceIDs := make([]string, 0, len(devices))
+	for deviceID := range devices {
+		deviceIDs = append(deviceIDs, deviceID)
+	}
+	sort.Strings(deviceIDs)
+	return references, deviceIDs, versionDeviceGroups(raw), nil
+}
+
+func (store *jsonDeviceGroupStore) ReplaceGatewayTarget(targetID, replacementID, expectedVersion string) error {
+	store.mu.Lock()
+	defer store.mu.Unlock()
+	document, raw, err := store.readDocument()
+	if err != nil {
+		return err
+	}
+	if expectedVersion != "" && expectedVersion != versionDeviceGroups(raw) {
+		return errors.New("device groups changed during gateway update")
+	}
+	if document.GlobalPolicy != nil && document.GlobalPolicy.TargetID == targetID {
+		document.GlobalPolicy.TargetID = replacementID
+	}
+	for _, group := range document.Groups {
+		if group != nil && group.Policy != nil && group.Policy.TargetID == targetID {
+			group.Policy.TargetID = replacementID
+		}
+	}
+	for _, policy := range document.DevicePolicies {
+		if policy != nil && policy.TargetID == targetID {
+			policy.TargetID = replacementID
+		}
+	}
+	nextRaw, err := json.Marshal(document)
+	if err != nil {
+		return err
+	}
+	return store.persist(store.path, nextRaw)
+}
+
+func (store *jsonDeviceGroupStore) snapshotRaw() ([]byte, bool, error) {
+	store.mu.Lock()
+	defer store.mu.Unlock()
+	raw, err := os.ReadFile(store.path)
+	if errors.Is(err, os.ErrNotExist) {
+		return nil, false, nil
+	}
+	return raw, true, err
+}
+
+func (store *jsonDeviceGroupStore) restoreRaw(raw []byte, existed bool) error {
+	store.mu.Lock()
+	defer store.mu.Unlock()
+	if !existed {
+		if err := os.Remove(store.path); err != nil && !errors.Is(err, os.ErrNotExist) {
+			return err
+		}
+		return nil
+	}
+	return store.persist(store.path, raw)
+}
+
 func (store *jsonDeviceGroupStore) readDocument() (deviceGroupDocument, []byte, error) {
 	raw, err := os.ReadFile(store.path)
 	if errors.Is(err, os.ErrNotExist) {

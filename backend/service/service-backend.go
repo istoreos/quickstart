@@ -156,6 +156,7 @@ func NewServiceBackend() *ServiceBackend {
 	backend.deviceProfile = NewDeviceProfileModule(inventory)
 	backend.deviceProfile.transactions = transactions
 	backend.gatewayPolicy = NewDefaultGatewayPolicyModule(inventory)
+	backend.gatewayPolicy.transactions = transactions
 	backend.deviceNetworkPolicy = NewDefaultDeviceNetworkPolicyModule(inventory, backend.devicePolicy, backend.gatewayPolicy)
 	backend.deviceNetworkPolicy.transactions = transactions
 	backend.floatingGateway = NewDefaultFloatingGatewayModule(backend.gatewayPolicy)
@@ -164,7 +165,11 @@ func NewServiceBackend() *ServiceBackend {
 	backend.capabilityActions = NewDefaultCapabilityActionModule()
 	backend.routerContext = NewDefaultRouterContextModule()
 	backend.trafficInsights = NewDefaultTrafficInsightsModule(backend.devicePolicy)
-	backend.deviceGroups = NewDefaultDeviceGroupModule(backend.devicePolicy, backend.deviceNetworkPolicy, backend.trafficInsights)
+	if backend.gatewayPolicy.groups != nil {
+		backend.deviceGroups = newDefaultDeviceGroupModuleWithStore(backend.gatewayPolicy.groups, backend.devicePolicy, backend.deviceNetworkPolicy, backend.trafficInsights)
+	} else {
+		backend.deviceGroups = NewDefaultDeviceGroupModule(backend.devicePolicy, backend.deviceNetworkPolicy, backend.trafficInsights)
+	}
 	backend.networkAudit = NewDefaultNetworkAuditModule()
 	backend.trafficInsights.audit = backend.networkAudit
 	backend.trafficInsights.AttachCollector(backend.deviceTraffic.Snapshot)
