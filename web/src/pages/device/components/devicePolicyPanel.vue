@@ -93,6 +93,26 @@ const mode = computed(() => props.mode)
 const emit = defineEmits<{ (event: 'saved', labels: string[]): void }>()
 const { $gettext } = useGettext()
 
+const translatePolicyMessage = (message: string): string => ({
+    '所需组件尚未安装': $gettext('所需组件尚未安装'),
+    '请先在全局设置中启用该能力': $gettext('请先在全局设置中启用该能力'),
+    '当前暂不可用': $gettext('当前暂不可用'),
+    '该设置与现有规则冲突': $gettext('该设置与现有规则冲突'),
+    '请检查填写内容': $gettext('请检查填写内容'),
+    '应用失败，原设置已恢复': $gettext('应用失败，原设置已恢复'),
+    '应用失败，原设置已恢复，可以重试': $gettext('应用失败，原设置已恢复，可以重试'),
+    '自动恢复未完成，请按提示处理': $gettext('自动恢复未完成，请按提示处理'),
+    '暂时无法安全保存，请稍后重试': $gettext('暂时无法安全保存，请稍后重试'),
+    '配置已写入，但状态记录需要恢复': $gettext('配置已写入，但状态记录需要恢复'),
+    '保存失败': $gettext('保存失败'),
+    '等待设备重新获取地址': $gettext('等待设备重新获取地址'),
+    '已观察到新租约，终端网关与 DNS 无法验证': $gettext('已观察到新租约，终端网关与 DNS 无法验证'),
+    '服务器配置可读，终端效果无法验证': $gettext('服务器配置可读，终端效果无法验证'),
+    '暂时无法读取续租状态': $gettext('暂时无法读取续租状态'),
+    '配置应用失败': $gettext('配置应用失败'),
+    '状态未知': $gettext('状态未知'),
+} as Record<string, string>)[message] || message
+
 const loading = ref(true)
 const loadError = ref('')
 const saving = ref('')
@@ -156,10 +176,10 @@ const load = async () => {
     }
 }
 const available = (kind: 'static' | 'speed' | 'access') => policyAvailable(policy.value, kind)
-const reason = (kind: 'static' | 'speed' | 'access') => policyUnavailableReason(policy.value, kind)
+const reason = (kind: 'static' | 'speed' | 'access') => translatePolicyMessage(policyUnavailableReason(policy.value, kind))
 const hostnameInvalid = computed(() => !validDhcpHostname(staticForm.hostname))
 const routeLocked = computed(() => routerContext.value?.routeEditability?.editable === false)
-const pathStateText = computed(() => internetPathStateLabel(networkPolicy.value.path.effect.observed.state))
+const pathStateText = computed(() => translatePolicyMessage(internetPathStateLabel(networkPolicy.value.path.effect.observed.state)))
 const desiredPathText = computed(() => networkPolicy.value.targets.find(item => item.id === networkPolicy.value.path.effect.desired?.targetId)?.name || $gettext('默认路线'))
 const appliedPathText = computed(() => networkPolicy.value.path.effect.applied?.state === 'server_configuration_observed' ? $gettext('已写入') : $gettext('等待确认'))
 const draftKey = computed(() => `quickstart.device-policy-draft.${props.device.deviceId}`)
@@ -186,7 +206,7 @@ const planRestriction = async (kind: 'speed' | 'access', value: Record<string, u
         pendingPlan.value=plan;pendingRequest.value=payload;pendingTask.value='restrictions'
     } catch (error: any) {
         feedbackKind.value = 'error'
-        feedback.value = policyErrorLabel(error?.code, error?.message)
+        feedback.value = translatePolicyMessage(policyErrorLabel(error?.code, error?.message))
     } finally {
         saving.value = ''
     }
@@ -213,7 +233,7 @@ const saveNetworkPolicy = async () => {
         pendingPlan.value=plan;pendingRequest.value=payload;pendingTask.value='network'
     } catch (error: any) {
         feedbackKind.value = 'error'
-        feedback.value = policyErrorLabel(error?.code, error?.message)
+        feedback.value = translatePolicyMessage(policyErrorLabel(error?.code, error?.message))
     } finally {
         saving.value = ''
     }
@@ -239,7 +259,7 @@ const applyPlannedChange = async () => {
         }
         feedbackKind.value='success';cancelPlan();syncForms()
         if(policy.value)emit('saved',policyLabelsFromPolicy(policy.value))
-    }catch(error:any){feedbackKind.value='error';feedback.value=policyErrorLabel(error?.code,error?.message)}finally{saving.value=''}
+    }catch(error:any){feedbackKind.value='error';feedback.value=translatePolicyMessage(policyErrorLabel(error?.code,error?.message))}finally{saving.value=''}
 }
 const saveSpeed = () => planRestriction('speed', { ...speedForm })
 const prepareSpeedService = async () => {

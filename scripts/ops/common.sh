@@ -85,8 +85,9 @@ build_ldflags() {
     version="$(project_version)"
     [ -n "$version" ] || die "cannot read version from ${VERSION_FILE}"
     git_sha="$(git -C "$PROJECT_ROOT" rev-parse HEAD)"
-    build_date="$(date -u +.%Y%m%d.%H%M%S)"
-    printf '%s' "-X main.BuildVersion=${git_sha} -X main.BuildDate=${build_date} -X main.Version=${version} -s -w -extldflags \"-static\""
+    build_epoch="${SOURCE_DATE_EPOCH:-$(git -C "$PROJECT_ROOT" show -s --format=%ct HEAD)}"
+    build_date="$(date -u -d "@${build_epoch}" +.%Y%m%d.%H%M%S)"
+    printf '%s' "-buildid= -X main.BuildVersion=${git_sha} -X main.BuildDate=${build_date} -X main.Version=${version} -s -w -extldflags \"-static\""
 }
 
 ssh_base_args() {

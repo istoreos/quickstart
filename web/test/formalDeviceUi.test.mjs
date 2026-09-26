@@ -1,6 +1,26 @@
 import assert from 'node:assert/strict'
 import { readFile } from 'node:fs/promises'
+import { createRequire } from 'node:module'
 import test from 'node:test'
+
+const require = createRequire(import.meta.url)
+const PO = require('pofile')
+
+test('M40 English catalog covers every device-management message', async () => {
+    const source = await readFile(new URL('../translations/en/app.po', import.meta.url), 'utf8')
+    const catalog = PO.parse(source)
+    const missing = catalog.items.filter(item =>
+        item.references?.some(reference => reference.includes('src/pages/device/')) &&
+        ((!item.msgstr?.length || item.msgstr.every(value => !value.trim())) || item.flags?.fuzzy),
+    )
+    assert.deepEqual(missing.map(item => item.msgid), [])
+
+    const translations = JSON.parse(await readFile(new URL('../public/luci-static/quickstart/i18n/en.json', import.meta.url), 'utf8')).en
+    assert.equal(translations['上网路线'], 'Internet path')
+    assert.equal(translations['网络与上网'], 'Network & Internet')
+    assert.equal(translations['使用管理'], 'Usage controls')
+    assert.equal(translations['计划与额度'], 'Schedule & quota')
+})
 
 test('M37 device details use four summary-first sections and have no classic escape hatch', async () => {
     const source = await readFile(new URL('../src/pages/device/deviceCenterList.vue', import.meta.url), 'utf8')
