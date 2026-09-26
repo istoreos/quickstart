@@ -63,6 +63,43 @@ func TestFloatingGatewayUsesProductRolesAndCapabilityState(t *testing.T) {
 	}
 }
 
+func TestFloatingGatewayReportsHealthyPeerHolder(t *testing.T) {
+	state := floatingGatewayTestState()
+	state.Config = validFloatingGatewayConfig()
+	state.Running = true
+	state.PeerHolder = true
+	response, err := NewFloatingGatewayModule(&fakeFloatingGatewayStore{state: state}, nil).Get(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	status := response.Result.Status
+	if status.State != "healthy" || status.Holder != "peer" || status.PeerState != "healthy" {
+		t.Fatalf("status=%#v", status)
+	}
+}
+
+func TestInventoryObservesOnlyOnlineCurrentFloatingPeer(t *testing.T) {
+	devices := []*models.DeviceInventoryItem{{
+		Online: true,
+		Addresses: &models.DeviceInventoryAddresses{Current: []*models.DeviceInventoryAddress{
+			{Family: 4, Address: "192.168.100.99"},
+		}},
+	}}
+	if !inventoryObservesFloatingPeer(devices, "192.168.100.99") {
+		t.Fatal("online current VIP owner should be observed as peer")
+	}
+	devices[0].Online = false
+	if inventoryObservesFloatingPeer(devices, "192.168.100.99") {
+		t.Fatal("offline inventory entry must not become peer holder")
+	}
+	devices[0].Addresses.Current = nil
+	devices[0].Addresses.Historical = []*models.DeviceInventoryAddress{{Family: 4, Address: "192.168.100.99"}}
+	devices[0].Online = true
+	if inventoryObservesFloatingPeer(devices, "192.168.100.99") {
+		t.Fatal("historical VIP address must not become peer holder")
+	}
+}
+
 func TestFloatingGatewayPlanValidatesBeforeWrite(t *testing.T) {
 	store := &fakeFloatingGatewayStore{state: floatingGatewayTestState()}
 	module := NewFloatingGatewayModule(store, nil)

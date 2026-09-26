@@ -8,6 +8,30 @@ for script in "${SCRIPT_DIR}"/*.sh; do
     sh -n "$script"
 done
 
+sh "${SCRIPT_DIR}/lan-device-load-check.test.sh"
+node "${PROJECT_ROOT}/scripts/analyze-lan-device-business-smoke.test.mjs"
+
+business_smoke="${SCRIPT_DIR}/lan-device-business-smoke.sh"
+[ -x "$business_smoke" ] || {
+    echo "business smoke must be executable: $business_smoke" >&2
+    exit 1
+}
+grep -Fq 'analyze-lan-device-business-smoke.mjs' "$business_smoke" || {
+    echo "business smoke must use the public-contract analyzer" >&2
+    exit 1
+}
+if grep -Eq 'curl .*\-(X|d) |/apply/|/plan/|/etc/init\.d/[^ ]+ (restart|reload|stop)|opkg (install|remove|upgrade)' "$business_smoke"; then
+    echo "business smoke must remain read-only on the critical gateway" >&2
+    exit 1
+fi
+
+grep -Fq 'smoke-lan-device:' "${PROJECT_ROOT}/Makefile" && \
+    grep -Fq './scripts/ops/lan-device-topology-smoke.sh' "${PROJECT_ROOT}/Makefile" && \
+    grep -Fq './scripts/ops/lan-device-business-smoke.sh' "${PROJECT_ROOT}/Makefile" || {
+    echo "Makefile must expose the fail-closed LAN device smoke gate" >&2
+    exit 1
+}
+
 required_files="
 ${PROJECT_ROOT}/.it-runner/project.yaml
 ${PROJECT_ROOT}/.it-runner/envs/000-defaults.env

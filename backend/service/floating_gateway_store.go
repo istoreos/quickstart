@@ -75,8 +75,10 @@ func (store *systemFloatingGatewayStore) Read(ctx context.Context) (floatingGate
 		running, holder = floatingGatewayRuntime(ctx, config.VirtualIP)
 	}
 	used := map[string]bool{}
+	peerHolder := false
 	if store.inventory != nil {
 		if snapshot, inventoryErr := store.inventory.Snapshot(ctx); inventoryErr == nil && snapshot.Result != nil {
+			peerHolder = !holder && inventoryObservesFloatingPeer(snapshot.Result.Devices, config.VirtualIP)
 			for _, device := range snapshot.Result.Devices {
 				if device != nil {
 					for _, address := range device.Addresses.Current {
@@ -88,7 +90,24 @@ func (store *systemFloatingGatewayStore) Read(ctx context.Context) (floatingGate
 			}
 		}
 	}
-	return floatingGatewaySnapshot{Installed: installed, Config: config, Prefixes: prefixes, UsedIPs: used, Running: running, LocalHolder: holder, Version: version}, nil
+	return floatingGatewaySnapshot{Installed: installed, Config: config, Prefixes: prefixes, UsedIPs: used, Running: running, LocalHolder: holder, PeerHolder: peerHolder, Version: version}, nil
+}
+
+func inventoryObservesFloatingPeer(devices []*models.DeviceInventoryItem, virtualIP string) bool {
+	if virtualIP == "" {
+		return false
+	}
+	for _, device := range devices {
+		if device == nil || !device.Online || device.Addresses == nil {
+			continue
+		}
+		for _, address := range device.Addresses.Current {
+			if address != nil && address.Family == 4 && address.Address == virtualIP {
+				return true
+			}
+		}
+	}
+	return false
 }
 
 func (store *systemFloatingGatewayStore) Apply(ctx context.Context, config *models.FloatingGatewayConfig) error {
