@@ -27,7 +27,7 @@
             <div v-if="section === 'services'" class="settings-stack">
                 <article class="setting-card">
                     <div class="card-heading"><div><h3>{{ $gettext('地址分配服务') }}</h3><p>{{ $gettext('由本机为局域网设备分配地址。关闭后，设备应由其他路由器分配地址。') }}</p></div><label class="switch-line"><input v-model="dhcp.enabled" type="checkbox" :disabled="!dhcpEditable" />{{ dhcp.enabled ? $gettext('已开启') : $gettext('已关闭') }}</label></div>
-                    <p v-if="!dhcpEditable" class="state-message">{{ dhcpState?.readOnlyReason || $gettext('当前由其他设备负责地址分配，本页只读。') }}</p>
+                    <p v-if="!dhcpEditable" class="state-message">{{ contextDescription }}</p>
                     <fieldset :disabled="!dhcpEditable">
                         <div class="two-columns"><label><span>{{ $gettext('地址池起始地址') }}</span><input v-model.trim="dhcp.poolStart" inputmode="decimal" placeholder="192.168.1.100" /></label><label><span>{{ $gettext('地址池结束地址') }}</span><input v-model.trim="dhcp.poolEnd" inputmode="decimal" placeholder="192.168.1.249" /></label></div>
                         <label><span>{{ $gettext('地址租期') }}</span><input v-model.trim="dhcp.leaseTime" placeholder="12h" /></label>
@@ -59,7 +59,7 @@
             <div v-else-if="section === 'routes'" class="settings-stack">
                 <article class="setting-card">
                     <div class="card-heading"><div><h3>{{ $gettext('自定义上网路线') }}</h3><p>{{ $gettext('把复杂网络工作交给旁路由或指定网关，设备可在详情中选择路线。DNS 跟随路线。') }}</p></div><button type="button" :disabled="!routeEditable" @click="startCreateRoute">{{ routeEditor ? $gettext('取消') : $gettext('添加路线') }}</button></div>
-                    <p v-if="!routeEditable" class="state-message">{{ routerContext?.routeEditability?.guidance || $gettext('本机不负责地址分配，上网路线当前为只读。') }}</p>
+                    <p v-if="!routeEditable" class="state-message">{{ contextDescription }}</p>
                     <form v-if="routeEditor" class="route-form" @submit.prevent="planRouteSave">
                         <label><span>{{ $gettext('路线名称') }}</span><input v-model.trim="routeDraft.name" maxlength="64" required :placeholder="$gettext('例如：旁路由')" /></label>
                         <label><span>{{ $gettext('路线类型') }}</span><select v-model="routeDraft.kind"><option value="bypass">{{ $gettext('旁路由') }}</option><option value="custom">{{ $gettext('指定网关') }}</option></select></label>
@@ -129,7 +129,17 @@ const routeEditable = computed(() => Boolean(routerContext.value?.routeEditabili
 const replacementRequired = computed(() => pendingRoutePlan.value?.error?.code === 'replacement_required')
 const replacementTargets = computed(() => gatewayTargets.value.filter(target => target.supported && target.id !== pendingRoutePlan.value?.target?.id))
 const contextTitle = computed(() => ({ local: $gettext('本机负责局域网地址分配'), external_observed: $gettext('检测到其他设备负责地址分配'), none_detected: $gettext('尚未检测到地址分配服务'), ambiguous: $gettext('局域网角色需要确认'), error: $gettext('暂时无法判断局域网角色') } as Record<string,string>)[routerContext.value?.dhcpAuthority] || $gettext('局域网角色待确认'))
-const contextDescription = computed(() => routerContext.value?.routeEditability?.guidance || (routerContext.value?.routeEditability?.editable ? $gettext('可在设备详情中设置上网路线。') : $gettext('当前仅提供查看与引导，不会自动修改其他设备。')))
+const contextDescription = computed(() => {
+    if (routerContext.value?.routeEditability?.editable) return $gettext('可在设备详情中设置上网路线。')
+    return ({
+        local_dhcp_unhealthy: $gettext('当前无法读取地址分配状态，其他设置仍可使用。'),
+        multiple_dhcp_evidence: $gettext('局域网角色需要确认'),
+        external_dhcp_authority: $gettext('当前由其他设备负责地址分配，本页只读。'),
+        multiple_external_dhcp_servers: $gettext('局域网角色需要确认'),
+        dhcp_authority_not_detected: $gettext('当前仅提供查看与引导，不会自动修改其他设备。'),
+        router_context_unavailable: $gettext('暂时无法判断局域网角色'),
+    } as Record<string,string>)[routerContext.value?.routeEditability?.reason] || $gettext('当前仅提供查看与引导，不会自动修改其他设备。')
+})
 const routeEditability = computed(() => routerContext.value?.routeEditability?.editable ? $gettext('路线可编辑') : $gettext('只读引导'))
 const routeKindLabel = (value: string) => ({ bypass: $gettext('旁路由'), custom: $gettext('指定网关') } as Record<string,string>)[value] || $gettext('自定义路线')
 const dhcpConflictLabel = (value:string) => ({router:$gettext('路由器地址'),floating_gateway:$gettext('浮动网关'),gateway_node:$gettext('网关节点'),address_reservation:$gettext('固定地址')} as Record<string,string>)[value] || $gettext('受保护地址')
