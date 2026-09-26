@@ -201,6 +201,10 @@ func (module *GatewayPolicyModule) plan(ctx context.Context, request *models.Gat
 		public.Error = &models.DevicePolicyError{Code: "validation_failed", Message: "action must be assign or delete_target"}
 		return result, nil
 	}
+	if state.DHCP == nil || state.DHCP.DhcpIgnore {
+		public.Error = &models.DevicePolicyError{Code: "dhcp_authority_unavailable", Message: "local DHCPv4 authority is required to assign an internet path"}
+		return result, nil
+	}
 	public.DeviceID = request.DeviceID
 	if request.DeviceID == "" || module.inventory == nil {
 		public.Error = &models.DevicePolicyError{Code: "validation_failed", Message: "deviceId is required"}

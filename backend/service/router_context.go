@@ -192,18 +192,8 @@ func routerContextLocalDHCPConfigured(tree uci.Tree, lan string) bool {
 			continue
 		}
 		ignore, _ := tree.GetLast("dhcp", section, "ignore")
-		if ignore == "1" {
-			return false
-		}
 		dhcpv4, _ := tree.GetLast("dhcp", section, "dhcpv4")
-		switch strings.ToLower(strings.TrimSpace(dhcpv4)) {
-		case "disabled", "relay":
-			return false
-		default:
-			// An omitted mode is the dnsmasq-compatible legacy default;
-			// server and hybrid modes both provide local DHCPv4 service.
-			return true
-		}
+		return dhcpIPv4ServingEnabled(ignore, dhcpv4)
 	}
 	return false
 }
