@@ -52,6 +52,29 @@ type DeviceSpeedPolicy struct {
 	DownloadSpeed int64 `json:"downloadSpeed"`
 }
 
+// RateLimitEnforcement describes where a device speed policy is executed and
+// how far it has progressed from saved configuration to observable effect.
+// Product clients should render these states instead of inferring success from
+// the presence of a provider-specific rule.
+type RateLimitEnforcement struct {
+	Provider      string   `json:"provider"`
+	ExecutionNode string   `json:"executionNode"`
+	TargetID      string   `json:"targetId,omitempty"`
+	Gateway       string   `json:"gateway,omitempty"`
+	State         string   `json:"state"`
+	Reason        string   `json:"reason,omitempty"`
+	Configured    bool     `json:"configured"`
+	Loaded        bool     `json:"loaded"`
+	Verified      bool     `json:"verified"`
+	CanApply      bool     `json:"canApply"`
+	AddressState  string   `json:"addressState"`
+	IPv4          string   `json:"ipv4,omitempty"`
+	IPv6State     string   `json:"ipv6State"`
+	OffloadState  string   `json:"offloadState"`
+	Warnings      []string `json:"warnings,omitempty"`
+	ObservedAt    string   `json:"observedAt,omitempty"`
+}
+
 // swagger:model deviceAccessPolicy
 type DeviceAccessPolicy struct {
 	NetworkAccess bool `json:"networkAccess"`
@@ -65,6 +88,7 @@ type DevicePolicy struct {
 	CurrentIPv4  string                             `json:"currentIPv4,omitempty"`
 	Static       *DeviceStaticPolicy                `json:"static"`
 	Speed        *DeviceSpeedPolicy                 `json:"speed"`
+	RateLimit    *RateLimitEnforcement              `json:"rateLimit,omitempty"`
 	Access       *DeviceAccessPolicy                `json:"access"`
 	Capabilities map[string]*DevicePolicyCapability `json:"capabilities"`
 	Version      string                             `json:"version"`

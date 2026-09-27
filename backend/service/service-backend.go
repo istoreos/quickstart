@@ -45,6 +45,7 @@ type ServiceBackend struct {
 	networkAudit         *NetworkAuditModule
 	advancedNetwork      *AdvancedNetworkModule
 	taskTransactions     *TaskTransactionJournal
+	rateLimitSettings    *RateLimitSettingsModule
 
 	dhnsServer  *dhns.DhnsServer
 	dhnsState   *dhnsruntime.State
@@ -151,13 +152,15 @@ func NewServiceBackend() *ServiceBackend {
 		dhnsState:        dhnsruntime.NewState(),
 	}
 	backend.deviceTraffic = NewDeviceTrafficModule(inventory, lanStats)
-	backend.devicePolicy = NewDevicePolicyModule(inventory)
-	backend.devicePolicy.transactions = transactions
 	backend.deviceClassification = NewDeviceClassificationModule(inventory)
 	backend.deviceProfile = NewDeviceProfileModule(inventory)
 	backend.deviceProfile.transactions = transactions
 	backend.gatewayPolicy = NewDefaultGatewayPolicyModule(inventory)
 	backend.gatewayPolicy.transactions = transactions
+	backend.devicePolicy = NewDevicePolicyModuleWithRateLimit(inventory, backend.gatewayPolicy)
+	backend.devicePolicy.transactions = transactions
+	backend.rateLimitSettings = NewDefaultRateLimitSettingsModule()
+	backend.rateLimitSettings.transactions = transactions
 	backend.deviceNetworkPolicy = NewDefaultDeviceNetworkPolicyModule(inventory, backend.devicePolicy, backend.gatewayPolicy)
 	backend.deviceNetworkPolicy.transactions = transactions
 	backend.floatingGateway = NewDefaultFloatingGatewayModule(backend.gatewayPolicy)

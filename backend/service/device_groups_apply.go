@@ -82,13 +82,23 @@ func (applier *defaultGroupPolicyApplier) ApplyBatch(ctx context.Context, polici
 			case "access":
 				need["firewall"] = true
 			case "speed":
-				need["eqos"] = true
+				need["speed"] = true
 			case "route":
 				need["dnsmasq"] = true
 			case "quota":
 				need["traffic"] = true
 			}
 		}
+	}
+	rateLimit := groupRateLimitModule(applier.policy)
+	speedService := "eqos"
+	if need["speed"] && rateLimit != nil {
+		if provider := rateLimit.provider(ctx); provider != nil {
+			speedService = provider.Name()
+		}
+	}
+	if need["speed"] {
+		need[speedService] = true
 	}
 	backups := map[string]devicePolicyBackup{}
 	if applier.policy != nil {
@@ -152,7 +162,7 @@ func (applier *defaultGroupPolicyApplier) ApplyBatch(ctx context.Context, polici
 			return failedGroupBatch(policies, now, "quota_batch_failed: "+quotaErr.Error())
 		}
 	}
-	reloadErr := applyCollectedGroupBatch(accumulator)
+	commit, reloadErr := applyCollectedGroupBatch(ctx, accumulator, rateLimit)
 	configs := make([]string, 0, 2)
 	if reloadErr == nil && need["firewall"] {
 		configs = append(configs, "firewall")
@@ -171,6 +181,9 @@ func (applier *defaultGroupPolicyApplier) ApplyBatch(ctx context.Context, polici
 	}
 	if reloadErr != nil {
 		recoveryFailed := false
+		if commit != nil && commit.rollback != nil && commit.rollback(ctx) != nil {
+			recoveryFailed = true
+		}
 		if quotaSnapshot != nil && applier.traffic.RestoreQuotaBatch(*quotaSnapshot) != nil {
 			recoveryFailed = true
 		}
@@ -199,9 +212,11 @@ func (applier *defaultGroupPolicyApplier) ApplyBatch(ctx context.Context, polici
 	return result
 }
 
-func applyCollectedGroupBatch(accumulator *groupBatchAccumulator) error {
+type groupBatchProviderCommit struct{ rollback func(context.Context) error }
+
+func applyCollectedGroupBatch(ctx context.Context, accumulator *groupBatchAccumulator, rateLimit *RateLimitModule) (*groupBatchProviderCommit, error) {
 	if accumulator == nil {
-		return errors.New("batch accumulator unavailable")
+		return nil, errors.New("batch accumulator unavailable")
 	}
 	access := make([]groupBatchRestrictionChange, 0, len(accumulator.restrictions))
 	speed := make([]groupBatchRestrictionChange, 0, len(accumulator.restrictions))
@@ -216,20 +231,83 @@ func applyCollectedGroupBatch(accumulator *groupBatchAccumulator) error {
 	configDir := deviceRestrictionConfigDir()
 	if len(access) > 0 {
 		if err := groupBatchWriteAccess(configDir, access); err != nil {
-			return err
+			return nil, err
 		}
 	}
+	commit := &groupBatchProviderCommit{}
 	if len(speed) > 0 {
-		if err := groupBatchWriteSpeed(configDir, speed); err != nil {
-			return err
+		provider := rateLimitProvider(nil)
+		if rateLimit != nil {
+			provider = rateLimit.provider(ctx)
+		}
+		if provider != nil && provider.Name() != "eqos" {
+			rollback, err := applyProviderGroupSpeedBatch(ctx, rateLimit, speed)
+			commit.rollback = rollback
+			if err != nil {
+				commit.rollback = nil // applyProviderGroupSpeedBatch already compensated partial writes.
+				return commit, err
+			}
+		} else if err := groupBatchWriteSpeed(configDir, speed); err != nil {
+			return commit, err
 		}
 	}
 	if len(accumulator.network) > 0 {
 		if err := groupBatchWriteNetwork(configDir, accumulator.network); err != nil {
-			return err
+			return commit, err
 		}
 	}
-	return nil
+	return commit, nil
+}
+
+func groupRateLimitModule(policy *DevicePolicyModule) *RateLimitModule {
+	if policy == nil {
+		return nil
+	}
+	store, _ := policy.store.(*systemDevicePolicyStore)
+	if store == nil {
+		return nil
+	}
+	return store.rateLimit
+}
+
+func applyProviderGroupSpeedBatch(ctx context.Context, module *RateLimitModule, changes []groupBatchRestrictionChange) (func(context.Context) error, error) {
+	type appliedChange struct {
+		target   rateLimitTarget
+		previous models.DeviceSpeedPolicy
+	}
+	applied := make([]appliedChange, 0, len(changes))
+	rollback := func(rollbackContext context.Context) error {
+		var failures []string
+		for index := len(applied) - 1; index >= 0; index-- {
+			if err := module.Apply(rollbackContext, applied[index].target, applied[index].previous); err != nil {
+				failures = append(failures, err.Error())
+			}
+		}
+		if len(failures) > 0 {
+			return errors.New(strings.Join(failures, "; "))
+		}
+		return nil
+	}
+	for _, change := range changes {
+		if change.current == nil || change.request == nil || change.request.Speed == nil {
+			return rollback, errors.New("invalid provider speed batch change")
+		}
+		reservedIP := ""
+		if change.current.Static != nil {
+			reservedIP = change.current.Static.AssignedIP
+		}
+		target := rateLimitTarget{DeviceID: change.current.DeviceID, MAC: change.current.MAC, DisplayName: change.current.DisplayName, CurrentIPv4: change.current.CurrentIPv4, ReservedIP: reservedIP}
+		previous := models.DeviceSpeedPolicy{}
+		if change.current.Speed != nil {
+			previous = *change.current.Speed
+		}
+		if err := module.Apply(ctx, target, *change.request.Speed); err != nil {
+			_ = rollback(ctx)
+			return rollback, err
+		}
+		applied = append(applied, appliedChange{target: target, previous: previous})
+	}
+	return rollback, nil
 }
 
 func (applier *defaultGroupPolicyApplier) preflight(ctx context.Context, effective *models.EffectiveGroupPolicy) error {

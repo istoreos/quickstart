@@ -14,6 +14,7 @@ import (
 
 type systemDevicePolicyStore struct {
 	inventory *DeviceInventoryModule
+	rateLimit *RateLimitModule
 }
 
 type devicePolicyFileSnapshot struct {
@@ -24,12 +25,22 @@ type devicePolicyFileSnapshot struct {
 }
 
 type systemDevicePolicyBackup struct {
-	Kind  string
-	Files []devicePolicyFileSnapshot
+	Kind      string
+	Files     []devicePolicyFileSnapshot
+	RateLimit *rateLimitPolicyBackup
 }
 
-func newSystemDevicePolicyStore(inventory *DeviceInventoryModule) devicePolicyStore {
-	return &systemDevicePolicyStore{inventory: inventory}
+type rateLimitPolicyBackup struct {
+	Target rateLimitTarget
+	Policy models.DeviceSpeedPolicy
+}
+
+func newSystemDevicePolicyStore(inventory *DeviceInventoryModule, rateLimit ...*RateLimitModule) devicePolicyStore {
+	store := &systemDevicePolicyStore{inventory: inventory}
+	if len(rateLimit) > 0 {
+		store.rateLimit = rateLimit[0]
+	}
+	return store
 }
 
 func (store *systemDevicePolicyStore) Get(ctx context.Context, deviceID string) (*models.DevicePolicy, error) {
@@ -51,10 +62,13 @@ func (store *systemDevicePolicyStore) Get(ctx context.Context, deviceID string) 
 		return nil, errors.New("device was not found")
 	}
 	currentIPv4 := ""
+	hasIPv6 := false
 	for _, address := range device.Addresses.Current {
 		if address != nil && address.Family == 4 {
 			currentIPv4 = address.Address
-			break
+		}
+		if address != nil && address.Family == 6 {
+			hasIPv6 = true
 		}
 	}
 	policy := &models.DevicePolicy{
@@ -80,8 +94,8 @@ func (store *systemDevicePolicyStore) Get(ctx context.Context, deviceID string) 
 		capability := global.Result.Capabilities.SpeedLimit
 		policy.Capabilities["speed"] = &models.DevicePolicyCapability{State: capability.State, Reason: capability.Reason, Actions: capability.Actions}
 	}
-	if (device.Mac == "" || currentIPv4 == "") && policy.Capabilities["speed"].State == "available" {
-		policy.Capabilities["speed"] = &models.DevicePolicyCapability{State: "disabled", Reason: "需要当前 IPv4 地址和可识别的 MAC"}
+	if device.Mac == "" && policy.Capabilities["speed"].State == "available" {
+		policy.Capabilities["speed"] = &models.DevicePolicyCapability{State: "disabled", Reason: "需要可识别的 MAC"}
 	}
 	if device.Mac == "" && policy.Capabilities["access"].State == "available" {
 		policy.Capabilities["access"] = &models.DevicePolicyCapability{State: "disabled", Reason: "需要可识别的 MAC"}
@@ -107,15 +121,28 @@ func (store *systemDevicePolicyStore) Get(ctx context.Context, deviceID string) 
 			policy.Access.NetworkAccess = access
 		}
 	}
-	if currentIPv4 != "" {
+	if store.rateLimit != nil {
+		speed, enforcement, readErr := store.rateLimit.Inspect(ctx, rateLimitTarget{
+			DeviceID: device.DeviceID, MAC: device.Mac, DisplayName: device.DisplayName, CurrentIPv4: currentIPv4,
+			ReservedIP: policy.Static.AssignedIP, HasIPv6: hasIPv6,
+		})
+		if readErr != nil && policy.Capabilities["speed"].State == "available" {
+			policy.Capabilities["speed"] = &models.DevicePolicyCapability{State: "error", Reason: "speed_rules_unavailable"}
+		} else if readErr == nil {
+			policy.RateLimit = enforcement
+			if speed != nil {
+				policy.Speed = speed
+			}
+			if policy.Capabilities["speed"].State != "available" {
+				policy.Capabilities["speed"].DesiredRetained = speed != nil && speed.Enabled
+			}
+		}
+	} else if currentIPv4 != "" {
 		speed, readErr := readDeviceSpeedPolicyAt(deviceRestrictionConfigDir(), currentIPv4)
 		if readErr != nil && policy.Capabilities["speed"].State == "available" {
 			policy.Capabilities["speed"] = &models.DevicePolicyCapability{State: "error", Reason: "speed_rules_unavailable"}
 		} else if readErr == nil && speed != nil && speed.Section != "" {
 			policy.Speed = &models.DeviceSpeedPolicy{Enabled: true, UploadSpeed: speed.Upload, DownloadSpeed: speed.Download}
-			if policy.Capabilities["speed"].State != "available" {
-				policy.Capabilities["speed"].DesiredRetained = true
-			}
 		}
 	}
 	return policy, nil
@@ -135,10 +162,23 @@ func (store *systemDevicePolicyStore) ListRules(ctx context.Context) (*models.De
 	return result, nil
 }
 
-func (store *systemDevicePolicyStore) Backup(_ context.Context, kind string) (devicePolicyBackup, error) {
+func (store *systemDevicePolicyStore) Backup(ctx context.Context, kind string, policies ...*models.DevicePolicy) (devicePolicyBackup, error) {
 	paths := []string{"/etc/config/dhcp"}
 	if kind == "speed" {
 		paths = []string{"/etc/config/eqos"}
+		if store.rateLimit != nil && store.rateLimit.provider(ctx) != nil && store.rateLimit.provider(ctx).Name() != "eqos" && len(policies) > 0 && policies[0] != nil {
+			current := policies[0]
+			reservedIP := ""
+			if current.Static != nil {
+				reservedIP = current.Static.AssignedIP
+			}
+			target := rateLimitTarget{DeviceID: current.DeviceID, MAC: current.MAC, DisplayName: current.DisplayName, CurrentIPv4: current.CurrentIPv4, ReservedIP: reservedIP}
+			previous := models.DeviceSpeedPolicy{}
+			if current.Speed != nil {
+				previous = *current.Speed
+			}
+			return &systemDevicePolicyBackup{Kind: kind, RateLimit: &rateLimitPolicyBackup{Target: target, Policy: previous}}, nil
+		}
 	}
 	if kind == "access" {
 		paths = []string{"/etc/config/firewall", immediateAccessIncludePath(deviceRestrictionConfigDir())}
@@ -183,6 +223,12 @@ func (store *systemDevicePolicyStore) Apply(ctx context.Context, request *models
 			BindIP: request.Static.BindIP, Hostname: request.Static.Hostname, TagName: request.Static.TagName, TagTitle: request.Static.TagTitle,
 		})
 	case "speed":
+		if store.rateLimit != nil {
+			return store.rateLimit.Apply(ctx, rateLimitTarget{
+				DeviceID: current.DeviceID, MAC: current.MAC, DisplayName: current.DisplayName, CurrentIPv4: current.CurrentIPv4,
+				ReservedIP: current.Static.AssignedIP,
+			}, *request.Speed)
+		}
 		if err := writeDeviceSpeedPolicyAt(deviceRestrictionConfigDir(), current.CurrentIPv4, current.MAC, current.DisplayName, request.Speed.Enabled, request.Speed.UploadSpeed, request.Speed.DownloadSpeed); err != nil {
 			return err
 		}
@@ -206,6 +252,12 @@ func (store *systemDevicePolicyStore) Restore(ctx context.Context, raw devicePol
 	backup, ok := raw.(*systemDevicePolicyBackup)
 	if !ok || backup == nil {
 		return errors.New("invalid rollback snapshot")
+	}
+	if backup.RateLimit != nil {
+		if store.rateLimit == nil {
+			return errors.New("rate limit rollback provider is unavailable")
+		}
+		return store.rateLimit.Apply(ctx, backup.RateLimit.Target, backup.RateLimit.Policy)
 	}
 	for _, file := range backup.Files {
 		if !file.Exists {

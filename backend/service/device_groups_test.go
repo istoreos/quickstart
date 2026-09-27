@@ -426,7 +426,7 @@ func TestCollectedGroupBatchCommitsEachConfigDomainOnce(t *testing.T) {
 		)
 		accumulator.network = append(accumulator.network, groupBatchNetworkChange{})
 	}
-	if err := applyCollectedGroupBatch(accumulator); err != nil {
+	if _, err := applyCollectedGroupBatch(context.Background(), accumulator, nil); err != nil {
 		t.Fatal(err)
 	}
 	if accessCalls != 1 || speedCalls != 1 || networkCalls != 1 {

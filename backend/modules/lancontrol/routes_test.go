@@ -72,6 +72,16 @@ func (backend *fakeLanControlBackend) PostLanEnableSpeedLimit(ctx context.Contex
 	return backend.normalResponse()
 }
 
+func (backend *fakeLanControlBackend) PostRateLimitSettingsPlanV2(ctx context.Context, r *http.Request) (*models.RateLimitSettingsResponse, error) {
+	backend.recordRequest("rateLimitSettingsPlanV2", r)
+	return &models.RateLimitSettingsResponse{Result: &models.RateLimitSettingsResult{}}, backend.err
+}
+
+func (backend *fakeLanControlBackend) PostRateLimitSettingsApplyV2(ctx context.Context, r *http.Request) (*models.RateLimitSettingsResponse, error) {
+	backend.recordRequest("rateLimitSettingsApplyV2", r)
+	return &models.RateLimitSettingsResponse{Result: &models.RateLimitSettingsResult{}}, backend.err
+}
+
 func (backend *fakeLanControlBackend) PostLanEnableFloatGateway(ctx context.Context, r *http.Request) (*models.JSONResponse, error) {
 	backend.recordRequest("enableFloatGateway", r)
 	return backend.normalResponse()
@@ -527,6 +537,20 @@ func TestRegisterLanControlRoutesMapsRoutesToBackendMethods(t *testing.T) {
 			path:     "/cgi-bin/luci/istore/lanctrl/enableSpeedLimit/",
 			body:     `{"enabled":true}`,
 			wantCall: "enableSpeedLimit",
+		},
+		{
+			name:     "plan rate limit settings",
+			method:   http.MethodPost,
+			path:     "/cgi-bin/luci/istore/lanctrl/v2/rate-limit-settings/plan/",
+			body:     `{"settings":{"enabled":true,"uploadSpeed":100,"downloadSpeed":1000}}`,
+			wantCall: "rateLimitSettingsPlanV2",
+		},
+		{
+			name:     "apply rate limit settings",
+			method:   http.MethodPost,
+			path:     "/cgi-bin/luci/istore/lanctrl/v2/rate-limit-settings/apply/",
+			body:     `{"settings":{"enabled":true,"uploadSpeed":100,"downloadSpeed":1000}}`,
+			wantCall: "rateLimitSettingsApplyV2",
 		},
 		{
 			name:     "enable float gateway",

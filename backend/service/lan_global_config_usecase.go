@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"errors"
 
 	"github.com/istoreos/quickstart/backend/models"
 )
@@ -40,6 +41,22 @@ func (svc *LanGlobalConfigService) GetGlobalConfigs(ctx context.Context) (*model
 	floatState, floatErr := svc.FloatIPReader.ReadFloatIPStatus(ctx)
 
 	speedState, speedErr := svc.SpeedLimitReader.ReadSpeedLimitStatus(ctx)
+	selectedProvider := effectiveRateLimitProvider(defaultRateLimitProviderPath)
+	if selectedProvider == nativePolicyProviderName {
+		installed, available, reason := nativeProviderCapability(ctx)
+		speedState.Installed = installed
+		speedState.Enabled = available
+		if !available {
+			speedErr = errors.New(reason)
+		}
+	} else if selectedProvider == "bandix" {
+		installed, supported, _ := bandixProviderCapability()
+		speedState.Installed = installed
+		speedState.Enabled = installed && supported
+		if !supported {
+			speedErr = errors.New("kernel_not_supported")
+		}
+	}
 
 	plan := BuildAutoDhcpPlan(lanStatus, dhcpState)
 

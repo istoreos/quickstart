@@ -16,6 +16,8 @@ type Backend interface {
 	PostLanDhcpGatewayConfig(ctx context.Context, r *http.Request) (*models.JSONResponse, error)
 	PostLanSpeedLimitConfig(ctx context.Context, r *http.Request) (*models.JSONResponse, error)
 	PostLanEnableSpeedLimit(ctx context.Context, r *http.Request) (*models.JSONResponse, error)
+	PostRateLimitSettingsPlanV2(ctx context.Context, r *http.Request) (*models.RateLimitSettingsResponse, error)
+	PostRateLimitSettingsApplyV2(ctx context.Context, r *http.Request) (*models.RateLimitSettingsResponse, error)
 	PostLanEnableFloatGateway(ctx context.Context, r *http.Request) (*models.JSONResponse, error)
 	PostLanStaticDeviceConfig(ctx context.Context, r *http.Request) (*models.JSONResponse, error)
 	GetLanGlobalConfigs(ctx context.Context) (*models.LANCtrlGlobalConfigResponse, error)
@@ -95,6 +97,12 @@ func RegisterRoutes(router *httprouter.Router, backend Backend) {
 
 	httpapi.PostJSON(router, "/cgi-bin/luci/istore/lanctrl/enableSpeedLimit/", func(ctx context.Context, r *http.Request) (any, error) {
 		return backend.PostLanEnableSpeedLimit(ctx, r)
+	})
+	httpapi.PostJSON(router, "/cgi-bin/luci/istore/lanctrl/v2/rate-limit-settings/plan/", func(ctx context.Context, r *http.Request) (any, error) {
+		return backend.PostRateLimitSettingsPlanV2(ctx, r)
+	})
+	httpapi.PostJSON(router, "/cgi-bin/luci/istore/lanctrl/v2/rate-limit-settings/apply/", func(ctx context.Context, r *http.Request) (any, error) {
+		return backend.PostRateLimitSettingsApplyV2(ctx, r)
 	})
 
 	httpapi.PostJSON(router, "/cgi-bin/luci/istore/lanctrl/enableFloatGateway/", func(ctx context.Context, r *http.Request) (any, error) {
