@@ -129,7 +129,7 @@
 - Shell 层手工转义和拼 JSON，且不同接口有空对象、透传、`success` 等多种错误形态；Quickstart 应统一错误码、事务和幂等语义。
 - 在线安装升级会下载 URL 并调用包管理器，是高权限供应链能力；不属于设备管理核心，不应并入设备详情。
 - 删除设备会连同历史删除，必须区分“从列表隐藏”“忘记设备”和“删除统计历史”，避免用户误操作。
-- 本 LuCI 仓库根 `LICENSE` 与 `PKG_LICENSE` 为 Apache-2.0；复制实现需保留许可证/NOTICE。独立 Rust `bandix` 后端未包含在本 checkout，其许可证和实现不能由本仓库代推。
+- LuCI、OpenWrt 包装与 Rust 后端现分别以固定版本 submodule 纳入 `third_party/bandix/`；上游许可证和 NOTICE 必须原样保留，版本与原理说明见 `docs/bandix-source-walkthrough.md`。
 
 ## 5. 横向产品结论
 

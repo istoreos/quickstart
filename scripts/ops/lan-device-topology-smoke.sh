@@ -7,15 +7,49 @@ C_HOST="${C_HOST:-root@192.168.30.93}"
 D_HOST="${D_HOST:-root@192.168.30.7}"
 EXPECTED_VERSION="${EXPECTED_VERSION:-0.14.0}"
 EXPECTED_PACKAGE_VERSION="${EXPECTED_PACKAGE_VERSION:-0.14.0-r12}"
-EXPECTED_ASSET_VERSION="${EXPECTED_ASSET_VERSION:-0.14.0-r12}"
-EXPECTED_BINARY_SHA="${EXPECTED_BINARY_SHA:-1fea489dbba5077d9cdf72de2c3f0052d3143c555334ebe06bd2a2f119bf9653}"
-EXPECTED_INDEX_SHA="${EXPECTED_INDEX_SHA:-26ed35b4010558217ba7910f1b78ffc6b73f93623641fb42779f3b454c1af4b4}"
-EXPECTED_STYLE_SHA="${EXPECTED_STYLE_SHA:-96b1b3f5c2b9c48db1c937fc17f0f9f98e8fefd9569553c5c77355d88ef507f7}"
-EXPECTED_VENDOR_SHA="${EXPECTED_VENDOR_SHA:-ca04fc80ba23dd55bb5b5f5a9640ae21156b1b66f9759f60f48199db37cd99b8}"
-EXPECTED_ICON_SHA="${EXPECTED_ICON_SHA:-393f9be7ca9252a94646a8111814df2a9e07690cd5777392fab85053b36e7309}"
 EXPECTED_VIP_OWNER="${EXPECTED_VIP_OWNER:-B}"
 REQUIRE_PACKAGE_COHERENCE="${REQUIRE_PACKAGE_COHERENCE:-1}"
+CANDIDATE_MODE="${CANDIDATE_MODE:-0}"
+PROJECT_ROOT="${PROJECT_ROOT:-$(CDPATH= cd -- "$(dirname "$0")/../.." && pwd)}"
+LOCAL_CANDIDATE_BINARY="${LOCAL_CANDIDATE_BINARY:-${PROJECT_ROOT}/bin/quickstart.amd64}"
+LOCAL_CANDIDATE_WEB_DIR="${LOCAL_CANDIDATE_WEB_DIR:-${PROJECT_ROOT}/web/dist/luci-static/quickstart}"
 SID="${SID:-lan-device-topology-smoke}"
+
+sha_file() {
+    sha256sum "$1" | awk '{print $1}'
+}
+
+if [ "$CANDIDATE_MODE" = 1 ]; then
+    for candidate_file in \
+        "$LOCAL_CANDIDATE_BINARY" \
+        "$LOCAL_CANDIDATE_WEB_DIR/index.js" \
+        "$LOCAL_CANDIDATE_WEB_DIR/style.css" \
+        "$LOCAL_CANDIDATE_WEB_DIR/vendor.js" \
+        "$LOCAL_CANDIDATE_WEB_DIR/device-icons/manifest.json" \
+        "$LOCAL_CANDIDATE_WEB_DIR/i18n/en.json"; do
+        [ -f "$candidate_file" ] || {
+            printf 'missing local candidate artifact: %s\n' "$candidate_file" >&2
+            exit 1
+        }
+    done
+    EXPECTED_BINARY_SHA="${EXPECTED_BINARY_SHA:-$(sha_file "$LOCAL_CANDIDATE_BINARY")}"
+    EXPECTED_INDEX_SHA="${EXPECTED_INDEX_SHA:-$(sha_file "$LOCAL_CANDIDATE_WEB_DIR/index.js")}"
+    EXPECTED_STYLE_SHA="${EXPECTED_STYLE_SHA:-$(sha_file "$LOCAL_CANDIDATE_WEB_DIR/style.css")}"
+    EXPECTED_VENDOR_SHA="${EXPECTED_VENDOR_SHA:-$(sha_file "$LOCAL_CANDIDATE_WEB_DIR/vendor.js")}"
+    EXPECTED_ICON_SHA="${EXPECTED_ICON_SHA:-$(sha_file "$LOCAL_CANDIDATE_WEB_DIR/device-icons/manifest.json")}"
+    EXPECTED_EN_SHA="${EXPECTED_EN_SHA:-$(sha_file "$LOCAL_CANDIDATE_WEB_DIR/i18n/en.json")}"
+    # The cache token is deployment metadata rather than a web artifact. If it
+    # is not supplied, require both nodes to expose the same non-empty value.
+    EXPECTED_ASSET_VERSION="${EXPECTED_ASSET_VERSION:-${ASSET_VERSION:-}}"
+else
+    EXPECTED_ASSET_VERSION="${EXPECTED_ASSET_VERSION:-0.14.0-r12}"
+    EXPECTED_BINARY_SHA="${EXPECTED_BINARY_SHA:-1fea489dbba5077d9cdf72de2c3f0052d3143c555334ebe06bd2a2f119bf9653}"
+    EXPECTED_INDEX_SHA="${EXPECTED_INDEX_SHA:-26ed35b4010558217ba7910f1b78ffc6b73f93623641fb42779f3b454c1af4b4}"
+    EXPECTED_STYLE_SHA="${EXPECTED_STYLE_SHA:-96b1b3f5c2b9c48db1c937fc17f0f9f98e8fefd9569553c5c77355d88ef507f7}"
+    EXPECTED_VENDOR_SHA="${EXPECTED_VENDOR_SHA:-ca04fc80ba23dd55bb5b5f5a9640ae21156b1b66f9759f60f48199db37cd99b8}"
+    EXPECTED_ICON_SHA="${EXPECTED_ICON_SHA:-393f9be7ca9252a94646a8111814df2a9e07690cd5777392fab85053b36e7309}"
+    EXPECTED_EN_SHA="${EXPECTED_EN_SHA:-2e0e34bc2f1e1eccb20e339ab4872f6a6d46b325127c4347df3376c4327b72e7}"
+fi
 
 failures=0
 checks=0
@@ -92,7 +126,15 @@ runtime_checks() {
     expect_value "$rt_label style hash" "$EXPECTED_STYLE_SHA" "$(remote "$rt_host" "sha256sum /www/luci-static/quickstart/style.css | cut -d ' ' -f1" 2>/dev/null || true)"
     expect_value "$rt_label vendor hash" "$EXPECTED_VENDOR_SHA" "$(remote "$rt_host" "sha256sum /www/luci-static/quickstart/vendor.js | cut -d ' ' -f1" 2>/dev/null || true)"
     expect_value "$rt_label icon manifest hash" "$EXPECTED_ICON_SHA" "$(remote "$rt_host" "sha256sum /www/luci-static/quickstart/device-icons/manifest.json | cut -d ' ' -f1" 2>/dev/null || true)"
-    expect_value "$rt_label asset version" "$EXPECTED_ASSET_VERSION" "$(remote "$rt_host" "sed -n 's/^local asset_version = \"\([^\"]*\)\"/\1/p' /usr/lib/lua/luci/view/quickstart/main.htm" 2>/dev/null || true)"
+    expect_value "$rt_label English catalog hash" "$EXPECTED_EN_SHA" "$(remote "$rt_host" "sha256sum /www/luci-static/quickstart/i18n/en.json | cut -d ' ' -f1" 2>/dev/null || true)"
+    actual_asset_version="$(remote "$rt_host" "sed -n 's/^local asset_version = \"\([^\"]*\)\"/\1/p' /usr/lib/lua/luci/view/quickstart/main.htm" 2>/dev/null || true)"
+    if [ -n "$EXPECTED_ASSET_VERSION" ]; then
+        expect_value "$rt_label asset version" "$EXPECTED_ASSET_VERSION" "$actual_asset_version"
+    elif [ -n "$actual_asset_version" ]; then
+        pass "$rt_label candidate asset version present"
+    else
+        fail "$rt_label candidate asset version present"
+    fi
 
     quickstart_package="$(remote "$rt_host" "opkg list-installed quickstart | sed -n 's/^quickstart - //p'" 2>/dev/null || true)"
     luci_package="$(remote "$rt_host" "opkg list-installed luci-app-quickstart | sed -n 's/^luci-app-quickstart - //p'" 2>/dev/null || true)"
@@ -119,6 +161,12 @@ command -v jq >/dev/null
 
 runtime_checks A "$A_HOST"
 runtime_checks B "$B_HOST"
+
+if [ "$CANDIDATE_MODE" = 1 ] && [ -z "$EXPECTED_ASSET_VERSION" ]; then
+    a_asset_version="$(remote "$A_HOST" "sed -n 's/^local asset_version = \"\([^\"]*\)\"/\1/p' /usr/lib/lua/luci/view/quickstart/main.htm" 2>/dev/null || true)"
+    b_asset_version="$(remote "$B_HOST" "sed -n 's/^local asset_version = \"\([^\"]*\)\"/\1/p' /usr/lib/lua/luci/view/quickstart/main.htm" 2>/dev/null || true)"
+    expect_value 'candidate asset versions agree' "$a_asset_version" "$b_asset_version"
+fi
 
 expect_api 'A is LAN gateway with local DHCP authority' "$A_HOST" router-context '.result.topologyPosition == "lan_gateway_candidate" and .result.dhcpAuthority == "local" and .result.routeEditability.editable == true'
 expect_api 'B is downstream and route editing is fail-closed' "$B_HOST" router-context '.result.topologyPosition == "downstream_router" and .result.dhcpAuthority != "local" and .result.routeEditability.editable == false'
@@ -147,5 +195,5 @@ owner_mac="$(remote "$owner_host" 'cat /sys/class/net/br-lan/address' 2>/dev/nul
 expect_remote 'C ARP resolves VIP to current owner' "$C_HOST" "ip neigh show 192.168.30.3 | grep -qi 'lladdr ${owner_mac}'"
 expect_remote 'D ARP resolves VIP to current owner' "$D_HOST" "ip neigh show 192.168.30.3 | grep -qi 'lladdr ${owner_mac}'"
 
-printf 'SUMMARY checks=%s failures=%s package_gate=%s\n' "$checks" "$failures" "$REQUIRE_PACKAGE_COHERENCE"
+printf 'SUMMARY checks=%s failures=%s package_gate=%s candidate_mode=%s\n' "$checks" "$failures" "$REQUIRE_PACKAGE_COHERENCE" "$CANDIDATE_MODE"
 [ "$failures" -eq 0 ]
