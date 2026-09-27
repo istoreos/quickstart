@@ -48,6 +48,11 @@ const inspectPage = page => page.evaluate(() => {
     '跟随网络默认', '设置速度上限', '设置流量额度', '自定义网关', '本机路由', '自动推荐', '自行选择',
     '当前无法确认地址分配设备', '本机 DHCP 服务异常', '检测到本机和外部 DHCP 证据', '请在主路由的 DHCP 设置中调整路线',
     '检测到多个 DHCP 服务证据', '暂时无法判断 DHCP 分配权',
+    '在指定时段执行规则', '时段内执行', '限制速度', '不设置时段规则',
+    '高级：执行方式与迁移', '执行方式', '兼容模式（按 IPv4）', '智能设备限速（推荐）',
+    '迁移现有 Bandix 规则', '扫描现有规则', '恢复迁移前设置',
+    '总带宽用于计算设备限速队列，不会自动平均分配给每台设备。', '预览限速服务设置',
+    '需先预留当前地址', '当前实现按 IPv4 限速，预留当前地址后规则才不会漂移。',
   ]
     .filter(label => document.querySelector('.device-management')?.innerText.includes(label))
   return {
@@ -120,6 +125,11 @@ const inspectPage = page => page.evaluate(() => {
     await page.locator('.primary-tabs button').nth(2).click()
     await page.locator('.lan-settings .context-card').waitFor({ timeout: 15_000 })
     await capture('settings-services')
+    const speedAdvanced = page.locator('.setting-card').filter({ hasText: /Device speed limit service|设备限速服务/ }).locator('details.advanced-group')
+    if (await speedAdvanced.count()) {
+      await clickOrRecord(speedAdvanced.locator('summary'), 'open speed provider details')
+      await capture('settings-services-advanced')
+    }
     await page.locator('.settings-nav button').nth(1).click()
     await capture('settings-routes')
     const routeButton = page.locator('.settings-stack .setting-card').first().locator('.card-heading button')

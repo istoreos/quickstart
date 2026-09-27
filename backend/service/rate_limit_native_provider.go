@@ -67,9 +67,16 @@ type nativePolicyMutation struct {
 }
 
 type nativePolicyPlan struct {
-	ID           string `json:"id"`
-	BaseRevision uint64 `json:"baseRevision"`
-	NextRevision uint64 `json:"nextRevision"`
+	ID           string               `json:"id"`
+	BaseRevision uint64               `json:"baseRevision"`
+	NextRevision uint64               `json:"nextRevision"`
+	Changes      []nativePolicyChange `json:"changes"`
+	Warnings     []string             `json:"warnings"`
+}
+
+type nativePolicyChange struct {
+	Kind   string               `json:"kind"`
+	Device nativeDeviceIdentity `json:"device"`
 }
 
 type nativeEnvelope struct {
@@ -188,6 +195,9 @@ func (provider *nativeRateLimitProvider) Apply(ctx context.Context, target rateL
 	if err := provider.call(ctx, http.MethodPost, "/api/v1/policies/plan", mutation, &plan); err != nil {
 		return err
 	}
+	if plan.Changes == nil || plan.Warnings == nil {
+		return errors.New("netpolicy_incompatible_plan")
+	}
 	var committed nativePolicySnapshot
 	if err := provider.call(ctx, http.MethodPost, "/api/v1/policies/apply", map[string]any{"plan": plan, "request": mutation}, &committed); err != nil {
 		return err
@@ -261,6 +271,9 @@ func (provider *nativeRateLimitProvider) replaceOwned(
 	var plan nativePolicyPlan
 	if err := provider.call(ctx, http.MethodPost, "/api/v1/policies/plan", mutation, &plan); err != nil {
 		return nativePolicySnapshot{}, err
+	}
+	if plan.Changes == nil || plan.Warnings == nil {
+		return nativePolicySnapshot{}, errors.New("netpolicy_incompatible_plan")
 	}
 	var committed nativePolicySnapshot
 	if err := provider.call(ctx, http.MethodPost, "/api/v1/policies/apply", map[string]any{"plan": plan, "request": mutation}, &committed); err != nil {

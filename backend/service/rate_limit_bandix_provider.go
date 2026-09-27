@@ -322,6 +322,20 @@ func bandixProviderCapability() (installed bool, supported bool, reason string) 
 	return true, true, ""
 }
 
+func bandixProviderAvailability(ctx context.Context) (installed bool, available bool, reason string) {
+	installed, supported, reason := bandixProviderCapability()
+	if !installed || !supported {
+		return installed, false, reason
+	}
+	probeCtx, cancel := context.WithTimeout(ctx, 500*time.Millisecond)
+	defer cancel()
+	provider := NewBandixRateLimitProvider(defaultBandixBaseURL(), nil).(*bandixRateLimitProvider)
+	if _, err := provider.rules(probeCtx); err != nil {
+		return true, false, "engine_unavailable"
+	}
+	return true, true, ""
+}
+
 func bandixKernelSupported(path string) bool {
 	data, err := os.ReadFile(path)
 	if err != nil {

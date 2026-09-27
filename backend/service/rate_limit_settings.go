@@ -59,7 +59,7 @@ func (module *RateLimitSettingsModule) Plan(ctx context.Context, request *models
 		if desired.Provider == nativePolicyProviderName {
 			installed, supported, reason = nativeProviderCapability(ctx)
 		} else {
-			installed, supported, reason = bandixProviderCapability()
+			installed, supported, reason = bandixProviderAvailability(ctx)
 		}
 		if !installed || !supported {
 			result.Desired = &desired

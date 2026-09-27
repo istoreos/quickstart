@@ -34,6 +34,16 @@ func TestRateLimitMigrationPlanConvertsExactBitsWithoutWriting(t *testing.T) {
 	}
 }
 
+func TestRateLimitMigrationAllowsVerifiedEmptySourceToSwitchProvider(t *testing.T) {
+	plan := buildRateLimitMigrationPlan(nil)
+	if !plan.CanApply || plan.ConvertibleCount != 0 || len(plan.Items) != 0 || plan.Version == "" {
+		t.Fatalf("empty source must remain an actionable lossless migration: %#v", plan)
+	}
+	if err := validateRateLimitMigrationPlan(plan); err != nil {
+		t.Fatalf("empty source validation failed: %v", err)
+	}
+}
+
 func TestRateLimitMigrationDoesNotDropUnsupportedOrConflictingRules(t *testing.T) {
 	duplicateOne := fullWeekBandixRule("AA:BB:CC:DD:EE:20", 1, 2)
 	duplicateTwo := fullWeekBandixRule("AA:BB:CC:DD:EE:20", 3, 4)
@@ -103,12 +113,16 @@ func migrationNativeServer(t *testing.T, calls *[]string) *httptest.Server {
 		case "/api/v1/policies/plan":
 			var mutation nativePolicyMutation
 			_ = json.NewDecoder(request.Body).Decode(&mutation)
-			write(nativePolicyPlan{ID: "plan", BaseRevision: mutation.ExpectedRevision, NextRevision: mutation.ExpectedRevision + 1})
+			write(nativePolicyPlan{ID: "plan", BaseRevision: mutation.ExpectedRevision, NextRevision: mutation.ExpectedRevision + 1, Changes: []nativePolicyChange{}, Warnings: []string{}})
 		case "/api/v1/policies/apply":
 			var payload struct {
+				Plan    nativePolicyPlan     `json:"plan"`
 				Request nativePolicyMutation `json:"request"`
 			}
 			_ = json.NewDecoder(request.Body).Decode(&payload)
+			if payload.Plan.Changes == nil || payload.Plan.Warnings == nil {
+				t.Fatalf("plan metadata was dropped in transit: %#v", payload.Plan)
+			}
 			snapshot.Revision++
 			snapshot.Policies = nil
 			for index, input := range payload.Request.Policies {

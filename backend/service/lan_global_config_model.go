@@ -20,9 +20,9 @@ func toFloatGatewayModel(state FloatIPStatus) *models.LANCtrlFloatGatewayModule 
 }
 
 func toSpeedLimitModel(state SpeedLimitStatus) *models.LANCtrlSpeedLimitModule {
-	bandixInstalled, bandixSupported, bandixReason := bandixProviderCapability()
 	capabilityCtx, cancel := context.WithTimeout(context.Background(), 800*time.Millisecond)
 	defer cancel()
+	bandixInstalled, bandixAvailable, bandixReason := bandixProviderAvailability(capabilityCtx)
 	nativeInstalled, nativeAvailable, nativeReason := nativeProviderCapability(capabilityCtx)
 	return &models.LANCtrlSpeedLimitModule{
 		Installed:     state.Installed,
@@ -38,7 +38,7 @@ func toSpeedLimitModel(state SpeedLimitStatus) *models.LANCtrlSpeedLimitModule {
 				}
 				return "dependency_not_installed"
 			}()},
-			{ID: "bandix", Available: bandixInstalled && bandixSupported, Installed: bandixInstalled, Reason: bandixReason},
+			{ID: "bandix", Available: bandixAvailable, Installed: bandixInstalled, Reason: bandixReason},
 		},
 	}
 }

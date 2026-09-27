@@ -50,11 +50,11 @@ func (svc *LanGlobalConfigService) GetGlobalConfigs(ctx context.Context) (*model
 			speedErr = errors.New(reason)
 		}
 	} else if selectedProvider == "bandix" {
-		installed, supported, _ := bandixProviderCapability()
+		installed, available, reason := bandixProviderAvailability(ctx)
 		speedState.Installed = installed
-		speedState.Enabled = installed && supported
-		if !supported {
-			speedErr = errors.New("kernel_not_supported")
+		speedState.Enabled = available
+		if !available {
+			speedErr = errors.New(reason)
 		}
 	}
 

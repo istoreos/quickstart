@@ -42,7 +42,7 @@ func nativeTestServer(t *testing.T, interfaceVersion string, conflict bool, call
 			if mutation.ExpectedRevision != 4 || len(mutation.Policies) != 1 || mutation.Policies[0].RateLimit.UploadBitsPerSecond != 10_000_000 {
 				t.Fatalf("unexpected mutation: %#v", mutation)
 			}
-			write(nativePolicyPlan{ID: "plan", BaseRevision: 4, NextRevision: 5})
+			write(nativePolicyPlan{ID: "plan", BaseRevision: 4, NextRevision: 5, Changes: []nativePolicyChange{}, Warnings: []string{}})
 		case "/api/v1/policies/apply":
 			snapshot.Revision = 5
 			write(snapshot)
