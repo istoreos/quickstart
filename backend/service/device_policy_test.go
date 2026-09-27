@@ -37,7 +37,7 @@ func (store *fakeDevicePolicyStore) ListRules(context.Context) (*models.DevicePo
 	return store.rules, nil
 }
 
-func (store *fakeDevicePolicyStore) Backup(context.Context, string) (devicePolicyBackup, error) {
+func (store *fakeDevicePolicyStore) Backup(context.Context, string, ...*models.DevicePolicy) (devicePolicyBackup, error) {
 	return store.Get(context.Background(), store.policy.DeviceID)
 }
 
@@ -109,6 +109,42 @@ func TestDeviceRestrictionsPlanIsReadOnlyAndVersionGuardsApply(t *testing.T) {
 	applied, err := module.Apply(context.Background(), request)
 	if err != nil || applied.Result.Error == nil || applied.Result.Error.Code != "conflict" || store.applyCalls != 0 {
 		t.Fatalf("apply=%#v calls=%d err=%v", applied, store.applyCalls, err)
+	}
+}
+
+func TestDevicePolicyVersionIgnoresRuntimeObservations(t *testing.T) {
+	policy := availablePolicyStore().policy
+	policy.RateLimit = &models.RateLimitEnforcement{Provider: "bandix", State: "ready", ObservedAt: "2026-09-26T11:00:00Z"}
+	before := devicePolicyVersion(policy)
+
+	policy.CurrentIPv4 = "192.168.100.99"
+	policy.RateLimit.ObservedAt = "2026-09-26T11:00:01Z"
+	policy.RateLimit.State = "loaded_unverified"
+	policy.Capabilities["speed"].Reason = "runtime_changed"
+	if after := devicePolicyVersion(policy); after != before {
+		t.Fatalf("runtime observation changed policy version: before=%s after=%s", before, after)
+	}
+
+	policy.Speed = &models.DeviceSpeedPolicy{Enabled: true, UploadSpeed: 10, DownloadSpeed: 100}
+	if after := devicePolicyVersion(policy); after == before {
+		t.Fatal("configured speed change did not change policy version")
+	}
+}
+
+func TestBandixRestrictionPlanDoesNotClaimEQoSReload(t *testing.T) {
+	store := availablePolicyStore()
+	store.policy.RateLimit = &models.RateLimitEnforcement{Provider: "bandix", CanApply: true}
+	module := newDevicePolicyModuleForTest(store)
+	planned, err := module.Plan(context.Background(), &models.DevicePolicyApplyRequest{
+		DeviceID: store.policy.DeviceID,
+		Kind:     "speed",
+		Speed:    &models.DeviceSpeedPolicy{Enabled: true, UploadSpeed: 10, DownloadSpeed: 100},
+	})
+	if err != nil || planned.Result.Error != nil {
+		t.Fatalf("plan=%#v err=%v", planned, err)
+	}
+	if len(planned.Result.ReloadServices) != 0 {
+		t.Fatalf("Bandix plan reloads = %v", planned.Result.ReloadServices)
 	}
 }
 

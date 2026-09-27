@@ -129,14 +129,42 @@ func (backend *ServiceBackend) PostLanEnableSpeedLimit(ctx context.Context, r *h
 	if req.UploadSpeed == 0 {
 		req.UploadSpeed = 200
 	}
-	if err := newLanSpeedLimitWriteService().SetSpeedLimitModule(ctx, SpeedLimitModuleInput{
-		Enabled:       req.Enabled,
-		UploadSpeed:   req.UploadSpeed,
-		DownloadSpeed: req.DownloadSpeed,
-	}); err != nil {
+	response, err := backend.rateLimitSettingsModule().Apply(ctx, &models.RateLimitSettingsRequest{Settings: &models.RateLimitSettings{
+		Enabled: req.Enabled, UploadSpeed: req.UploadSpeed, DownloadSpeed: req.DownloadSpeed, Provider: "eqos",
+	}})
+	if err != nil {
 		return nil, err
 	}
+	if response.Result != nil && response.Result.Error != nil {
+		return nil, errors.New(response.Result.Error.Message)
+	}
 	return &models.JSONResponse{}, nil
+}
+
+func (backend *ServiceBackend) PostRateLimitSettingsPlanV2(ctx context.Context, r *http.Request) (*models.RateLimitSettingsResponse, error) {
+	var request models.RateLimitSettingsRequest
+	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
+		return &models.RateLimitSettingsResponse{Result: &models.RateLimitSettingsResult{Error: &models.DevicePolicyError{Code: "validation_failed", Message: "invalid rate limit settings request"}}}, nil
+	}
+	return backend.rateLimitSettingsModule().Plan(ctx, &request)
+}
+
+func (backend *ServiceBackend) PostRateLimitSettingsApplyV2(ctx context.Context, r *http.Request) (*models.RateLimitSettingsResponse, error) {
+	var request models.RateLimitSettingsRequest
+	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
+		return &models.RateLimitSettingsResponse{Result: &models.RateLimitSettingsResult{Error: &models.DevicePolicyError{Code: "validation_failed", Message: "invalid rate limit settings request"}}}, nil
+	}
+	return backend.rateLimitSettingsModule().Apply(ctx, &request)
+}
+
+func (backend *ServiceBackend) rateLimitSettingsModule() *RateLimitSettingsModule {
+	backend.mu.Lock()
+	defer backend.mu.Unlock()
+	if backend.rateLimitSettings == nil {
+		backend.rateLimitSettings = NewDefaultRateLimitSettingsModule()
+		backend.rateLimitSettings.transactions = backend.taskTransactionJournalLocked()
+	}
+	return backend.rateLimitSettings
 }
 
 func (backend *ServiceBackend) PostLanEnableFloatGateway(ctx context.Context, r *http.Request) (*models.JSONResponse, error) {
@@ -313,7 +341,11 @@ func (backend *ServiceBackend) trafficInsightsModule() *TrafficInsightsModule {
 		backend.deviceInventory = NewDeviceInventoryModule()
 	}
 	if backend.devicePolicy == nil {
-		backend.devicePolicy = NewDevicePolicyModule(backend.deviceInventory)
+		if backend.gatewayPolicy == nil {
+			backend.gatewayPolicy = NewDefaultGatewayPolicyModule(backend.deviceInventory)
+			backend.gatewayPolicy.transactions = backend.taskTransactionJournalLocked()
+		}
+		backend.devicePolicy = NewDevicePolicyModuleWithRateLimit(backend.deviceInventory, backend.gatewayPolicy)
 		backend.devicePolicy.transactions = backend.taskTransactionJournalLocked()
 	}
 	if backend.trafficInsights == nil {
@@ -406,17 +438,8 @@ func (backend *ServiceBackend) auditModule() *NetworkAuditModule {
 func (backend *ServiceBackend) advancedNetworkModule() *AdvancedNetworkModule {
 	backend.mu.Lock()
 	defer backend.mu.Unlock()
-	if backend.deviceInventory == nil {
-		backend.deviceInventory = NewDeviceInventoryModule()
-	}
-	if backend.devicePolicy == nil {
-		backend.devicePolicy = NewDevicePolicyModule(backend.deviceInventory)
-		backend.devicePolicy.transactions = backend.taskTransactionJournalLocked()
-	}
+	backend.ensureDevicePolicyLocked()
 	if backend.deviceNetworkPolicy == nil {
-		if backend.gatewayPolicy == nil {
-			backend.gatewayPolicy = NewDefaultGatewayPolicyModule(backend.deviceInventory)
-		}
 		backend.deviceNetworkPolicy = NewDefaultDeviceNetworkPolicyModule(backend.deviceInventory, backend.devicePolicy, backend.gatewayPolicy)
 		backend.deviceNetworkPolicy.transactions = backend.taskTransactionJournalLocked()
 	}
@@ -571,16 +594,7 @@ func (backend *ServiceBackend) PostDeviceRestrictionsApplyV2(ctx context.Context
 func (backend *ServiceBackend) deviceNetworkPolicyModule() *DeviceNetworkPolicyModule {
 	backend.mu.Lock()
 	defer backend.mu.Unlock()
-	if backend.deviceInventory == nil {
-		backend.deviceInventory = NewDeviceInventoryModule()
-	}
-	if backend.devicePolicy == nil {
-		backend.devicePolicy = NewDevicePolicyModule(backend.deviceInventory)
-		backend.devicePolicy.transactions = backend.taskTransactionJournalLocked()
-	}
-	if backend.gatewayPolicy == nil {
-		backend.gatewayPolicy = NewDefaultGatewayPolicyModule(backend.deviceInventory)
-	}
+	backend.ensureDevicePolicyLocked()
 	if backend.deviceNetworkPolicy == nil {
 		backend.deviceNetworkPolicy = NewDefaultDeviceNetworkPolicyModule(backend.deviceInventory, backend.devicePolicy, backend.gatewayPolicy)
 		backend.deviceNetworkPolicy.transactions = backend.taskTransactionJournalLocked()
@@ -663,16 +677,7 @@ func (backend *ServiceBackend) PostNetworkRulesApplyV2(ctx context.Context, r *h
 func (backend *ServiceBackend) networkRulesModule() *NetworkRulesModule {
 	backend.mu.Lock()
 	defer backend.mu.Unlock()
-	if backend.deviceInventory == nil {
-		backend.deviceInventory = NewDeviceInventoryModule()
-	}
-	if backend.devicePolicy == nil {
-		backend.devicePolicy = NewDevicePolicyModule(backend.deviceInventory)
-		backend.devicePolicy.transactions = backend.taskTransactionJournalLocked()
-	}
-	if backend.gatewayPolicy == nil {
-		backend.gatewayPolicy = NewDefaultGatewayPolicyModule(backend.deviceInventory)
-	}
+	backend.ensureDevicePolicyLocked()
 	if backend.networkRules == nil {
 		backend.networkRules = NewDefaultNetworkRulesModule(backend.deviceInventory, backend.devicePolicy, backend.gatewayPolicy)
 	}
@@ -694,16 +699,7 @@ func (backend *ServiceBackend) PostLanDeviceMigrationApplyV2(ctx context.Context
 func (backend *ServiceBackend) lanDeviceMigrationModule() *LanDeviceMigrationModule {
 	backend.mu.Lock()
 	defer backend.mu.Unlock()
-	if backend.deviceInventory == nil {
-		backend.deviceInventory = NewDeviceInventoryModule()
-	}
-	if backend.devicePolicy == nil {
-		backend.devicePolicy = NewDevicePolicyModule(backend.deviceInventory)
-		backend.devicePolicy.transactions = backend.taskTransactionJournalLocked()
-	}
-	if backend.gatewayPolicy == nil {
-		backend.gatewayPolicy = NewDefaultGatewayPolicyModule(backend.deviceInventory)
-	}
+	backend.ensureDevicePolicyLocked()
 	if backend.networkRules == nil {
 		backend.networkRules = NewDefaultNetworkRulesModule(backend.deviceInventory, backend.devicePolicy, backend.gatewayPolicy)
 	}
@@ -757,16 +753,7 @@ func (backend *ServiceBackend) PostDeviceGroupsV2(ctx context.Context, r *http.R
 func (backend *ServiceBackend) deviceGroupsModule() *DeviceGroupModule {
 	backend.mu.Lock()
 	defer backend.mu.Unlock()
-	if backend.deviceInventory == nil {
-		backend.deviceInventory = NewDeviceInventoryModule()
-	}
-	if backend.devicePolicy == nil {
-		backend.devicePolicy = NewDevicePolicyModule(backend.deviceInventory)
-		backend.devicePolicy.transactions = backend.taskTransactionJournalLocked()
-	}
-	if backend.gatewayPolicy == nil {
-		backend.gatewayPolicy = NewDefaultGatewayPolicyModule(backend.deviceInventory)
-	}
+	backend.ensureDevicePolicyLocked()
 	if backend.deviceNetworkPolicy == nil {
 		backend.deviceNetworkPolicy = NewDefaultDeviceNetworkPolicyModule(backend.deviceInventory, backend.devicePolicy, backend.gatewayPolicy)
 		backend.deviceNetworkPolicy.transactions = backend.taskTransactionJournalLocked()
@@ -818,14 +805,24 @@ func (backend *ServiceBackend) GetDevicePolicyRulesV2(ctx context.Context) (*mod
 func (backend *ServiceBackend) devicePolicyModule() *DevicePolicyModule {
 	backend.mu.Lock()
 	defer backend.mu.Unlock()
+	backend.ensureDevicePolicyLocked()
+	return backend.devicePolicy
+}
+
+func (backend *ServiceBackend) ensureDevicePolicyLocked() {
 	if backend.deviceInventory == nil {
 		backend.deviceInventory = NewDeviceInventoryModule()
 	}
-	if backend.devicePolicy == nil {
-		backend.devicePolicy = NewDevicePolicyModule(backend.deviceInventory)
-		backend.devicePolicy.transactions = backend.taskTransactionJournalLocked()
+	if backend.gatewayPolicy == nil {
+		backend.gatewayPolicy = NewDefaultGatewayPolicyModule(backend.deviceInventory)
+		backend.gatewayPolicy.transactions = backend.taskTransactionJournalLocked()
 	}
-	return backend.devicePolicy
+	if backend.devicePolicy == nil {
+		backend.devicePolicy = NewDevicePolicyModuleWithRateLimit(backend.deviceInventory, backend.gatewayPolicy)
+		backend.devicePolicy.transactions = backend.taskTransactionJournalLocked()
+	} else if store, ok := backend.devicePolicy.store.(*systemDevicePolicyStore); ok && store.rateLimit == nil {
+		store.rateLimit = NewDefaultRateLimitModule(backend.gatewayPolicy)
+	}
 }
 
 func (backend *ServiceBackend) taskTransactionJournalLocked() *TaskTransactionJournal {

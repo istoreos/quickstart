@@ -18,7 +18,7 @@ type devicePolicyBackup interface{}
 type devicePolicyStore interface {
 	Get(context.Context, string) (*models.DevicePolicy, error)
 	ListRules(context.Context) (*models.DevicePolicyRulesResult, error)
-	Backup(context.Context, string) (devicePolicyBackup, error)
+	Backup(context.Context, string, ...*models.DevicePolicy) (devicePolicyBackup, error)
 	Apply(context.Context, *models.DevicePolicyApplyRequest, *models.DevicePolicy) error
 	Restore(context.Context, devicePolicyBackup) error
 }
@@ -38,6 +38,10 @@ func (err *PolicyError) Error() string { return err.Message }
 
 func NewDevicePolicyModule(inventory *DeviceInventoryModule) *DevicePolicyModule {
 	return &DevicePolicyModule{store: newSystemDevicePolicyStore(inventory), transactions: newMemoryTaskTransactionJournal()}
+}
+
+func NewDevicePolicyModuleWithRateLimit(inventory *DeviceInventoryModule, gateway *GatewayPolicyModule) *DevicePolicyModule {
+	return &DevicePolicyModule{store: newSystemDevicePolicyStore(inventory, NewDefaultRateLimitModule(gateway)), transactions: newMemoryTaskTransactionJournal()}
 }
 
 func newDevicePolicyModuleForTest(store devicePolicyStore) *DevicePolicyModule {
@@ -97,6 +101,10 @@ func (module *DevicePolicyModule) Plan(ctx context.Context, request *models.Devi
 		result.Error = &models.DevicePolicyError{Code: code, Message: reason}
 		return &models.DeviceRestrictionPlanResponse{Result: result}, nil
 	}
+	if request.Kind == "speed" && request.Speed != nil && request.Speed.Enabled && current.RateLimit != nil && !current.RateLimit.CanApply {
+		result.Error = &models.DevicePolicyError{Code: current.RateLimit.Reason, Message: rateLimitReasonMessage(current.RateLimit.Reason)}
+		return &models.DeviceRestrictionPlanResponse{Result: result}, nil
+	}
 	if conflict := module.validateConflict(ctx, request, current); conflict != nil {
 		result.Error = &models.DevicePolicyError{Code: conflict.Code, Message: conflict.Message}
 		return &models.DeviceRestrictionPlanResponse{Result: result}, nil
@@ -105,7 +113,9 @@ func (module *DevicePolicyModule) Plan(ctx context.Context, request *models.Devi
 	case "speed":
 		currentValue, desiredValue := *current.Speed, *request.Speed
 		result.CurrentSpeed, result.DesiredSpeed = &currentValue, &desiredValue
-		result.ReloadServices = []string{"eqos"}
+		if current.RateLimit == nil || current.RateLimit.Provider == "eqos" {
+			result.ReloadServices = []string{"eqos"}
+		}
 	case "access":
 		currentValue, desiredValue := *current.Access, *request.Access
 		result.CurrentAccess, result.DesiredAccess = &currentValue, &desiredValue
@@ -155,6 +165,10 @@ func (module *DevicePolicyModule) Apply(ctx context.Context, request *models.Dev
 		}
 		return attachDevicePolicyTransaction(devicePolicyFailure(code, reason), rejectedTaskTransaction(devicePolicyTask(request), request.IdempotencyKey)), nil
 	}
+	if request.Kind == "speed" && request.Speed != nil && request.Speed.Enabled && current.RateLimit != nil && !current.RateLimit.CanApply {
+		code := current.RateLimit.Reason
+		return attachDevicePolicyTransaction(devicePolicyFailure(code, rateLimitReasonMessage(code)), rejectedTaskTransaction(devicePolicyTask(request), request.IdempotencyKey)), nil
+	}
 	if conflict := module.validateConflict(ctx, request, current); conflict != nil {
 		return attachDevicePolicyTransaction(devicePolicyFailure(conflict.Code, conflict.Message), rejectedTaskTransaction(devicePolicyTask(request), request.IdempotencyKey)), nil
 	}
@@ -184,7 +198,7 @@ func (module *DevicePolicyModule) Apply(ctx context.Context, request *models.Dev
 	}
 
 	_ = module.transactions.Advance(ctx, transaction, "snapshot", "in_progress", "")
-	backup, err := module.store.Backup(ctx, request.Kind)
+	backup, err := module.store.Backup(ctx, request.Kind, current)
 	if err != nil {
 		_ = module.transactions.Advance(ctx, transaction, "snapshot", "failed", "retry")
 		return attachDevicePolicyTransaction(devicePolicyFailure("apply_failed", "could not create a rollback snapshot"), transaction), nil
@@ -212,6 +226,17 @@ func (module *DevicePolicyModule) Apply(ctx context.Context, request *models.Dev
 	}
 	_ = module.transactions.Advance(ctx, transaction, "verify", "committed", "")
 	return attachDevicePolicyTransaction(devicePolicySuccess(updated, true), transaction), nil
+}
+
+func rateLimitReasonMessage(reason string) string {
+	switch reason {
+	case "address_reservation_required":
+		return "请先为设备预留当前 IPv4 地址，再启用限速"
+	case "execution_node_unavailable":
+		return "设备当前不通过本机上网，请在实际执行上网的网关上设置限速"
+	default:
+		return "当前无法安全应用设备限速"
+	}
 }
 
 func devicePolicyTask(request *models.DevicePolicyApplyRequest) string {
@@ -300,9 +325,23 @@ func devicePolicyVersion(policy *models.DevicePolicy) string {
 	if policy == nil {
 		return ""
 	}
-	copyValue := *policy
-	copyValue.Version = ""
-	raw, _ := json.Marshal(copyValue)
+	// Optimistic concurrency protects configurable policy, not volatile runtime
+	// observations such as ObservedAt, traffic state or capability hints. Those
+	// values can legitimately change between Plan and Apply without a user edit.
+	stable := struct {
+		DeviceID string                     `json:"deviceId"`
+		MAC      string                     `json:"mac"`
+		Static   *models.DeviceStaticPolicy `json:"static"`
+		Speed    *models.DeviceSpeedPolicy  `json:"speed"`
+		Access   *models.DeviceAccessPolicy `json:"access"`
+	}{
+		DeviceID: policy.DeviceID,
+		MAC:      policy.MAC,
+		Static:   policy.Static,
+		Speed:    policy.Speed,
+		Access:   policy.Access,
+	}
+	raw, _ := json.Marshal(stable)
 	sum := sha256.Sum256(raw)
 	return hex.EncodeToString(sum[:])
 }
