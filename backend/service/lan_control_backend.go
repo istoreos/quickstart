@@ -696,6 +696,35 @@ func (backend *ServiceBackend) PostLanDeviceMigrationApplyV2(ctx context.Context
 	return backend.lanDeviceMigrationModule().Apply(ctx, &request)
 }
 
+func (backend *ServiceBackend) GetRateLimitMigrationPlanV2(ctx context.Context) (*models.RateLimitMigrationResponse, error) {
+	return backend.rateLimitMigrationModule().Plan(ctx)
+}
+
+func (backend *ServiceBackend) PostRateLimitMigrationApplyV2(ctx context.Context, r *http.Request) (*models.RateLimitMigrationResponse, error) {
+	var request models.RateLimitMigrationRequest
+	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
+		return migrationResult(nil, false, false, "", &models.DevicePolicyError{Code: "validation_failed", Message: "invalid rate limit migration request"}), nil
+	}
+	return backend.rateLimitMigrationModule().Apply(ctx, &request)
+}
+
+func (backend *ServiceBackend) PostRateLimitMigrationRollbackV2(ctx context.Context, r *http.Request) (*models.RateLimitMigrationResponse, error) {
+	var request models.RateLimitMigrationRollbackRequest
+	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
+		return migrationResult(nil, false, false, "", &models.DevicePolicyError{Code: "validation_failed", Message: "invalid rate limit rollback request"}), nil
+	}
+	return backend.rateLimitMigrationModule().Rollback(ctx, &request)
+}
+
+func (backend *ServiceBackend) rateLimitMigrationModule() *RateLimitMigrationModule {
+	backend.mu.Lock()
+	defer backend.mu.Unlock()
+	if backend.rateLimitMigration == nil {
+		backend.rateLimitMigration = NewDefaultRateLimitMigrationModule()
+	}
+	return backend.rateLimitMigration
+}
+
 func (backend *ServiceBackend) lanDeviceMigrationModule() *LanDeviceMigrationModule {
 	backend.mu.Lock()
 	defer backend.mu.Unlock()

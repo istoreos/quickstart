@@ -246,6 +246,43 @@ func (provider *nativeRateLimitProvider) snapshot(ctx context.Context) (nativePo
 	return snapshot, err
 }
 
+func (provider *nativeRateLimitProvider) replaceOwned(
+	ctx context.Context,
+	before nativePolicySnapshot,
+	policies []nativePolicyInput,
+	idempotencyKey string,
+) (nativePolicySnapshot, error) {
+	mutation := nativePolicyMutation{
+		ExpectedRevision: before.Revision,
+		IdempotencyKey:   idempotencyKey,
+		Owner:            provider.owner,
+		Policies:         policies,
+	}
+	var plan nativePolicyPlan
+	if err := provider.call(ctx, http.MethodPost, "/api/v1/policies/plan", mutation, &plan); err != nil {
+		return nativePolicySnapshot{}, err
+	}
+	var committed nativePolicySnapshot
+	if err := provider.call(ctx, http.MethodPost, "/api/v1/policies/apply", map[string]any{"plan": plan, "request": mutation}, &committed); err != nil {
+		return nativePolicySnapshot{}, err
+	}
+	var verified nativePolicySnapshot
+	if err := provider.call(ctx, http.MethodPost, "/api/v1/policies/verify", committed, &verified); err != nil {
+		return nativePolicySnapshot{}, fmt.Errorf("netpolicy_verification_failed: %w", err)
+	}
+	return committed, nil
+}
+
+func (provider *nativeRateLimitProvider) ownedInputs(snapshot nativePolicySnapshot) []nativePolicyInput {
+	inputs := make([]nativePolicyInput, 0, len(snapshot.Policies))
+	for _, policy := range snapshot.Policies {
+		if policy.Owner == provider.owner {
+			inputs = append(inputs, nativePolicyInput{Device: policy.Device, RateLimit: policy.RateLimit, Quota: policy.Quota})
+		}
+	}
+	return inputs
+}
+
 func (provider *nativeRateLimitProvider) call(ctx context.Context, method, path string, payload any, result any) error {
 	var body io.Reader
 	if payload != nil {

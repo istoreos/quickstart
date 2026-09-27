@@ -11,6 +11,7 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -33,8 +34,31 @@ type bandixScheduleRule struct {
 		End   string `json:"end"`
 		Days  []int  `json:"days"`
 	} `json:"time_slot"`
-	UploadBytes   int64 `json:"wan_tx_rate_limit"`
-	DownloadBytes int64 `json:"wan_rx_rate_limit"`
+	UploadBytes   int64    `json:"wan_tx_rate_limit"`
+	DownloadBytes int64    `json:"wan_rx_rate_limit"`
+	UnknownFields []string `json:"-"`
+}
+
+func (rule *bandixScheduleRule) UnmarshalJSON(data []byte) error {
+	type alias bandixScheduleRule
+	var decoded alias
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		return err
+	}
+	var fields map[string]json.RawMessage
+	if err := json.Unmarshal(data, &fields); err != nil {
+		return err
+	}
+	for _, known := range []string{"id", "mac", "time_slot", "wan_tx_rate_limit", "wan_rx_rate_limit"} {
+		delete(fields, known)
+	}
+	decoded.UnknownFields = make([]string, 0, len(fields))
+	for field := range fields {
+		decoded.UnknownFields = append(decoded.UnknownFields, field)
+	}
+	sort.Strings(decoded.UnknownFields)
+	*rule = bandixScheduleRule(decoded)
+	return nil
 }
 
 type bandixRateLimitProvider struct {
