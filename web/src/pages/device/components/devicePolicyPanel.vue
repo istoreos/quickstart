@@ -48,11 +48,15 @@
                 </div>
                 <div v-if="reason('speed')" class="policy-reason"><span>{{ reason('speed') }}</span><button v-if="['not_installed','disabled'].includes(policy.capabilities.speed?.state || '')" type="button" :disabled="saving !== ''" @click="prepareSpeedService">{{ saving === 'capability' ? $gettext('正在处理…') : policy.capabilities.speed?.state === 'disabled' ? $gettext('启用限速服务') : $gettext('安装限速服务') }}</button></div>
                 <template v-else>
+                    <div v-if="policy.rateLimit" class="enforcement-card" :class="policy.rateLimit.state">
+                        <div><strong>{{ rateLimitStateLabel }}</strong><small>{{ rateLimitExecutionLabel }}</small></div>
+                        <ul v-if="rateLimitHints.length"><li v-for="hint in rateLimitHints" :key="hint">{{ hint }}</li></ul>
+                    </div>
                     <div v-if="speedForm.enabled" class="field-grid">
                         <label><span>{{ $gettext('上传上限（Mbit/s）') }}</span><input v-model.number="speedForm.uploadSpeed" type="number" min="1" /></label>
                         <label><span>{{ $gettext('下载上限（Mbit/s）') }}</span><input v-model.number="speedForm.downloadSpeed" type="number" min="1" /></label>
                     </div>
-                    <button type="button" :disabled="saving !== ''" @click="saveSpeed">{{ saving === 'restriction-plan' ? $gettext('正在检查…') : $gettext('预览限速') }}</button>
+                    <button type="button" :disabled="saving !== '' || (speedForm.enabled && policy.rateLimit && !policy.rateLimit.canApply)" @click="saveSpeed">{{ saving === 'restriction-plan' ? $gettext('正在检查…') : $gettext('预览限速') }}</button>
                 </template>
             </section>
 
@@ -179,6 +183,24 @@ const available = (kind: 'static' | 'speed' | 'access') => policyAvailable(polic
 const reason = (kind: 'static' | 'speed' | 'access') => translatePolicyMessage(policyUnavailableReason(policy.value, kind))
 const hostnameInvalid = computed(() => !validDhcpHostname(staticForm.hostname))
 const routeLocked = computed(() => routerContext.value?.routeEditability?.editable === false)
+const rateLimitStateLabel = computed(() => ({
+    verified: $gettext('限速已生效'), loaded_unverified: $gettext('限速已加载，效果待验证'),
+    configured_not_loaded: $gettext('限速已保存，服务尚未加载'), configured_unstable: $gettext('限速地址不稳定'),
+    configured_wrong_node: $gettext('限速规则不在实际上网节点'), needs_address_reservation: $gettext('需先预留当前地址'),
+    unavailable: $gettext('当前节点无法执行限速'), ready: $gettext('可以设置限速'), inactive: $gettext('未设置限速'),
+} as Record<string,string>)[policy.value?.rateLimit?.state || 'inactive'] || $gettext('限速状态待确认'))
+const rateLimitExecutionLabel = computed(() => policy.value?.rateLimit?.executionNode === 'local'
+    ? $gettext('由本机执行')
+    : policy.value?.rateLimit?.gateway ? `${$gettext('应由上网网关执行')} · ${policy.value.rateLimit.gateway}` : $gettext('执行节点待确认'))
+const rateLimitHints = computed(() => {
+    const status = policy.value?.rateLimit
+    if (!status) return []
+    const hints: string[] = []
+    if (!['stable','stable_identity'].includes(status.addressState)) hints.push($gettext('当前实现按 IPv4 限速，预留当前地址后规则才不会漂移。'))
+    if (status.ipv6State === 'unsupported') hints.push($gettext('这台设备的 IPv6 流量暂不受此限速约束。'))
+    if (status.offloadState === 'risk') hints.push($gettext('检测到流量卸载，部分流量可能绕过限速。'))
+    return hints
+})
 const routeLockGuidance = computed(() => ({
     external_dhcp_authority: $gettext('本机当前不负责地址分配，请到实际分配地址的路由器上修改。'),
     multiple_dhcp_evidence: $gettext('局域网角色需要确认'),
@@ -334,6 +356,8 @@ watch(() => props.device.deviceId, load, { immediate: true })
 .policy-card button.danger { background: #b94343; border-color: #b94343; }
 .policy-reason { margin: 10px 0 0; padding: 8px 10px; opacity: .72; background: rgba(127, 127, 127, .07); border-radius: 6px; font-size: 12px; }
 .policy-reason button { width: auto; margin: 8px 0 0; }.effect-flow { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 6px; margin-top: 9px; }.effect-flow span { display: grid; gap: 3px; padding: 7px; background: rgba(85,58,254,.05); border-radius: 6px; overflow-wrap: anywhere; }.effect-flow small { opacity: .6; }.attention { display: block; margin-top: 7px; padding: 7px; color: #8a5a00; background: #fff8e8; border-radius: 6px; }
+.enforcement-card { display: grid; gap: 7px; margin-top: 10px; padding: 9px 10px; background: rgba(127,127,127,.06); border-radius: 7px; font-size: 12px; }
+.enforcement-card>div { display: flex; justify-content: space-between; gap: 8px; }.enforcement-card small{opacity:.65}.enforcement-card ul{margin:0;padding-left:18px;opacity:.78}.enforcement-card.verified{color:#176b45;background:rgba(38,162,105,.1)}.enforcement-card.configured_not_loaded,.enforcement-card.configured_unstable,.enforcement-card.configured_wrong_node,.enforcement-card.unavailable,.enforcement-card.needs_address_reservation{color:#8a5a00;background:#fff8e8}
 details { margin-top: 11px; }
 summary { color: #553afe; cursor: pointer; font-size: 12px; }
 .checkbox-line { flex-direction: row !important; align-items: center; }

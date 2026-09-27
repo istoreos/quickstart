@@ -18,9 +18,11 @@
                 <legend>{{ $gettext('休息时段') }}</legend>
                 <label class="check">
                     <input v-model="draft.scheduleEnabled" type="checkbox" />
-                    {{ scheduleToggleLabel }}
+                    {{ $gettext('在指定时段执行规则') }}
                 </label>
                 <div v-if="draft.scheduleEnabled" class="schedule-editor">
+                    <label><span>{{ $gettext('时段内执行') }}</span><select v-model="draft.scheduleAction"><option value="block">{{ $gettext('暂停联网') }}</option><option value="limit">{{ $gettext('限制速度') }}</option></select></label>
+                    <div v-if="draft.scheduleAction==='limit'" class="columns"><label><span>{{ $gettext('上传 Mbit/s') }}</span><input v-model.number="draft.scheduleUpload" type="number" min="1" /></label><label><span>{{ $gettext('下载 Mbit/s') }}</span><input v-model.number="draft.scheduleDownload" type="number" min="1" /></label></div>
                     <div class="days" role="group" :aria-label="$gettext('执行日期')"><label v-for="day in dayOptions" :key="day.value" :class="{ selected: draft.days.includes(day.value) }"><input v-model="draft.days" type="checkbox" :value="day.value" />{{ day.label }}</label></div>
                     <div class="columns"><label><span>{{ $gettext('开始') }}</span><input v-model="draft.start" type="time" /></label><label><span>{{ $gettext('结束') }}</span><input v-model="draft.end" type="time" /></label></div>
                     <small>{{ $gettext('结束时间早于开始时间时，会自动跨到第二天。') }}</small>
@@ -56,11 +58,10 @@ import PageState from './pageState.vue'
 
 const props = defineProps<{ deviceId: string }>()
 const { $gettext } = useGettext()
-const scheduleToggleLabel = $gettext('在指定时段暂停联网')
 const quotaToggleLabel = $gettext('限制累计用量')
 const loading = ref(true), saving = ref(false), error = ref(''), feedback = ref(''), feedbackKind = ref<'success'|'error'>('success'), previewing = ref(false)
 const version = ref(''), timezone = ref(''), policyBase = ref<Record<string, any>>({}), effective = ref<any>(null), groups = ref<any[]>([]), managedScheduleId = ref('device-rest')
-const draft = reactive({ scheduleEnabled: false, days: [1,2,3,4,5] as number[], start: '22:00', end: '07:00', quotaEnabled: false, quotaPeriod: 'monthly', quotaGB: 10, quotaAction: 'notify' })
+const draft = reactive({ scheduleEnabled: false, scheduleAction: 'block', scheduleUpload: 20, scheduleDownload: 100, days: [1,2,3,4,5] as number[], start: '22:00', end: '07:00', quotaEnabled: false, quotaPeriod: 'monthly', quotaGB: 10, quotaAction: 'notify' })
 const dayOptions = computed(() => [{value:1,label:$gettext('一')},{value:2,label:$gettext('二')},{value:3,label:$gettext('三')},{value:4,label:$gettext('四')},{value:5,label:$gettext('五')},{value:6,label:$gettext('六')},{value:0,label:$gettext('日')}])
 const minutes = (value:string) => { const [hour, minute] = value.split(':').map(Number); return hour * 60 + minute }
 const clock = (value:number) => `${String(Math.floor(value/60)).padStart(2,'0')}:${String(value%60).padStart(2,'0')}`
@@ -73,7 +74,7 @@ const sourceLabel = computed(() => {
 })
 const nextChangeLabel = computed(() => formatDate(effective.value?.nextScheduleAt || ''))
 const previewLabel = computed(() => {
-    const parts = [draft.scheduleEnabled ? `${$gettext('休息时段')} ${draft.start}–${draft.end}` : $gettext('不设置休息时段')]
+    const parts = [draft.scheduleEnabled ? `${draft.scheduleAction==='limit'?$gettext('时段限速'):$gettext('休息时段')} ${draft.start}–${draft.end}` : $gettext('不设置时段规则')]
     parts.push(draft.quotaEnabled ? `${draft.quotaGB} GB · ${quotaPeriodLabel(draft.quotaPeriod)}` : $gettext('不设置流量额度'))
     return parts.join('；')
 })
@@ -86,22 +87,25 @@ const applyResponse = (result:any) => {
     effective.value = (result?.effective || []).find((item:any) => item.deviceId === props.deviceId) || null
     const policy = result?.devicePolicies?.[props.deviceId] || {}
     policyBase.value = { ...policy, schedules: [...(policy.schedules || [])] }
-    const schedule = policyBase.value.schedules.find((item:any) => item?.action === 'block')
-    managedScheduleId.value = schedule?.id || 'device-rest'
+    const schedule = policyBase.value.schedules.find((item:any) => item?.action === 'block' || item?.action === 'limit')
+    managedScheduleId.value = schedule?.id || 'device-schedule'
     draft.scheduleEnabled = Boolean(schedule?.enabled)
     draft.days = schedule?.days?.length ? [...schedule.days] : [1,2,3,4,5]
     draft.start = schedule ? clock(schedule.startMinute) : '22:00'
     draft.end = schedule ? clock(schedule.endMinute) : '07:00'
+    draft.scheduleAction = schedule?.action || 'block'
+    draft.scheduleUpload = schedule?.speed?.uploadSpeed || 20
+    draft.scheduleDownload = schedule?.speed?.downloadSpeed || 100
     draft.quotaEnabled = Boolean(policy.quota?.enabled)
     draft.quotaPeriod = policy.quota?.period || 'monthly'
     draft.quotaGB = policy.quota?.limitBytes ? Math.round(policy.quota.limitBytes / 1073741824 * 10) / 10 : 10
     draft.quotaAction = policy.quota?.action || 'notify'
 }
 const load = async () => { loading.value = true; error.value = ''; previewing.value = false; try { const result = (await request.DeviceMangement.deviceGroupsV2.GET()).data.result; if (result?.error) throw new Error(result.error.message); applyResponse(result) } catch (reason:any) { error.value = reason?.message || $gettext('读取使用规则失败') } finally { loading.value = false } }
-const requestPreview = () => { feedback.value = ''; if (draft.scheduleEnabled && !draft.days.length) { feedbackKind.value='error'; feedback.value=$gettext('请至少选择一天'); return } if (draft.scheduleEnabled && (!draft.start || !draft.end)) { feedbackKind.value='error'; feedback.value=$gettext('请填写完整时间'); return } if (draft.quotaEnabled && (!Number.isFinite(draft.quotaGB) || draft.quotaGB < .1)) { feedbackKind.value='error'; feedback.value=$gettext('流量额度至少为 0.1 GB'); return } previewing.value = true }
+const requestPreview = () => { feedback.value = ''; if (draft.scheduleEnabled && !draft.days.length) { feedbackKind.value='error'; feedback.value=$gettext('请至少选择一天'); return } if (draft.scheduleEnabled && (!draft.start || !draft.end)) { feedbackKind.value='error'; feedback.value=$gettext('请填写完整时间'); return } if (draft.scheduleEnabled && draft.scheduleAction==='limit' && (!draft.scheduleUpload || !draft.scheduleDownload)) { feedbackKind.value='error';feedback.value=$gettext('请填写完整的时段速度上限');return } if (draft.quotaEnabled && (!Number.isFinite(draft.quotaGB) || draft.quotaGB < .1)) { feedbackKind.value='error'; feedback.value=$gettext('流量额度至少为 0.1 GB'); return } previewing.value = true }
 const buildPolicy = () => {
     const schedules = (policyBase.value.schedules || []).filter((item:any) => item?.id !== managedScheduleId.value)
-    if (draft.scheduleEnabled) schedules.push({ id:managedScheduleId.value, enabled:true, days:[...draft.days], startMinute:minutes(draft.start), endMinute:minutes(draft.end), action:'block' })
+    if (draft.scheduleEnabled) schedules.push({ id:managedScheduleId.value, enabled:true, days:[...draft.days], startMinute:minutes(draft.start), endMinute:minutes(draft.end), action:draft.scheduleAction, speed:draft.scheduleAction==='limit'?{enabled:true,uploadSpeed:draft.scheduleUpload,downloadSpeed:draft.scheduleDownload}:undefined })
     const next:any = { ...policyBase.value, schedules, quota:draft.quotaEnabled ? { enabled:true, period:draft.quotaPeriod, limitBytes:Math.round(draft.quotaGB*1073741824), action:draft.quotaAction } : undefined }
     if (next.access === undefined && next.speed === undefined && !next.targetId && !next.quota && !next.schedules.length) return null
     return next

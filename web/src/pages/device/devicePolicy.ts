@@ -4,6 +4,24 @@ import type { GatewayTargetKind } from './gatewayTargets'
 export type PolicyCapability = { state: CapabilityState; reason?: string }
 export type StaticPolicy = { enabled: boolean; assignedIP: string; bindIP: boolean; hostname: string; tagName: string; tagTitle?: string }
 export type SpeedPolicy = { enabled: boolean; uploadSpeed: number; downloadSpeed: number }
+export type RateLimitEnforcement = {
+    provider: string
+    executionNode: 'local' | 'remote' | 'unknown'
+    targetId?: string
+    gateway?: string
+    state: 'inactive' | 'ready' | 'verified' | 'loaded_unverified' | 'configured_not_loaded' | 'configured_unstable' | 'configured_wrong_node' | 'needs_address_reservation' | 'unavailable'
+    reason?: string
+    configured: boolean
+    loaded: boolean
+    verified: boolean
+    canApply: boolean
+    addressState: 'stable' | 'stable_identity' | 'current_only' | 'missing'
+    ipv4?: string
+    ipv6State: 'not_present' | 'unsupported' | 'unknown'
+    offloadState: 'compatible' | 'risk' | 'unknown'
+    warnings?: string[]
+    observedAt?: string
+}
 export type AccessPolicy = { networkAccess: boolean }
 export type InternetPathTarget = {
     id: string
@@ -37,6 +55,7 @@ export type DevicePolicy = {
     currentIPv4?: string
     static: StaticPolicy
     speed: SpeedPolicy
+    rateLimit?: RateLimitEnforcement
     access: AccessPolicy
     capabilities: Record<'static' | 'speed' | 'access', PolicyCapability>
     version: string

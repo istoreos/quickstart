@@ -101,7 +101,7 @@ test('M30 LAN settings use read-only role guidance local degradation and draft-p
     assert.match(source, /capabilityActionV2\.PLAN/)
     assert.match(source, /sessionStorage/)
     assert.match(source, /rememberDraft/)
-    assert.doesNotMatch(source, /DHCP 标签|option 3|option 6|eqos|UCI/)
+    assert.doesNotMatch(source, /DHCP 标签|option 3|option 6|UCI/)
 })
 
 test('M33 Internet Path editor uses the domain plan and apply contract without DHCP implementation fields', async () => {
@@ -141,4 +141,55 @@ test('M34 network and restriction writes require visible plan before apply', asy
     assert.match(source, /deviceRestrictionsV2\.PLAN/)
     assert.match(source, /deviceRestrictionsV2\.APPLY/)
     assert.doesNotMatch(source, /devicePolicyV2\.POST|deviceNetworkPolicyV2\.POST/)
+})
+
+test('P0-P2 rate limits expose effect truth plans scheduled limits and progressive providers', async () => {
+    const [policy, settings, groups, usage, types] = await Promise.all([
+        readFile(new URL('../src/pages/device/components/devicePolicyPanel.vue', import.meta.url), 'utf8'),
+        readFile(new URL('../src/pages/device/lanSettingsPanel.vue', import.meta.url), 'utf8'),
+        readFile(new URL('../src/pages/device/deviceGroupsPanel.vue', import.meta.url), 'utf8'),
+        readFile(new URL('../src/pages/device/components/deviceUsagePolicyEditor.vue', import.meta.url), 'utf8'),
+        readFile(new URL('../src/pages/device/devicePolicy.ts', import.meta.url), 'utf8'),
+    ])
+    for (const token of ['rateLimitStateLabel', 'executionNode', 'addressState', 'offloadState', 'ipv6State']) assert.match(policy + types, new RegExp(token))
+    for (const token of ['rateLimitSettingsV2.PLAN', 'rateLimitSettingsV2.APPLY', 'pendingSpeedPlan', '高级：执行方式与迁移', '智能设备限速（推荐）']) assert.match(settings, new RegExp(token))
+    for (const source of [groups, usage]) {
+        assert.match(source, /scheduleAction/)
+        assert.match(source, /action:draft\.scheduleAction/)
+        assert.match(source, /时段限速/)
+    }
+    assert.doesNotMatch(policy + settings, /UCI|eBPF|\/api\/traffic/)
+
+    const catalog = JSON.parse(await readFile(new URL('../public/luci-static/quickstart/i18n/en.json', import.meta.url), 'utf8')).en
+    for (const message of [
+        '在指定时段执行规则', '时段内执行', '限制速度', '不设置时段规则',
+        '高级：执行方式与迁移', '执行方式', '兼容模式（按 IPv4）', '智能设备限速（推荐）',
+        '总带宽用于计算设备限速队列，不会自动平均分配给每台设备。',
+        '预览限速服务设置', '需先预留当前地址', '当前实现按 IPv4 限速，预留当前地址后规则才不会漂移。',
+    ]) {
+        assert.equal(typeof catalog[message], 'string', `missing English rate-limit translation: ${message}`)
+        assert.ok(catalog[message].length > 0, `empty English rate-limit translation: ${message}`)
+        assert.doesNotMatch(catalog[message], /[\u3400-\u9fff]/, `Chinese leaked into English rate-limit copy: ${message}`)
+    }
+})
+
+test('M51 native speed limits stay simple while failures and Bandix migration remain explicit', async () => {
+    const [settings, requests] = await Promise.all([
+        readFile(new URL('../src/pages/device/lanSettingsPanel.vue', import.meta.url), 'utf8'),
+        readFile(new URL('../src/request/request.ts', import.meta.url), 'utf8'),
+    ])
+    for (const label of [
+        '设备限速服务', '智能设备限速（推荐）', '高级：执行方式与迁移',
+        '迁移现有 Bandix 规则', '扫描现有规则', '我已手动停止 Bandix，并启动 Quickstart 限速服务',
+        '存在不支持或冲突的规则，全部处理完成前不会迁移。', '恢复迁移前设置',
+    ]) assert.match(settings, new RegExp(label))
+    assert.match(settings, /speedProviderReady/)
+    assert.match(settings, /canInstallSpeedProvider/)
+    assert.match(settings, /rateLimitMigrationV2\.PLAN/)
+    assert.match(settings, /rateLimitMigrationV2\.APPLY/)
+    assert.match(settings, /rateLimitMigrationV2\.ROLLBACK/)
+    assert.match(requests, /rate-limit-migration\/plan/)
+    assert.match(requests, /rate-limit-migration\/apply/)
+    assert.match(requests, /rate-limit-migration\/rollback/)
+    assert.doesNotMatch(settings, /eBPF|tc qdisc|BPF map/)
 })
