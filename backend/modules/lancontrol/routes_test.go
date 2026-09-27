@@ -265,6 +265,21 @@ func (backend *fakeLanControlBackend) PostLanDeviceMigrationApplyV2(ctx context.
 	return &models.LanDeviceMigrationResponse{Result: &models.LanDeviceMigrationResult{}}, backend.err
 }
 
+func (backend *fakeLanControlBackend) GetRateLimitMigrationPlanV2(context.Context) (*models.RateLimitMigrationResponse, error) {
+	backend.record("getRateLimitMigrationPlanV2")
+	return &models.RateLimitMigrationResponse{Result: &models.RateLimitMigrationResult{}}, backend.err
+}
+
+func (backend *fakeLanControlBackend) PostRateLimitMigrationApplyV2(_ context.Context, r *http.Request) (*models.RateLimitMigrationResponse, error) {
+	backend.recordRequest("postRateLimitMigrationApplyV2", r)
+	return &models.RateLimitMigrationResponse{Result: &models.RateLimitMigrationResult{}}, backend.err
+}
+
+func (backend *fakeLanControlBackend) PostRateLimitMigrationRollbackV2(_ context.Context, r *http.Request) (*models.RateLimitMigrationResponse, error) {
+	backend.recordRequest("postRateLimitMigrationRollbackV2", r)
+	return &models.RateLimitMigrationResponse{Result: &models.RateLimitMigrationResult{}}, backend.err
+}
+
 func (backend *fakeLanControlBackend) PostCapabilityActionPlanV2(ctx context.Context, r *http.Request) (*models.CapabilityActionResponse, error) {
 	backend.recordRequest("postCapabilityActionPlanV2", r)
 	return &models.CapabilityActionResponse{Result: &models.CapabilityActionResult{}}, backend.err
@@ -468,6 +483,9 @@ func TestRegisterLanControlRoutesMapsRoutesToBackendMethods(t *testing.T) {
 		{name: "apply network rules v2", method: http.MethodPost, path: "/cgi-bin/luci/istore/lanctrl/v2/network-rules/apply/", body: `{"action":"delete","ruleIds":["static:1"]}`, wantCall: "postNetworkRulesApplyV2"},
 		{name: "plan LAN device migration v2", method: http.MethodGet, path: "/cgi-bin/luci/istore/lanctrl/v2/migration/plan/", wantCall: "getLanDeviceMigrationPlanV2"},
 		{name: "apply LAN device migration v2", method: http.MethodPost, path: "/cgi-bin/luci/istore/lanctrl/v2/migration/apply/", body: `{"expectedVersion":"v1"}`, wantCall: "postLanDeviceMigrationApplyV2"},
+		{name: "plan rate limit migration v2", method: http.MethodGet, path: "/cgi-bin/luci/istore/lanctrl/v2/rate-limit-migration/plan/", wantCall: "getRateLimitMigrationPlanV2"},
+		{name: "apply rate limit migration v2", method: http.MethodPost, path: "/cgi-bin/luci/istore/lanctrl/v2/rate-limit-migration/apply/", body: `{"expectedVersion":"v1"}`, wantCall: "postRateLimitMigrationApplyV2"},
+		{name: "rollback rate limit migration v2", method: http.MethodPost, path: "/cgi-bin/luci/istore/lanctrl/v2/rate-limit-migration/rollback/", body: `{"migrationId":"m1"}`, wantCall: "postRateLimitMigrationRollbackV2"},
 		{name: "plan capability install v2", method: http.MethodPost, path: "/cgi-bin/luci/istore/lanctrl/v2/capability-action/plan/", body: `{"capabilityKey":"device_speed_limit","action":"install","draftToken":"draft-1"}`, wantCall: "postCapabilityActionPlanV2"},
 		{name: "apply capability install v2", method: http.MethodPost, path: "/cgi-bin/luci/istore/lanctrl/v2/capability-action/apply/", body: `{"capabilityKey":"device_speed_limit","action":"install","draftToken":"draft-1","confirm":true}`, wantCall: "postCapabilityActionApplyV2"},
 		{name: "get router context v2", method: http.MethodGet, path: "/cgi-bin/luci/istore/lanctrl/v2/router-context/?lan=guest_20", wantCall: "getRouterContextV2"},

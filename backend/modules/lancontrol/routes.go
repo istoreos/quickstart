@@ -51,6 +51,9 @@ type Backend interface {
 	PostNetworkRulesApplyV2(ctx context.Context, r *http.Request) (*models.NetworkRulesBulkResponse, error)
 	GetLanDeviceMigrationPlanV2(ctx context.Context) (*models.LanDeviceMigrationResponse, error)
 	PostLanDeviceMigrationApplyV2(ctx context.Context, r *http.Request) (*models.LanDeviceMigrationResponse, error)
+	GetRateLimitMigrationPlanV2(ctx context.Context) (*models.RateLimitMigrationResponse, error)
+	PostRateLimitMigrationApplyV2(ctx context.Context, r *http.Request) (*models.RateLimitMigrationResponse, error)
+	PostRateLimitMigrationRollbackV2(ctx context.Context, r *http.Request) (*models.RateLimitMigrationResponse, error)
 	PostCapabilityActionPlanV2(ctx context.Context, r *http.Request) (*models.CapabilityActionResponse, error)
 	PostCapabilityActionApplyV2(ctx context.Context, r *http.Request) (*models.CapabilityActionResponse, error)
 	GetRouterContextV2(ctx context.Context, r *http.Request) (*models.RouterContextResponse, error)
@@ -216,6 +219,15 @@ func RegisterRoutes(router *httprouter.Router, backend Backend) {
 	})
 	httpapi.PostJSON(router, "/cgi-bin/luci/istore/lanctrl/v2/migration/apply/", func(ctx context.Context, r *http.Request) (any, error) {
 		return backend.PostLanDeviceMigrationApplyV2(ctx, r)
+	})
+	httpapi.GetJSON(router, "/cgi-bin/luci/istore/lanctrl/v2/rate-limit-migration/plan/", func(ctx context.Context, _ *http.Request) (any, error) {
+		return backend.GetRateLimitMigrationPlanV2(ctx)
+	})
+	httpapi.PostJSON(router, "/cgi-bin/luci/istore/lanctrl/v2/rate-limit-migration/apply/", func(ctx context.Context, r *http.Request) (any, error) {
+		return backend.PostRateLimitMigrationApplyV2(ctx, r)
+	})
+	httpapi.PostJSON(router, "/cgi-bin/luci/istore/lanctrl/v2/rate-limit-migration/rollback/", func(ctx context.Context, r *http.Request) (any, error) {
+		return backend.PostRateLimitMigrationRollbackV2(ctx, r)
 	})
 	httpapi.PostJSON(router, "/cgi-bin/luci/istore/lanctrl/v2/capability-action/plan/", func(ctx context.Context, r *http.Request) (any, error) {
 		return backend.PostCapabilityActionPlanV2(ctx, r)

@@ -46,6 +46,7 @@ type ServiceBackend struct {
 	advancedNetwork      *AdvancedNetworkModule
 	taskTransactions     *TaskTransactionJournal
 	rateLimitSettings    *RateLimitSettingsModule
+	rateLimitMigration   *RateLimitMigrationModule
 
 	dhnsServer  *dhns.DhnsServer
 	dhnsState   *dhnsruntime.State
@@ -161,6 +162,7 @@ func NewServiceBackend() *ServiceBackend {
 	backend.devicePolicy.transactions = transactions
 	backend.rateLimitSettings = NewDefaultRateLimitSettingsModule()
 	backend.rateLimitSettings.transactions = transactions
+	backend.rateLimitMigration = NewDefaultRateLimitMigrationModule()
 	backend.deviceNetworkPolicy = NewDefaultDeviceNetworkPolicyModule(inventory, backend.devicePolicy, backend.gatewayPolicy)
 	backend.deviceNetworkPolicy.transactions = transactions
 	backend.floatingGateway = NewDefaultFloatingGatewayModule(backend.gatewayPolicy)
