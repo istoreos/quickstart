@@ -356,7 +356,7 @@ msgstr ""
 msgid "qBittorrent高级配置"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:159
+#: src/pages/device/lanSettingsPanel.vue:164
 msgid ""
 "Quickstart 限速服务未就绪。请安装或启动服务后重新检查；系统不会自动改用其他方"
 "式。"
@@ -523,18 +523,18 @@ msgstr ""
 #: src/pages/device/components/devicePolicyPanel.vue:23
 #: src/pages/device/components/devicePolicyPanel.vue:238
 #: src/pages/device/deviceGroupsPanel.vue:23
-#: src/pages/device/lanSettingsPanel.vue:148
-#: src/pages/device/lanSettingsPanel.vue:180
+#: src/pages/device/lanSettingsPanel.vue:152
+#: src/pages/device/lanSettingsPanel.vue:185
 #: src/pages/device/networkRulesHub.vue:38
 #: src/pages/device/networkRulesHub.vue:9
 msgid "上网路线"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:270
+#: src/pages/device/lanSettingsPanel.vue:275
 msgid "上网路线已更新"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:270
+#: src/pages/device/lanSettingsPanel.vue:275
 msgid "上网路线没有变化"
 msgstr ""
 
@@ -655,8 +655,8 @@ msgstr ""
 
 #: src/pages/device/components/advancedNetworkTools.vue:27
 #: src/pages/device/components/trafficInsightsPanel.vue:38
-#: src/pages/device/lanSettingsPanel.vue:179
-#: src/pages/device/lanSettingsPanel.vue:245
+#: src/pages/device/lanSettingsPanel.vue:184
+#: src/pages/device/lanSettingsPanel.vue:250
 msgid "不支持"
 msgstr ""
 
@@ -729,7 +729,7 @@ msgstr ""
 msgid "主要地址"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:105
+#: src/pages/device/lanSettingsPanel.vue:109
 msgid "主路由与旁路由共享一个稳定入口，旁路由异常时自动切回主路由。"
 msgstr ""
 
@@ -753,7 +753,7 @@ msgstr ""
 msgid "仅提醒"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:160
+#: src/pages/device/lanSettingsPanel.vue:165
 msgid "仅用于查看和迁移现有规则，不再作为新规则的默认执行方式。"
 msgstr ""
 
@@ -846,7 +846,7 @@ msgstr ""
 msgid "例如：客厅电视"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:85
+#: src/pages/device/lanSettingsPanel.vue:89
 msgid "例如：旁路由"
 msgstr ""
 
@@ -1013,7 +1013,7 @@ msgstr ""
 msgid "允许联网"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:66
+#: src/pages/device/lanSettingsPanel.vue:70
 msgid "先扫描并逐条检查；不会自动停止、卸载或改写 Bandix。"
 msgstr ""
 
@@ -1126,7 +1126,7 @@ msgstr ""
 msgid "其余设置会在同一次安全接管中处理。"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:157
+#: src/pages/device/lanSettingsPanel.vue:162
 msgid "兼容模式（按 IPv4）"
 msgstr ""
 
@@ -1234,7 +1234,7 @@ msgstr ""
 
 #: src/pages/device/configure.vue:103 src/pages/device/configure.vue:104
 #: src/pages/device/deviceGroupsPanel.vue:11
-#: src/pages/device/lanSettingsPanel.vue:91
+#: src/pages/device/lanSettingsPanel.vue:95
 #: src/pages/device/speedLimitList.vue:24
 #: src/pages/device/staticStateList.vue:19
 #: src/pages/interfaceconfig/index.vue:38
@@ -1436,10 +1436,10 @@ msgstr ""
 #: src/pages/device/components/floatingGatewayWizard.vue:61
 #: src/pages/device/configure.vue:48 src/pages/device/configure.vue:49
 #: src/pages/device/configure.vue:55 src/pages/device/deviceGroupsPanel.vue:36
-#: src/pages/device/lanSettingsPanel.vue:101
+#: src/pages/device/lanSettingsPanel.vue:105
 #: src/pages/device/lanSettingsPanel.vue:43
-#: src/pages/device/lanSettingsPanel.vue:59
-#: src/pages/device/lanSettingsPanel.vue:82
+#: src/pages/device/lanSettingsPanel.vue:63
+#: src/pages/device/lanSettingsPanel.vue:86
 #: src/pages/index/components/ModuleSettings.vue:38
 #: src/pages/quickwifi/index.vue:56 src/pages/raid/index/index.vue:184
 #: src/pages/raid/index/index.vue:275
@@ -1450,15 +1450,15 @@ msgstr ""
 msgid "取消添加"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:178
+#: src/pages/device/lanSettingsPanel.vue:183
 msgid "受保护地址"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:96
+#: src/pages/device/lanSettingsPanel.vue:100
 msgid "受影响分组"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:96
+#: src/pages/device/lanSettingsPanel.vue:100
 msgid "受影响设备"
 msgstr ""
 
@@ -1489,7 +1489,7 @@ msgid ""
 "只探测设备当前局域网地址和常用管理端口；不会扫描其他地址，也不会跟随跳转。"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:106
+#: src/pages/device/lanSettingsPanel.vue:110
 msgid "只有浮动网关功能会被锁定，设备和其他路线仍可管理。"
 msgstr ""
 
@@ -1499,7 +1499,7 @@ msgstr ""
 msgid "只读"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:176
+#: src/pages/device/lanSettingsPanel.vue:181
 msgid "只读引导"
 msgstr ""
 
@@ -1517,7 +1517,7 @@ msgstr ""
 msgid "可以安全应用"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:181
+#: src/pages/device/lanSettingsPanel.vue:186
 msgid "可以接管"
 msgstr ""
 
@@ -1526,7 +1526,7 @@ msgstr ""
 msgid "可以设置限速"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:245
+#: src/pages/device/lanSettingsPanel.vue:250
 msgid "可以迁移"
 msgstr ""
 
@@ -1535,13 +1535,13 @@ msgstr ""
 msgid "可前往"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:166
+#: src/pages/device/lanSettingsPanel.vue:171
 msgid "可在设备详情中设置上网路线。"
 msgstr ""
 
 #: src/pages/device/components/advancedNetworkTools.vue:27
 #: src/pages/device/components/trafficInsightsPanel.vue:38
-#: src/pages/device/lanSettingsPanel.vue:179
+#: src/pages/device/lanSettingsPanel.vue:184
 msgid "可用"
 msgstr ""
 
@@ -1574,7 +1574,7 @@ msgstr ""
 msgid "合计"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:98
+#: src/pages/device/lanSettingsPanel.vue:102
 msgid "同时影响全局或局域网默认路线。"
 msgstr ""
 
@@ -1625,7 +1625,7 @@ msgstr ""
 msgid "启用浮动网关"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:130
+#: src/pages/device/lanSettingsPanel.vue:134
 msgid "启用设备限速"
 msgstr ""
 
@@ -1667,7 +1667,7 @@ msgstr ""
 msgid "固件版本"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:178
+#: src/pages/device/lanSettingsPanel.vue:183
 msgid "固定地址"
 msgstr ""
 
@@ -1723,7 +1723,7 @@ msgstr ""
 msgid "地址分配服务"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:224
+#: src/pages/device/lanSettingsPanel.vue:229
 msgid "地址分配设置已保存"
 msgstr ""
 
@@ -1745,7 +1745,7 @@ msgstr ""
 
 #: src/pages/device/components/devicePolicyPanel.vue:18
 #: src/pages/device/components/devicePolicyPanel.vue:238
-#: src/pages/device/lanSettingsPanel.vue:180
+#: src/pages/device/lanSettingsPanel.vue:185
 #: src/pages/device/networkRulesHub.vue:38
 #: src/pages/device/networkRulesHub.vue:9
 msgid "地址预留"
@@ -1908,12 +1908,12 @@ msgstr ""
 msgid "存储服务"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:70
+#: src/pages/device/lanSettingsPanel.vue:74
 msgid "存在不支持或冲突的规则，全部处理完成前不会迁移。"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:181
-#: src/pages/device/lanSettingsPanel.vue:245
+#: src/pages/device/lanSettingsPanel.vue:186
+#: src/pages/device/lanSettingsPanel.vue:250
 msgid "存在冲突"
 msgstr ""
 
@@ -1941,7 +1941,7 @@ msgstr ""
 msgid "安装失败，"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:297
+#: src/pages/device/lanSettingsPanel.vue:302
 msgid "安装失败，可稍后重试"
 msgstr ""
 
@@ -1957,7 +1957,7 @@ msgstr ""
 msgid "安装所需服务"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:106
+#: src/pages/device/lanSettingsPanel.vue:110
 msgid "安装浮动网关"
 msgstr ""
 
@@ -2091,7 +2091,7 @@ msgstr ""
 msgid "将同时检查地址、上网路线、DNS 和 DHCP 分配权。"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:181
+#: src/pages/device/lanSettingsPanel.vue:186
 msgid "将安全整理"
 msgstr ""
 
@@ -2099,18 +2099,18 @@ msgstr ""
 msgid "将扫描磁盘里 RAID 的磁盘阵列配置并恢复，确定要恢复 RAID 磁盘阵列吗？"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:96
-#: src/pages/device/lanSettingsPanel.vue:97
+#: src/pages/device/lanSettingsPanel.vue:100
+#: src/pages/device/lanSettingsPanel.vue:101
 msgid "将更新路线名称和网关，已有引用会继续保留。"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:56
-#: src/pages/device/lanSettingsPanel.vue:57
+#: src/pages/device/lanSettingsPanel.vue:60
+#: src/pages/device/lanSettingsPanel.vue:61
 msgid "将更新限速执行方式，现有规则保持不变。"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:96
-#: src/pages/device/lanSettingsPanel.vue:97
+#: src/pages/device/lanSettingsPanel.vue:100
+#: src/pages/device/lanSettingsPanel.vue:101
 msgid "将添加一条可供设备和分组选择的路线。"
 msgstr ""
 
@@ -2134,7 +2134,7 @@ msgstr ""
 msgid "尚未安装浮动网关组件"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:164
+#: src/pages/device/lanSettingsPanel.vue:169
 msgid "尚未检测到地址分配服务"
 msgstr ""
 
@@ -2152,7 +2152,7 @@ msgid ""
 "保障硬盘数据的安全。"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:180
+#: src/pages/device/lanSettingsPanel.vue:185
 msgid "局域网主机名"
 msgstr ""
 
@@ -2164,15 +2164,15 @@ msgstr ""
 msgid "局域网文件共享配置"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:164
+#: src/pages/device/lanSettingsPanel.vue:169
 msgid "局域网角色待确认"
 msgstr ""
 
 #: src/pages/device/components/devicePolicyPanel.vue:206
 #: src/pages/device/components/devicePolicyPanel.vue:207
-#: src/pages/device/lanSettingsPanel.vue:164
 #: src/pages/device/lanSettingsPanel.vue:169
-#: src/pages/device/lanSettingsPanel.vue:171
+#: src/pages/device/lanSettingsPanel.vue:174
+#: src/pages/device/lanSettingsPanel.vue:176
 msgid "局域网角色需要确认"
 msgstr ""
 
@@ -2267,7 +2267,7 @@ msgstr ""
 msgid "已恢复自动判断"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:248
+#: src/pages/device/lanSettingsPanel.vue:253
 msgid "已恢复迁移前设置"
 msgstr ""
 
@@ -2404,13 +2404,13 @@ msgstr ""
 msgid "应用商店"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:272
+#: src/pages/device/lanSettingsPanel.vue:277
 msgid "应用失败，原设置已保留"
 msgstr ""
 
 #: src/pages/device/components/devicePolicyPanel.vue:106
-#: src/pages/device/lanSettingsPanel.vue:224
-#: src/pages/device/lanSettingsPanel.vue:242
+#: src/pages/device/lanSettingsPanel.vue:229
+#: src/pages/device/lanSettingsPanel.vue:247
 msgid "应用失败，原设置已恢复"
 msgstr ""
 
@@ -2467,7 +2467,7 @@ msgstr ""
 msgid "当前 IPv4 上游信息（点此刷新）"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:158
+#: src/pages/device/lanSettingsPanel.vue:163
 #: src/pages/device/rateLimitI18n.ts:14
 msgid "当前不可用"
 msgstr ""
@@ -2482,8 +2482,8 @@ msgid "当前仅使用内置可回滚规则"
 msgstr ""
 
 #: src/pages/device/components/devicePolicyPanel.vue:208
-#: src/pages/device/lanSettingsPanel.vue:172
-#: src/pages/device/lanSettingsPanel.vue:174
+#: src/pages/device/lanSettingsPanel.vue:177
+#: src/pages/device/lanSettingsPanel.vue:179
 msgid "当前仅提供查看与引导，不会自动修改其他设备。"
 msgstr ""
 
@@ -2518,16 +2518,16 @@ msgstr ""
 msgid "当前已断开互联网"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:159
+#: src/pages/device/lanSettingsPanel.vue:164
 msgid "当前执行方式不可用，请先安装或启用对应服务。"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:291
+#: src/pages/device/lanSettingsPanel.vue:296
 msgid "当前无法安装，请检查存储空间和软件源。"
 msgstr ""
 
 #: src/pages/device/components/devicePolicyPanel.vue:209
-#: src/pages/device/lanSettingsPanel.vue:168
+#: src/pages/device/lanSettingsPanel.vue:173
 msgid "当前无法读取地址分配状态，其他设置仍可使用。"
 msgstr ""
 
@@ -2553,7 +2553,7 @@ msgstr ""
 msgid "当前生效"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:170
+#: src/pages/device/lanSettingsPanel.vue:175
 msgid "当前由其他设备负责地址分配，本页只读。"
 msgstr ""
 
@@ -2584,7 +2584,7 @@ msgid ""
 "（目标分区不支持NTFS，FAT等文件系统）"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:95
+#: src/pages/device/lanSettingsPanel.vue:99
 msgid "影响范围"
 msgstr ""
 
@@ -2610,15 +2610,15 @@ msgstr ""
 msgid "快捷入口"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:52
+#: src/pages/device/lanSettingsPanel.vue:53
 msgid "总上传带宽（Mbit/s）"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:52
+#: src/pages/device/lanSettingsPanel.vue:53
 msgid "总下载带宽（Mbit/s）"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:53
+#: src/pages/device/lanSettingsPanel.vue:54
 #: src/pages/device/rateLimitI18n.ts:17
 msgid "总带宽用于计算设备限速队列，不会自动平均分配给每台设备。"
 msgstr ""
@@ -2646,7 +2646,7 @@ msgstr ""
 msgid "恢复失败，原配置已回滚"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:248
+#: src/pages/device/lanSettingsPanel.vue:253
 msgid "恢复失败，请按提示处理"
 msgstr ""
 
@@ -2663,8 +2663,8 @@ msgstr ""
 msgid "恢复路径"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:73
-#: src/pages/device/lanSettingsPanel.vue:74
+#: src/pages/device/lanSettingsPanel.vue:77
+#: src/pages/device/lanSettingsPanel.vue:78
 msgid "恢复迁移前设置"
 msgstr ""
 
@@ -2764,7 +2764,7 @@ msgstr ""
 msgid "执行中..."
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:63
+#: src/pages/device/lanSettingsPanel.vue:67
 #: src/pages/device/rateLimitI18n.ts:18
 msgid "执行方式"
 msgstr ""
@@ -2794,7 +2794,7 @@ msgstr ""
 msgid "扫描恢复RAID"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:67
+#: src/pages/device/lanSettingsPanel.vue:71
 msgid "扫描现有规则"
 msgstr ""
 
@@ -2814,7 +2814,7 @@ msgstr ""
 msgid "批量规则未应用"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:82
+#: src/pages/device/lanSettingsPanel.vue:86
 msgid ""
 "把复杂网络工作交给旁路由或指定网关，设备可在详情中选择路线。DNS 跟随路线。"
 msgstr ""
@@ -2851,8 +2851,8 @@ msgstr ""
 msgid "挂载路径:"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:177
-#: src/pages/device/lanSettingsPanel.vue:86
+#: src/pages/device/lanSettingsPanel.vue:182
+#: src/pages/device/lanSettingsPanel.vue:90
 msgid "指定网关"
 msgstr ""
 
@@ -2864,7 +2864,7 @@ msgstr ""
 msgid "按名称"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:160
+#: src/pages/device/lanSettingsPanel.vue:165
 msgid "按设备身份同时覆盖 IPv4 与 IPv6，并验证规则是否真正生效。"
 msgstr ""
 
@@ -2897,7 +2897,7 @@ msgstr ""
 msgid "接收："
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:282
+#: src/pages/device/lanSettingsPanel.vue:287
 msgid "接管失败，原设置已保留"
 msgstr ""
 
@@ -3014,10 +3014,10 @@ msgstr ""
 #: src/pages/device/components/devicePolicyPanel.vue:215
 #: src/pages/device/configure.vue:255 src/pages/device/deviceGroupsPanel.vue:57
 #: src/pages/device/deviceList.vue:242
-#: src/pages/device/lanSettingsPanel.vue:177
-#: src/pages/device/lanSettingsPanel.vue:185
-#: src/pages/device/lanSettingsPanel.vue:192
-#: src/pages/device/lanSettingsPanel.vue:86
+#: src/pages/device/lanSettingsPanel.vue:182
+#: src/pages/device/lanSettingsPanel.vue:190
+#: src/pages/device/lanSettingsPanel.vue:197
+#: src/pages/device/lanSettingsPanel.vue:90
 #: src/pages/device/networkRulesHub.vue:42
 #: src/pages/device/staticStateList.vue:134
 msgid "旁路由"
@@ -3043,7 +3043,7 @@ msgstr ""
 msgid "无人持有"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:246
+#: src/pages/device/lanSettingsPanel.vue:251
 msgid "无法扫描现有规则"
 msgstr ""
 
@@ -3063,15 +3063,15 @@ msgstr ""
 msgid "无法识别路径"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:221
+#: src/pages/device/lanSettingsPanel.vue:226
 msgid "无法预览地址分配设置"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:259
+#: src/pages/device/lanSettingsPanel.vue:264
 msgid "无法预览这次修改"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:233
+#: src/pages/device/lanSettingsPanel.vue:238
 #: src/pages/device/rateLimitI18n.ts:44
 msgid "无法预览限速服务设置"
 msgstr ""
@@ -3173,7 +3173,7 @@ msgstr ""
 msgid "智能家居"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:157
+#: src/pages/device/lanSettingsPanel.vue:162
 msgid "智能设备限速（推荐）"
 msgstr ""
 
@@ -3213,8 +3213,8 @@ msgid "暂无静态分配"
 msgstr ""
 
 #: src/pages/device/components/devicePolicyPanel.vue:210
-#: src/pages/device/lanSettingsPanel.vue:164
-#: src/pages/device/lanSettingsPanel.vue:173
+#: src/pages/device/lanSettingsPanel.vue:169
+#: src/pages/device/lanSettingsPanel.vue:178
 msgid "暂时无法判断局域网角色"
 msgstr ""
 
@@ -3258,7 +3258,7 @@ msgstr ""
 msgid "更改虚拟 IP"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:99
+#: src/pages/device/lanSettingsPanel.vue:103
 msgid "替代路线"
 msgstr ""
 
@@ -3295,7 +3295,11 @@ msgstr ""
 msgid "服务已启动"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:158
+#: src/pages/device/lanSettingsPanel.vue:56
+msgid "服务已就绪，请在设备详情中为需要的设备设置速度上限。"
+msgstr ""
+
+#: src/pages/device/lanSettingsPanel.vue:163
 msgid "服务未运行"
 msgstr ""
 
@@ -3331,7 +3335,7 @@ msgstr ""
 #: src/pages/device/components/devicePolicyPanel.vue:46
 #: src/pages/device/components/devicePolicyPanel.vue:47
 #: src/pages/device/components/floatingGatewayWizard.vue:88
-#: src/pages/device/lanSettingsPanel.vue:179 src/pages/index/info/status.vue:20
+#: src/pages/device/lanSettingsPanel.vue:184 src/pages/index/info/status.vue:20
 #: src/pages/index/nav/QuickActions.vue:20
 #: src/pages/index/nav/QuickActions.vue:21
 #: src/pages/index/nav/QuickActions.vue:22
@@ -3362,8 +3366,8 @@ msgstr ""
 
 #: src/pages/device/components/advancedNetworkTools.vue:27
 #: src/pages/device/components/trafficInsightsPanel.vue:38
-#: src/pages/device/lanSettingsPanel.vue:158
-#: src/pages/device/lanSettingsPanel.vue:179 src/pages/index/info/status.vue:9
+#: src/pages/device/lanSettingsPanel.vue:163
+#: src/pages/device/lanSettingsPanel.vue:184 src/pages/index/info/status.vue:9
 msgid "未安装"
 msgstr ""
 
@@ -3395,7 +3399,7 @@ msgstr ""
 #: src/components/action-disk-part/item.vue:13
 #: src/pages/device/components/floatingGatewayWizard.vue:88
 #: src/pages/device/deviceCenterList.vue:294
-#: src/pages/device/lanSettingsPanel.vue:179 src/pages/smart/task/index.vue:65
+#: src/pages/device/lanSettingsPanel.vue:184 src/pages/smart/task/index.vue:65
 msgid "未知"
 msgstr ""
 
@@ -3459,14 +3463,14 @@ msgstr ""
 msgid "本机当前不负责地址分配，请到实际分配地址的路由器上修改。"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:164
+#: src/pages/device/lanSettingsPanel.vue:169
 msgid "本机负责局域网地址分配"
 msgstr ""
 
 #: src/pages/device/components/devicePolicyPanel.vue:214
 #: src/pages/device/deviceGroupsPanel.vue:57
-#: src/pages/device/lanSettingsPanel.vue:184
-#: src/pages/device/lanSettingsPanel.vue:192
+#: src/pages/device/lanSettingsPanel.vue:189
+#: src/pages/device/lanSettingsPanel.vue:197
 #: src/pages/device/networkRulesHub.vue:42
 msgid "本机路由"
 msgstr ""
@@ -3595,7 +3599,7 @@ msgid ""
 "续"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:164
+#: src/pages/device/lanSettingsPanel.vue:169
 msgid "检测到其他设备负责地址分配"
 msgstr ""
 
@@ -3706,7 +3710,7 @@ msgstr ""
 msgid "正在安装"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:106
+#: src/pages/device/lanSettingsPanel.vue:110
 #: src/pages/device/lanSettingsPanel.vue:49
 msgid "正在安装…"
 msgstr ""
@@ -3723,12 +3727,12 @@ msgstr ""
 #: src/pages/device/components/floatingGatewayWizard.vue:63
 #: src/pages/device/components/floatingGatewayWizard.vue:64
 #: src/pages/device/deviceGroupsPanel.vue:35
-#: src/pages/device/lanSettingsPanel.vue:100
-#: src/pages/device/lanSettingsPanel.vue:101
+#: src/pages/device/lanSettingsPanel.vue:104
+#: src/pages/device/lanSettingsPanel.vue:105
 #: src/pages/device/lanSettingsPanel.vue:42
 #: src/pages/device/lanSettingsPanel.vue:43
-#: src/pages/device/lanSettingsPanel.vue:58
-#: src/pages/device/lanSettingsPanel.vue:59
+#: src/pages/device/lanSettingsPanel.vue:62
+#: src/pages/device/lanSettingsPanel.vue:63
 #: src/pages/device/networkRulesHub.vue:12
 msgid "正在应用…"
 msgstr ""
@@ -3740,7 +3744,7 @@ msgstr ""
 msgid "正在恢复…"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:67
+#: src/pages/device/lanSettingsPanel.vue:71
 msgid "正在扫描…"
 msgstr ""
 
@@ -3770,10 +3774,10 @@ msgstr ""
 #: src/pages/device/components/devicePolicyPanel.vue:69
 #: src/pages/device/lanSettingsPanel.vue:35
 #: src/pages/device/lanSettingsPanel.vue:36
-#: src/pages/device/lanSettingsPanel.vue:53
-#: src/pages/device/lanSettingsPanel.vue:54
-#: src/pages/device/lanSettingsPanel.vue:87
-#: src/pages/device/lanSettingsPanel.vue:88
+#: src/pages/device/lanSettingsPanel.vue:57
+#: src/pages/device/lanSettingsPanel.vue:58
+#: src/pages/device/lanSettingsPanel.vue:91
+#: src/pages/device/lanSettingsPanel.vue:92
 msgid "正在检查…"
 msgstr ""
 
@@ -4017,11 +4021,11 @@ msgstr ""
 #: src/pages/device/configure.vue:235 src/pages/device/configure.vue:256
 #: src/pages/device/configure.vue:266 src/pages/device/deviceGroupsPanel.vue:57
 #: src/pages/device/deviceList.vue:243
-#: src/pages/device/lanSettingsPanel.vue:105
-#: src/pages/device/lanSettingsPanel.vue:178
-#: src/pages/device/lanSettingsPanel.vue:180
-#: src/pages/device/lanSettingsPanel.vue:186
-#: src/pages/device/lanSettingsPanel.vue:192
+#: src/pages/device/lanSettingsPanel.vue:109
+#: src/pages/device/lanSettingsPanel.vue:183
+#: src/pages/device/lanSettingsPanel.vue:185
+#: src/pages/device/lanSettingsPanel.vue:191
+#: src/pages/device/lanSettingsPanel.vue:197
 #: src/pages/device/networkRulesHub.vue:42
 #: src/pages/device/staticStateList.vue:135
 msgid "浮动网关"
@@ -4071,7 +4075,7 @@ msgstr ""
 msgid "添加设备"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:82
+#: src/pages/device/lanSettingsPanel.vue:86
 msgid "添加路线"
 msgstr ""
 
@@ -4139,7 +4143,7 @@ msgstr ""
 msgid "点此自动配置 AriaNg"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:158
+#: src/pages/device/lanSettingsPanel.vue:163
 msgid "版本不兼容"
 msgstr ""
 
@@ -4164,7 +4168,11 @@ msgstr ""
 msgid "现在，请你配置旁路由信息"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:157
+#: src/pages/device/lanSettingsPanel.vue:57
+msgid "现有 Bandix 仅用于迁移，请先完成下方步骤。"
+msgstr ""
+
+#: src/pages/device/lanSettingsPanel.vue:162
 msgid "现有 Bandix（仅用于迁移）"
 msgstr ""
 
@@ -4172,11 +4180,11 @@ msgstr ""
 msgid "现有地址已隐藏；更换时需重新输入。"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:280
+#: src/pages/device/lanSettingsPanel.vue:285
 msgid "现有设置已安全接管"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:280
+#: src/pages/device/lanSettingsPanel.vue:285
 msgid "现有设置无需重复接管"
 msgstr ""
 
@@ -4388,7 +4396,7 @@ msgstr ""
 msgid "确认删除此设备的静态分配？"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:292
+#: src/pages/device/lanSettingsPanel.vue:297
 msgid "确认安装所需组件？"
 msgstr ""
 
@@ -4400,12 +4408,12 @@ msgstr ""
 #: src/pages/device/components/devicePolicyPanel.vue:11
 #: src/pages/device/components/devicePolicyPanel.vue:12
 #: src/pages/device/components/devicePolicyPanel.vue:13
-#: src/pages/device/lanSettingsPanel.vue:100
-#: src/pages/device/lanSettingsPanel.vue:101
+#: src/pages/device/lanSettingsPanel.vue:104
+#: src/pages/device/lanSettingsPanel.vue:105
 #: src/pages/device/lanSettingsPanel.vue:42
 #: src/pages/device/lanSettingsPanel.vue:43
-#: src/pages/device/lanSettingsPanel.vue:58
-#: src/pages/device/lanSettingsPanel.vue:59
+#: src/pages/device/lanSettingsPanel.vue:62
+#: src/pages/device/lanSettingsPanel.vue:63
 msgid "确认应用"
 msgstr ""
 
@@ -4430,7 +4438,7 @@ msgstr ""
 msgid "确认接管现有设置"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:275
+#: src/pages/device/lanSettingsPanel.vue:280
 msgid "确认接管现有设置？接管前会创建快照，失败时自动恢复。"
 msgstr ""
 
@@ -4438,7 +4446,7 @@ msgstr ""
 msgid "确认添加"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:72
+#: src/pages/device/lanSettingsPanel.vue:76
 msgid "确认迁移并验证"
 msgstr ""
 
@@ -4606,7 +4614,7 @@ msgstr ""
 msgid "系统信息"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:158
+#: src/pages/device/lanSettingsPanel.vue:163
 #: src/pages/device/rateLimitI18n.ts:26
 msgid "系统内核不支持"
 msgstr ""
@@ -4645,11 +4653,11 @@ msgstr ""
 msgid "级别"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:294
+#: src/pages/device/lanSettingsPanel.vue:299
 msgid "组件仍在安装，稍后刷新即可继续，草稿已经保留。"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:296
+#: src/pages/device/lanSettingsPanel.vue:301
 msgid "组件安装完成，草稿已恢复"
 msgstr ""
 
@@ -4700,7 +4708,7 @@ msgstr ""
 
 #: src/pages/device/components/floatingGatewayWizard.vue:23
 #: src/pages/device/configure.vue:101 src/pages/device/deviceGroupsPanel.vue:11
-#: src/pages/device/lanSettingsPanel.vue:91
+#: src/pages/device/lanSettingsPanel.vue:95
 #: src/pages/device/staticStateList.vue:16
 #: src/pages/interfaceconfig/index.vue:32
 #: src/pages/interfaceconfig/index.vue:33
@@ -4740,7 +4748,7 @@ msgstr ""
 msgid "网关切换"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:87 src/pages/network/dhcp/index.vue:40
+#: src/pages/device/lanSettingsPanel.vue:91 src/pages/network/dhcp/index.vue:40
 #: src/pages/network/dhcp/index.vue:42 src/pages/network/gateway/index.vue:51
 #: src/pages/network/gateway/index.vue:53
 msgid "网关地址"
@@ -4750,7 +4758,7 @@ msgstr ""
 msgid "网关地址: "
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:178
+#: src/pages/device/lanSettingsPanel.vue:183
 msgid "网关节点"
 msgstr ""
 
@@ -4789,7 +4797,7 @@ msgstr ""
 msgid "网络接口详细信息"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:148
+#: src/pages/device/lanSettingsPanel.vue:152
 msgid "网络服务"
 msgstr ""
 
@@ -4835,7 +4843,7 @@ msgstr ""
 #: src/pages/device/components/devicePolicyPanel.vue:238
 #: src/pages/device/components/devicePolicyPanel.vue:64
 #: src/pages/device/deviceGroupsPanel.vue:22
-#: src/pages/device/lanSettingsPanel.vue:180
+#: src/pages/device/lanSettingsPanel.vue:185
 #: src/pages/device/networkRulesHub.vue:38
 #: src/pages/device/networkRulesHub.vue:9
 msgid "联网权限"
@@ -4899,19 +4907,19 @@ msgstr ""
 msgid "自定义DNS"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:82
+#: src/pages/device/lanSettingsPanel.vue:86
 msgid "自定义上网路线"
 msgstr ""
 
 #: src/pages/device/components/devicePolicyPanel.vue:217
 #: src/pages/device/deviceGroupsPanel.vue:57
-#: src/pages/device/lanSettingsPanel.vue:187
 #: src/pages/device/lanSettingsPanel.vue:192
+#: src/pages/device/lanSettingsPanel.vue:197
 #: src/pages/device/networkRulesHub.vue:42
 msgid "自定义网关"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:177
+#: src/pages/device/lanSettingsPanel.vue:182
 msgid "自定义路线"
 msgstr ""
 
@@ -4965,7 +4973,7 @@ msgid ""
 "数据的由两个硬盘组成的组。"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:292
+#: src/pages/device/lanSettingsPanel.vue:297
 msgid "至少需要可用空间"
 msgstr ""
 
@@ -5017,12 +5025,12 @@ msgstr ""
 msgid "覆盖迁移（覆盖目标路径，继续迁移会清空该目标路径下的文件）"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:148
+#: src/pages/device/lanSettingsPanel.vue:152
 #: src/pages/device/networkRulesHub.vue:3
 msgid "规则台账"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:247
+#: src/pages/device/lanSettingsPanel.vue:252
 msgid "规则已写入并验证，执行方式已切换"
 msgstr ""
 
@@ -5176,7 +5184,7 @@ msgstr ""
 msgid "设备系统信息概览"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:180
+#: src/pages/device/lanSettingsPanel.vue:185
 msgid "设备规则"
 msgstr ""
 
@@ -5190,7 +5198,7 @@ msgstr ""
 
 #: src/pages/device/deviceCenterList.vue:142
 #: src/pages/device/deviceCenterList.vue:256
-#: src/pages/device/lanSettingsPanel.vue:180
+#: src/pages/device/lanSettingsPanel.vue:185
 msgid "设备资料"
 msgstr ""
 
@@ -5218,7 +5226,7 @@ msgstr ""
 
 #: src/pages/device/components/devicePolicyPanel.vue:238
 #: src/pages/device/components/devicePolicyPanel.vue:46
-#: src/pages/device/lanSettingsPanel.vue:180
+#: src/pages/device/lanSettingsPanel.vue:185
 #: src/pages/device/networkRulesHub.vue:38
 #: src/pages/device/networkRulesHub.vue:9
 msgid "设备限速"
@@ -5228,7 +5236,7 @@ msgstr ""
 msgid "设备限速服务"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:93
+#: src/pages/device/lanSettingsPanel.vue:97
 msgid "设备默认通过本机上网；需要时再添加旁路由或指定网关。"
 msgstr ""
 
@@ -5249,13 +5257,13 @@ msgstr ""
 #: src/pages/device/components/devicePolicyPanel.vue:299
 #: src/pages/device/components/devicePolicyPanel.vue:305
 #: src/pages/device/components/deviceProfileEditor.vue:97
-#: src/pages/device/lanSettingsPanel.vue:224
-#: src/pages/device/lanSettingsPanel.vue:241
+#: src/pages/device/lanSettingsPanel.vue:229
+#: src/pages/device/lanSettingsPanel.vue:246
 msgid "设置没有变化"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:56
-#: src/pages/device/lanSettingsPanel.vue:57
+#: src/pages/device/lanSettingsPanel.vue:60
+#: src/pages/device/lanSettingsPanel.vue:61
 #: src/pages/device/rateLimitI18n.ts:43
 msgid "设置没有变化。"
 msgstr ""
@@ -5346,7 +5354,7 @@ msgstr ""
 msgid "请先在全局设置中启用该能力"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:247
+#: src/pages/device/lanSettingsPanel.vue:252
 msgid "请先手动停止 Bandix，并启动 Quickstart 限速服务后重试。"
 msgstr ""
 
@@ -5538,7 +5546,7 @@ msgid "请输入迁移路径"
 msgstr ""
 
 #: src/pages/device/configure.vue:78 src/pages/device/deviceList.vue:448
-#: src/pages/device/deviceList.vue:95 src/pages/device/lanSettingsPanel.vue:99
+#: src/pages/device/deviceList.vue:95 src/pages/device/lanSettingsPanel.vue:103
 #: src/pages/device/staticStateList.vue:332
 #: src/pages/device/staticStateList.vue:62
 msgid "请选择"
@@ -5641,7 +5649,7 @@ msgstr ""
 #: src/pages/device/deviceCenterList.vue:280
 #: src/pages/device/deviceList.vue:212 src/pages/device/deviceList.vue:283
 #: src/pages/device/deviceList.vue:328
-#: src/pages/device/lanSettingsPanel.vue:217
+#: src/pages/device/lanSettingsPanel.vue:222
 #: src/pages/device/networkRulesHub.vue:47
 #: src/pages/device/speedLimitList.vue:129
 #: src/pages/device/speedLimitList.vue:165
@@ -5683,7 +5691,7 @@ msgstr ""
 msgid "账号用户名"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:160
+#: src/pages/device/lanSettingsPanel.vue:165
 #: src/pages/device/rateLimitI18n.ts:27
 msgid "资源占用较低，按固定 IPv4 执行。"
 msgstr ""
@@ -5698,7 +5706,7 @@ msgid ""
 "配置。"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:178
+#: src/pages/device/lanSettingsPanel.vue:183
 msgid "路由器地址"
 msgstr ""
 
@@ -5706,15 +5714,15 @@ msgstr ""
 msgid "路由器配置"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:176
+#: src/pages/device/lanSettingsPanel.vue:181
 msgid "路线可编辑"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:85
+#: src/pages/device/lanSettingsPanel.vue:89
 msgid "路线名称"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:86
+#: src/pages/device/lanSettingsPanel.vue:90
 msgid "路线类型"
 msgstr ""
 
@@ -5765,7 +5773,7 @@ msgstr ""
 msgid "迁移到："
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:247
+#: src/pages/device/lanSettingsPanel.vue:252
 msgid "迁移失败，原设置已保留"
 msgstr ""
 
@@ -5773,7 +5781,7 @@ msgstr ""
 msgid "迁移成功！"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:65
+#: src/pages/device/lanSettingsPanel.vue:69
 msgid "迁移现有 Bandix 规则"
 msgstr ""
 
@@ -5828,7 +5836,7 @@ msgstr ""
 msgid "返回修改"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:93
+#: src/pages/device/lanSettingsPanel.vue:97
 msgid "还没有自定义上网路线"
 msgstr ""
 
@@ -6239,12 +6247,12 @@ msgstr ""
 msgid "限速服务已安装，请继续启用，输入内容已恢复"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:56
+#: src/pages/device/lanSettingsPanel.vue:60
 #: src/pages/device/rateLimitI18n.ts:41
 msgid "限速服务影响"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:241
+#: src/pages/device/lanSettingsPanel.vue:246
 #: src/pages/device/rateLimitI18n.ts:42
 msgid "限速服务设置已应用"
 msgstr ""
@@ -6286,12 +6294,12 @@ msgstr ""
 msgid "需要安装DDNSTO插件，点击“确定”开始安装"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:179
+#: src/pages/device/lanSettingsPanel.vue:184
 msgid "需要检查"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:181
-#: src/pages/device/lanSettingsPanel.vue:245
+#: src/pages/device/lanSettingsPanel.vue:186
+#: src/pages/device/lanSettingsPanel.vue:250
 msgid "需要确认"
 msgstr ""
 
@@ -6352,8 +6360,8 @@ msgstr ""
 msgid "预览"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:87
-#: src/pages/device/lanSettingsPanel.vue:88
+#: src/pages/device/lanSettingsPanel.vue:91
+#: src/pages/device/lanSettingsPanel.vue:92
 msgid "预览修改"
 msgstr ""
 
@@ -6388,8 +6396,8 @@ msgstr ""
 msgid "预览断开网络"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:87
-#: src/pages/device/lanSettingsPanel.vue:88
+#: src/pages/device/lanSettingsPanel.vue:91
+#: src/pages/device/lanSettingsPanel.vue:92
 msgid "预览添加"
 msgstr ""
 
@@ -6400,8 +6408,8 @@ msgstr ""
 msgid "预览限速"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:53
-#: src/pages/device/lanSettingsPanel.vue:54
+#: src/pages/device/lanSettingsPanel.vue:57
+#: src/pages/device/lanSettingsPanel.vue:58
 #: src/pages/device/rateLimitI18n.ts:40
 msgid "预览限速服务设置"
 msgstr ""
@@ -6445,7 +6453,7 @@ msgstr ""
 msgid "高"
 msgstr ""
 
-#: src/pages/device/lanSettingsPanel.vue:62
+#: src/pages/device/lanSettingsPanel.vue:66
 msgid "高级：执行方式与迁移"
 msgstr ""
 
@@ -6509,7 +6517,7 @@ msgstr ""
 #: src/pages/device/components/devicePolicyPanel.vue:213
 #: src/pages/device/components/devicePolicyPanel.vue:223
 #: src/pages/device/deviceGroupsPanel.vue:57
-#: src/pages/device/lanSettingsPanel.vue:183
+#: src/pages/device/lanSettingsPanel.vue:188
 #: src/pages/device/networkRulesHub.vue:42
 msgid "默认路线"
 msgstr ""

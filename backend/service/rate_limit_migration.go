@@ -209,14 +209,16 @@ func buildRateLimitMigrationPlan(rules []bandixScheduleRule) *models.RateLimitMi
 			plan.UnsupportedCount++
 		}
 	}
-	plan.CanApply = len(items) > 0 && plan.UnsupportedCount == 0 && plan.ConflictCount == 0
+	// An empty plan is still actionable: it is the verified, lossless path for
+	// switching away from an installed Bandix instance that has no rules.
+	plan.CanApply = plan.UnsupportedCount == 0 && plan.ConflictCount == 0
 	plan.Version = migrationPlanVersion(items)
 	return plan
 }
 
 func validateRateLimitMigrationPlan(plan *models.RateLimitMigrationPlan) error {
-	if plan == nil || plan.Source != "bandix" || plan.Target != nativePolicyProviderName || len(plan.Items) == 0 {
-		return errors.New("invalid migration source, target, or empty plan")
+	if plan == nil || plan.Source != "bandix" || plan.Target != nativePolicyProviderName {
+		return errors.New("invalid migration source or target")
 	}
 	seen := make(map[string]struct{}, len(plan.Items))
 	convertible := 0
