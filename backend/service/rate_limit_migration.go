@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"math"
 	"net"
 	"os"
 	"path/filepath"
@@ -72,7 +73,7 @@ func (module *RateLimitMigrationModule) Apply(ctx context.Context, request *mode
 	if request.ExpectedVersion != plan.Version || migrationPlanVersion(plan.Items) != plan.Version {
 		return migrationResult(plan, false, false, "", &models.DevicePolicyError{Code: "conflict", Message: "migration preview changed; scan Bandix again"}), nil
 	}
-	if !plan.CanApply || plan.UnsupportedCount > 0 || plan.ConflictCount > 0 {
+	if err := validateRateLimitMigrationPlan(plan); err != nil {
 		return migrationResult(plan, false, false, "", &models.DevicePolicyError{Code: "needs_attention", Message: "resolve unsupported or conflicting Bandix rules first"}), nil
 	}
 	if err := module.native.probe(ctx); err != nil {
@@ -176,7 +177,11 @@ func buildRateLimitMigrationPlan(rules []bandixScheduleRule) *models.RateLimitMi
 			item.Disposition, item.Reason = "unsupported", "unknown_fields:"+strings.Join(rule.UnknownFields, ",")
 		case !isFullWeekRule(rule):
 			item.Disposition, item.Reason = "unsupported", "scheduled_rule_not_supported"
-		case rule.UploadBytes <= 0 && rule.DownloadBytes <= 0:
+		case rule.UploadBytes < 0 || rule.DownloadBytes < 0:
+			item.Disposition, item.Reason = "unsupported", "invalid_rate_limit"
+		case rule.UploadBytes > math.MaxInt64/8 || rule.DownloadBytes > math.MaxInt64/8:
+			item.Disposition, item.Reason = "unsupported", "rate_limit_overflow"
+		case rule.UploadBytes == 0 && rule.DownloadBytes == 0:
 			item.Disposition, item.Reason = "unsupported", "empty_rate_limit"
 		default:
 			item.UploadBitsPerSecond = rule.UploadBytes * 8
@@ -207,6 +212,39 @@ func buildRateLimitMigrationPlan(rules []bandixScheduleRule) *models.RateLimitMi
 	plan.CanApply = len(items) > 0 && plan.UnsupportedCount == 0 && plan.ConflictCount == 0
 	plan.Version = migrationPlanVersion(items)
 	return plan
+}
+
+func validateRateLimitMigrationPlan(plan *models.RateLimitMigrationPlan) error {
+	if plan == nil || plan.Source != "bandix" || plan.Target != nativePolicyProviderName || len(plan.Items) == 0 {
+		return errors.New("invalid migration source, target, or empty plan")
+	}
+	seen := make(map[string]struct{}, len(plan.Items))
+	convertible := 0
+	for _, item := range plan.Items {
+		if item == nil || item.Disposition != "convert" || item.Desired == nil || !item.Desired.Enabled {
+			return errors.New("migration contains an unresolved item")
+		}
+		mac := strings.ToUpper(normalizeInventoryMAC(item.MAC))
+		if !validMigrationMAC(mac) {
+			return errors.New("migration contains an invalid device identity")
+		}
+		if _, duplicate := seen[mac]; duplicate {
+			return errors.New("migration contains duplicate device rules")
+		}
+		seen[mac] = struct{}{}
+		if item.UploadBytesPerSecond < 0 || item.DownloadBytesPerSecond < 0 ||
+			item.UploadBytesPerSecond > math.MaxInt64/8 || item.DownloadBytesPerSecond > math.MaxInt64/8 ||
+			(item.UploadBytesPerSecond == 0 && item.DownloadBytesPerSecond == 0) ||
+			item.UploadBitsPerSecond != item.UploadBytesPerSecond*8 ||
+			item.DownloadBitsPerSecond != item.DownloadBytesPerSecond*8 {
+			return errors.New("migration contains an invalid rate limit")
+		}
+		convertible++
+	}
+	if !plan.CanApply || plan.ConvertibleCount != convertible || plan.UnsupportedCount != 0 || plan.ConflictCount != 0 {
+		return errors.New("migration summary does not match its rules")
+	}
+	return nil
 }
 
 func validMigrationMAC(value string) bool {

@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"encoding/json"
+	"math"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -43,6 +44,29 @@ func TestRateLimitMigrationDoesNotDropUnsupportedOrConflictingRules(t *testing.T
 	plan := buildRateLimitMigrationPlan([]bandixScheduleRule{duplicateOne, duplicateTwo, unknown, scheduled})
 	if plan.CanApply || plan.ConflictCount != 2 || plan.UnsupportedCount != 2 || len(plan.Items) != 4 {
 		t.Fatalf("unexpected classification: %#v", plan)
+	}
+}
+
+func TestRateLimitMigrationRejectsInvalidAndOverflowingRates(t *testing.T) {
+	negative := fullWeekBandixRule("AA:BB:CC:DD:EE:23", -1, 8)
+	overflow := fullWeekBandixRule("AA:BB:CC:DD:EE:24", math.MaxInt64/8+1, 8)
+	plan := buildRateLimitMigrationPlan([]bandixScheduleRule{negative, overflow})
+	if plan.CanApply || plan.UnsupportedCount != 2 {
+		t.Fatalf("unsafe rates were accepted: %#v", plan)
+	}
+}
+
+func TestRateLimitMigrationApplyRevalidatesClientSummary(t *testing.T) {
+	plan := buildRateLimitMigrationPlan([]bandixScheduleRule{fullWeekBandixRule("AA:BB:CC:DD:EE:20", 1, 2)})
+	plan.Items[0].Disposition = "unsupported"
+	plan.Version = migrationPlanVersion(plan.Items)
+	plan.CanApply = true
+	plan.ConvertibleCount = 1
+	plan.UnsupportedCount = 0
+	module := &RateLimitMigrationModule{}
+	result, err := module.Apply(context.Background(), &models.RateLimitMigrationRequest{ExpectedVersion: plan.Version, Plan: plan})
+	if err != nil || result.Result.Error == nil || result.Result.Error.Code != "needs_attention" {
+		t.Fatalf("tampered plan was not rejected: %#v %v", result, err)
 	}
 }
 

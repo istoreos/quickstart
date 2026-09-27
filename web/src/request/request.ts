@@ -1021,6 +1021,11 @@ export const DeviceMangement = {
     PLAN() { return Request<any>("/lanctrl/v2/migration/plan/", { method: "GET" }); },
     APPLY(data: { expectedVersion: string }) { return Request<any>("/lanctrl/v2/migration/apply/", { method: "POST", headers: { "Content-Type": "application/json;charset=utf-8" }, body: JSON.stringify(data) }); },
   },
+  rateLimitMigrationV2: {
+    PLAN() { return Request<any>("/lanctrl/v2/rate-limit-migration/plan/", { method: "GET" }); },
+    APPLY(data: { expectedVersion: string; plan: any }) { return Request<any>("/lanctrl/v2/rate-limit-migration/apply/", { method: "POST", headers: { "Content-Type": "application/json;charset=utf-8" }, body: JSON.stringify(data) }); },
+    ROLLBACK(data: { migrationId: string }) { return Request<any>("/lanctrl/v2/rate-limit-migration/rollback/", { method: "POST", headers: { "Content-Type": "application/json;charset=utf-8" }, body: JSON.stringify(data) }); },
+  },
   capabilityActionV2: {
     PLAN(data: { [key: string]: any }) { return Request<any>("/lanctrl/v2/capability-action/plan/", { method: "POST", headers: { "Content-Type": "application/json;charset=utf-8" }, body: JSON.stringify(data) }); },
     APPLY(data: { [key: string]: any }) { return Request<any>("/lanctrl/v2/capability-action/apply/", { method: "POST", headers: { "Content-Type": "application/json;charset=utf-8" }, body: JSON.stringify(data) }); },
@@ -1109,6 +1114,10 @@ export const DeviceMangement = {
   deviceRestrictionsV2: {
     PLAN(data: { [key: string]: any }) { return Request<any>("/lanctrl/v2/device-restrictions/plan/", { method: "POST", headers: { "Content-Type": "application/json;charset=utf-8" }, body: JSON.stringify(data) }); },
     APPLY(data: { [key: string]: any }) { return Request<any>("/lanctrl/v2/device-restrictions/apply/", { method: "POST", headers: { "Content-Type": "application/json;charset=utf-8" }, body: JSON.stringify(data) }); },
+  },
+  rateLimitSettingsV2: {
+    PLAN(data: { [key: string]: any }) { return Request<any>("/lanctrl/v2/rate-limit-settings/plan/", { method: "POST", headers: { "Content-Type": "application/json;charset=utf-8" }, body: JSON.stringify(data) }); },
+    APPLY(data: { [key: string]: any }) { return Request<any>("/lanctrl/v2/rate-limit-settings/apply/", { method: "POST", headers: { "Content-Type": "application/json;charset=utf-8" }, body: JSON.stringify(data) }); },
   },
   gatewayTargetsV2: {
     GET() { return Request<any>("/lanctrl/v2/gateway-targets/", { method: "GET" }); },
