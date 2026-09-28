@@ -196,3 +196,16 @@ test('M51 native speed limits stay simple while failures and Bandix migration re
     assert.match(requests, /rate-limit-migration\/rollback/)
     assert.doesNotMatch(settings, /eBPF|tc qdisc|BPF map/)
 })
+
+test('M55 keeps Unicode device aliases separate from portable DHCP hostnames', async () => {
+    const [panel, policy, profile] = await Promise.all([
+        readFile(new URL('../src/pages/device/components/devicePolicyPanel.vue', import.meta.url), 'utf8'),
+        readFile(new URL('../src/pages/device/devicePolicy.ts', import.meta.url), 'utf8'),
+        readFile(new URL('../src/pages/device/components/deviceProfileEditor.vue', import.meta.url), 'utf8'),
+    ])
+    assert.match(profile, /设备备注名/)
+    assert.match(profile, /例如：客厅电视/)
+    assert.match(panel, /与可使用中文的设备备注名分开保存/)
+    assert.match(panel, /maxlength="63"/)
+    assert.match(policy, /hostname === '' \|\| \/\^\[a-z0-9\]/)
+})

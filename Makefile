@@ -23,7 +23,7 @@ export DEPLOY_TARGET SSH_TARGET SSH_PORT SSH_EXTRA_OPTS SCP_EXTRA_OPTS
 export REMOTE_BINARY REMOTE_TMP REMOTE_BACKUP_DIR REMOTE_SERVICE REMOTE_LOG_COMMAND ROLLBACK_RELEASE
 
 .PHONY: help fmt tidy test build build-web build-amd64 build-arm64 build-armv7 release clean
-.PHONY: ops-targets ops-show-selected ops-release ops-init-selected ops-preflight-selected ops-deploy-selected ops-verify-selected ops-rollback-selected ops-ui-smoke-selected test-ops test-lan-lab verify-product smoke-lan-device smoke-lan-device-candidate smoke-bandix bandix-sources bandix-source-check
+.PHONY: ops-targets ops-show-selected ops-release ops-init-selected ops-preflight-selected ops-deploy-selected ops-verify-selected ops-rollback-selected ops-ui-smoke-selected test-ops test-lan-lab test-lan-identity-address verify-product smoke-lan-device smoke-lan-device-candidate smoke-bandix bandix-sources bandix-source-check
 
 help:
 	@printf '%s\n' \
@@ -46,6 +46,7 @@ help:
 		'  ops-ui-smoke-selected  Run authenticated responsive UI smoke on the selected target' \
 		'  test-ops               Validate deployment scripts and task YAML' \
 		'  test-lan-lab           Run the local fault-injection and cleanup laboratory' \
+		'  test-lan-identity-address  Verify device identity, hostname, address history, and DHCP recovery' \
 		'  verify-product         Validate and regenerate the five-layer product coverage matrix' \
 		'  smoke-lan-device       Fail-closed four-host release smoke; critical gateway stays read-only' \
 		'  smoke-lan-device-candidate  Validate local candidate artifacts on the four-host topology; ignore old opkg metadata' \
@@ -110,6 +111,9 @@ test-ops:
 
 test-lan-lab:
 	./scripts/ops/lan-device-isolation-lab.test.sh
+
+test-lan-identity-address:
+	./scripts/ops/lan-device-identity-address-smoke.sh
 
 verify-product:
 	node ./scripts/validate-lan-device-coverage.mjs --self-test --write

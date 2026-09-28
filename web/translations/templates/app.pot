@@ -4225,10 +4225,13 @@ msgstr ""
 msgid "现有设置无需重复接管"
 msgstr ""
 
-#: src/pages/device/components/devicePolicyPanel.vue:37
 #: src/pages/device/deviceList.vue:86
 #: src/pages/device/staticStateList.vue:53
 msgid "用于局域网名称解析，仅支持英文、数字和中间连字符"
+msgstr ""
+
+#: src/pages/device/components/devicePolicyPanel.vue:37
+msgid "用于局域网名称解析，仅支持英文、数字和中间连字符；与可使用中文的设备备注名分开保存"
 msgstr ""
 
 #: src/components/action-download/index.vue:149

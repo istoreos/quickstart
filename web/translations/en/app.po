@@ -3491,7 +3491,9 @@ msgstr "Service started"
 
 #: src/pages/device/lanSettingsPanel.vue:56
 msgid "服务已就绪，请在设备详情中为需要的设备设置速度上限。"
-msgstr "The service is ready. Set speed limits for individual devices in their details."
+msgstr ""
+"The service is ready. Set speed limits for individual devices in their "
+"details."
 
 #: src/pages/device/lanSettingsPanel.vue:163
 msgid "服务未运行"
@@ -4407,7 +4409,9 @@ msgstr "Now, please configure bypass routing information"
 
 #: src/pages/device/lanSettingsPanel.vue:57
 msgid "现有 Bandix 仅用于迁移，请先完成下方步骤。"
-msgstr "The existing Bandix installation is only used for migration. Complete the steps below first."
+msgstr ""
+"The existing Bandix installation is only used for migration. Complete the "
+"steps below first."
 
 #: src/pages/device/lanSettingsPanel.vue:162
 msgid "现有 Bandix（仅用于迁移）"
@@ -4427,12 +4431,19 @@ msgstr "Existing settings safely taken over"
 msgid "现有设置无需重复接管"
 msgstr "Existing settings do not need to be taken over repeatedly"
 
-#: src/pages/device/components/devicePolicyPanel.vue:37
 #: src/pages/device/deviceList.vue:86 src/pages/device/staticStateList.vue:53
 msgid "用于局域网名称解析，仅支持英文、数字和中间连字符"
 msgstr ""
 "For LAN name resolution, only English, numbers and middle hyphens are "
 "supported"
+
+#: src/pages/device/components/devicePolicyPanel.vue:37
+msgid ""
+"用于局域网名称解析，仅支持英文、数字和中间连字符；与可使用中文的设备备注名分"
+"开保存"
+msgstr ""
+"For LAN name resolution, use only letters, numbers, and interior hyphens. "
+"This is stored separately from the device note, which can use Chinese."
 
 #: src/components/action-download/index.vue:149
 #: src/components/action-download/index.vue:193

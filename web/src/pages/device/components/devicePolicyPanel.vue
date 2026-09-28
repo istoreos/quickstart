@@ -34,7 +34,7 @@
                         <summary>{{ $gettext('高级选项') }}</summary>
                         <label><span>{{ $gettext('DHCP 主机名（可选）') }}</span><input v-model.trim="staticForm.hostname"
                             maxlength="63" autocomplete="off" autocapitalize="none" spellcheck="false" /></label>
-                        <small class="field-hint">{{ $gettext('用于局域网名称解析，仅支持英文、数字和中间连字符') }}</small>
+                        <small class="field-hint">{{ $gettext('用于局域网名称解析，仅支持英文、数字和中间连字符；与可使用中文的设备备注名分开保存') }}</small>
                         <small v-if="hostnameInvalid" class="field-error" role="alert">{{ $gettext('请输入 1～63 位英文、数字或中间连字符，不能以连字符开头或结尾') }}</small>
                         <label class="checkbox-line"><input v-model="staticForm.bindIP" type="checkbox" />{{ $gettext('绑定 MAC 与 IPv4') }}</label>
                     </details>
