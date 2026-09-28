@@ -21,11 +21,12 @@ type gatewayPolicyHost struct {
 }
 
 type gatewayPolicySnapshot struct {
-	LAN      LanStatusSnapshot
-	DHCP     *LanDhcpState
-	Hosts    []gatewayPolicyHost
-	Prefixes []netip.Prefix
-	Version  string
+	LAN                 LanStatusSnapshot
+	DHCP                *LanDhcpState
+	Hosts               []gatewayPolicyHost
+	Prefixes            []netip.Prefix
+	UnreachableGateways map[string]bool
+	Version             string
 }
 
 type gatewayTargetDescriptor struct {
@@ -537,7 +538,11 @@ func (module *GatewayPolicyModule) plan(ctx context.Context, request *models.Gat
 		return result, nil
 	}
 	if target.Public.Gateway != "" && !gatewayInPrefixes(target.Public.Gateway, state.Prefixes) {
-		public.Error = &models.DevicePolicyError{Code: "validation_failed", Message: "gateway target is outside the LAN subnet"}
+		public.Error = &models.DevicePolicyError{Code: "gateway_outside_lan", Message: "gateway target is outside the LAN subnet"}
+		return result, nil
+	}
+	if target.Public.Gateway != "" && state.UnreachableGateways[target.Public.Gateway] {
+		public.Error = &models.DevicePolicyError{Code: "gateway_unreachable", Message: "gateway did not answer neighbor discovery; confirm that it is powered on and connected to this LAN, then retry"}
 		return result, nil
 	}
 	result.MAC = device.Mac
@@ -656,6 +661,12 @@ func buildGatewayTargetIndex(state gatewayPolicySnapshot) gatewayTargetIndex {
 				descriptor.Stored = isStored
 				descriptor.Materialize = !isStored || (descriptor.Public.Supported && !sameStringSet(tag.DhcpOption, canonical))
 			}
+		}
+	}
+	for _, descriptor := range index.targets {
+		if descriptor.Public.Gateway != "" && state.UnreachableGateways[descriptor.Public.Gateway] {
+			descriptor.Public.EffectState = "unreachable"
+			descriptor.Public.Reasons = uniqueSortedStrings(append(descriptor.Public.Reasons, "gateway_unreachable"))
 		}
 	}
 	return index

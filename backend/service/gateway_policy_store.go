@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"net/netip"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 
@@ -25,9 +26,30 @@ var (
 	gatewayPolicyMutate       = func(plan gatewayPolicyExecutionPlan) error {
 		return mutateGatewayPolicyConfigAt(filepath.Dir(dhcpConfigPath), plan)
 	}
-	gatewayPolicyReload  = reloadAndVerifyDnsmasq
-	gatewayPolicyRestore = restoreDhcpConfig
+	gatewayPolicyReload          = reloadAndVerifyDnsmasq
+	gatewayPolicyRestore         = restoreDhcpConfig
+	gatewayPolicyFailedNeighbors = func(ctx context.Context) map[string]bool {
+		output, err := exec.CommandContext(ctx, "ip", "-4", "neigh", "show").Output()
+		if err != nil {
+			return map[string]bool{}
+		}
+		return parseFailedIPv4Neighbors(string(output))
+	}
 )
+
+func parseFailedIPv4Neighbors(output string) map[string]bool {
+	result := map[string]bool{}
+	for _, line := range strings.Split(output, "\n") {
+		fields := strings.Fields(line)
+		if len(fields) < 2 || !strings.EqualFold(fields[len(fields)-1], "FAILED") {
+			continue
+		}
+		if address, err := netip.ParseAddr(fields[0]); err == nil && address.Is4() {
+			result[address.String()] = true
+		}
+	}
+	return result
+}
 
 func NewDefaultGatewayPolicyStore() gatewayPolicyStore {
 	return newDefaultGatewayPolicyStore(newJSONDeviceGroupStore(defaultDeviceGroupStorePath))
@@ -66,7 +88,8 @@ func (store *defaultGatewayPolicyStore) ReadState(ctx context.Context) (gatewayP
 	}
 	sum := sha256.Sum256(data)
 	return gatewayPolicySnapshot{
-		LAN: lan, DHCP: dhcp, Hosts: hosts, Prefixes: prefixes, Version: hex.EncodeToString(sum[:]),
+		LAN: lan, DHCP: dhcp, Hosts: hosts, Prefixes: prefixes,
+		UnreachableGateways: gatewayPolicyFailedNeighbors(ctx), Version: hex.EncodeToString(sum[:]),
 	}, nil
 }
 

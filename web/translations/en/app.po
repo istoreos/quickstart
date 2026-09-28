@@ -7065,3 +7065,43 @@ msgstr "Default path"
 
 #~ msgid "配置"
 #~ msgstr "Configure"
+
+#: src/pages/device/networkRulesHub.vue
+msgid "恢复默认路线"
+msgstr "Restore default path"
+
+#: src/pages/device/networkRulesHub.vue
+msgid "恢复默认路线？设备重新获取地址后生效。"
+msgstr "Restore the default path? It takes effect after the device renews its address."
+
+#: src/pages/device/networkRulesHub.vue
+msgid "网关不可达"
+msgstr "Gateway unreachable"
+
+#: src/pages/device/networkRulesHub.vue
+msgid "恢复默认路线，或在设备详情中选择其他可用路线"
+msgstr "Restore the default path, or choose another available path in device details."
+
+#: src/pages/device/networkRulesHub.vue
+msgid "确认网关设备已开机并接入当前局域网；仍不可达时恢复默认路线"
+msgstr "Confirm the gateway is powered on and connected to this LAN; if it remains unreachable, restore the default path."
+
+#: src/pages/device/networkRulesHub.vue
+msgid "恢复默认路线，或编辑路线后重新应用"
+msgstr "Restore the default path, or edit the path and apply it again."
+
+#: src/pages/device/networkRulesHub.vue
+msgid "请在设备详情中检查这条路线"
+msgstr "Check this path in device details."
+
+#: src/pages/device/components/devicePolicyPanel.vue
+msgid "该地址已分配给其他设备，请选择一个未占用地址后重试"
+msgstr "This address is assigned to another device. Choose an unused address and try again."
+
+#: src/pages/device/components/devicePolicyPanel.vue
+msgid "该网关不在当前局域网，请检查网关 IP 或选择其他路线"
+msgstr "This gateway is outside the current LAN. Check its IP address or choose another path."
+
+#: src/pages/device/components/devicePolicyPanel.vue
+msgid "暂时无法连接该网关，请确认设备已开机并接入当前局域网后重试"
+msgstr "The gateway is currently unreachable. Confirm it is powered on and connected to this LAN, then try again."

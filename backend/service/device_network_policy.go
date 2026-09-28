@@ -316,7 +316,7 @@ func networkPolicyStaticIPConflict(mac string, input StaticAssignmentWriteInput,
 			continue
 		}
 		if normalizeInventoryMAC(rule.AssignedMac) != normalizeInventoryMAC(mac) {
-			return &models.DevicePolicyError{Code: "conflict", Message: "IPv4 address is already reserved for another device"}
+			return &models.DevicePolicyError{Code: "address_conflict", Message: "IPv4 address is already reserved for another device"}
 		}
 	}
 	return nil

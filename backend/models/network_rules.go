@@ -12,6 +12,8 @@ type NetworkRule struct {
 	Summary     string `json:"summary"`
 	Orphaned    bool   `json:"orphaned"`
 	TargetID    string `json:"targetId,omitempty"`
+	IssueCode   string `json:"issueCode,omitempty"`
+	NextAction  string `json:"nextAction,omitempty"`
 }
 
 type NetworkRulesResult struct {

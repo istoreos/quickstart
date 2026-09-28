@@ -232,3 +232,18 @@ test('M56 capability failures stay local and native service preparation preserve
     assert.match(legacySettings, /openMode\('quickstart-netpolicy'\)/)
     assert.doesNotMatch(panel + settings + legacySettings, /app-meta-eqos/)
 })
+
+test('M57 route failures provide an actionable default-path recovery without exposing DHCP internals', async () => {
+    const [rules, policy] = await Promise.all([
+        readFile(new URL('../src/pages/device/networkRulesHub.vue', import.meta.url), 'utf8'),
+        readFile(new URL('../src/pages/device/devicePolicy.ts', import.meta.url), 'utf8'),
+    ])
+    for (const label of ['网关不可达', '恢复默认路线', '确认网关设备已开机并接入当前局域网']) assert.match(rules, new RegExp(label))
+    assert.match(rules, /rule\.nextAction/)
+    assert.match(rules, /repairRule/)
+    assert.match(rules, /networkRulesV2\.PLAN/)
+    assert.match(rules, /networkRulesV2\.APPLY/)
+    assert.match(policy, /gateway_unreachable/)
+    assert.match(policy, /address_conflict/)
+    assert.doesNotMatch(rules, /DHCP 标签|option 3|option 6|UCI/)
+})

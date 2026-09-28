@@ -149,7 +149,7 @@ func TestDeviceNetworkPolicyRejectsInvalidAndConflictingInputBeforeWrite(t *test
 		DeviceID: policyStore.policy.DeviceID, TargetID: "default",
 		Static: &models.DeviceAddressPolicy{Enabled: true, AssignedIP: "192.168.100.50", BindIP: true},
 	})
-	if conflict.Result.Error == nil || conflict.Result.Error.Code != "conflict" || writer.calls != 0 {
+	if conflict.Result.Error == nil || conflict.Result.Error.Code != "address_conflict" || writer.calls != 0 {
 		t.Fatalf("conflict=%#v calls=%d", conflict.Result, writer.calls)
 	}
 }

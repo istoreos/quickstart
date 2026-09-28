@@ -80,6 +80,29 @@ func TestSystemNetworkRulesAggregatesStaticSpeedAccessRouteAndOrphans(t *testing
 	}
 }
 
+func TestSystemNetworkRulesExplainsUnreachableGatewayAndRecovery(t *testing.T) {
+	now := time.Date(2026, 9, 24, 12, 0, 0, 0, time.UTC)
+	inventory := newTestDeviceInventory(t, &fakeDeviceInventorySource{snapshots: []deviceInventorySourceSnapshot{{ARP: []deviceInventoryObservation{{MAC: "AA:BB:CC:DD:EE:01", IPv4: "192.168.100.20", Online: true}}}}}, &now, 2048)
+	policyStore := availablePolicyStore()
+	policyStore.rules = &models.DevicePolicyRulesResult{}
+	gatewayState := gatewayPolicyTestState()
+	gatewayState.UnreachableGateways = map[string]bool{"192.168.100.2": true}
+	store := &systemNetworkRulesStore{inventory: inventory, policy: newDevicePolicyModuleForTest(policyStore), gateway: NewGatewayPolicyModule(inventory, &fakeGatewayPolicyStore{state: gatewayState})}
+	snapshot, err := store.Read(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, rule := range snapshot.Rules {
+		if rule.Kind == "route" {
+			if rule.Status != "unreachable" || rule.IssueCode != "gateway_unreachable" || rule.NextAction != "check_gateway_or_restore_default" {
+				t.Fatalf("route diagnostic = %#v", rule)
+			}
+			return
+		}
+	}
+	t.Fatal("route diagnostic missing")
+}
+
 func TestClearNetworkRuleRoutePreservesAddressReservation(t *testing.T) {
 	directory := t.TempDir()
 	config := "config host 'device'\n\toption mac 'AA:BB:CC:DD:EE:01'\n\toption ip '192.168.100.20'\n\toption name 'printer'\n\toption tag 'route'\n\toption tag_title 'bypass'\n"
