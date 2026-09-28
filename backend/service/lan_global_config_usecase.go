@@ -74,7 +74,7 @@ func (svc *LanGlobalConfigService) GetGlobalConfigs(ctx context.Context) (*model
 func buildDeviceManagementCapabilities(floatState FloatIPStatus, floatErr error, speedState SpeedLimitStatus, speedErr error) *models.DeviceManagementCapabilities {
 	access := &models.DeviceManagementCapability{State: "available"}
 	speed := buildDeviceManagementCapability(speedState.Installed, speedState.Enabled, speedErr)
-	decorateCapabilityActions(speed, "app-meta-eqos")
+	decorateCapabilityActions(speed, "quickstart-netpolicy")
 	floating := buildDeviceManagementCapability(floatState.Installed, floatState.Enabled, floatErr)
 	decorateCapabilityActions(floating, "app-meta-floatip")
 	traffic := &models.DeviceManagementCapability{State: "available"}

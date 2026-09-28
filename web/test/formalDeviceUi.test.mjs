@@ -209,3 +209,26 @@ test('M55 keeps Unicode device aliases separate from portable DHCP hostnames', a
     assert.match(panel, /maxlength="63"/)
     assert.match(policy, /hostname === '' \|\| \/\^\[a-z0-9\]/)
 })
+
+test('M56 capability failures stay local and native service preparation preserves the edit task', async () => {
+    const [panel, settings, legacySettings] = await Promise.all([
+        readFile(new URL('../src/pages/device/components/devicePolicyPanel.vue', import.meta.url), 'utf8'),
+        readFile(new URL('../src/pages/device/lanSettingsPanel.vue', import.meta.url), 'utf8'),
+        readFile(new URL('../src/pages/device/configure.vue', import.meta.url), 'utf8'),
+    ])
+    assert.match(panel, /const routeLocked = computed/)
+    assert.match(panel, /:disabled="routeLocked \|\| saving/)
+    assert.match(panel, /:disabled="!available\('speed'\)"/)
+    assert.match(panel, /v-if="reason\('access'\)"/)
+    assert.match(panel, /<button v-else[^>]+@click="toggleAccess"/)
+    assert.match(panel, /rememberDraft\(\); saving\.value = 'capability'/)
+    assert.match(panel, /尚未保存的限速输入会保留/)
+    assert.match(panel, /await load\(\)/)
+    const prepare = panel.match(/const prepareSpeedService = async \(\) => \{[\s\S]*?\n\}/)?.[0] || ''
+    assert.doesNotMatch(prepare, /saveSpeed|deviceRestrictionsV2\.APPLY/)
+
+    assert.match(settings, /其他设置仍可使用/)
+    assert.match(settings, /capabilityActionV2\.PLAN/)
+    assert.match(legacySettings, /openMode\('quickstart-netpolicy'\)/)
+    assert.doesNotMatch(panel + settings + legacySettings, /app-meta-eqos/)
+})
