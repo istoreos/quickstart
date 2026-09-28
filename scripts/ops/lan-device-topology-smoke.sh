@@ -10,6 +10,7 @@ EXPECTED_PACKAGE_VERSION="${EXPECTED_PACKAGE_VERSION:-0.14.0-r12}"
 EXPECTED_VIP_OWNER="${EXPECTED_VIP_OWNER:-B}"
 REQUIRE_PACKAGE_COHERENCE="${REQUIRE_PACKAGE_COHERENCE:-1}"
 CANDIDATE_MODE="${CANDIDATE_MODE:-0}"
+CANDIDATE_TARGET="${CANDIDATE_TARGET:-B}"
 PROJECT_ROOT="${PROJECT_ROOT:-$(CDPATH= cd -- "$(dirname "$0")/../.." && pwd)}"
 LOCAL_CANDIDATE_BINARY="${LOCAL_CANDIDATE_BINARY:-${PROJECT_ROOT}/bin/quickstart.amd64}"
 LOCAL_CANDIDATE_WEB_DIR="${LOCAL_CANDIDATE_WEB_DIR:-${PROJECT_ROOT}/web/dist/luci-static/quickstart}"
@@ -115,20 +116,25 @@ expect_api() {
 runtime_checks() {
     rt_label="$1"
     rt_host="$2"
+    rt_candidate="$3"
     expect_remote "$rt_label SSH reachable" "$rt_host" 'true'
     expect_remote "$rt_label Quickstart single process" "$rt_host" '[ "$(pidof quickstart | wc -w)" -eq 1 ] && /etc/init.d/quickstart status >/dev/null'
     expect_remote "$rt_label dnsmasq running" "$rt_host" '/etc/init.d/dnsmasq status >/dev/null'
     expect_remote "$rt_label floatip running" "$rt_host" '/etc/init.d/floatip status >/dev/null'
 
     expect_value "$rt_label backend version" "$EXPECTED_VERSION" "$(remote "$rt_host" '/usr/sbin/quickstart version' 2>/dev/null || true)"
-    expect_value "$rt_label backend hash" "$EXPECTED_BINARY_SHA" "$(remote "$rt_host" "sha256sum /usr/sbin/quickstart | cut -d ' ' -f1" 2>/dev/null || true)"
-    expect_value "$rt_label index hash" "$EXPECTED_INDEX_SHA" "$(remote "$rt_host" "sha256sum /www/luci-static/quickstart/index.js | cut -d ' ' -f1" 2>/dev/null || true)"
-    expect_value "$rt_label style hash" "$EXPECTED_STYLE_SHA" "$(remote "$rt_host" "sha256sum /www/luci-static/quickstart/style.css | cut -d ' ' -f1" 2>/dev/null || true)"
-    expect_value "$rt_label vendor hash" "$EXPECTED_VENDOR_SHA" "$(remote "$rt_host" "sha256sum /www/luci-static/quickstart/vendor.js | cut -d ' ' -f1" 2>/dev/null || true)"
-    expect_value "$rt_label icon manifest hash" "$EXPECTED_ICON_SHA" "$(remote "$rt_host" "sha256sum /www/luci-static/quickstart/device-icons/manifest.json | cut -d ' ' -f1" 2>/dev/null || true)"
-    expect_value "$rt_label English catalog hash" "$EXPECTED_EN_SHA" "$(remote "$rt_host" "sha256sum /www/luci-static/quickstart/i18n/en.json | cut -d ' ' -f1" 2>/dev/null || true)"
+    if [ "$CANDIDATE_MODE" != 1 ] || [ "$rt_candidate" = 1 ]; then
+        expect_value "$rt_label backend hash" "$EXPECTED_BINARY_SHA" "$(remote "$rt_host" "sha256sum /usr/sbin/quickstart | cut -d ' ' -f1" 2>/dev/null || true)"
+        expect_value "$rt_label index hash" "$EXPECTED_INDEX_SHA" "$(remote "$rt_host" "sha256sum /www/luci-static/quickstart/index.js | cut -d ' ' -f1" 2>/dev/null || true)"
+        expect_value "$rt_label style hash" "$EXPECTED_STYLE_SHA" "$(remote "$rt_host" "sha256sum /www/luci-static/quickstart/style.css | cut -d ' ' -f1" 2>/dev/null || true)"
+        expect_value "$rt_label vendor hash" "$EXPECTED_VENDOR_SHA" "$(remote "$rt_host" "sha256sum /www/luci-static/quickstart/vendor.js | cut -d ' ' -f1" 2>/dev/null || true)"
+        expect_value "$rt_label icon manifest hash" "$EXPECTED_ICON_SHA" "$(remote "$rt_host" "sha256sum /www/luci-static/quickstart/device-icons/manifest.json | cut -d ' ' -f1" 2>/dev/null || true)"
+        expect_value "$rt_label English catalog hash" "$EXPECTED_EN_SHA" "$(remote "$rt_host" "sha256sum /www/luci-static/quickstart/i18n/en.json | cut -d ' ' -f1" 2>/dev/null || true)"
+    else
+        expect_remote "$rt_label existing artifacts readable (candidate intentionally not deployed)" "$rt_host" 'test -x /usr/sbin/quickstart && test -s /www/luci-static/quickstart/index.js && test -s /www/luci-static/quickstart/style.css'
+    fi
     actual_asset_version="$(remote "$rt_host" "sed -n 's/^local asset_version = \"\([^\"]*\)\"/\1/p' /usr/lib/lua/luci/view/quickstart/main.htm" 2>/dev/null || true)"
-    if [ -n "$EXPECTED_ASSET_VERSION" ]; then
+    if [ -n "$EXPECTED_ASSET_VERSION" ] && { [ "$CANDIDATE_MODE" != 1 ] || [ "$rt_candidate" = 1 ]; }; then
         expect_value "$rt_label asset version" "$EXPECTED_ASSET_VERSION" "$actual_asset_version"
     elif [ -n "$actual_asset_version" ]; then
         pass "$rt_label candidate asset version present"
@@ -159,10 +165,11 @@ runtime_checks() {
 command -v ssh >/dev/null
 command -v jq >/dev/null
 
-runtime_checks A "$A_HOST"
-runtime_checks B "$B_HOST"
+case "$CANDIDATE_TARGET" in A) a_candidate=1; b_candidate=0 ;; B) a_candidate=0; b_candidate=1 ;; both) a_candidate=1; b_candidate=1 ;; *) echo 'CANDIDATE_TARGET must be A, B, or both' >&2; exit 2 ;; esac
+runtime_checks A "$A_HOST" "$a_candidate"
+runtime_checks B "$B_HOST" "$b_candidate"
 
-if [ "$CANDIDATE_MODE" = 1 ] && [ -z "$EXPECTED_ASSET_VERSION" ]; then
+if [ "$CANDIDATE_MODE" = 1 ] && [ "$CANDIDATE_TARGET" = both ] && [ -z "$EXPECTED_ASSET_VERSION" ]; then
     a_asset_version="$(remote "$A_HOST" "sed -n 's/^local asset_version = \"\([^\"]*\)\"/\1/p' /usr/lib/lua/luci/view/quickstart/main.htm" 2>/dev/null || true)"
     b_asset_version="$(remote "$B_HOST" "sed -n 's/^local asset_version = \"\([^\"]*\)\"/\1/p' /usr/lib/lua/luci/view/quickstart/main.htm" 2>/dev/null || true)"
     expect_value 'candidate asset versions agree' "$a_asset_version" "$b_asset_version"
