@@ -57,6 +57,21 @@ func TestRateLimitModuleReportsVerifiedLocalPolicy(t *testing.T) {
 	}
 }
 
+func TestRateLimitModuleReportsNativeMACPolicyCoversIPv6(t *testing.T) {
+	provider := NewNativeRateLimitProvider("http://127.0.0.1:8765", nil)
+	module := NewRateLimitModule(provider, nil)
+	module.now = fixedRateLimitTime
+	enforcement := module.enforcement(provider, rateLimitTarget{
+		MAC:         "46:F1:F3:B9:9F:B9",
+		CurrentIPv4: "192.168.1.20",
+		HasIPv6:     true,
+		Route:       rateLimitRoute{TargetID: "self", Gateway: "192.168.1.1", Local: true},
+	}, rateLimitProviderObservation{Configured: true, Loaded: true, Verified: true, Offload: "compatible"})
+	if enforcement.AddressState != "stable_identity" || enforcement.IPv6State != "covered" || len(enforcement.Warnings) != 0 {
+		t.Fatalf("expected native MAC identity to cover IPv4 and IPv6: %#v", enforcement)
+	}
+}
+
 func TestRateLimitModuleRejectsRemoteExecutionNode(t *testing.T) {
 	provider := &fakeRateLimitProvider{}
 	module := NewRateLimitModule(provider, &fakeRateLimitRouteResolver{route: rateLimitRoute{TargetID: "bypass-1", Gateway: "192.168.1.2", Local: false}})

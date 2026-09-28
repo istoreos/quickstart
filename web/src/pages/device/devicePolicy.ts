@@ -17,7 +17,7 @@ export type RateLimitEnforcement = {
     canApply: boolean
     addressState: 'stable' | 'stable_identity' | 'current_only' | 'missing'
     ipv4?: string
-    ipv6State: 'not_present' | 'unsupported' | 'unknown'
+    ipv6State: 'not_present' | 'covered' | 'unsupported' | 'unknown'
     offloadState: 'compatible' | 'risk' | 'unknown'
     warnings?: string[]
     observedAt?: string
