@@ -121,16 +121,26 @@ func (store *systemNetworkRulesStore) Read(ctx context.Context) (networkRulesSna
 				target := index.targets[targetID]
 				summary := "未知路线"
 				status := "unsupported"
+				issueCode := "gateway_target_missing"
+				nextAction := "restore_default_or_choose"
 				if target != nil {
 					summary = target.Public.Name
 					if target.Public.Gateway != "" {
 						summary += " · " + target.Public.Gateway
 					}
-					if target.Public.Supported {
+					if state.UnreachableGateways[target.Public.Gateway] {
+						status = "unreachable"
+						issueCode = "gateway_unreachable"
+						nextAction = "check_gateway_or_restore_default"
+					} else if target.Public.Supported {
 						status = "active"
+						issueCode, nextAction = "", ""
+					} else {
+						issueCode = "gateway_target_unsupported"
+						nextAction = "restore_default_or_edit"
 					}
 				}
-				rule := &models.NetworkRule{ID: stableNetworkRuleID("route", normalizeInventoryMAC(host.MAC), targetID), Kind: "route", MAC: host.MAC, Status: status, Source: "device", Summary: summary, TargetID: targetID}
+				rule := &models.NetworkRule{ID: stableNetworkRuleID("route", normalizeInventoryMAC(host.MAC), targetID), Kind: "route", MAC: host.MAC, Status: status, Source: "device", Summary: summary, TargetID: targetID, IssueCode: issueCode, NextAction: nextAction}
 				attachNetworkRuleDevice(rule, deviceByMAC[normalizeInventoryMAC(host.MAC)])
 				rules = append(rules, rule)
 			}

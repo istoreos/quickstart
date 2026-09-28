@@ -23,7 +23,7 @@ export DEPLOY_TARGET SSH_TARGET SSH_PORT SSH_EXTRA_OPTS SCP_EXTRA_OPTS
 export REMOTE_BINARY REMOTE_TMP REMOTE_BACKUP_DIR REMOTE_SERVICE REMOTE_LOG_COMMAND ROLLBACK_RELEASE
 
 .PHONY: help fmt tidy test build build-web build-amd64 build-arm64 build-armv7 release clean
-.PHONY: ops-targets ops-show-selected ops-release ops-init-selected ops-preflight-selected ops-deploy-selected ops-verify-selected ops-rollback-selected ops-ui-smoke-selected test-ops test-lan-lab test-lan-identity-address test-lan-capability-context verify-product smoke-lan-device smoke-lan-device-candidate smoke-bandix bandix-sources bandix-source-check
+.PHONY: ops-targets ops-show-selected ops-release ops-init-selected ops-preflight-selected ops-deploy-selected ops-verify-selected ops-rollback-selected ops-ui-smoke-selected test-ops test-lan-lab test-lan-identity-address test-lan-capability-context test-lan-route verify-product smoke-lan-device smoke-lan-device-candidate smoke-bandix bandix-sources bandix-source-check
 
 help:
 	@printf '%s\n' \
@@ -48,6 +48,7 @@ help:
 		'  test-lan-lab           Run the local fault-injection and cleanup laboratory' \
 		'  test-lan-identity-address  Verify device identity, hostname, address history, and DHCP recovery' \
 		'  test-lan-capability-context Verify DHCP authority, local capability degradation, and native service actions' \
+		'  test-lan-route         Verify path precedence, gateway/DNS pairing, diagnostics, and rollback' \
 		'  verify-product         Validate and regenerate the five-layer product coverage matrix' \
 		'  smoke-lan-device       Fail-closed four-host release smoke; critical gateway stays read-only' \
 		'  smoke-lan-device-candidate  Validate local candidate artifacts on the four-host topology; ignore old opkg metadata' \
@@ -118,6 +119,9 @@ test-lan-identity-address:
 
 test-lan-capability-context:
 	./scripts/ops/lan-device-capability-context-smoke.sh
+
+test-lan-route:
+	./scripts/ops/lan-device-route-smoke.sh
 
 verify-product:
 	node ./scripts/validate-lan-device-coverage.mjs --self-test --write

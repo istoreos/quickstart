@@ -6526,3 +6526,43 @@ msgstr ""
 #: src/pages/device/networkRulesHub.vue:42
 msgid "默认路线"
 msgstr ""
+
+#: src/pages/device/networkRulesHub.vue
+msgid "恢复默认路线"
+msgstr ""
+
+#: src/pages/device/networkRulesHub.vue
+msgid "恢复默认路线？设备重新获取地址后生效。"
+msgstr ""
+
+#: src/pages/device/networkRulesHub.vue
+msgid "网关不可达"
+msgstr ""
+
+#: src/pages/device/networkRulesHub.vue
+msgid "恢复默认路线，或在设备详情中选择其他可用路线"
+msgstr ""
+
+#: src/pages/device/networkRulesHub.vue
+msgid "确认网关设备已开机并接入当前局域网；仍不可达时恢复默认路线"
+msgstr ""
+
+#: src/pages/device/networkRulesHub.vue
+msgid "恢复默认路线，或编辑路线后重新应用"
+msgstr ""
+
+#: src/pages/device/networkRulesHub.vue
+msgid "请在设备详情中检查这条路线"
+msgstr ""
+
+#: src/pages/device/components/devicePolicyPanel.vue
+msgid "该地址已分配给其他设备，请选择一个未占用地址后重试"
+msgstr ""
+
+#: src/pages/device/components/devicePolicyPanel.vue
+msgid "该网关不在当前局域网，请检查网关 IP 或选择其他路线"
+msgstr ""
+
+#: src/pages/device/components/devicePolicyPanel.vue
+msgid "暂时无法连接该网关，请确认设备已开机并接入当前局域网后重试"
+msgstr ""

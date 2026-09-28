@@ -115,6 +115,9 @@ const translatePolicyMessage = (message: string): string => ({
     '暂时无法读取续租状态': $gettext('暂时无法读取续租状态'),
     '配置应用失败': $gettext('配置应用失败'),
     '状态未知': $gettext('状态未知'),
+	'该地址已分配给其他设备，请选择一个未占用地址后重试': $gettext('该地址已分配给其他设备，请选择一个未占用地址后重试'),
+	'该网关不在当前局域网，请检查网关 IP 或选择其他路线': $gettext('该网关不在当前局域网，请检查网关 IP 或选择其他路线'),
+	'暂时无法连接该网关，请确认设备已开机并接入当前局域网后重试': $gettext('暂时无法连接该网关，请确认设备已开机并接入当前局域网后重试'),
 } as Record<string, string>)[message] || message
 
 const loading = ref(true)

@@ -109,6 +109,9 @@ export const policyErrorLabel = (code: string, fallback = ''): string => ({
     recovery_required: '自动恢复未完成，请按提示处理',
     transaction_unavailable: '暂时无法安全保存，请稍后重试',
     effect_record_failed: '配置已写入，但状态记录需要恢复',
+	address_conflict: '该地址已分配给其他设备，请选择一个未占用地址后重试',
+	gateway_outside_lan: '该网关不在当前局域网，请检查网关 IP 或选择其他路线',
+	gateway_unreachable: '暂时无法连接该网关，请确认设备已开机并接入当前局域网后重试',
 }[code] || fallback || '保存失败')
 
 export const internetPathStateLabel = (state: string): string => ({

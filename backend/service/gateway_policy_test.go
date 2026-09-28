@@ -159,6 +159,35 @@ func TestGatewayPolicyRejectsAssignmentWithoutLocalDHCPAuthority(t *testing.T) {
 	}
 }
 
+func TestGatewayPolicyRejectsExplicitlyFailedNeighborWithoutWriting(t *testing.T) {
+	state := gatewayPolicyTestState()
+	state.UnreachableGateways = map[string]bool{"192.168.100.254": true}
+	store := &fakeGatewayPolicyStore{state: state}
+	module := gatewayPolicyTestModule(t, store)
+	planned, err := module.PlanAssignment(context.Background(), &models.GatewayAssignmentRequest{
+		Action: "assign", DeviceID: "mac:aa:bb:cc:dd:ee:01", TargetID: "upstream",
+	})
+	if err != nil || planned.Result.Error == nil || planned.Result.Error.Code != "gateway_unreachable" || planned.Result.CanApply || store.applies != 0 {
+		t.Fatalf("plan = %#v, applies=%d, err=%v", planned, store.applies, err)
+	}
+	listed, err := module.ListTargets(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, target := range listed.Result.Targets {
+		if target.ID == "upstream" && (target.EffectState != "unreachable" || !containsString(target.Reasons, "gateway_unreachable")) {
+			t.Fatalf("unreachable target = %#v", target)
+		}
+	}
+}
+
+func TestParseFailedIPv4NeighborsOnlyUsesExplicitKernelFailure(t *testing.T) {
+	failed := parseFailedIPv4Neighbors("192.168.100.2 dev br-lan lladdr aa:bb:cc:dd:ee:ff REACHABLE\n192.168.100.9 dev br-lan FAILED\n2001:db8::1 dev br-lan FAILED\nmalformed FAILED\n")
+	if len(failed) != 1 || !failed["192.168.100.9"] {
+		t.Fatalf("failed neighbors = %#v", failed)
+	}
+}
+
 func TestGatewayPolicyRejectsReferencedDeleteAndStaleVersion(t *testing.T) {
 	store := &fakeGatewayPolicyStore{state: gatewayPolicyTestState()}
 	module := gatewayPolicyTestModule(t, store)
@@ -321,6 +350,8 @@ func TestMutateGatewayPolicyPreservesHostAndMaterializesTarget(t *testing.T) {
 	}
 	if options, _ := tree.Get("dhcp", "t_auto_c0a86402", "dhcp_option"); len(options) != 2 {
 		t.Fatalf("target options = %#v", options)
+	} else if fmt.Sprint(options) != "[3,192.168.100.2 6,192.168.100.2]" {
+		t.Fatalf("gateway and DNS must follow the same target: %#v", options)
 	}
 }
 
