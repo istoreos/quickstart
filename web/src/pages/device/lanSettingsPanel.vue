@@ -281,10 +281,13 @@ const applyMigration = async () => {
     migrating.value = true; feedback.value = ''
     try {
         const result = (await request.DeviceMangement.lanDeviceMigrationV2.APPLY({ expectedVersion: migrationPlan.value.version })).data?.result
-        if (result?.error) throw new Error(result.error.message)
+        if (result?.error) throw Object.assign(new Error(result.error.message), { code: result.error.code })
         feedbackKind.value = 'success'; feedback.value = result?.changed ? $gettext('现有设置已安全接管') : $gettext('现有设置无需重复接管')
         await load()
-    } catch (reason:any) { feedbackKind.value='error'; feedback.value=reason?.message||$gettext('接管失败，原设置已保留') }
+    } catch (reason:any) {
+        feedbackKind.value='error'
+        feedback.value=reason?.code==='rolled_back'?$gettext('接管失败，原设置已恢复，可以重试'):reason?.code==='recovery_required'?$gettext('自动恢复未完成，请按提示处理'):reason?.message||$gettext('接管失败，原设置已保留')
+    }
     finally { migrating.value=false }
 }
 const installCapability = async (capabilityKey:string) => {

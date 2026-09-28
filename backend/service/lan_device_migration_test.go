@@ -17,6 +17,7 @@ type fakeLanDeviceMigrationStore struct {
 	commitErr           error
 	verifyErr           error
 	restoreErr          error
+	snapshotErr         error
 	failReadAfterCommit bool
 }
 
@@ -27,6 +28,9 @@ func (store *fakeLanDeviceMigrationStore) Read(context.Context) (lanDeviceMigrat
 	return store.snapshot, nil
 }
 func (store *fakeLanDeviceMigrationStore) SnapshotReceipt(context.Context) ([]byte, bool, error) {
+	if store.snapshotErr != nil {
+		return nil, false, store.snapshotErr
+	}
 	return append([]byte(nil), store.receipt...), store.receiptExists, nil
 }
 func (store *fakeLanDeviceMigrationStore) Commit(_ context.Context, receipt lanDeviceMigrationReceipt) error {
@@ -164,5 +168,34 @@ func TestLanDeviceMigrationCommitFailureRestoresReceipt(t *testing.T) {
 	}
 	if result.Result.Error == nil || result.Result.Error.Code != "rolled_back" || store.restoreCalls != 1 {
 		t.Fatalf("expected apply rollback: %#v", result.Result)
+	}
+}
+
+func TestLanDeviceMigrationFailureBoundariesDoNotHideRecoveryState(t *testing.T) {
+	fixture := lanDeviceMigrationSnapshot{Items: migrationFixtureItems(), SourceVersions: map[string]string{"dhcp": "one"}}
+	for _, test := range []struct {
+		name        string
+		store       *fakeLanDeviceMigrationStore
+		wantCode    string
+		wantCommit  int
+		wantRestore int
+	}{
+		{name: "snapshot is zero-write", store: &fakeLanDeviceMigrationStore{snapshot: fixture, snapshotErr: errors.New("snapshot failed")}, wantCode: "snapshot_failed"},
+		{name: "commit and restore require recovery", store: &fakeLanDeviceMigrationStore{snapshot: fixture, commitErr: errors.New("write failed"), restoreErr: errors.New("restore failed")}, wantCode: "recovery_required", wantCommit: 1, wantRestore: 1},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			module := NewLanDeviceMigrationModule(test.store)
+			preview, err := module.Plan(context.Background())
+			if err != nil {
+				t.Fatal(err)
+			}
+			result, err := module.Apply(context.Background(), &models.LanDeviceMigrationRequest{ExpectedVersion: preview.Result.Plan.Version})
+			if err != nil {
+				t.Fatal(err)
+			}
+			if result.Result.Error == nil || result.Result.Error.Code != test.wantCode || test.store.commitCalls != test.wantCommit || test.store.restoreCalls != test.wantRestore {
+				t.Fatalf("unexpected failure result=%#v commit=%d restore=%d", result.Result, test.store.commitCalls, test.store.restoreCalls)
+			}
+		})
 	}
 }
