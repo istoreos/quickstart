@@ -72,6 +72,11 @@ export type DeviceListItem = InventoryDevice & {
 
 export type DeviceFilter = 'online' | 'all' | 'controlled'
 export type DeviceSort = 'recent' | 'name'
+export type DeviceListCriteria = {
+    connection?: 'all' | InventoryDevice['connection']['kind']
+    brand?: string
+    policy?: 'all' | 'none' | 'static' | 'route' | 'limited' | 'blocked'
+}
 
 export type DeviceIdentityMetaMode = 'category' | 'classification-source' | 'pending'
 
@@ -247,11 +252,16 @@ export const selectDeviceListItems = (
     filter: DeviceFilter,
     query: string,
     sort: DeviceSort,
+    criteria: DeviceListCriteria = {},
 ): DeviceListItem[] => {
     const keyword = normalized(query)
     const selected = devices.filter(device => {
         if (filter === 'online' && !device.online) return false
         if (filter === 'controlled' && !device.controlled) return false
+        if (criteria.connection && criteria.connection !== 'all' && device.connection.kind !== criteria.connection) return false
+        if (criteria.brand && normalized(device.brand) !== normalized(criteria.brand)) return false
+        if (criteria.policy === 'none' && device.policyLabels.length > 0) return false
+        if (criteria.policy && criteria.policy !== 'all' && criteria.policy !== 'none' && !device.policyLabels.includes(criteria.policy)) return false
         if (!keyword) return true
         const addresses = [...device.addresses.current, ...device.addresses.historical].map(item => item.address)
         return [device.displayName, device.hostname, device.mac, device.vendor, device.brand, ...addresses]

@@ -215,6 +215,25 @@ test('M60 history stays lazy and quota actions remain distinct', async () => {
     assert.match(insights, /today.*week.*month/s)
 })
 
+test('M62 list filters compose without discarding detail context and audit stays progressive', async () => {
+    const [list, inventory, advanced] = await Promise.all([
+        readFile(new URL('../src/pages/device/deviceCenterList.vue', import.meta.url), 'utf8'),
+        readFile(new URL('../src/pages/device/deviceInventory.ts', import.meta.url), 'utf8'),
+        readFile(new URL('../src/pages/device/components/advancedNetworkTools.vue', import.meta.url), 'utf8'),
+    ])
+    for (const label of ['更多筛选', '连接方式', '全部品牌', '策略状态', '清除筛选', '此设备不在当前筛选结果中']) assert.match(list, new RegExp(label))
+    assert.match(inventory, /criteria\.connection/)
+    assert.match(inventory, /criteria\.brand/)
+    assert.match(inventory, /criteria\.policy/)
+    assert.match(list, /selectedVisible/)
+    assert.match(list, /previousFocus/)
+    assert.match(advanced, /<details class="advanced-tools"/)
+    assert.match(advanced, /@toggle="handleToggle"/)
+    assert.match(advanced, /记录数量有上限/)
+    assert.match(advanced, /unsupported:\$gettext\('不支持'\)/)
+    assert.match(list, /telemetrySpeedLabel\(device\.telemetry, direction, \$gettext\('采集中'\)\)/)
+})
+
 test('M55 keeps Unicode device aliases separate from portable DHCP hostnames', async () => {
     const [panel, policy, profile] = await Promise.all([
         readFile(new URL('../src/pages/device/components/devicePolicyPanel.vue', import.meta.url), 'utf8'),

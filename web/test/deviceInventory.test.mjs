@@ -57,6 +57,16 @@ test('selectDeviceListItems filters, searches all identity fields and sorts with
     assert.equal(items.length, 2)
 })
 
+test('selectDeviceListItems composes connection brand and policy filters', () => {
+    const items = buildDeviceListItems(inventory, [], undefined, [
+        { kind: 'route', deviceId: inventory[0].deviceId },
+    ])
+    items[0].brand = 'Example'
+    assert.deepEqual(selectDeviceListItems(items, 'all', '', 'recent', { connection: 'wifi', brand: 'example', policy: 'route' }).map(item => item.deviceId), [inventory[0].deviceId])
+    assert.deepEqual(selectDeviceListItems(items, 'all', '', 'recent', { policy: 'none' }).map(item => item.deviceId), [inventory[1].deviceId])
+    assert.deepEqual(selectDeviceListItems(items, 'all', '', 'recent', { connection: 'lan' }), [])
+})
+
 test('deviceCounts and safe highlight segments support the list controls', () => {
     const items = buildDeviceListItems(inventory, [{ mac: 'AA:BB:CC:DD:EE:01', staticAssigned: { bindIP: true } }])
     assert.deepEqual(deviceCounts(items), { all: 2, online: 1, controlled: 1 })

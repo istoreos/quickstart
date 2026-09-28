@@ -105,7 +105,7 @@
         ]
       },
       "prototype": {
-        "status": "partial",
+        "status": "verified",
         "refs": [
           "docs/prototypes/lan-device-management/coverage.md"
         ]
@@ -117,20 +117,21 @@
         ]
       },
       "frontend": {
-        "status": "partial",
+        "status": "verified",
         "refs": [
-          "web/src/pages/device/deviceCenterList.vue"
+          "web/src/pages/device/deviceCenterList.vue",
+          "web/test/deviceInventory.test.mjs"
         ]
       },
       "device": {
-        "status": "partial",
+        "status": "verified",
         "refs": [
-          "docs/evidence/m17/acceptance.md"
+          "docs/evidence/m17/acceptance.md",
+          "docs/evidence/m62/acceptance.md"
         ]
       },
-      "overall": "partial",
-      "closureMilestone": "M62",
-      "blocker": "补齐组合筛选、详情上下文保持和登录态响应式验收"
+      "overall": "verified",
+      "blocker": ""
     },
     {
       "id": "DEV-PRES-004",
@@ -1835,15 +1836,15 @@
         ]
       },
       "device": {
-        "status": "partial",
+        "status": "verified",
         "refs": [
           "docs/evidence/m31/acceptance.md",
-          "docs/lan-device-management-m32-m40-closeout-milestones.md"
+          "docs/lan-device-management-m32-m40-closeout-milestones.md",
+          "docs/evidence/m62/acceptance.md"
         ]
       },
-      "overall": "partial",
-      "closureMilestone": "M62",
-      "blocker": "登录态检查折叠审计入口、真实变更事件和有界容量"
+      "overall": "verified",
+      "blocker": ""
     },
     {
       "id": "OPS-006",
