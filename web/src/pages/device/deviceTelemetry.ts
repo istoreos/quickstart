@@ -24,8 +24,8 @@ export const formatTrafficBytes = (value: number, suffix = ''): string => {
     return `${amount.toFixed(digits)} ${units[index]}${suffix}`
 }
 
-export const telemetrySpeedLabel = (item: DeviceTelemetryItem | undefined, direction: 'up' | 'down'): string => {
-    if (!item || item.state === 'warming_up') return '采集中'
+export const telemetrySpeedLabel = (item: DeviceTelemetryItem | undefined, direction: 'up' | 'down', warmingLabel = '采集中'): string => {
+    if (!item || item.state === 'warming_up') return warmingLabel
     const value = direction === 'up' ? item.uploadSpeed : item.downloadSpeed
     return formatTrafficBytes(value, '/s')
 }
