@@ -9,6 +9,7 @@ for script in "${SCRIPT_DIR}"/*.sh; do
 done
 
 sh "${SCRIPT_DIR}/lan-device-load-check.test.sh"
+sh "${SCRIPT_DIR}/lan-device-isolation-lab.test.sh"
 node "${PROJECT_ROOT}/scripts/analyze-lan-device-business-smoke.test.mjs"
 
 business_smoke="${SCRIPT_DIR}/lan-device-business-smoke.sh"
