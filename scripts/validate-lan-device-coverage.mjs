@@ -98,7 +98,10 @@ function selfTest(matrix) {
     (copy) => { copy.requirements[0].product.refs = ['docs/does-not-exist.md'] },
     (copy) => { copy.requirements[0].device.refs = ['planned:M99'] },
     (copy) => {
-      const open = copy.requirements.find((item) => item.overall !== 'verified')
+      const open = copy.requirements.find((item) => item.overall !== 'verified') ?? copy.requirements[0]
+      open.overall = 'partial'
+      open.device.status = 'partial'
+      open.blocker = 'validator self-test fixture'
       delete open.closureMilestone
     }
   ]

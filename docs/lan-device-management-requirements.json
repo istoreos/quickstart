@@ -1605,7 +1605,7 @@
         ]
       },
       "prototype": {
-        "status": "partial",
+        "status": "verified",
         "refs": [
           "docs/prototypes/lan-device-management/coverage.md"
         ]
@@ -1626,14 +1626,14 @@
         ]
       },
       "device": {
-        "status": "partial",
+        "status": "verified",
         "refs": [
-          "docs/evidence/m20/acceptance.md"
+          "docs/evidence/m20/acceptance.md",
+          "docs/evidence/m63/acceptance.md"
         ]
       },
-      "overall": "partial",
-      "closureMilestone": "M63",
-      "blocker": "登录态验收通知、导出、dry-run 导入、冲突与恢复"
+      "overall": "verified",
+      "blocker": ""
     },
     {
       "id": "OPS-001",
@@ -1860,92 +1860,7 @@
         ]
       },
       "prototype": {
-        "status": "partial",
-        "refs": [
-          "docs/prototypes/lan-device-management/coverage.md"
-        ]
-      },
-      "backend": {
         "status": "verified",
-        "refs": [
-          "backend/service/advanced_network.go"
-        ]
-      },
-      "frontend": {
-        "status": "verified",
-        "refs": [
-          "web/src/pages/device/components/advancedNetworkTools.vue",
-          "docs/evidence/m32-m38/acceptance.md"
-        ]
-      },
-      "device": {
-        "status": "partial",
-        "refs": [
-          "docs/evidence/t0-t8/acceptance.md",
-          "docs/lan-device-management-m32-m40-closeout-milestones.md"
-        ]
-      },
-      "overall": "partial",
-      "closureMilestone": "M63",
-      "blocker": "实机验证管理探测目标网段、端口、协议与跳转边界"
-    },
-    {
-      "id": "OPS-007",
-      "priority": "P2",
-      "requirement": "发送有界 Webhook 通知",
-      "acceptance": "失败退避、不阻塞核心策略且只发送稳定伪匿名设备标识",
-      "source": "legacy-48",
-      "milestone": "M36",
-      "product": {
-        "status": "verified",
-        "refs": [
-          "docs/lan-device-management-product-architecture.md#63-可选高级能力"
-        ]
-      },
-      "prototype": {
-        "status": "partial",
-        "refs": [
-          "docs/prototypes/lan-device-management/coverage.md"
-        ]
-      },
-      "backend": {
-        "status": "verified",
-        "refs": [
-          "backend/service/network_audit.go"
-        ]
-      },
-      "frontend": {
-        "status": "verified",
-        "refs": [
-          "web/src/pages/device/components/advancedNetworkTools.vue",
-          "docs/evidence/m32-m38/acceptance.md"
-        ]
-      },
-      "device": {
-        "status": "partial",
-        "refs": [
-          "docs/evidence/m20/acceptance.md"
-        ]
-      },
-      "overall": "partial",
-      "closureMilestone": "M63",
-      "blocker": "完成伪匿名 Webhook 的失败退避、容量边界和不阻塞验收"
-    },
-    {
-      "id": "OPS-008",
-      "priority": "P1",
-      "requirement": "导入、导出和恢复策略",
-      "acceptance": "导入先 dry-run 且冲突时零写入",
-      "source": "legacy-48",
-      "milestone": "M31",
-      "product": {
-        "status": "verified",
-        "refs": [
-          "docs/lan-device-management-product-architecture.md#2-当前完整功能清单"
-        ]
-      },
-      "prototype": {
-        "status": "partial",
         "refs": [
           "docs/prototypes/lan-device-management/coverage.md"
         ]
@@ -1965,15 +1880,102 @@
         ]
       },
       "device": {
-        "status": "partial",
+        "status": "verified",
         "refs": [
-          "docs/evidence/m31/acceptance.md",
-          "docs/lan-device-management-m32-m40-closeout-milestones.md"
+          "docs/evidence/t0-t8/acceptance.md",
+          "docs/lan-device-management-m32-m40-closeout-milestones.md",
+          "docs/evidence/m63/acceptance.md"
         ]
       },
-      "overall": "partial",
-      "closureMilestone": "M63",
-      "blocker": "以当前新模型实机执行导出、dry-run、冲突、应用与恢复"
+      "overall": "verified",
+      "blocker": ""
+    },
+    {
+      "id": "OPS-007",
+      "priority": "P2",
+      "requirement": "发送有界 Webhook 通知",
+      "acceptance": "失败退避、不阻塞核心策略且只发送稳定伪匿名设备标识",
+      "source": "legacy-48",
+      "milestone": "M36",
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#63-可选高级能力"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/prototypes/lan-device-management/coverage.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/service/network_audit.go",
+          "backend/service/advanced_network_test.go"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/components/advancedNetworkTools.vue",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/m20/acceptance.md",
+          "docs/evidence/m63/acceptance.md"
+        ]
+      },
+      "overall": "verified",
+      "blocker": ""
+    },
+    {
+      "id": "OPS-008",
+      "priority": "P1",
+      "requirement": "导入、导出和恢复策略",
+      "acceptance": "导入先 dry-run 且冲突时零写入",
+      "source": "legacy-48",
+      "milestone": "M31",
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#2-当前完整功能清单"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/prototypes/lan-device-management/coverage.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/service/advanced_network.go",
+          "backend/service/advanced_network_test.go"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/components/advancedNetworkTools.vue",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/m31/acceptance.md",
+          "docs/lan-device-management-m32-m40-closeout-milestones.md",
+          "docs/evidence/m63/acceptance.md"
+        ]
+      },
+      "overall": "verified",
+      "blocker": ""
     },
     {
       "id": "OPS-009",
