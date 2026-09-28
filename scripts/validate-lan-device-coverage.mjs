@@ -48,7 +48,13 @@ export function validate(matrix) {
     if (item.overall === 'verified' && layerNames.some((layer) => !['verified', 'not_applicable'].includes(item[layer]?.status))) {
       errors.push(`${item.id}: overall verified requires all five layers verified or not_applicable`)
     }
-    if (item.overall !== 'verified' && (typeof item.blocker !== 'string' || item.blocker.trim() === '')) errors.push(`${item.id}: non-verified requirement needs blocker`)
+    if (item.overall !== 'verified') {
+      if (typeof item.blocker !== 'string' || item.blocker.trim() === '') errors.push(`${item.id}: non-verified requirement needs blocker`)
+      if (!/^M(?:5[4-9]|6[0-4])$/.test(item.closureMilestone ?? '')) errors.push(`${item.id}: non-verified requirement needs one M54-M64 closureMilestone`)
+      if (/\bM(?:39|40)\b/.test(item.blocker ?? '')) errors.push(`${item.id}: blocker still points at completed M39/M40`)
+    } else if (item.closureMilestone) {
+      errors.push(`${item.id}: verified requirement must not retain closureMilestone`)
+    }
     if (item.source === 'p0-addition') {
       for (const scenario of requiredScenarios) if (!item.scenarios?.includes(scenario)) errors.push(`${item.id}: missing P0 scenario ${scenario}`)
     }
@@ -77,7 +83,8 @@ function render(matrix) {
     '| --- | --- | --- | --- | --- | --- | --- | --- | --- |'
   ]
   for (const item of matrix.requirements) {
-    lines.push(`| ${item.id} | ${item.priority} | ${item.requirement}<br>验收：${item.acceptance} | ${cell(item.product)} | ${cell(item.prototype)} | ${cell(item.backend)} | ${cell(item.frontend)} | ${cell(item.device)} | ${item.overall}<br>${item.blocker ?? ''} |`)
+    const closeout = item.closureMilestone ? `关闭：${item.closureMilestone}<br>` : ''
+    lines.push(`| ${item.id} | ${item.priority} | ${item.requirement}<br>验收：${item.acceptance} | ${cell(item.product)} | ${cell(item.prototype)} | ${cell(item.backend)} | ${cell(item.frontend)} | ${cell(item.device)} | ${item.overall}<br>${closeout}${item.blocker ?? ''} |`)
   }
   lines.push('')
   return lines.join('\n')
@@ -89,7 +96,11 @@ function selfTest(matrix) {
     (copy) => { delete copy.requirements[0].frontend },
     (copy) => { copy.requirements[0].overall = 'done' },
     (copy) => { copy.requirements[0].product.refs = ['docs/does-not-exist.md'] },
-    (copy) => { copy.requirements[0].device.refs = ['planned:M99'] }
+    (copy) => { copy.requirements[0].device.refs = ['planned:M99'] },
+    (copy) => {
+      const open = copy.requirements.find((item) => item.overall !== 'verified')
+      delete open.closureMilestone
+    }
   ]
   for (const mutate of mutations) {
     const copy = structuredClone(matrix)
