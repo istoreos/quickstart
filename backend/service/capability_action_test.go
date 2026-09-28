@@ -113,12 +113,73 @@ func TestCapabilityInstallPlanAndCancelPreserveDraft(t *testing.T) {
 	module := NewCapabilityActionModule(store)
 	request := &models.CapabilityActionRequest{CapabilityKey: "device_speed_limit", Action: "install", DraftToken: "device-1:restrictions"}
 	preview, err := module.Plan(context.Background(), request)
-	if err != nil || !preview.Result.Plan.CanApply || preview.Result.Plan.DraftToken != request.DraftToken || preview.Result.Plan.Target != "app-meta-eqos" {
+	if err != nil || !preview.Result.Plan.CanApply || preview.Result.Plan.DraftToken != request.DraftToken || preview.Result.Plan.Target != "quickstart-netpolicy" {
 		t.Fatalf("preview = %#v, %v", preview, err)
 	}
 	cancelled, err := module.Apply(context.Background(), request)
 	if err != nil || !cancelled.Result.Cancelled || cancelled.Result.Changed || len(store.installs) != 0 || cancelled.Result.Plan.DraftToken != request.DraftToken {
 		t.Fatalf("cancel = %#v, %v", cancelled, err)
+	}
+}
+
+func TestSystemCapabilityActionStoreEnablesNativeServiceWithoutTouchingEqos(t *testing.T) {
+	type invocation struct {
+		name string
+		args []string
+	}
+	var calls []invocation
+	store := &systemCapabilityActionStore{run: func(_ context.Context, name string, args ...string) ([]byte, error) {
+		calls = append(calls, invocation{name: name, args: append([]string(nil), args...)})
+		if len(args) == 1 && (args[0] == "enabled" || args[0] == "running") {
+			return nil, errors.New("inactive")
+		}
+		return nil, nil
+	}}
+	if err := store.Enable(context.Background(), "device_speed_limit"); err != nil {
+		t.Fatal(err)
+	}
+	want := []string{"enabled", "running", "enable", "start"}
+	if len(calls) != len(want) {
+		t.Fatalf("calls = %#v", calls)
+	}
+	for index, call := range calls {
+		if call.name != "/etc/init.d/quickstart-netpolicy" || len(call.args) != 1 || call.args[0] != want[index] {
+			t.Fatalf("call[%d] = %#v", index, call)
+		}
+		if call.name == "uci" || call.name == "/etc/init.d/eqos" {
+			t.Fatalf("legacy service touched: %#v", call)
+		}
+	}
+}
+
+func TestSystemCapabilityActionStoreRestoresNativeServiceStateWhenStartFails(t *testing.T) {
+	var actions []string
+	store := &systemCapabilityActionStore{run: func(_ context.Context, name string, args ...string) ([]byte, error) {
+		if name != "/etc/init.d/quickstart-netpolicy" || len(args) != 1 {
+			t.Fatalf("unexpected command: %s %#v", name, args)
+		}
+		actions = append(actions, args[0])
+		switch args[0] {
+		case "enabled", "running":
+			return nil, errors.New("inactive")
+		case "start":
+			return []byte("start failed"), errors.New("exit 1")
+		default:
+			return nil, nil
+		}
+	}}
+	err := store.Enable(context.Background(), "device_speed_limit")
+	if err == nil || err.Error() != "limit service could not be started; original service state was restored" {
+		t.Fatalf("error = %v", err)
+	}
+	want := []string{"enabled", "running", "enable", "start", "stop", "disable"}
+	if len(actions) != len(want) {
+		t.Fatalf("actions = %#v", actions)
+	}
+	for index := range want {
+		if actions[index] != want[index] {
+			t.Fatalf("actions = %#v", actions)
+		}
 	}
 }
 

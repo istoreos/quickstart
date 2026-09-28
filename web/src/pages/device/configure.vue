@@ -27,7 +27,7 @@
                             fill="#909399" p-id="4946"></path>
                     </svg>
                     <span>{{ $gettext('软件暂未安装') }}</span>
-                    <div class="not_installed_btn" @click="openMode('app-meta-eqos')">{{ $gettext("立即安装") }}</div>
+                    <div class="not_installed_btn" @click="openMode('quickstart-netpolicy')">{{ $gettext("立即安装") }}</div>
                 </div>
                 <div v-else>
                     <div class="item_box">

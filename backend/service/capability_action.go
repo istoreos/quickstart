@@ -36,7 +36,7 @@ func NewCapabilityActionModule(store capabilityActionStore) *CapabilityActionMod
 	return &CapabilityActionModule{store: store, pollInterval: 500 * time.Millisecond, pollTimeout: 30 * time.Second}
 }
 func NewDefaultCapabilityActionModule() *CapabilityActionModule {
-	return NewCapabilityActionModule(&systemCapabilityActionStore{})
+	return NewCapabilityActionModule(newSystemCapabilityActionStore())
 }
 
 func (module *CapabilityActionModule) Plan(ctx context.Context, request *models.CapabilityActionRequest) (*models.CapabilityActionResponse, error) {
@@ -165,7 +165,7 @@ func (module *CapabilityActionModule) plan(ctx context.Context, request *models.
 func capabilityInstallTarget(key string) string {
 	switch key {
 	case "device_speed_limit":
-		return "app-meta-eqos"
+		return "quickstart-netpolicy"
 	case "floating_gateway":
 		return "app-meta-floatip"
 	default:
@@ -177,7 +177,24 @@ func capabilityActionResponse(plan *models.CapabilityActionPlan, changed, cancel
 	return &models.CapabilityActionResponse{Result: &models.CapabilityActionResult{Plan: plan, Changed: changed, Cancelled: cancelled, Current: current, Error: policyErr}}
 }
 
-type systemCapabilityActionStore struct{}
+type capabilityCommandRunner func(context.Context, string, ...string) ([]byte, error)
+
+type systemCapabilityActionStore struct {
+	run capabilityCommandRunner
+}
+
+func newSystemCapabilityActionStore() *systemCapabilityActionStore {
+	return &systemCapabilityActionStore{run: func(ctx context.Context, name string, args ...string) ([]byte, error) {
+		return exec.CommandContext(ctx, name, args...).CombinedOutput()
+	}}
+}
+
+func (store *systemCapabilityActionStore) runCommand(ctx context.Context, name string, args ...string) ([]byte, error) {
+	if store == nil || store.run == nil {
+		return nil, errors.New("capability command runner is unavailable")
+	}
+	return store.run(ctx, name, args...)
+}
 
 func (store *systemCapabilityActionStore) Read(ctx context.Context, key string) (*models.Capability, error) {
 	response, err := NewLanGlobalConfigService().GetGlobalConfigs(ctx)
@@ -202,7 +219,7 @@ func (store *systemCapabilityActionStore) AvailableBytes(context.Context) (int64
 	return int64(stat.Bavail) * int64(stat.Bsize), nil
 }
 func (store *systemCapabilityActionStore) Install(ctx context.Context, target string) error {
-	output, err := exec.CommandContext(ctx, "is-opkg", "install", target).CombinedOutput()
+	output, err := store.runCommand(ctx, "is-opkg", "install", target)
 	if err != nil {
 		detail := strings.TrimSpace(string(output))
 		if len(detail) > 4096 {
@@ -218,27 +235,28 @@ func (store *systemCapabilityActionStore) Enable(ctx context.Context, capability
 	if capabilityKey != "device_speed_limit" {
 		return errors.New("this capability cannot be enabled from device management")
 	}
-	previous, err := exec.CommandContext(ctx, "uci", "get", "eqos.@eqos[0].enabled").Output()
-	if err != nil {
-		return errors.New("limit service configuration is unavailable")
-	}
-	oldValue := strings.TrimSpace(string(previous))
+	const service = "/etc/init.d/quickstart-netpolicy"
+	_, enabledErr := store.runCommand(ctx, service, "enabled")
+	_, runningErr := store.runCommand(ctx, service, "running")
+	wasEnabled, wasRunning := enabledErr == nil, runningErr == nil
 	rollback := func() {
-		_ = exec.Command("uci", "set", "eqos.@eqos[0].enabled="+oldValue).Run()
-		_ = exec.Command("uci", "commit", "eqos").Run()
-		_ = exec.Command("/etc/init.d/eqos", "restart").Run()
+		rollbackCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
+		if !wasRunning {
+			_, _ = store.runCommand(rollbackCtx, service, "stop")
+		}
+		if !wasEnabled {
+			_, _ = store.runCommand(rollbackCtx, service, "disable")
+		}
 	}
-	if err := exec.CommandContext(ctx, "uci", "set", "eqos.@eqos[0].enabled=1").Run(); err != nil {
+	if output, err := store.runCommand(ctx, service, "enable"); err != nil {
+		log.Printf("capability enable failed key=%s action=enable: %s", capabilityKey, strings.TrimSpace(string(output)))
 		return errors.New("limit service could not be enabled")
 	}
-	if err := exec.CommandContext(ctx, "uci", "commit", "eqos").Run(); err != nil {
+	if output, err := store.runCommand(ctx, service, "start"); err != nil {
+		log.Printf("capability enable failed key=%s action=start: %s", capabilityKey, strings.TrimSpace(string(output)))
 		rollback()
-		return errors.New("limit service configuration could not be saved")
-	}
-	if output, err := exec.CommandContext(ctx, "/etc/init.d/eqos", "restart").CombinedOutput(); err != nil {
-		log.Printf("capability enable failed key=%s: %s", capabilityKey, strings.TrimSpace(string(output)))
-		rollback()
-		return errors.New("limit service could not be restarted; original setting was restored")
+		return errors.New("limit service could not be started; original service state was restored")
 	}
 	return nil
 }
