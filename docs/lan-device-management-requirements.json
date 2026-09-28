@@ -774,15 +774,12 @@
         ]
       },
       "device": {
-        "status": "partial",
+        "status": "verified",
         "refs": [
-          "docs/evidence/m31/acceptance.md",
-          "docs/evidence/p0-p2-rate-limit/acceptance.md"
+          "docs/evidence/m59/acceptance.md"
         ]
       },
-      "overall": "partial",
-      "closureMilestone": "M59",
-      "blocker": "在隔离环境缩短窗口验收时段限速进入、退出与跨午夜"
+      "overall": "verified"
     },
     {
       "id": "NET-DEVICE-009",
@@ -1101,7 +1098,7 @@
         ]
       },
       "prototype": {
-        "status": "partial",
+        "status": "verified",
         "refs": [
           "docs/prototypes/lan-device-management/coverage.md"
         ]
@@ -1121,15 +1118,12 @@
         ]
       },
       "device": {
-        "status": "partial",
+        "status": "verified",
         "refs": [
-          "docs/evidence/m31/acceptance.md",
-          "docs/lan-device-management-m32-m40-closeout-milestones.md"
+          "docs/evidence/m59/acceptance.md"
         ]
       },
-      "overall": "partial",
-      "closureMilestone": "M59",
-      "blocker": "从正式页面保存、解释并恢复全局默认策略"
+      "overall": "verified"
     },
     {
       "id": "GROUP-002",
@@ -1210,15 +1204,12 @@
         ]
       },
       "device": {
-        "status": "partial",
+        "status": "verified",
         "refs": [
-          "docs/evidence/m31/acceptance.md",
-          "docs/lan-device-management-m32-m40-closeout-milestones.md"
+          "docs/evidence/m59/acceptance.md"
         ]
       },
-      "overall": "partial",
-      "closureMilestone": "M59",
-      "blocker": "实机验证批量预览、部分失败补偿及每服务每批最多重载一次"
+      "overall": "verified"
     },
     {
       "id": "GROUP-004",
