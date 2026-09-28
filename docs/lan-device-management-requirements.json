@@ -816,15 +816,12 @@
         ]
       },
       "device": {
-        "status": "partial",
+        "status": "verified",
         "refs": [
-          "docs/evidence/m31/acceptance.md",
-          "docs/lan-device-management-m32-m40-closeout-milestones.md"
+          "docs/evidence/m60/acceptance.md"
         ]
       },
-      "overall": "partial",
-      "closureMilestone": "M60",
-      "blocker": "实机验收额度计数、提醒或阻断、周期恢复及计数误差"
+      "overall": "verified"
     },
     {
       "id": "NET-DEVICE-010",
@@ -903,14 +900,12 @@
         ]
       },
       "device": {
-        "status": "partial",
+        "status": "verified",
         "refs": [
-          "docs/evidence/m19/acceptance.md"
+          "docs/evidence/m60/acceptance.md"
         ]
       },
-      "overall": "partial",
-      "closureMilestone": "M60",
-      "blocker": "完成 24 小时按需历史采样、闪存写入和低内存趋势验收"
+      "overall": "verified"
     },
     {
       "id": "NET-DEVICE-012",

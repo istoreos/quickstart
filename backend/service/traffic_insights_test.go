@@ -112,6 +112,25 @@ func TestTrafficQuotaPeriodBoundariesAndBlockRestore(t *testing.T) {
 	}
 }
 
+func TestTrafficQuotaNotifyNeverBlocksAccess(t *testing.T) {
+	policyStore := availablePolicyStore()
+	policy := newDevicePolicyModuleForTest(policyStore)
+	now := time.Date(2026, 9, 24, 10, 0, 0, 0, time.UTC)
+	module := NewTrafficInsightsModule(newTrafficInsightsFileStore(filepath.Join(t.TempDir(), "traffic.json")), policy)
+	module.now = func() time.Time { return now }
+	deviceID := policyStore.policy.DeviceID
+	if _, err := module.SetQuota(context.Background(), &models.TrafficQuotaRequest{DeviceID: deviceID, Enabled: true, Period: "daily", LimitBytes: 100, Action: "notify"}); err != nil {
+		t.Fatal(err)
+	}
+	_ = module.Record(context.Background(), insightTraffic(deviceID, 0, 0))
+	now = now.Add(time.Minute)
+	_ = module.Record(context.Background(), insightTraffic(deviceID, 60, 50))
+	status := module.quotaStatus(deviceID, now)
+	if !status.Exceeded || !policyStore.policy.Access.NetworkAccess || policyStore.applyCalls != 0 {
+		t.Fatalf("notify quota must report without blocking: status=%#v access=%v calls=%d", status, policyStore.policy.Access.NetworkAccess, policyStore.applyCalls)
+	}
+}
+
 func TestTrafficQuotaEditRestoresBlockImmediately(t *testing.T) {
 	policyStore := availablePolicyStore()
 	policy := newDevicePolicyModuleForTest(policyStore)
@@ -183,6 +202,40 @@ func TestTrafficInsightsTwentyDevicesThirtyDaysStayWithinBudget(t *testing.T) {
 	loaded, _, err := store.Load()
 	if err != nil || len(loaded.Daily) != 20 {
 		t.Fatalf("load failed: devices=%d err=%v", len(loaded.Daily), err)
+	}
+}
+
+func TestTrafficInsightsTwentyDevicesTwentyFourHoursStayWithinRuntimeBudget(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "traffic.json")
+	store := newTrafficInsightsFileStore(path)
+	writes := 0
+	store.persist = func(path string, raw []byte) error {
+		writes++
+		return persistClassificationOverrides(path, raw)
+	}
+	now := time.Date(2026, 9, 24, 0, 0, 0, 0, time.UTC)
+	module := NewTrafficInsightsModule(store, nil)
+	module.now = func() time.Time { return now }
+	response := &models.DeviceTrafficResponse{Result: &models.DeviceTrafficResult{}}
+	for device := 0; device < 20; device++ {
+		response.Result.Items = append(response.Result.Items, &models.DeviceTrafficItem{DeviceID: fmt.Sprintf("mac:%02d", device), State: "ready"})
+	}
+	started := time.Now()
+	for minute := 0; minute < 24*60; minute++ {
+		now = now.Add(time.Minute)
+		for _, item := range response.Result.Items {
+			item.UploadBytes += 1024
+			item.DownloadBytes += 2048
+		}
+		if err := module.Record(context.Background(), response); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if writes > 24*12+1 {
+		t.Fatalf("flash write budget exceeded: writes=%d", writes)
+	}
+	if module.storageSize > trafficInsightsBudget || len(module.document.Hourly) != 20 || time.Since(started) > 5*time.Second {
+		t.Fatalf("runtime budget exceeded: bytes=%d devices=%d duration=%s", module.storageSize, len(module.document.Hourly), time.Since(started))
 	}
 }
 

@@ -205,6 +205,16 @@ test('M58 migration and profile tasks distinguish restored from manual recovery'
     assert.match(profile, /policyErrorLabel\(error\.code/)
 })
 
+test('M60 history stays lazy and quota actions remain distinct', async () => {
+    const list = await readFile(new URL('../src/pages/device/deviceCenterList.vue', import.meta.url), 'utf8')
+    const insights = await readFile(new URL('../src/pages/device/components/trafficInsightsPanel.vue', import.meta.url), 'utf8')
+    assert.doesNotMatch(list, /trafficInsightsV2/)
+    assert.match(insights, /仅提醒/)
+    assert.match(insights, /达到后/)
+    assert.match(insights, /value="block"[^>]*>\{\{ \$gettext\('暂停联网'\)/)
+    assert.match(insights, /today.*week.*month/s)
+})
+
 test('M55 keeps Unicode device aliases separate from portable DHCP hostnames', async () => {
     const [panel, policy, profile] = await Promise.all([
         readFile(new URL('../src/pages/device/components/devicePolicyPanel.vue', import.meta.url), 'utf8'),
