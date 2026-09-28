@@ -197,6 +197,14 @@ test('M51 native speed limits stay simple while failures and Bandix migration re
     assert.doesNotMatch(settings, /eBPF|tc qdisc|BPF map/)
 })
 
+test('M58 migration and profile tasks distinguish restored from manual recovery', async () => {
+    const settings = await readFile(new URL('../src/pages/device/lanSettingsPanel.vue', import.meta.url), 'utf8')
+    const profile = await readFile(new URL('../src/pages/device/components/deviceProfileEditor.vue', import.meta.url), 'utf8')
+    assert.match(settings, /reason\?\.code==='rolled_back'/)
+    assert.match(settings, /reason\?\.code==='recovery_required'/)
+    assert.match(profile, /policyErrorLabel\(error\.code/)
+})
+
 test('M55 keeps Unicode device aliases separate from portable DHCP hostnames', async () => {
     const [panel, policy, profile] = await Promise.all([
         readFile(new URL('../src/pages/device/components/devicePolicyPanel.vue', import.meta.url), 'utf8'),

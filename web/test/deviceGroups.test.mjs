@@ -4,7 +4,7 @@ import { readFile } from 'node:fs/promises'
 
 test('M30 exposes one complete group-plan editor with preview and source explanation', async () => {
     const source = await readFile(new URL('../src/pages/device/deviceGroupsPanel.vue', import.meta.url), 'utf8')
-    for (const label of ['分组与计划', '在指定时段暂停联网', '自动跨到第二天', '单设备例外始终优先', '查看最终生效结果与来源', '上网路线', '速度上限', '流量额度', '预览影响']) {
+    for (const label of ['分组与计划', '在指定时段执行规则', '自动跨到第二天', '单设备例外始终优先', '查看最终生效结果与来源', '上网路线', '速度上限', '流量额度', '预览影响']) {
         assert.match(source, new RegExp(label))
     }
     assert.match(source, /effective\.slice\(0,50\)/)

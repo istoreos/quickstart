@@ -49,6 +49,7 @@ import type { DeviceClassification, DeviceListItem } from '../deviceInventory'
 import { editableDeviceCategories } from '../deviceClassification'
 import { deviceIconKeys, deviceIconLabels, isDeviceIconKey, type DeviceIconKey, type DeviceScene } from '../deviceScene'
 import { validDeviceAlias, type DeviceProfileResult } from '../deviceProfile'
+import { policyErrorLabel } from '../devicePolicy'
 
 const props = defineProps<{ device: DeviceListItem }>()
 const emit = defineEmits<{ (event: 'saved', value: { alias: string; classification: DeviceClassification; iconKey: DeviceIconKey }): void }>()
@@ -95,7 +96,7 @@ const post = async (body: Record<string, unknown>, success: string) => {
         const result = response.data?.result as DeviceProfileResult
         applyResult(result)
         feedbackKind.value = 'success'; feedback.value = result.changed ? success : $gettext('设置没有变化')
-    } catch (error: any) { feedbackKind.value = 'error'; feedback.value = error?.message || $gettext('保存失败，请稍后重试') }
+    } catch (error: any) { feedbackKind.value = 'error'; feedback.value = error?.code ? $gettext(policyErrorLabel(error.code, error?.message)) : error?.message || $gettext('保存失败，请稍后重试') }
     finally { saving.value = false }
 }
 const save = () => { if (!invalid.value) post({ action: 'patch', alias: alias.value.trim(), brand: brand.value.trim(), ...(profile.value?.manualCategory || category.value !== profile.value?.classification.category ? { category: category.value } : {}), iconMode: iconMode.value, ...(iconMode.value === 'manual' ? { iconKey: iconKey.value } : {}) }, $gettext('设备资料已更新')) }
