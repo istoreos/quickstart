@@ -30,6 +30,20 @@ type retryWebhookSender struct {
 	events   chan *models.NetworkAuditEvent
 }
 
+type blockingWebhookSender struct {
+	entered chan struct{}
+	release chan struct{}
+}
+
+func (sender *blockingWebhookSender) Send(_ context.Context, _ string, _ *models.NetworkAuditEvent) error {
+	select {
+	case sender.entered <- struct{}{}:
+	default:
+	}
+	<-sender.release
+	return nil
+}
+
 func (sender *retryWebhookSender) Send(_ context.Context, _ string, event *models.NetworkAuditEvent) error {
 	sender.attempts++
 	copyValue := *event
@@ -96,6 +110,17 @@ func TestManagementProbeAllowsInventoryLANOnly(t *testing.T) {
 	}
 	if cap(module.probeSlots) != 4 {
 		t.Fatalf("probe concurrency=%d", cap(module.probeSlots))
+	}
+}
+
+func TestManagementProbeDefaultClientDoesNotFollowRedirects(t *testing.T) {
+	module := NewManagementProbeModule(nil, nil)
+	if module.client.CheckRedirect == nil {
+		t.Fatal("management probe must define a redirect policy")
+	}
+	request, _ := http.NewRequest(http.MethodHead, "http://192.168.1.1/next", nil)
+	if err := module.client.CheckRedirect(request, nil); !errors.Is(err, http.ErrUseLastResponse) {
+		t.Fatalf("redirect policy returned %v", err)
 	}
 }
 
@@ -252,6 +277,37 @@ func TestWebhookRetryKeepsTheSamePrivatePayload(t *testing.T) {
 	if first.DeviceID != second.DeviceID || first.Reason != "" || second.Reason != "" || sender.attempts != 2 {
 		t.Fatalf("unsafe or inconsistent retry: first=%#v second=%#v attempts=%d", first, second, sender.attempts)
 	}
+}
+
+func TestWebhookQueueSaturationDoesNotBlockAudit(t *testing.T) {
+	sender := &blockingWebhookSender{entered: make(chan struct{}, 1), release: make(chan struct{})}
+	module := NewNetworkAuditModule(filepath.Join(t.TempDir(), "audit.json"), sender)
+	module.persist = func(string, []byte) error { return nil }
+	if response, err := module.SetWebhook(&models.WebhookConfig{Enabled: true, URL: "https://example.com/hook", Events: []string{"policy_changed"}}); err != nil || response.Result.Error != nil {
+		t.Fatalf("enable webhook: response=%#v err=%v", response, err)
+	}
+	module.Record("mac:first", "device_policy", "policy_changed", "success", "")
+	select {
+	case <-sender.entered:
+	case <-time.After(time.Second):
+		t.Fatal("webhook worker did not start")
+	}
+	done := make(chan struct{})
+	go func() {
+		for index := 0; index < webhookQueueLimit+100; index++ {
+			module.Record(fmt.Sprintf("mac:%d", index), "device_policy", "policy_changed", "success", "")
+		}
+		close(done)
+	}()
+	select {
+	case <-done:
+	case <-time.After(time.Second):
+		t.Fatal("saturated webhook queue blocked the audit path")
+	}
+	if len(module.queue) > cap(module.queue) || cap(module.queue) != webhookQueueLimit {
+		t.Fatalf("unbounded webhook queue: len=%d cap=%d", len(module.queue), cap(module.queue))
+	}
+	close(sender.release)
 }
 
 func TestDefaultWebhookClientDoesNotFollowRedirects(t *testing.T) {
