@@ -168,6 +168,8 @@ func (module *RateLimitModule) enforcement(provider rateLimitProvider, target ra
 	if target.HasIPv6 && !provider.SupportsIPv6() {
 		result.IPv6State = "unsupported"
 		result.Warnings = append(result.Warnings, "ipv6_not_limited")
+	} else if target.HasIPv6 && provider.SupportsIPv6() && provider.IdentityKind() == "mac" {
+		result.IPv6State = "covered"
 	}
 	if observation.Offload == "risk" {
 		result.Warnings = append(result.Warnings, "flow_offload_may_bypass_limit")

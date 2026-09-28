@@ -1580,15 +1580,15 @@
         ]
       },
       "device": {
-        "status": "partial",
+        "status": "verified",
         "refs": [
           "docs/evidence/p0-p2-rate-limit/acceptance.md",
-          "docs/evidence/m41-m52/acceptance.md"
+          "docs/evidence/m41-m52/acceptance.md",
+          "docs/evidence/m61/acceptance.md"
         ]
       },
-      "overall": "partial",
-      "closureMilestone": "M61",
-      "blocker": "Provider 切换、Bandix IPv4 与失败恢复已验收；仍需补 IPv6 数据面"
+      "overall": "verified",
+      "blocker": ""
     },
     {
       "id": "LAN-008",
