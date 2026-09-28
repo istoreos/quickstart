@@ -5,13 +5,18 @@ A_HOST="${A_HOST:-root@192.168.30.1}"
 B_HOST="${B_HOST:-root@192.168.30.244}"
 C_HOST="${C_HOST:-root@192.168.30.93}"
 D_HOST="${D_HOST:-root@192.168.30.7}"
-EXPECTED_VERSION="${EXPECTED_VERSION:-0.14.0}"
-EXPECTED_PACKAGE_VERSION="${EXPECTED_PACKAGE_VERSION:-0.14.0-r12}"
+PROJECT_ROOT="${PROJECT_ROOT:-$(CDPATH= cd -- "$(dirname "$0")/../.." && pwd)}"
+SOURCE_VERSION="$(sed -n 's/^const VERSION = "\(.*\)"/\1/p' "$PROJECT_ROOT/backend/api/version.go")"
+EXPECTED_VERSION="${EXPECTED_VERSION:-$SOURCE_VERSION}"
+EXPECTED_PACKAGE_VERSION="${EXPECTED_PACKAGE_VERSION:-${EXPECTED_VERSION}-r1}"
+A_EXPECTED_VERSION="${A_EXPECTED_VERSION:-$EXPECTED_VERSION}"
+B_EXPECTED_VERSION="${B_EXPECTED_VERSION:-$EXPECTED_VERSION}"
+A_EXPECTED_PACKAGE_VERSION="${A_EXPECTED_PACKAGE_VERSION:-$EXPECTED_PACKAGE_VERSION}"
+B_EXPECTED_PACKAGE_VERSION="${B_EXPECTED_PACKAGE_VERSION:-$EXPECTED_PACKAGE_VERSION}"
 EXPECTED_VIP_OWNER="${EXPECTED_VIP_OWNER:-B}"
 REQUIRE_PACKAGE_COHERENCE="${REQUIRE_PACKAGE_COHERENCE:-1}"
 CANDIDATE_MODE="${CANDIDATE_MODE:-0}"
 CANDIDATE_TARGET="${CANDIDATE_TARGET:-B}"
-PROJECT_ROOT="${PROJECT_ROOT:-$(CDPATH= cd -- "$(dirname "$0")/../.." && pwd)}"
 LOCAL_CANDIDATE_BINARY="${LOCAL_CANDIDATE_BINARY:-${PROJECT_ROOT}/bin/quickstart.amd64}"
 LOCAL_CANDIDATE_WEB_DIR="${LOCAL_CANDIDATE_WEB_DIR:-${PROJECT_ROOT}/web/dist/luci-static/quickstart}"
 SID="${SID:-lan-device-topology-smoke}"
@@ -43,7 +48,7 @@ if [ "$CANDIDATE_MODE" = 1 ]; then
     # is not supplied, require both nodes to expose the same non-empty value.
     EXPECTED_ASSET_VERSION="${EXPECTED_ASSET_VERSION:-${ASSET_VERSION:-}}"
 else
-    EXPECTED_ASSET_VERSION="${EXPECTED_ASSET_VERSION:-0.14.0-r12}"
+    EXPECTED_ASSET_VERSION="${EXPECTED_ASSET_VERSION:-${EXPECTED_PACKAGE_VERSION}}"
     EXPECTED_BINARY_SHA="${EXPECTED_BINARY_SHA:-1fea489dbba5077d9cdf72de2c3f0052d3143c555334ebe06bd2a2f119bf9653}"
     EXPECTED_INDEX_SHA="${EXPECTED_INDEX_SHA:-26ed35b4010558217ba7910f1b78ffc6b73f93623641fb42779f3b454c1af4b4}"
     EXPECTED_STYLE_SHA="${EXPECTED_STYLE_SHA:-96b1b3f5c2b9c48db1c937fc17f0f9f98e8fefd9569553c5c77355d88ef507f7}"
@@ -117,12 +122,14 @@ runtime_checks() {
     rt_label="$1"
     rt_host="$2"
     rt_candidate="$3"
+    rt_expected_version="$4"
+    rt_expected_package_version="$5"
     expect_remote "$rt_label SSH reachable" "$rt_host" 'true'
     expect_remote "$rt_label Quickstart single process" "$rt_host" '[ "$(pidof quickstart | wc -w)" -eq 1 ] && /etc/init.d/quickstart status >/dev/null'
     expect_remote "$rt_label dnsmasq running" "$rt_host" '/etc/init.d/dnsmasq status >/dev/null'
     expect_remote "$rt_label floatip running" "$rt_host" '/etc/init.d/floatip status >/dev/null'
 
-    expect_value "$rt_label backend version" "$EXPECTED_VERSION" "$(remote "$rt_host" '/usr/sbin/quickstart version' 2>/dev/null || true)"
+    expect_value "$rt_label backend version" "$rt_expected_version" "$(remote "$rt_host" '/usr/sbin/quickstart version' 2>/dev/null || true)"
     if [ "$CANDIDATE_MODE" != 1 ] || [ "$rt_candidate" = 1 ]; then
         expect_value "$rt_label backend hash" "$EXPECTED_BINARY_SHA" "$(remote "$rt_host" "sha256sum /usr/sbin/quickstart | cut -d ' ' -f1" 2>/dev/null || true)"
         expect_value "$rt_label index hash" "$EXPECTED_INDEX_SHA" "$(remote "$rt_host" "sha256sum /www/luci-static/quickstart/index.js | cut -d ' ' -f1" 2>/dev/null || true)"
@@ -145,8 +152,8 @@ runtime_checks() {
     quickstart_package="$(remote "$rt_host" "opkg list-installed quickstart | sed -n 's/^quickstart - //p'" 2>/dev/null || true)"
     luci_package="$(remote "$rt_host" "opkg list-installed luci-app-quickstart | sed -n 's/^luci-app-quickstart - //p'" 2>/dev/null || true)"
     if [ "$REQUIRE_PACKAGE_COHERENCE" = 1 ]; then
-        expect_value "$rt_label quickstart package" "$EXPECTED_PACKAGE_VERSION" "$quickstart_package"
-        expect_value "$rt_label LuCI package" "$EXPECTED_PACKAGE_VERSION" "$luci_package"
+        expect_value "$rt_label quickstart package" "$rt_expected_package_version" "$quickstart_package"
+        expect_value "$rt_label LuCI package" "$rt_expected_package_version" "$luci_package"
     else
         printf 'INFO  %s package quickstart=%s luci=%s (coherence gate disabled)\n' "$rt_label" "${quickstart_package:-missing}" "${luci_package:-missing}"
     fi
@@ -166,8 +173,8 @@ command -v ssh >/dev/null
 command -v jq >/dev/null
 
 case "$CANDIDATE_TARGET" in A) a_candidate=1; b_candidate=0 ;; B) a_candidate=0; b_candidate=1 ;; both) a_candidate=1; b_candidate=1 ;; *) echo 'CANDIDATE_TARGET must be A, B, or both' >&2; exit 2 ;; esac
-runtime_checks A "$A_HOST" "$a_candidate"
-runtime_checks B "$B_HOST" "$b_candidate"
+runtime_checks A "$A_HOST" "$a_candidate" "$A_EXPECTED_VERSION" "$A_EXPECTED_PACKAGE_VERSION"
+runtime_checks B "$B_HOST" "$b_candidate" "$B_EXPECTED_VERSION" "$B_EXPECTED_PACKAGE_VERSION"
 
 if [ "$CANDIDATE_MODE" = 1 ] && [ "$CANDIDATE_TARGET" = both ] && [ -z "$EXPECTED_ASSET_VERSION" ]; then
     a_asset_version="$(remote "$A_HOST" "sed -n 's/^local asset_version = \"\([^\"]*\)\"/\1/p' /usr/lib/lua/luci/view/quickstart/main.htm" 2>/dev/null || true)"
