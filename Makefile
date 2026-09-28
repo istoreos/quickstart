@@ -23,7 +23,7 @@ export DEPLOY_TARGET SSH_TARGET SSH_PORT SSH_EXTRA_OPTS SCP_EXTRA_OPTS
 export REMOTE_BINARY REMOTE_TMP REMOTE_BACKUP_DIR REMOTE_SERVICE REMOTE_LOG_COMMAND ROLLBACK_RELEASE
 
 .PHONY: help fmt tidy test build build-web build-amd64 build-arm64 build-armv7 release clean
-.PHONY: ops-targets ops-show-selected ops-release ops-init-selected ops-preflight-selected ops-deploy-selected ops-verify-selected ops-rollback-selected ops-ui-smoke-selected test-ops test-lan-lab test-lan-identity-address test-lan-capability-context test-lan-route test-lan-transaction-migration test-lan-groups-schedule verify-product smoke-lan-device smoke-lan-device-candidate smoke-bandix bandix-sources bandix-source-check
+.PHONY: ops-targets ops-show-selected ops-release ops-init-selected ops-preflight-selected ops-deploy-selected ops-verify-selected ops-rollback-selected ops-ui-smoke-selected test-ops test-lan-lab test-lan-identity-address test-lan-capability-context test-lan-route test-lan-transaction-migration test-lan-groups-schedule test-lan-traffic-quota verify-product smoke-lan-device smoke-lan-device-candidate smoke-bandix bandix-sources bandix-source-check
 
 help:
 	@printf '%s\n' \
@@ -51,6 +51,7 @@ help:
 		'  test-lan-route         Verify path precedence, gateway/DNS pairing, diagnostics, and rollback' \
 		'  test-lan-transaction-migration Verify migration and task transaction recovery boundaries' \
 		'  test-lan-groups-schedule Verify policy precedence, batch reload bounds, and schedules' \
+		'  test-lan-traffic-quota Verify quota actions, lazy history, and 24h resource budgets' \
 		'  verify-product         Validate and regenerate the five-layer product coverage matrix' \
 		'  smoke-lan-device       Fail-closed four-host release smoke; critical gateway stays read-only' \
 		'  smoke-lan-device-candidate  Validate local candidate artifacts on the four-host topology; ignore old opkg metadata' \
@@ -130,6 +131,9 @@ test-lan-transaction-migration:
 
 test-lan-groups-schedule:
 	./scripts/ops/lan-device-groups-schedule-smoke.sh
+
+test-lan-traffic-quota:
+	./scripts/ops/lan-device-traffic-quota-smoke.sh
 
 verify-product:
 	node ./scripts/validate-lan-device-coverage.mjs --self-test --write
