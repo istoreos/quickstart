@@ -66,6 +66,29 @@ func TestLanDHCPSettingsDisableRequiresConfirmationAndReportsRecovery(t *testing
 	}
 }
 
+func TestLanDHCPSettingsDisableAndRestoreInOneTaskModule(t *testing.T) {
+	store := &fakeLanDHCPSettingsStore{snapshot: testLanDHCPSettingsSnapshot()}
+	module := NewLanDHCPSettingsModule(store)
+	disabled := &models.LanDHCPSettings{Enabled: false, PoolStart: "192.168.30.100", PoolEnd: "192.168.30.239", LeaseTime: "12h", DefaultTargetID: "self"}
+	disable, err := module.Apply(context.Background(), &models.LanDHCPSettingsApplyRequest{
+		Settings: disabled, ConfirmDisable: true, ExpectedVersion: "v1", IdempotencyKey: "m55-disable",
+	})
+	if err != nil || disable.Result.Error != nil || !disable.Result.Changed || disable.Result.Transaction.Status != "committed" {
+		t.Fatalf("disable=%#v err=%v", disable, err)
+	}
+	restored := *disabled
+	restored.Enabled = true
+	restore, err := module.Apply(context.Background(), &models.LanDHCPSettingsApplyRequest{
+		Settings: &restored, ExpectedVersion: "v1", IdempotencyKey: "m55-restore",
+	})
+	if err != nil || restore.Result.Error != nil || !restore.Result.Changed || restore.Result.Transaction.Status != "committed" {
+		t.Fatalf("restore=%#v err=%v", restore, err)
+	}
+	if store.applies != 2 || store.snapshot.Settings == nil || !store.snapshot.Settings.Enabled {
+		t.Fatalf("applies=%d settings=%#v", store.applies, store.snapshot.Settings)
+	}
+}
+
 func TestLanDHCPSettingsApplyRejectsExternalAuthorityAndStaleVersion(t *testing.T) {
 	state := testLanDHCPSettingsSnapshot()
 	state.Authority = "external_observed"
