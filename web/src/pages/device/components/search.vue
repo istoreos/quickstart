@@ -1,5 +1,5 @@
 <template>
-    <div style="display: flex;align-items: center;">
+    <div class="device-actions">
         <button class="del-button add-button--danger" style="" v-if="showAdd" @click="handleAdd">
             <span>{{ $gettext('添加') }}</span>
         </button>
@@ -72,6 +72,14 @@ const handleAdd = () => {
 </script>
 
 <style lang="scss" scoped>
+.device-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    max-width: 100%;
+}
+
 .del-button {
     display: inline-flex;
     justify-content: center;
@@ -92,7 +100,7 @@ const handleAdd = () => {
     padding: 8px 15px;
     font-size: 14px;
     border-radius: 4px;
-    margin-right: 8px;
+    margin-right: 0;
 }
 
 .add-button--danger {
@@ -149,7 +157,7 @@ const handleAdd = () => {
 }
 
 .search_box {
-    width: 350px;
+    width: min(350px, 100%);
 
     .search_container {
         display: flex;
@@ -210,6 +218,18 @@ const handleAdd = () => {
                 animation: spin 1s linear infinite;
             }
         }
+    }
+}
+
+@media (max-width: 600px) {
+    .device-actions {
+        flex-wrap: wrap;
+        width: 100%;
+    }
+
+    .search_box {
+        flex-basis: 100%;
+        order: -1;
     }
 }
 

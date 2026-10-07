@@ -8,19 +8,21 @@ const config: {language: Language|undefined, numberFormat:Intl.NumberFormat } = 
 }
 
 export const createI18n = async (app: App) => {
-    const language = window.vue_lang
-    const t = new Date().getTime()
+    const language = window.vue_lang || (navigator.language.toLowerCase().startsWith("zh") ? "zh-cn" : "en")
     let translation = {};
-    try {
-        const res = await axios({
-            url: window.vue_lang_data,
-            method: "GET"
-        })
-        if (res.data) {
-            translation = res.data
+    const translationUrl = window.vue_lang_data || (language === "zh-cn" ? "" : `/luci-static/quickstart/i18n/${language}.json`)
+    if (translationUrl) {
+        try {
+            const res = await axios({
+                url: translationUrl,
+                method: "GET"
+            })
+            if (res.data) {
+                translation = res.data
+            }
+        } catch (error) {
+            console.log(error);
         }
-    } catch (error) {
-        console.log(error);
     }
     const gettext = createGettext({
         defaultLanguage: language,
@@ -76,5 +78,3 @@ export {
     useGettextLazy,
     formatNumber,
 }
-
-

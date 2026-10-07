@@ -1,0 +1,71 @@
+{
+  "target": "http://192.168.30.244/cgi-bin/luci/admin/quickstart/devicemanagement",
+  "generatedAt": "2026-09-28T02:16:36.758Z",
+  "profiles": [
+    {
+      "name": "desktop-zh-light",
+      "width": 1440,
+      "height": 900,
+      "locale": "zh-CN",
+      "colorScheme": "light",
+      "heading": "局域网设备管理",
+      "overflowX": false,
+      "internalTerms": [],
+      "background": "rgb(244, 245, 247)",
+      "auditEvents": 1,
+      "auditLimit": 512,
+      "focusRestored": true,
+      "consoleErrors": [],
+      "requestFailures": []
+    },
+    {
+      "name": "tablet-en-dark",
+      "width": 1024,
+      "height": 768,
+      "locale": "en-US",
+      "colorScheme": "dark",
+      "heading": "LAN device management",
+      "overflowX": false,
+      "internalTerms": [],
+      "background": "rgb(21, 21, 24)",
+      "auditEvents": 1,
+      "auditLimit": 512,
+      "focusRestored": true,
+      "consoleErrors": [],
+      "requestFailures": []
+    },
+    {
+      "name": "mobile-zh-dark",
+      "width": 390,
+      "height": 844,
+      "locale": "zh-CN",
+      "colorScheme": "dark",
+      "heading": "局域网设备管理",
+      "overflowX": false,
+      "internalTerms": [],
+      "background": "rgb(21, 21, 24)",
+      "auditEvents": 1,
+      "auditLimit": 512,
+      "focusRestored": true,
+      "consoleErrors": [],
+      "requestFailures": []
+    },
+    {
+      "name": "mobile-en-light",
+      "width": 390,
+      "height": 844,
+      "locale": "en-US",
+      "colorScheme": "light",
+      "heading": "LAN device management",
+      "overflowX": false,
+      "internalTerms": [],
+      "background": "rgb(244, 245, 247)",
+      "auditEvents": 1,
+      "auditLimit": 512,
+      "focusRestored": true,
+      "consoleErrors": [],
+      "requestFailures": []
+    }
+  ],
+  "failures": []
+}

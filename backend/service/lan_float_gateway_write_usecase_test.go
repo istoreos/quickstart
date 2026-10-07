@@ -175,9 +175,33 @@ func TestLanFloatGatewayWriteServicePropagatesStoreErrors(t *testing.T) {
 		&fakeLanFloatGatewayWriteStore{readStateErr: errors.New("read failed")},
 		&fakeLanFloatGatewayApply{},
 	)
-	err := svc.SetFloatGateway(context.Background(), FloatGatewayWriteInput{Role: "fallback"})
+	err := svc.SetFloatGateway(context.Background(), FloatGatewayWriteInput{
+		Role: "fallback", SetIP: "192.168.100.3", CheckIP: "192.168.100.2",
+	})
 	if err == nil || err.Error() != "read failed" {
 		t.Fatalf("err = %v, want read failed", err)
+	}
+}
+
+func TestLanFloatGatewayWriteServiceRejectsUnsafeLegacyInput(t *testing.T) {
+	t.Parallel()
+
+	store := &fakeLanFloatGatewayWriteStore{}
+	svc := NewLanFloatGatewayWriteService(store, &fakeLanFloatGatewayApply{})
+	tests := []FloatGatewayWriteInput{
+		{Role: "unknown", SetIP: "192.168.100.3", CheckIP: "192.168.100.2"},
+		{Role: "fallback", SetIP: "192.168.100.3'; reboot", CheckIP: "192.168.100.2"},
+		{Role: "fallback", SetIP: "192.168.100.3", CheckIP: "2001:db8::1"},
+		{Role: "main", SetIP: "192.168.100.3", CheckIP: "192.168.100.2", CheckURL: "https://example.com/'bad", CheckURLTimeout: 5},
+		{Role: "main", SetIP: "192.168.100.3", CheckIP: "192.168.100.2", CheckURL: "https://example.com", CheckURLTimeout: 31},
+	}
+	for index, input := range tests {
+		if err := svc.SetFloatGateway(context.Background(), input); err == nil {
+			t.Fatalf("case %d should fail: %+v", index, input)
+		}
+	}
+	if len(store.applyPlan.FloatCommands) != 0 {
+		t.Fatalf("unsafe input reached store: %+v", store.applyPlan)
 	}
 }
 

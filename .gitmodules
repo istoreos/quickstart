@@ -1,0 +1,9 @@
+[submodule "third_party/bandix/core"]
+	path = third_party/bandix/core
+	url = https://github.com/timsaya/bandix.git
+[submodule "third_party/bandix/openwrt"]
+	path = third_party/bandix/openwrt
+	url = https://github.com/timsaya/openwrt-bandix.git
+[submodule "third_party/bandix/luci"]
+	path = third_party/bandix/luci
+	url = https://github.com/timsaya/luci-app-bandix.git
