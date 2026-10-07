@@ -1,4 +1,14 @@
 definitions:
+  TaskTransaction:
+    type: object
+    required: [task, stage, status]
+    properties:
+      task: { type: string, enum: [profile, network, restrictions] }
+      idempotencyKey: { type: string, maxLength: 128 }
+      stage: { type: string, enum: [plan, validate, snapshot, apply, verify, rollback, recover] }
+      status: { type: string, enum: [in_progress, committed, unchanged, rejected, failed, rolled_back, recovery_required] }
+      replayed: { type: boolean }
+      recoveryAction: { type: string }
   DeviceManagementCapability:
     type: object
     required:
@@ -6,16 +16,68 @@ definitions:
     properties:
       state:
         type: string
-        enum: [available, disabled, not_installed, error]
+        enum: [available, disabled, not_installed, unsupported, error]
       reason:
         type: string
+      desiredRetained:
+        type: boolean
+      actions:
+        type: array
+        items:
+          type: object
+          properties:
+            kind: { type: string, enum: [install, enable, retry] }
+            target: { type: string }
+            requiresConfirmation: { type: boolean }
   DeviceManagementCapabilities:
     type: object
     properties:
+      items:
+        type: object
+        additionalProperties:
+          $ref: "#/definitions/DeviceManagementCapability"
+      internetAccess:
+        $ref: "#/definitions/DeviceManagementCapability"
       speedLimit:
         $ref: "#/definitions/DeviceManagementCapability"
       floatGateway:
         $ref: "#/definitions/DeviceManagementCapability"
+      trafficInsights:
+        $ref: "#/definitions/DeviceManagementCapability"
+  RouterContextEvidence:
+    type: object
+    properties:
+      kind: { type: string }
+      source: { type: string }
+      value: { type: string }
+      confidence: { type: string, enum: [configured, observed] }
+  RouteEditability:
+    type: object
+    required: [editable, reason]
+    properties:
+      editable: { type: boolean }
+      reason: { type: string }
+      guidance: { type: string }
+  RouterContext:
+    type: object
+    required: [lan, topologyPosition, dhcpAuthority, routeEditability]
+    properties:
+      lan: { type: string }
+      topologyPosition: { type: string, enum: [lan_gateway_candidate, downstream_router, ambiguous, unknown] }
+      localAddress: { type: string }
+      upstreamGateways: { type: array, items: { type: string } }
+      localDhcpConfigured: { type: boolean }
+      localDhcpHealthy: { type: boolean }
+      dhcpAuthority: { type: string, enum: [local, external_observed, none_detected, ambiguous, error] }
+      externalDhcpServers: { type: array, items: { type: string } }
+      routeEditability: { $ref: "#/definitions/RouteEditability" }
+      evidence: { type: array, items: { $ref: "#/definitions/RouterContextEvidence" } }
+  RouterContextResponse:
+    allOf:
+      - $ref: "common.yaml#/definitions/SDKNormalResponse"
+      - type: object
+        properties:
+          result: { $ref: "#/definitions/RouterContext" }
   LANDhcpGlobalConfig:
     type: object
     properties:
@@ -383,7 +445,7 @@ definitions:
         enum: [high, medium, low]
   DeviceInventoryItem:
     type: object
-    required: [deviceId, online, lastSeenAt, mac, identity, addresses, connection, classification]
+    required: [deviceId, online, presenceState, lastSeenAt, mac, identity, addresses, connection, classification, icon]
     properties:
       deviceId:
         type: string
@@ -393,6 +455,9 @@ definitions:
         type: string
       online:
         type: boolean
+      presenceState:
+        type: string
+        enum: [online, offline, never_seen]
       lastSeenAt:
         type: string
       mac:
@@ -401,12 +466,30 @@ definitions:
         type: string
       classification:
         $ref: "#/definitions/DeviceClassification"
+      icon:
+        $ref: "#/definitions/DeviceIconVisual"
       identity:
         $ref: "#/definitions/DeviceInventoryIdentity"
       addresses:
         $ref: "#/definitions/DeviceInventoryAddresses"
       connection:
         $ref: "#/definitions/DeviceInventoryConnection"
+  DeviceIconVisual:
+    type: object
+    required: [mode, resolvedKey, assetKey, label]
+    properties:
+      mode: { type: string, enum: [auto, manual] }
+      preferenceKey: { type: string }
+      resolvedKey: { type: string }
+      assetKey: { type: string }
+      label: { type: string }
+      brandLabel: { type: string }
+  DeviceInventoryAddRequest:
+    type: object
+    required: [mac]
+    properties:
+      mac: { type: string }
+      alias: { type: string, maxLength: 64 }
   DeviceInventoryResponse:
     type: object
     allOf:
@@ -538,12 +621,13 @@ definitions:
         type: object
         additionalProperties:
           $ref: "#/definitions/DevicePolicyCapability"
+      version: { type: string }
   DevicePolicyError:
     type: object
     properties:
       code:
         type: string
-        enum: [dependency_not_installed, conflict, validation_failed, apply_failed]
+        enum: [dependency_not_installed, conflict, validation_failed, apply_failed, transaction_unavailable, rolled_back, recovery_required, effect_record_failed]
       message: { type: string }
   DevicePolicyResponse:
     type: object
@@ -558,6 +642,8 @@ definitions:
           changed: { type: boolean }
           error:
             $ref: "#/definitions/DevicePolicyError"
+          transaction:
+            $ref: "#/definitions/TaskTransaction"
   DevicePolicyApplyRequest:
     type: object
     required: [deviceId, kind]
@@ -567,12 +653,18 @@ definitions:
         type: string
         enum: [static, speed, access]
       idempotencyKey: { type: string }
+      expectedVersion: { type: string }
       static:
         $ref: "#/definitions/DeviceStaticPolicy"
       speed:
         $ref: "#/definitions/DeviceSpeedPolicy"
       access:
         $ref: "#/definitions/DeviceAccessPolicy"
+  DeviceRestrictionPlanResponse:
+    type: object
+    allOf: [{ $ref: "common.yaml#/definitions/JsonResponse" }]
+    properties:
+      result: { type: object }
   DevicePolicyRulesResponse:
     type: object
     allOf:
@@ -589,3 +681,470 @@ definitions:
             type: array
             items:
               $ref: "#/definitions/LANCtrlSpeedLimitItem"
+  DeviceRuntimeDiagnosticsResponse:
+    type: object
+    allOf:
+      - $ref: "common.yaml#/definitions/JsonResponse"
+    properties:
+      result:
+        type: object
+        description: "Privacy-safe aggregate runtime counters; contains no device identity or address"
+        properties:
+          inventory: { type: object }
+          traffic: { type: object }
+          sampler: { type: object }
+          oui: { type: object }
+  DeviceProfile:
+    type: object
+    properties:
+      deviceId: { type: string }
+      alias: { type: string }
+      originalHostname: { type: string }
+      scope: { type: string, enum: [persistent, boot] }
+      classification: { $ref: "#/definitions/DeviceClassification" }
+  DeviceProfileResponse:
+    type: object
+    allOf:
+      - $ref: "common.yaml#/definitions/JsonResponse"
+    properties:
+      result:
+        type: object
+        properties:
+          profile: { $ref: "#/definitions/DeviceProfile" }
+          changed: { type: boolean }
+          error: { $ref: "#/definitions/DevicePolicyError" }
+          transaction: { $ref: "#/definitions/TaskTransaction" }
+  DeviceProfileApplyRequest:
+    type: object
+    required: [deviceId, action]
+    properties:
+      deviceId: { type: string }
+      idempotencyKey: { type: string, maxLength: 128 }
+      action: { type: string, enum: [patch, reset, reset_brand, reset_category, reset_icon] }
+      alias: { type: string, maxLength: 64 }
+      brand: { type: string, maxLength: 48 }
+      category: { type: string }
+      iconMode: { type: string, enum: [auto, manual] }
+      iconKey: { type: string }
+  GatewayTarget:
+    type: object
+    properties:
+      id: { type: string }
+      name: { type: string }
+      kind: { type: string, enum: [default, self, upstream, bypass, floating, custom] }
+      gateway: { type: string }
+      dns: { type: array, items: { type: string } }
+      supported: { type: boolean }
+      reasons: { type: array, items: { type: string } }
+      referenceCount: { type: integer }
+      desiredState: { type: string }
+      effectState: { type: string }
+      version: { type: string }
+  GatewayTargetListResponse:
+    type: object
+    allOf: [{ $ref: "common.yaml#/definitions/JsonResponse" }]
+    properties:
+      result:
+        type: object
+        properties:
+          targets: { type: array, items: { $ref: "#/definitions/GatewayTarget" } }
+          version: { type: string }
+          health: { type: string }
+  GatewayAssignmentRequest:
+    type: object
+    required: [action, targetId]
+    properties:
+      action: { type: string, enum: [assign, delete_target] }
+      deviceId: { type: string }
+      targetId: { type: string }
+      expectedVersion: { type: string }
+  GatewayAssignmentPlanResponse:
+    type: object
+    allOf: [{ $ref: "common.yaml#/definitions/JsonResponse" }]
+    properties:
+      result: { type: object }
+  GatewayAssignmentApplyResponse:
+    type: object
+    allOf: [{ $ref: "common.yaml#/definitions/JsonResponse" }]
+    properties:
+      result: { type: object }
+  GatewayReferencesResponse:
+    type: object
+    allOf: [{ $ref: "common.yaml#/definitions/JsonResponse" }]
+    properties:
+      result: { type: object }
+  GatewayTargetMutationRequest:
+    type: object
+    required: [action]
+    description: "Create, update, or safely replace and delete a user-facing Internet Path; DHCP implementation fields are intentionally absent"
+    properties:
+      action: { type: string, enum: [create, update, delete] }
+      targetId: { type: string }
+      name: { type: string, maxLength: 64 }
+      kind: { type: string, enum: [bypass, custom] }
+      gateway: { type: string }
+      replacementTargetId: { type: string }
+      expectedVersion: { type: string }
+      idempotencyKey: { type: string, maxLength: 128 }
+  GatewayTargetMutationPlanResponse:
+    type: object
+    allOf: [{ $ref: "common.yaml#/definitions/JsonResponse" }]
+    properties:
+      result: { type: object }
+  GatewayTargetMutationApplyResponse:
+    type: object
+    allOf: [{ $ref: "common.yaml#/definitions/JsonResponse" }]
+    properties:
+      result: { type: object }
+  DeviceAddressPolicy:
+    type: object
+    required: [enabled, bindIP]
+    description: "User-facing address reservation; intentionally excludes internal DHCP tags"
+    properties:
+      enabled: { type: boolean }
+      assignedIP: { type: string }
+      bindIP: { type: boolean }
+      hostname: { type: string, maxLength: 63 }
+  DeviceInternetPath:
+    type: object
+    required: [targetId, effect]
+    properties:
+      targetId: { type: string }
+      effect: { $ref: "#/definitions/PolicyEffect" }
+  DesiredNetworkPolicy:
+    type: object
+    required: [targetId, static]
+    properties:
+      targetId: { type: string }
+      static: { $ref: "#/definitions/DeviceAddressPolicy" }
+      updatedAt: { type: string, format: date-time }
+  AppliedNetworkConfiguration:
+    type: object
+    required: [targetId, configVersion, state]
+    properties:
+      targetId: { type: string }
+      configVersion: { type: string }
+      state: { type: string, enum: [server_applied, server_configuration_observed, apply_failed] }
+      appliedAt: { type: string, format: date-time }
+  ObservedNetworkEffect:
+    type: object
+    required: [state]
+    properties:
+      state: { type: string, enum: [pending_renewal, lease_observed_unverifiable, unverifiable, observation_error, failed] }
+      reason: { type: string }
+      source: { type: string }
+      observedAt: { type: string, format: date-time }
+  PolicyEffect:
+    type: object
+    required: [desired, applied, observed, needsAttention]
+    properties:
+      desired: { $ref: "#/definitions/DesiredNetworkPolicy" }
+      applied: { $ref: "#/definitions/AppliedNetworkConfiguration" }
+      observed: { $ref: "#/definitions/ObservedNetworkEffect" }
+      needsAttention: { type: boolean }
+      attentionReason: { type: string }
+  DeviceNetworkPolicy:
+    type: object
+    required: [deviceId, static, path, targets, version]
+    properties:
+      deviceId: { type: string }
+      static: { $ref: "#/definitions/DeviceAddressPolicy" }
+      path: { $ref: "#/definitions/DeviceInternetPath" }
+      targets: { type: array, items: { $ref: "#/definitions/GatewayTarget" } }
+      version: { type: string }
+  DeviceNetworkPolicyResponse:
+    type: object
+    allOf: [{ $ref: "common.yaml#/definitions/JsonResponse" }]
+    properties:
+      result:
+        type: object
+        properties:
+          policy: { $ref: "#/definitions/DeviceNetworkPolicy" }
+          changed: { type: boolean }
+          error: { $ref: "#/definitions/DevicePolicyError" }
+          transaction: { $ref: "#/definitions/TaskTransaction" }
+  DeviceNetworkPolicyApplyRequest:
+    type: object
+    required: [deviceId, static, targetId]
+    properties:
+      deviceId: { type: string }
+      idempotencyKey: { type: string, maxLength: 128 }
+      static: { $ref: "#/definitions/DeviceAddressPolicy" }
+      targetId: { type: string }
+      expectedVersion: { type: string }
+  DeviceNetworkPolicyPlanResponse:
+    type: object
+    allOf: [{ $ref: "common.yaml#/definitions/JsonResponse" }]
+    properties:
+      result: { type: object }
+  LanDHCPSettings:
+    type: object
+    required: [enabled, poolStart, poolEnd, leaseTime, defaultTargetId]
+    properties:
+      enabled: { type: boolean }
+      poolStart: { type: string }
+      poolEnd: { type: string }
+      leaseTime: { type: string }
+      defaultTargetId: { type: string }
+  LanDHCPSettingsApplyRequest:
+    type: object
+    required: [settings]
+    properties:
+      settings: { $ref: "#/definitions/LanDHCPSettings" }
+      confirmDisable: { type: boolean }
+      expectedVersion: { type: string }
+      idempotencyKey: { type: string, maxLength: 128 }
+  LanDHCPSettingsResponse:
+    type: object
+    allOf: [{ $ref: "common.yaml#/definitions/JsonResponse" }]
+    properties:
+      result: { type: object }
+  FloatingGatewayConfig:
+    type: object
+    required: [enabled, peerIPs]
+    properties:
+      enabled: { type: boolean }
+      role: { type: string, enum: [preferred, takeover] }
+      virtualIP: { type: string }
+      peerIPs: { type: array, items: { type: string } }
+      healthURL: { type: string }
+      healthTimeoutSec: { type: integer, minimum: 1, maximum: 30 }
+  FloatingGatewayStatus:
+    type: object
+    properties:
+      capability: { type: string, enum: [available, not_installed] }
+      state: { type: string, enum: [disabled, starting, healthy, degraded, failover, error] }
+      holder: { type: string, enum: [local, peer, none, unknown] }
+      serviceRunning: { type: boolean }
+      peerState: { type: string }
+      externalState: { type: string }
+      reason: { type: string }
+  FloatingGatewayResponse:
+    type: object
+    allOf: [{ $ref: "common.yaml#/definitions/JsonResponse" }]
+    properties:
+      result:
+        type: object
+        properties:
+          config: { $ref: "#/definitions/FloatingGatewayConfig" }
+          status: { $ref: "#/definitions/FloatingGatewayStatus" }
+          plan: { type: object }
+          changed: { type: boolean }
+          error: { $ref: "#/definitions/DevicePolicyError" }
+  FloatingGatewayApplyRequest:
+    type: object
+    required: [config]
+    properties:
+      config: { $ref: "#/definitions/FloatingGatewayConfig" }
+      expectedVersion: { type: string }
+  FloatingGatewayDrillResponse:
+    type: object
+    allOf: [{ $ref: "common.yaml#/definitions/JsonResponse" }]
+    properties:
+      result: { type: object }
+  NetworkRule:
+    type: object
+    properties:
+      id: { type: string }
+      kind: { type: string, enum: [static, route, speed, access] }
+      deviceId: { type: string }
+      displayName: { type: string }
+      mac: { type: string }
+      ip: { type: string }
+      status: { type: string, enum: [active, orphaned, unsupported] }
+      source: { type: string }
+      summary: { type: string }
+      orphaned: { type: boolean }
+      targetId: { type: string }
+  NetworkRulesResponse:
+    type: object
+    allOf: [{ $ref: "common.yaml#/definitions/JsonResponse" }]
+    properties:
+      result:
+        type: object
+        properties:
+          rules: { type: array, items: { $ref: "#/definitions/NetworkRule" } }
+          version: { type: string }
+          error: { $ref: "#/definitions/DevicePolicyError" }
+  NetworkRulesBulkRequest:
+    type: object
+    required: [action, ruleIds]
+    properties:
+      action: { type: string, enum: [delete] }
+      ruleIds: { type: array, maxItems: 128, items: { type: string } }
+      expectedVersion: { type: string }
+  NetworkRulesBulkResponse:
+    type: object
+    allOf: [{ $ref: "common.yaml#/definitions/JsonResponse" }]
+    properties:
+      result: { type: object }
+  GroupSpeedPolicy:
+    type: object
+    properties:
+      enabled: { type: boolean }
+      uploadSpeed: { type: integer, format: int64 }
+      downloadSpeed: { type: integer, format: int64 }
+  GroupQuotaPolicy:
+    type: object
+    properties:
+      enabled: { type: boolean }
+      period: { type: string, enum: [daily, weekly, monthly] }
+      limitBytes: { type: integer, format: int64 }
+      action: { type: string, enum: [notify, block] }
+  GroupSchedule:
+    type: object
+    required: [id, enabled, days, startMinute, endMinute, action]
+    properties:
+      id: { type: string }
+      enabled: { type: boolean }
+      days: { type: array, items: { type: integer, minimum: 0, maximum: 6 } }
+      startMinute: { type: integer, minimum: 0, maximum: 1439 }
+      endMinute: { type: integer, minimum: 0, maximum: 1439 }
+      action: { type: string, enum: [block, limit] }
+      speed: { $ref: "#/definitions/GroupSpeedPolicy" }
+  GroupPolicy:
+    type: object
+    properties:
+      access: { type: boolean }
+      speed: { $ref: "#/definitions/GroupSpeedPolicy" }
+      targetId: { type: string }
+      quota: { $ref: "#/definitions/GroupQuotaPolicy" }
+      schedules: { type: array, maxItems: 64, items: { $ref: "#/definitions/GroupSchedule" } }
+  DeviceGroup:
+    type: object
+    required: [id, name, priority, members, policy]
+    properties:
+      id: { type: string, maxLength: 64 }
+      name: { type: string, maxLength: 64 }
+      priority: { type: integer }
+      members: { type: array, items: { type: string } }
+      policy: { $ref: "#/definitions/GroupPolicy" }
+  DeviceGroupsResponse:
+    type: object
+    allOf: [{ $ref: "common.yaml#/definitions/JsonResponse" }]
+    properties:
+      result:
+        type: object
+        properties:
+          globalPolicy: { $ref: "#/definitions/GroupPolicy" }
+          groups: { type: array, maxItems: 128, items: { $ref: "#/definitions/DeviceGroup" } }
+          devicePolicies: { type: object }
+          effective: { type: array, items: { type: object } }
+          events: { type: array, maxItems: 256, items: { type: object } }
+          timezone: { type: string }
+          nextEvaluationAt: { type: string, format: date-time }
+          version: { type: string }
+          error: { $ref: "#/definitions/DevicePolicyError" }
+          lastBatch: { type: object }
+  DeviceGroupMutationRequest:
+    type: object
+    required: [action]
+    properties:
+      action: { type: string, enum: [upsert_group, delete_group, set_device_policy, set_global_policy] }
+      group: { $ref: "#/definitions/DeviceGroup" }
+      groupId: { type: string }
+      deviceId: { type: string }
+      globalPolicy: { $ref: "#/definitions/GroupPolicy" }
+      devicePolicy: { $ref: "#/definitions/GroupPolicy" }
+      expectedVersion: { type: string }
+  TrafficInsightBucket:
+    type: object
+    required: [start, uploadBytes, downloadBytes]
+    properties:
+      start: { type: string, format: date-time }
+      uploadBytes: { type: integer, format: int64 }
+      downloadBytes: { type: integer, format: int64 }
+  TrafficQuota:
+    type: object
+    required: [deviceId, enabled, period, limitBytes, action]
+    properties:
+      deviceId: { type: string }
+      enabled: { type: boolean }
+      period: { type: string, enum: [daily, weekly, monthly] }
+      limitBytes: { type: integer, format: int64, minimum: 1 }
+      action: { type: string, enum: [notify, block] }
+  TrafficQuotaRequest:
+    type: object
+    required: [deviceId, enabled]
+    properties:
+      deviceId: { type: string }
+      enabled: { type: boolean }
+      period: { type: string, enum: [daily, weekly, monthly] }
+      limitBytes: { type: integer, format: int64 }
+      action: { type: string, enum: [notify, block] }
+  TrafficInsightsResponse:
+    type: object
+    allOf: [{ $ref: "common.yaml#/definitions/JsonResponse" }]
+    properties:
+      result:
+        type: object
+        properties:
+          deviceId: { type: string }
+          range: { type: string, enum: [today, week, month] }
+          buckets: { type: array, items: { $ref: "#/definitions/TrafficInsightBucket" } }
+          uploadBytes: { type: integer, format: int64 }
+          downloadBytes: { type: integer, format: int64 }
+          quota: { type: object }
+          local: { type: object }
+          bandix: { type: object }
+          timezone: { type: string }
+          storageBytes: { type: integer, format: int64 }
+          storageBudget: { type: integer, format: int64 }
+          writeIntervalSeconds: { type: integer, format: int64 }
+          error: { $ref: "#/definitions/DevicePolicyError" }
+  AdvancedNetworkResponse:
+    type: object
+    allOf: [{ $ref: "common.yaml#/definitions/JsonResponse" }]
+    properties:
+      result:
+        type: object
+        properties:
+          capabilities: { type: object }
+          events: { type: array, maxItems: 512, items: { type: object } }
+          eventLimit: { type: integer }
+          webhook: { type: object }
+          error: { $ref: "#/definitions/DevicePolicyError" }
+  ManagementProbeRequest:
+    type: object
+    required: [deviceId, address, scheme, port]
+    properties:
+      deviceId: { type: string }
+      address: { type: string }
+      scheme: { type: string, enum: [http, https] }
+      port: { type: integer, enum: [80, 443, 8080, 8443] }
+  ManagementProbeResponse:
+    type: object
+    allOf: [{ $ref: "common.yaml#/definitions/JsonResponse" }]
+    properties:
+      result: { type: object }
+  WebhookConfig:
+    type: object
+    required: [enabled]
+    properties:
+      enabled: { type: boolean }
+      url: { type: string }
+      events: { type: array, items: { type: string, enum: [new_device, gateway_failover, policy_changed, quota_exceeded] } }
+  PolicyBundle:
+    type: object
+    required: [schemaVersion, scope, groups, devicePolicies, quotas]
+    properties:
+      schemaVersion: { type: integer, enum: [1] }
+      scope: { type: string, enum: [device_groups_and_quotas] }
+      exportedAt: { type: string, format: date-time }
+      globalPolicy: { $ref: "#/definitions/GroupPolicy" }
+      groups: { type: array, maxItems: 128, items: { $ref: "#/definitions/DeviceGroup" } }
+      devicePolicies: { type: object }
+      quotas: { type: object }
+  PolicyImportRequest:
+    type: object
+    required: [bundle]
+    properties:
+      bundle: { $ref: "#/definitions/PolicyBundle" }
+      expectedGroupVersion: { type: string }
+      planChecksum: { type: string }
+      confirmed: { type: boolean }
+  PolicyBundleResponse:
+    type: object
+    allOf: [{ $ref: "common.yaml#/definitions/JsonResponse" }]
+    properties:
+      result: { type: object }

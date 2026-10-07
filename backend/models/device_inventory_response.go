@@ -45,13 +45,20 @@ type DeviceInventoryItem struct {
 	DisplayName    string                     `json:"displayName,omitempty"`
 	Hostname       string                     `json:"hostname,omitempty"`
 	Online         bool                       `json:"online"`
+	PresenceState  string                     `json:"presenceState"`
 	LastSeenAt     string                     `json:"lastSeenAt"`
 	Mac            string                     `json:"mac"`
 	Vendor         string                     `json:"vendor,omitempty"`
 	Classification *DeviceClassification      `json:"classification"`
+	Icon           *DeviceIconVisual          `json:"icon"`
 	Identity       *DeviceInventoryIdentity   `json:"identity"`
 	Addresses      *DeviceInventoryAddresses  `json:"addresses"`
 	Connection     *DeviceInventoryConnection `json:"connection"`
+}
+
+type DeviceInventoryAddRequest struct {
+	MAC   string `json:"mac"`
+	Alias string `json:"alias,omitempty"`
 }
 
 // swagger:model deviceInventoryResult

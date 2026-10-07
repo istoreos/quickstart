@@ -30,6 +30,13 @@ type fakeTrafficSampler struct {
 	index   int
 }
 
+type churnTrafficInventory struct{ index int }
+
+func (inventory *churnTrafficInventory) Snapshot(context.Context) (*models.DeviceInventoryResponse, error) {
+	inventory.index++
+	return trafficInventoryResponse(fmt.Sprintf("mac:churn:%06d", inventory.index), fmt.Sprintf("fd00::%x", inventory.index)), nil
+}
+
 func (sampler *fakeTrafficSampler) Sample(context.Context) lanStatsSnapshot {
 	index := sampler.index
 	if index >= len(sampler.samples) {
@@ -182,7 +189,58 @@ func TestDeviceTrafficSimulatedTwoHourStateIsBounded(t *testing.T) {
 	if len(module.addresses) > 20 || len(module.addresses) > deviceTrafficAddressLimit {
 		t.Fatalf("address state grew to %d", len(module.addresses))
 	}
+	if len(module.totals) > 20 || len(module.totals) > deviceTrafficTotalLimit {
+		t.Fatalf("total state grew to %d", len(module.totals))
+	}
 	if growth := int64(after.HeapAlloc) - int64(before.HeapAlloc); growth > 10*1024*1024 {
 		t.Fatalf("heap grew by %d bytes", growth)
 	}
 }
+
+func TestDeviceTrafficHundredThousandIdentityChurnIsBounded(t *testing.T) {
+	now := time.Date(2026, 9, 24, 3, 0, 0, 0, time.UTC)
+	inventory := &churnTrafficInventory{}
+	sampler := &fakeTrafficSampler{samples: []lanStatsSnapshot{{samples: 2, sampledAt: now}}}
+	module := newDeviceTrafficModuleForTest(inventory, sampler, func() time.Time { return now })
+	for index := 0; index < 100_000; index++ {
+		now = now.Add(time.Millisecond)
+		sampler.samples[0].sampledAt = now
+		if _, err := module.Snapshot(context.Background()); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if len(module.addresses) > deviceTrafficAddressLimit || len(module.totals) > deviceTrafficTotalLimit {
+		t.Fatalf("unbounded churn state: addresses=%d totals=%d", len(module.addresses), len(module.totals))
+	}
+	if module.addressExpiry.Len() > deviceTrafficAddressLimit*4 || module.totalExpiry.Len() > deviceTrafficTotalLimit*4 {
+		t.Fatalf("unbounded expiry indexes: addresses=%d totals=%d", module.addressExpiry.Len(), module.totalExpiry.Len())
+	}
+}
+
+func benchmarkDeviceTrafficSnapshot(b *testing.B, deviceCount int) {
+	now := time.Date(2026, 9, 24, 3, 0, 0, 0, time.UTC)
+	devices := make([]*models.DeviceInventoryItem, 0, deviceCount)
+	hosts := make([]*LanHostRet, 0, deviceCount)
+	for index := 0; index < deviceCount; index++ {
+		address := fmt.Sprintf("192.168.%d.%d", index/250+10, index%250+1)
+		devices = append(devices, &models.DeviceInventoryItem{
+			DeviceID:  fmt.Sprintf("mac:benchmark:%03d", index),
+			Addresses: &models.DeviceInventoryAddresses{Current: []*models.DeviceInventoryAddress{{Family: 4, Address: address}}},
+		})
+		hosts = append(hosts, trafficHost(address, 1000, 2000, 100, 200, 2, now))
+	}
+	inventory := &fakeTrafficInventory{responses: []*models.DeviceInventoryResponse{{Result: &models.DeviceInventoryResult{Devices: devices}}}}
+	sampler := &fakeTrafficSampler{samples: []lanStatsSnapshot{{samples: 2, sampledAt: now, hosts: hosts}}}
+	module := newDeviceTrafficModuleForTest(inventory, sampler, func() time.Time { return now })
+	b.ReportAllocs()
+	b.ResetTimer()
+	for index := 0; index < b.N; index++ {
+		if _, err := module.Snapshot(context.Background()); err != nil {
+			b.Fatal(err)
+		}
+	}
+}
+
+func BenchmarkDeviceTrafficSnapshot20(b *testing.B)   { benchmarkDeviceTrafficSnapshot(b, 20) }
+func BenchmarkDeviceTrafficSnapshot256(b *testing.B)  { benchmarkDeviceTrafficSnapshot(b, 256) }
+func BenchmarkDeviceTrafficSnapshot2048(b *testing.B) { benchmarkDeviceTrafficSnapshot(b, 2048) }

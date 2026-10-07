@@ -63,10 +63,20 @@ load_target_env() {
     : "${SCP_EXTRA_OPTS:=}"
     : "${REMOTE_BINARY:=/usr/sbin/quickstart}"
     : "${REMOTE_TMP:=/tmp/quickstart.new}"
+    : "${REMOTE_WEB_ZIP:=/tmp/quickstart-web.new.zip}"
+    : "${REMOTE_INSTALLER:=/tmp/quickstart-install-candidate.sh}"
     : "${REMOTE_BACKUP_DIR:=/tmp/quickstart-backups}"
     : "${REMOTE_SERVICE:=/etc/init.d/quickstart}"
+    : "${REMOTE_WEB_DIR:=/www/luci-static/quickstart}"
+    : "${REMOTE_TEMPLATE:=/usr/lib/lua/luci/view/quickstart/main.htm}"
+    : "${REMOTE_STAGE_ROOT:=/tmp/quickstart-candidates}"
+    : "${REMOTE_HEALTH_URL:=http://127.0.0.1:3038/cgi-bin/luci/istore/lanctrl/v2/router-context/}"
     : "${REMOTE_LOG_COMMAND:=logread -e quickstart}"
     : "${LOCAL_BINARY:=${BUILD_DIR}/quickstart.amd64}"
+    : "${LOCAL_WEB_ZIP:=${PROJECT_ROOT}/web/dist/quickstart_web.zip}"
+    : "${LOCAL_REMOTE_INSTALLER:=${PROJECT_ROOT}/scripts/ops/install-candidate-remote.sh}"
+    : "${PROTECT_CRITICAL_GATEWAY:=0}"
+    : "${ALLOW_CRITICAL_GATEWAY_DEPLOY:=0}"
 
     require_var SSH_TARGET
     require_var SSH_PORT
@@ -77,6 +87,20 @@ load_target_env() {
     require_var REMOTE_LOG_COMMAND
 }
 
+ensure_local_candidate() {
+    ensure_local_binary
+    [ -f "$LOCAL_WEB_ZIP" ] || die "local web archive not found: ${LOCAL_WEB_ZIP}"
+    [ -x "$LOCAL_REMOTE_INSTALLER" ] || die "remote installer not executable: ${LOCAL_REMOTE_INSTALLER}"
+}
+
+validate_safe_deploy_value() {
+    value_name="$1"
+    eval "value=\${$value_name-}"
+    case "$value" in
+        ''|*[!A-Za-z0-9_./:-]*) die "unsafe ${value_name}: ${value}" ;;
+    esac
+}
+
 project_version() {
     sed -n 's/^const VERSION = "\(.*\)"/\1/p' "$VERSION_FILE"
 }
@@ -85,8 +109,9 @@ build_ldflags() {
     version="$(project_version)"
     [ -n "$version" ] || die "cannot read version from ${VERSION_FILE}"
     git_sha="$(git -C "$PROJECT_ROOT" rev-parse HEAD)"
-    build_date="$(date -u +.%Y%m%d.%H%M%S)"
-    printf '%s' "-X main.BuildVersion=${git_sha} -X main.BuildDate=${build_date} -X main.Version=${version} -s -w -extldflags \"-static\""
+    build_epoch="${SOURCE_DATE_EPOCH:-$(git -C "$PROJECT_ROOT" show -s --format=%ct HEAD)}"
+    build_date="$(date -u -d "@${build_epoch}" +.%Y%m%d.%H%M%S)"
+    printf '%s' "-buildid= -X main.BuildVersion=${git_sha} -X main.BuildDate=${build_date} -X main.Version=${version} -s -w -extldflags \"-static\""
 }
 
 ssh_base_args() {

@@ -1,6 +1,6 @@
 version: "1"
 name: ops-deploy-selected
-description: Build, upload, install, restart, and verify quickstart on the selected target
+description: Build, atomically deploy, verify, and preserve a rollback point for the complete Quickstart candidate
 tags: [ops, deploy, remote]
 workspace:
   workdir: ${PROJECT_ROOT}

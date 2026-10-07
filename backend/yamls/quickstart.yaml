@@ -1613,6 +1613,23 @@ paths:
           description: "设备清单快照"
           schema:
             $ref: "lanctrl.yaml#/definitions/DeviceInventoryResponse"
+    post:
+      tags:
+        - "lanctrl"
+      summary: "Add a never-seen device by MAC without creating a network rule"
+      consumes:
+        - "application/json"
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: "lanctrl.yaml#/definitions/DeviceInventoryAddRequest"
+      responses:
+        200:
+          description: "Updated inventory snapshot"
+          schema:
+            $ref: "lanctrl.yaml#/definitions/DeviceInventoryResponse"
   /cgi-bin/luci/istore/lanctrl/v2/device-traffic/:
     get:
       tags:
@@ -1622,6 +1639,323 @@ paths:
           description: "Device traffic telemetry"
           schema:
             $ref: "lanctrl.yaml#/definitions/DeviceTrafficResponse"
+  /cgi-bin/luci/istore/lanctrl/v2/device-diagnostics/:
+    get:
+      tags: ["lanctrl"]
+      summary: "Get privacy-safe device runtime diagnostics"
+      responses:
+        200:
+          description: "Aggregate cache and sampler diagnostics"
+          schema:
+            $ref: "lanctrl.yaml#/definitions/DeviceRuntimeDiagnosticsResponse"
+  /cgi-bin/luci/istore/lanctrl/v2/device-profile/:
+    get:
+      tags: ["lanctrl"]
+      parameters:
+        - { name: deviceId, in: query, required: true, type: string }
+      responses:
+        200:
+          description: "User-owned device profile"
+          schema: { $ref: "lanctrl.yaml#/definitions/DeviceProfileResponse" }
+    post:
+      tags: ["lanctrl"]
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema: { $ref: "lanctrl.yaml#/definitions/DeviceProfileApplyRequest" }
+      responses:
+        200:
+          description: "Updated device profile"
+          schema: { $ref: "lanctrl.yaml#/definitions/DeviceProfileResponse" }
+  /cgi-bin/luci/istore/lanctrl/v2/gateway-targets/:
+    get:
+      tags: ["lanctrl"]
+      responses:
+        200:
+          description: "Gateway targets without internal DHCP tag identifiers"
+          schema: { $ref: "lanctrl.yaml#/definitions/GatewayTargetListResponse" }
+  /cgi-bin/luci/istore/lanctrl/v2/gateway-assignment/plan/:
+    post:
+      tags: ["lanctrl"]
+      parameters:
+        - { name: body, in: body, required: true, schema: { $ref: "lanctrl.yaml#/definitions/GatewayAssignmentRequest" } }
+      responses:
+        200:
+          description: "Read-only gateway assignment plan"
+          schema: { $ref: "lanctrl.yaml#/definitions/GatewayAssignmentPlanResponse" }
+  /cgi-bin/luci/istore/lanctrl/v2/gateway-assignment/apply/:
+    post:
+      tags: ["lanctrl"]
+      parameters:
+        - { name: body, in: body, required: true, schema: { $ref: "lanctrl.yaml#/definitions/GatewayAssignmentRequest" } }
+      responses:
+        200:
+          description: "Transactional gateway assignment result"
+          schema: { $ref: "lanctrl.yaml#/definitions/GatewayAssignmentApplyResponse" }
+  /cgi-bin/luci/istore/lanctrl/v2/gateway-target-references/:
+    get:
+      tags: ["lanctrl"]
+      parameters:
+        - { name: targetId, in: query, required: true, type: string }
+      responses:
+        200:
+          description: "Devices and orphaned rules referencing a gateway target"
+          schema: { $ref: "lanctrl.yaml#/definitions/GatewayReferencesResponse" }
+  /cgi-bin/luci/istore/lanctrl/v2/gateway-target/plan/:
+    post:
+      tags: ["lanctrl"]
+      parameters:
+        - { name: body, in: body, required: true, schema: { $ref: "lanctrl.yaml#/definitions/GatewayTargetMutationRequest" } }
+      responses:
+        200:
+          description: "Read-only impact plan for creating, updating, or deleting an Internet Path"
+          schema: { $ref: "lanctrl.yaml#/definitions/GatewayTargetMutationPlanResponse" }
+  /cgi-bin/luci/istore/lanctrl/v2/gateway-target/apply/:
+    post:
+      tags: ["lanctrl"]
+      parameters:
+        - { name: body, in: body, required: true, schema: { $ref: "lanctrl.yaml#/definitions/GatewayTargetMutationRequest" } }
+      responses:
+        200:
+          description: "Transactional Internet Path mutation with reference replacement"
+          schema: { $ref: "lanctrl.yaml#/definitions/GatewayTargetMutationApplyResponse" }
+  /cgi-bin/luci/istore/lanctrl/v2/device-network-policy/:
+    get:
+      tags: ["lanctrl"]
+      summary: "Get address reservation and opaque internet path for one device"
+      parameters:
+        - { name: deviceId, in: query, required: true, type: string }
+      responses:
+        200:
+          description: "Unified device network policy"
+          schema: { $ref: "lanctrl.yaml#/definitions/DeviceNetworkPolicyResponse" }
+    post:
+      tags: ["lanctrl"]
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema: { $ref: "lanctrl.yaml#/definitions/DeviceNetworkPolicyApplyRequest" }
+      responses:
+        200:
+          description: "Atomically applied device network policy"
+          schema: { $ref: "lanctrl.yaml#/definitions/DeviceNetworkPolicyResponse" }
+  /cgi-bin/luci/istore/lanctrl/v2/device-network-policy/plan/:
+    post:
+      tags: ["lanctrl"]
+      parameters:
+        - { name: body, in: body, required: true, schema: { $ref: "lanctrl.yaml#/definitions/DeviceNetworkPolicyApplyRequest" } }
+      responses:
+        200:
+          description: "Read-only address and Internet Path impact plan"
+          schema: { $ref: "lanctrl.yaml#/definitions/DeviceNetworkPolicyPlanResponse" }
+  /cgi-bin/luci/istore/lanctrl/v2/device-network-policy/apply/:
+    post:
+      tags: ["lanctrl"]
+      parameters:
+        - { name: body, in: body, required: true, schema: { $ref: "lanctrl.yaml#/definitions/DeviceNetworkPolicyApplyRequest" } }
+      responses:
+        200:
+          description: "Confirmed transactional address and Internet Path result"
+          schema: { $ref: "lanctrl.yaml#/definitions/DeviceNetworkPolicyResponse" }
+  /cgi-bin/luci/istore/lanctrl/v2/device-restrictions/plan/:
+    post:
+      tags: ["lanctrl"]
+      parameters:
+        - { name: body, in: body, required: true, schema: { $ref: "lanctrl.yaml#/definitions/DevicePolicyApplyRequest" } }
+      responses:
+        200:
+          description: "Read-only access or speed impact plan"
+          schema: { $ref: "lanctrl.yaml#/definitions/DeviceRestrictionPlanResponse" }
+  /cgi-bin/luci/istore/lanctrl/v2/device-restrictions/apply/:
+    post:
+      tags: ["lanctrl"]
+      parameters:
+        - { name: body, in: body, required: true, schema: { $ref: "lanctrl.yaml#/definitions/DevicePolicyApplyRequest" } }
+      responses:
+        200:
+          description: "Confirmed transactional access or speed result"
+          schema: { $ref: "lanctrl.yaml#/definitions/DevicePolicyResponse" }
+  /cgi-bin/luci/istore/lanctrl/v2/floating-gateway/:
+    get:
+      tags: ["lanctrl"]
+      summary: "Get product-level floating gateway capability and state"
+      responses:
+        200:
+          description: "Floating gateway state"
+          schema: { $ref: "lanctrl.yaml#/definitions/FloatingGatewayResponse" }
+  /cgi-bin/luci/istore/lanctrl/v2/floating-gateway/plan/:
+    post:
+      tags: ["lanctrl"]
+      parameters:
+        - { name: body, in: body, required: true, schema: { $ref: "lanctrl.yaml#/definitions/FloatingGatewayApplyRequest" } }
+      responses:
+        200:
+          description: "Read-only floating gateway change plan"
+          schema: { $ref: "lanctrl.yaml#/definitions/FloatingGatewayResponse" }
+  /cgi-bin/luci/istore/lanctrl/v2/floating-gateway/apply/:
+    post:
+      tags: ["lanctrl"]
+      parameters:
+        - { name: body, in: body, required: true, schema: { $ref: "lanctrl.yaml#/definitions/FloatingGatewayApplyRequest" } }
+      responses:
+        200:
+          description: "Transactional floating gateway apply result"
+          schema: { $ref: "lanctrl.yaml#/definitions/FloatingGatewayResponse" }
+  /cgi-bin/luci/istore/lanctrl/v2/floating-gateway/drill-plan/:
+    get:
+      tags: ["lanctrl"]
+      responses:
+        200:
+          description: "Non-executing controlled failover drill plan"
+          schema: { $ref: "lanctrl.yaml#/definitions/FloatingGatewayDrillResponse" }
+  /cgi-bin/luci/istore/lanctrl/v2/network-rules/:
+    get:
+      tags: ["lanctrl"]
+      responses:
+        200:
+          description: "Unified address, route, speed and access rule ledger"
+          schema: { $ref: "lanctrl.yaml#/definitions/NetworkRulesResponse" }
+  /cgi-bin/luci/istore/lanctrl/v2/network-rules/plan/:
+    post:
+      tags: ["lanctrl"]
+      parameters:
+        - { name: body, in: body, required: true, schema: { $ref: "lanctrl.yaml#/definitions/NetworkRulesBulkRequest" } }
+      responses:
+        200:
+          description: "Read-only bulk rule operation plan"
+          schema: { $ref: "lanctrl.yaml#/definitions/NetworkRulesBulkResponse" }
+  /cgi-bin/luci/istore/lanctrl/v2/network-rules/apply/:
+    post:
+      tags: ["lanctrl"]
+      parameters:
+        - { name: body, in: body, required: true, schema: { $ref: "lanctrl.yaml#/definitions/NetworkRulesBulkRequest" } }
+      responses:
+        200:
+          description: "Transactional bulk rule operation result"
+          schema: { $ref: "lanctrl.yaml#/definitions/NetworkRulesBulkResponse" }
+  /cgi-bin/luci/istore/lanctrl/v2/device-groups/:
+    get:
+      tags: ["lanctrl"]
+      responses:
+        200:
+          description: "Bounded device groups, schedules and effective policy explanations"
+          schema: { $ref: "lanctrl.yaml#/definitions/DeviceGroupsResponse" }
+    post:
+      tags: ["lanctrl"]
+      parameters:
+        - { name: body, in: body, required: true, schema: { $ref: "lanctrl.yaml#/definitions/DeviceGroupMutationRequest" } }
+      responses:
+        200:
+          description: "Atomic device group mutation result"
+          schema: { $ref: "lanctrl.yaml#/definitions/DeviceGroupsResponse" }
+  /cgi-bin/luci/istore/lanctrl/v2/router-context/:
+    get:
+      tags: ["lanctrl"]
+      summary: "Get DHCP authority and route editability for one selected LAN"
+      parameters:
+        - { name: lan, in: query, required: false, type: string, default: lan }
+      responses:
+        200:
+          description: "Router context; probe failures are represented as a safe read-only result"
+          schema: { $ref: "lanctrl.yaml#/definitions/RouterContextResponse" }
+  /cgi-bin/luci/istore/lanctrl/v2/lan-dhcp-settings/:
+    get:
+      tags: ["lanctrl"]
+      responses:
+        200:
+          description: "Typed DHCP pool, lease, authority, and default Internet Path settings"
+          schema: { $ref: "lanctrl.yaml#/definitions/LanDHCPSettingsResponse" }
+  /cgi-bin/luci/istore/lanctrl/v2/lan-dhcp-settings/plan/:
+    post:
+      tags: ["lanctrl"]
+      parameters:
+        - { name: body, in: body, required: true, schema: { $ref: "lanctrl.yaml#/definitions/LanDHCPSettingsApplyRequest" } }
+      responses:
+        200:
+          description: "Read-only DHCP impact and conflict plan"
+          schema: { $ref: "lanctrl.yaml#/definitions/LanDHCPSettingsResponse" }
+  /cgi-bin/luci/istore/lanctrl/v2/lan-dhcp-settings/apply/:
+    post:
+      tags: ["lanctrl"]
+      parameters:
+        - { name: body, in: body, required: true, schema: { $ref: "lanctrl.yaml#/definitions/LanDHCPSettingsApplyRequest" } }
+      responses:
+        200:
+          description: "Confirmed transactional DHCP settings result"
+          schema: { $ref: "lanctrl.yaml#/definitions/LanDHCPSettingsResponse" }
+  /cgi-bin/luci/istore/lanctrl/v2/traffic-insights/:
+    get:
+      tags: ["lanctrl"]
+      parameters:
+        - { name: deviceId, in: query, required: true, type: string }
+        - { name: range, in: query, required: false, type: string, enum: [today, week, month] }
+      responses:
+        200:
+          description: "Bounded local historical traffic and optional Bandix capability"
+          schema: { $ref: "lanctrl.yaml#/definitions/TrafficInsightsResponse" }
+  /cgi-bin/luci/istore/lanctrl/v2/traffic-quota/:
+    post:
+      tags: ["lanctrl"]
+      parameters:
+        - { name: body, in: body, required: true, schema: { $ref: "lanctrl.yaml#/definitions/TrafficQuotaRequest" } }
+      responses:
+        200:
+          description: "Persist a daily, weekly or monthly device traffic quota"
+          schema: { $ref: "lanctrl.yaml#/definitions/TrafficInsightsResponse" }
+  /cgi-bin/luci/istore/lanctrl/v2/advanced-network/:
+    get:
+      tags: ["lanctrl"]
+      parameters:
+        - { name: deviceId, in: query, required: false, type: string }
+      responses:
+        200:
+          description: "Advanced capability truth and privacy-safe audit events"
+          schema: { $ref: "lanctrl.yaml#/definitions/AdvancedNetworkResponse" }
+  /cgi-bin/luci/istore/lanctrl/v2/management-probe/:
+    post:
+      tags: ["lanctrl"]
+      parameters:
+        - { name: body, in: body, required: true, schema: { $ref: "lanctrl.yaml#/definitions/ManagementProbeRequest" } }
+      responses:
+        200:
+          description: "Bounded LAN-only management endpoint probe"
+          schema: { $ref: "lanctrl.yaml#/definitions/ManagementProbeResponse" }
+  /cgi-bin/luci/istore/lanctrl/v2/network-webhook/:
+    post:
+      tags: ["lanctrl"]
+      parameters:
+        - { name: body, in: body, required: true, schema: { $ref: "lanctrl.yaml#/definitions/WebhookConfig" } }
+      responses:
+        200:
+          description: "Configure a disabled-by-default bounded event webhook"
+          schema: { $ref: "lanctrl.yaml#/definitions/AdvancedNetworkResponse" }
+  /cgi-bin/luci/istore/lanctrl/v2/policy-bundle/:
+    get:
+      tags: ["lanctrl"]
+      responses:
+        200:
+          description: "Export device groups, exceptions and traffic quotas"
+          schema: { $ref: "lanctrl.yaml#/definitions/PolicyBundleResponse" }
+  /cgi-bin/luci/istore/lanctrl/v2/policy-import/plan/:
+    post:
+      tags: ["lanctrl"]
+      parameters:
+        - { name: body, in: body, required: true, schema: { $ref: "lanctrl.yaml#/definitions/PolicyImportRequest" } }
+      responses:
+        200:
+          description: "Zero-write policy import dry-run"
+          schema: { $ref: "lanctrl.yaml#/definitions/PolicyBundleResponse" }
+  /cgi-bin/luci/istore/lanctrl/v2/policy-import/apply/:
+    post:
+      tags: ["lanctrl"]
+      parameters:
+        - { name: body, in: body, required: true, schema: { $ref: "lanctrl.yaml#/definitions/PolicyImportRequest" } }
+      responses:
+        200:
+          description: "Confirmed transactional policy import"
+          schema: { $ref: "lanctrl.yaml#/definitions/PolicyBundleResponse" }
   /cgi-bin/luci/istore/lanctrl/v2/device-policy/:
     get:
       tags: ["lanctrl"]

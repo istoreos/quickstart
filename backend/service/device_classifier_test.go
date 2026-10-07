@@ -19,7 +19,7 @@ func TestDeviceClassifierContract(t *testing.T) {
 		confidence string
 	}{
 		{name: "fallback", input: DeviceClassificationInput{}, category: "computer", source: "fallback", confidence: "low"},
-		{name: "ASUS manufacturer", input: DeviceClassificationInput{Manufacturer: "ASUSTek COMPUTER INC."}, brand: "ASUS", category: "computer", source: "manufacturer_default", confidence: "medium"},
+		{name: "ASUS manufacturer", input: DeviceClassificationInput{Manufacturer: "ASUSTek COMPUTER INC."}, brand: "ASUS", category: "network", source: "manufacturer_default", confidence: "medium"},
 		{name: "ASUS router model", input: DeviceClassificationInput{DisplayName: "ASUS RT-AX88U", Manufacturer: "ASUSTek COMPUTER INC."}, brand: "ASUS", category: "network", source: "model", confidence: "high"},
 		{name: "Nintendo Switch", input: DeviceClassificationInput{Hostname: "Nintendo-Switch"}, category: "gaming", source: "model", confidence: "high"},
 		{name: "network switch", input: DeviceClassificationInput{Hostname: "office-switch"}, category: "network", source: "hostname", confidence: "medium"},

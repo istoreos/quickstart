@@ -162,10 +162,28 @@ func TestBuildDeviceManagementCapabilityStates(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			got := buildDeviceManagementCapability(tt.installed, tt.enabled, tt.err)
-			if got.State != tt.wantState || got.Reason != tt.wantReason {
+			if string(got.State) != tt.wantState || got.Reason != tt.wantReason {
 				t.Fatalf("capability = %#v, want state=%q reason=%q", got, tt.wantState, tt.wantReason)
 			}
 		})
+	}
+}
+
+func TestBuildDeviceManagementCapabilitiesDegradeIndependently(t *testing.T) {
+	t.Parallel()
+
+	capabilities := buildDeviceManagementCapabilities(
+		FloatIPStatus{}, errors.New("float status unavailable"),
+		SpeedLimitStatus{}, nil,
+	)
+	if capabilities.InternetAccess.State != "available" || capabilities.TrafficInsights.State != "available" {
+		t.Fatalf("base capabilities were degraded: %#v", capabilities)
+	}
+	if capabilities.FloatGateway.State != "error" || len(capabilities.FloatGateway.Actions) != 1 || capabilities.FloatGateway.Actions[0].Kind != "retry" {
+		t.Fatalf("floating gateway capability = %#v", capabilities.FloatGateway)
+	}
+	if capabilities.SpeedLimit.State != "not_installed" || len(capabilities.SpeedLimit.Actions) != 1 || capabilities.SpeedLimit.Actions[0].Target != "quickstart-netpolicy" {
+		t.Fatalf("speed capability = %#v", capabilities.SpeedLimit)
 	}
 }
 

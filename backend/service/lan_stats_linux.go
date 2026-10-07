@@ -9,8 +9,10 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"sync/atomic"
 	"time"
 
+	"github.com/istoreos/quickstart/backend/models"
 	"github.com/ti-mo/conntrack"
 )
 
@@ -27,19 +29,28 @@ type LanStats struct {
 	c         *conntrack.Conn
 	isRunning bool
 	// Auto stop when no request after 30s
-	lastRunningTime  time.Time
-	hosts            map[string]*LanStatHost
-	fetchHostStatsCh chan *fetchHostStatsReq
-	lanPrefixes      []netip.Prefix
-	lanPrefixReader  func() ([]netip.Prefix, error)
-	lastPrefixRead   time.Time
-	maxHosts         int
-	hostIdleTTL      time.Duration
-	now              func() time.Time
-	lastFetchAt      time.Time
-	lastFetchErr     error
-	sampleCount      int64
-	procFallback     bool
+	lastRunningTime       time.Time
+	hosts                 map[string]*LanStatHost
+	fetchHostStatsCh      chan *fetchHostStatsReq
+	lanPrefixes           []netip.Prefix
+	lanPrefixReader       func() ([]netip.Prefix, error)
+	lastPrefixRead        time.Time
+	maxHosts              int
+	hostIdleTTL           time.Duration
+	now                   func() time.Time
+	lastFetchAt           time.Time
+	lastFetchErr          error
+	sampleCount           int64
+	procFallback          bool
+	lastNetlinkAttempt    time.Time
+	diagnosticSampling    atomic.Bool
+	diagnosticFallback    atomic.Bool
+	diagnosticHostCount   atomic.Int64
+	diagnosticFlowCount   atomic.Int64
+	diagnosticSampleNanos atomic.Int64
+	diagnosticFailures    atomic.Int64
+	diagnosticEvictions   atomic.Int64
+	diagnosticSamples     atomic.Int64
 }
 
 type LanStatHost struct {
@@ -105,13 +116,16 @@ func (lstat *LanStats) runOnce(tm *time.Timer) error {
 		tm.Reset(lanStatTimeTick)
 		lstat.lastRunningTime = time.Now()
 		lstat.isRunning = true
+		lstat.diagnosticSampling.Store(true)
 		err := lstat.fetchItems()
 		lstat.lastFetchErr = err
 		if err == nil {
 			lstat.lastFetchAt = lstat.currentTime()
 			lstat.sampleCount++
+			lstat.diagnosticSamples.Add(1)
 		}
 		if err != nil {
+			lstat.diagnosticFailures.Add(1)
 			l.Debugln("fetchItems in fetchStatCh err=", err)
 		}
 
@@ -122,6 +136,7 @@ func (lstat *LanStats) runOnce(tm *time.Timer) error {
 		now := time.Now()
 		if lstat.lastRunningTime.Add(10 * lanStatTimeTick).Before(now) {
 			lstat.isRunning = false
+			lstat.diagnosticSampling.Store(false)
 			tm.Stop()
 			lstat.closeConn()
 			return nil
@@ -131,8 +146,10 @@ func (lstat *LanStats) runOnce(tm *time.Timer) error {
 		if err == nil {
 			lstat.lastFetchAt = lstat.currentTime()
 			lstat.sampleCount++
+			lstat.diagnosticSamples.Add(1)
 		}
 		if err != nil {
+			lstat.diagnosticFailures.Add(1)
 			l.Debugln("fetchItems in timer err=", err)
 		}
 		tm.Reset(lanStatTimeTick)
@@ -161,26 +178,30 @@ func (lstat *LanStats) closeConn() {
 }
 
 func (lstat *LanStats) fetchItems() error {
+	started := time.Now()
+	flowCount := int64(0)
+	defer func() {
+		lstat.diagnosticFlowCount.Store(flowCount)
+		lstat.diagnosticHostCount.Store(int64(len(lstat.hosts)))
+		lstat.diagnosticSampleNanos.Store(time.Since(started).Nanoseconds())
+	}()
 	lstat.refreshLANPrefixes()
-	flows, err := lstat.readTrafficFlows()
-	if err != nil {
-		return err
-	}
 	for _, host := range lstat.hosts {
 		host.connectionCount = 0
 	}
-
-	for _, flow := range flows {
+	err := lstat.walkTrafficFlows(func(flow lanTrafficFlow) {
+		flowCount++
 		srcIP := flow.source
 		dstIP := flow.destination
 		// Skip broadcast IPs (like 255.255.255.255)
 		if srcIP.IsUnspecified() || dstIP.IsUnspecified() ||
 			srcIP.IsMulticast() || dstIP.IsMulticast() {
-			continue
+			return
 		}
-
-		// Get upstream (outbound) and downstream (inbound) traffic
 		lstat.recordFlow(srcIP, dstIP, flow.upstream, flow.downstream)
+	})
+	if err != nil {
+		return err
 	}
 
 	curr := lstat.currentTime()
@@ -203,40 +224,45 @@ type lanTrafficFlow struct {
 	downstream  int64
 }
 
-func (lstat *LanStats) readTrafficFlows() ([]lanTrafficFlow, error) {
-	if !lstat.procFallback {
+func (lstat *LanStats) walkTrafficFlows(visit func(lanTrafficFlow)) error {
+	now := lstat.currentTime()
+	tryNetlink := !lstat.procFallback || lstat.lastNetlinkAttempt.IsZero() || now.Sub(lstat.lastNetlinkAttempt) >= time.Minute
+	if tryNetlink {
+		lstat.lastNetlinkAttempt = now
 		if err := lstat.dial(); err == nil {
 			flows, dumpErr := lstat.c.Dump(nil)
 			if dumpErr == nil {
-				result := make([]lanTrafficFlow, 0, len(flows))
 				for _, flow := range flows {
-					result = append(result, lanTrafficFlow{
+					visit(lanTrafficFlow{
 						source: flow.TupleOrig.IP.SourceAddress, destination: flow.TupleOrig.IP.DestinationAddress,
 						upstream: int64(flow.CountersOrig.Bytes), downstream: int64(flow.CountersReply.Bytes),
 					})
 				}
-				return result, nil
+				lstat.procFallback = false
+				lstat.diagnosticFallback.Store(false)
+				return nil
 			}
 		}
 		lstat.closeConn()
 		lstat.procFallback = true
+		lstat.diagnosticFallback.Store(true)
 	}
-	return readProcConntrackFlows("/proc/net/nf_conntrack")
+	return walkProcConntrackFlows("/proc/net/nf_conntrack", visit)
 }
 
-func readProcConntrackFlows(path string) ([]lanTrafficFlow, error) {
+func walkProcConntrackFlows(path string, visit func(lanTrafficFlow)) error {
 	file, err := os.Open(path)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	defer file.Close()
-	result := make([]lanTrafficFlow, 0)
 	scanner := bufio.NewScanner(file)
 	buffer := make([]byte, 64*1024)
 	scanner.Buffer(buffer, 1024*1024)
 	for scanner.Scan() {
 		var source, destination netip.Addr
-		bytes := make([]int64, 0, 2)
+		var upstream, downstream int64
+		byteCount := 0
 		for _, field := range strings.Fields(scanner.Text()) {
 			key, value, ok := strings.Cut(field, "=")
 			if !ok {
@@ -252,24 +278,25 @@ func readProcConntrackFlows(path string) ([]lanTrafficFlow, error) {
 					destination, _ = netip.ParseAddr(value)
 				}
 			case "bytes":
-				if len(bytes) < 2 {
+				if byteCount < 2 {
 					parsed, parseErr := strconv.ParseInt(value, 10, 64)
 					if parseErr == nil && parsed >= 0 {
-						bytes = append(bytes, parsed)
+						if byteCount == 0 {
+							upstream = parsed
+						} else {
+							downstream = parsed
+						}
+						byteCount++
 					}
 				}
 			}
 		}
-		if !source.IsValid() || !destination.IsValid() || len(bytes) == 0 {
+		if !source.IsValid() || !destination.IsValid() || byteCount == 0 {
 			continue
 		}
-		downstream := int64(0)
-		if len(bytes) > 1 {
-			downstream = bytes[1]
-		}
-		result = append(result, lanTrafficFlow{source: source.Unmap(), destination: destination.Unmap(), upstream: bytes[0], downstream: downstream})
+		visit(lanTrafficFlow{source: source.Unmap(), destination: destination.Unmap(), upstream: upstream, downstream: downstream})
 	}
-	return result, scanner.Err()
+	return scanner.Err()
 }
 
 func (lstat *LanStats) recordFlow(srcIP, dstIP netip.Addr, upstream, downstream int64) {
@@ -347,6 +374,7 @@ func (lstat *LanStats) evictOldestHost() {
 	}
 	if oldestIP != "" {
 		delete(lstat.hosts, oldestIP)
+		lstat.diagnosticEvictions.Add(1)
 	}
 }
 
@@ -530,15 +558,44 @@ func lanPrefixesFromStatus(status *ubusLanStatus) []netip.Prefix {
 }
 
 func (lstat *LanStats) reqHosts(hostIP string, speedOnly bool) []*LanHostRet {
-	return lstat.reqSnapshot(hostIP, speedOnly).hosts
+	return lstat.reqSnapshotContext(context.Background(), hostIP, speedOnly).hosts
+}
+
+func (lstat *LanStats) diagnostics() *models.DeviceSamplerRuntimeDiagnostics {
+	if lstat == nil {
+		return &models.DeviceSamplerRuntimeDiagnostics{}
+	}
+	return &models.DeviceSamplerRuntimeDiagnostics{
+		Sampling:      lstat.diagnosticSampling.Load(),
+		ProcFallback:  lstat.diagnosticFallback.Load(),
+		HostCount:     lstat.diagnosticHostCount.Load(),
+		FlowCount:     lstat.diagnosticFlowCount.Load(),
+		LastSampleMS:  time.Duration(lstat.diagnosticSampleNanos.Load()).Milliseconds(),
+		SampleCount:   lstat.diagnosticSamples.Load(),
+		FailureCount:  lstat.diagnosticFailures.Load(),
+		EvictionCount: lstat.diagnosticEvictions.Load(),
+	}
 }
 
 func (lstat *LanStats) reqSnapshot(hostIP string, speedOnly bool) lanStatsSnapshot {
+	return lstat.reqSnapshotContext(context.Background(), hostIP, speedOnly)
+}
+
+func (lstat *LanStats) reqSnapshotContext(ctx context.Context, hostIP string, speedOnly bool) lanStatsSnapshot {
 	req := &fetchHostStatsReq{
 		hostIP:    hostIP,
 		speedOnly: speedOnly,
 		response:  make(chan lanStatsSnapshot, 1),
 	}
-	lstat.fetchHostStatsCh <- req
-	return <-req.response
+	select {
+	case <-ctx.Done():
+		return lanStatsSnapshot{err: ctx.Err()}
+	case lstat.fetchHostStatsCh <- req:
+	}
+	select {
+	case <-ctx.Done():
+		return lanStatsSnapshot{err: ctx.Err()}
+	case response := <-req.response:
+		return response
+	}
 }

@@ -5,6 +5,7 @@ import { formatTrafficBytes, telemetryBackoff, telemetryByDevice, telemetrySpeed
 
 test('traffic values distinguish warming up from a real zero sample', () => {
     assert.equal(telemetrySpeedLabel(undefined, 'up'), '采集中')
+    assert.equal(telemetrySpeedLabel(undefined, 'up', 'Collecting'), 'Collecting')
     assert.equal(telemetrySpeedLabel({ deviceId: 'one', state: 'warming_up', uploadSpeed: 0, downloadSpeed: 0, uploadBytes: 0, downloadBytes: 0, connectionCount: 0 }, 'up'), '采集中')
     assert.equal(telemetrySpeedLabel({ deviceId: 'one', state: 'ready', uploadSpeed: 0, downloadSpeed: 0, uploadBytes: 0, downloadBytes: 0, connectionCount: 0 }, 'up'), '0 B/s')
 })

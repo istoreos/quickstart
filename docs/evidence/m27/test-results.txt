@@ -1,0 +1,17 @@
+M27 self-check — 2026-09-25
+
+PASS backend full suite: 1441 tests / 89 packages
+PASS frontend node suite: 43 tests
+PASS frontend vue-tsc --noEmit
+PASS five-layer matrix validation: 55 requirements / 48 migrated / 7 P0 additions
+
+State scenarios:
+- no prior apply record -> server configuration observed / terminal unverifiable
+- saved -> server applied / pending renewal
+- lease source missing -> unverifiable
+- lease read error -> observation_error / needs attention
+- observer recovery -> pending renewal
+- post-save lease observed -> lease_observed_unverifiable
+- apply failed -> desired retained / apply_failed / failed
+- service module restart -> terminal observation restored
+- bounded store rejects entry 2049

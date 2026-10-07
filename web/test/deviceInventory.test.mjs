@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 
 import { buildDeviceListItems, detectDeviceScene, deviceCounts, deviceIdentityPresentation, normalizeDeviceBrand, resolveDeviceClassification, selectDeviceListItems, splitHighlight } from '../src/pages/device/deviceInventory.ts'
-import { deviceSceneIconPath } from '../src/pages/device/deviceScene.ts'
+import { deviceIconKeys, deviceIconLabels, deviceIconPath, deviceSceneIconPath } from '../src/pages/device/deviceScene.ts'
 
 const inventory = [
     {
@@ -28,12 +28,43 @@ test('buildDeviceListItems joins policy summaries by stable MAC identity', () =>
     assert.equal(result[0].controlled, true)
 })
 
+test('v2 policy rules replace the legacy device list dependency', () => {
+    const result = buildDeviceListItems(inventory, [], {
+        static: [{ assignedMac: 'AA:BB:CC:DD:EE:01' }],
+        speed: [{ mac: 'AA:BB:CC:DD:EE:01', enabled: true, networkAccess: false }],
+    })
+    assert.deepEqual(result[0].policyLabels, ['static', 'blocked'])
+    assert.equal(result[0].controlled, true)
+    assert.equal(result[0].legacy, undefined)
+})
+
+test('unified network rules keep list summaries consistent with routes and the rules ledger', () => {
+    const result = buildDeviceListItems(inventory, [], undefined, [
+        { kind: 'static', deviceId: inventory[0].deviceId },
+        { kind: 'route', mac: 'aa:bb:cc:dd:ee:01' },
+        { kind: 'speed', ip: '192.168.100.20' },
+    ])
+    assert.deepEqual(result[0].policyLabels, ['static', 'route', 'limited'])
+    assert.equal(result[0].controlled, true)
+    assert.deepEqual(result[1].policyLabels, [])
+})
+
 test('selectDeviceListItems filters, searches all identity fields and sorts without mutating', () => {
     const items = buildDeviceListItems(inventory, [])
     assert.deepEqual(selectDeviceListItems(items, 'online', '', 'recent').map(item => item.deviceId), [inventory[0].deviceId])
     assert.deepEqual(selectDeviceListItems(items, 'all', '192.168.100.30', 'recent').map(item => item.deviceId), [inventory[1].deviceId])
     assert.deepEqual(selectDeviceListItems(items, 'all', '', 'name').map(item => item.displayName), ['Living TV', 'Printer'])
     assert.equal(items.length, 2)
+})
+
+test('selectDeviceListItems composes connection brand and policy filters', () => {
+    const items = buildDeviceListItems(inventory, [], undefined, [
+        { kind: 'route', deviceId: inventory[0].deviceId },
+    ])
+    items[0].brand = 'Example'
+    assert.deepEqual(selectDeviceListItems(items, 'all', '', 'recent', { connection: 'wifi', brand: 'example', policy: 'route' }).map(item => item.deviceId), [inventory[0].deviceId])
+    assert.deepEqual(selectDeviceListItems(items, 'all', '', 'recent', { policy: 'none' }).map(item => item.deviceId), [inventory[1].deviceId])
+    assert.deepEqual(selectDeviceListItems(items, 'all', '', 'recent', { connection: 'lan' }), [])
 })
 
 test('deviceCounts and safe highlight segments support the list controls', () => {
@@ -75,10 +106,19 @@ test('device scenes use recognizable signals and safely fall back to unknown', (
     assert.equal(deviceSceneIconPath('unknown'), '/luci-static/quickstart/device-icons/computer.webp')
 })
 
-test('M7 presents reviewed brands without treating a manufacturer as a router', () => {
+test('M24 exposes 30 stable selectable icons with accessible labels', () => {
+    assert.equal(deviceIconKeys.length, 30)
+    assert.equal(new Set(deviceIconKeys).size, 30)
+    for (const key of deviceIconKeys) {
+        assert.ok(deviceIconLabels[key])
+        assert.match(deviceIconPath(key), /^\/luci-static\/quickstart\/device-icons\/.+\.webp$/)
+    }
+})
+
+test('confirmed ASUS manufacturer fallback presents a network device while stronger names win', () => {
     assert.equal(normalizeDeviceBrand('ASUSTek COMPUTER INC.'), 'ASUS')
     assert.equal(normalizeDeviceBrand('Unreviewed Manufacturer LLC'), '')
-    assert.equal(detectDeviceScene({ vendor: 'ASUSTek COMPUTER INC.' }), 'computer')
+    assert.equal(detectDeviceScene({ vendor: 'ASUSTek COMPUTER INC.' }), 'network')
     assert.equal(detectDeviceScene({ displayName: 'ASUS RT-AX88U', vendor: 'ASUSTek COMPUTER INC.' }), 'network')
     assert.equal(detectDeviceScene({ displayName: 'Family workstation', vendor: 'ASUSTek COMPUTER INC.' }), 'computer')
     assert.equal(detectDeviceScene({ displayName: '', hostname: '', vendor: '' }), 'unknown')
@@ -93,7 +133,7 @@ test('M8 prefers the backend classification contract and safely adapts old respo
 
     const legacy = resolveDeviceClassification({ ...inventory[0], displayName: '', hostname: '', vendor: 'ASUSTek COMPUTER INC.' })
     assert.equal(legacy.brand, 'ASUS')
-    assert.equal(legacy.category, 'computer')
+    assert.equal(legacy.category, 'network')
     assert.equal(legacy.source, 'manufacturer_default')
 
     const fallback = resolveDeviceClassification({ ...inventory[0], displayName: '', hostname: '', vendor: '' })

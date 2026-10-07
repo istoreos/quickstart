@@ -3,26 +3,29 @@ import test from 'node:test'
 
 import { capabilityAllowsConfiguration, resolveCapability } from '../src/pages/device/deviceCapabilities.ts'
 
-test('resolveCapability prefers the explicit backend contract', () => {
+test('resolveCapability reads the canonical capability map', () => {
     assert.deepEqual(resolveCapability({
-        capabilities: { speedLimit: { state: 'error', reason: 'status_unavailable' } },
-        speedLimit: { installed: true, enabled: true },
+        capabilities: {
+            items: {
+                device_speed_limit: { state: 'error', reason: 'status_unavailable' },
+            },
+            speedLimit: { state: 'available' },
+        },
     }, 'speedLimit'), { state: 'error', reason: 'status_unavailable' })
 })
 
-test('resolveCapability remains compatible with the legacy installed flags', () => {
-    assert.deepEqual(resolveCapability({ speedLimit: { installed: false } }, 'speedLimit'), {
-        state: 'not_installed',
-        reason: 'dependency_not_installed',
-    })
-    assert.deepEqual(resolveCapability({ floatGateway: { installed: true, enabled: false } }, 'floatGateway'), {
-        state: 'disabled',
-    })
+test('resolveCapability fails closed when the capability contract is absent', () => {
+    assert.deepEqual(resolveCapability({}, 'speedLimit'), { state: 'error', reason: 'capability_missing' })
+})
+
+test('resolveCapability fails closed for an unknown server state', () => {
+    assert.deepEqual(resolveCapability({ capabilities: { speedLimit: { state: 'future_state' } } }, 'speedLimit'), { state: 'error', reason: 'capability_state_unknown' })
 })
 
 test('only installed capabilities allow configuration', () => {
     assert.equal(capabilityAllowsConfiguration({ state: 'available' }), true)
     assert.equal(capabilityAllowsConfiguration({ state: 'disabled' }), true)
     assert.equal(capabilityAllowsConfiguration({ state: 'not_installed' }), false)
+    assert.equal(capabilityAllowsConfiguration({ state: 'unsupported' }), false)
     assert.equal(capabilityAllowsConfiguration({ state: 'error' }), false)
 })

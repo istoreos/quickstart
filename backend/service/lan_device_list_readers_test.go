@@ -12,11 +12,14 @@ func TestBuildDeviceInventoryItemInitializesDefaults(t *testing.T) {
 	<-initDone
 	initMutex.Lock()
 	original := d
-	d = make(map[int]interface{})
+	originalPrefixes := manufPrefixLengths
+	d = make(map[int]map[uint64]string)
 	parse("00:BB:CC", "Test Vendor")
+	finalizeManufIndex()
 	t.Cleanup(func() {
 		initMutex.Lock()
 		d = original
+		manufPrefixLengths = originalPrefixes
 		initMutex.Unlock()
 	})
 	initMutex.Unlock()

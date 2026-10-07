@@ -23,5 +23,5 @@ log "building ${output}"
 (
     cd "$BACKEND_ROOT"
     CGO_ENABLED=0 GOOS="$GOOS" GOARCH="$GOARCH" GOARM="$GOARM" \
-        "$GO" build -a -ldflags "$ldflags" -o "$output" ./cmd/backend
+        "$GO" build -a -trimpath -buildvcs=false -ldflags "$ldflags" -o "$output" ./cmd/backend
 )

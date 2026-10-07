@@ -27,7 +27,7 @@
                             fill="#909399" p-id="4946"></path>
                     </svg>
                     <span>{{ $gettext('软件暂未安装') }}</span>
-                    <div class="not_installed_btn" @click="openMode('app-meta-eqos')">{{ $gettext("立即安装") }}</div>
+                    <div class="not_installed_btn" @click="openMode('quickstart-netpolicy')">{{ $gettext("立即安装") }}</div>
                 </div>
                 <div v-else>
                     <div class="item_box">
@@ -62,57 +62,7 @@
 
             <!-- 浮动网关 -->
             <div v-show="activeTab === 'gateway'">
-                <PageState v-if="floatCapability.state === 'error'" kind="error"
-                    :title="$gettext('无法确认浮动网关状态')" :description="$gettext('请重试或检查插件状态。')"
-                    :action-label="$gettext('重新加载')" @action="getGlobalData" />
-                <div class="not_installed" v-else-if="!floatipShow">
-                    <svg t="1752659436579" class="icon" viewBox="0 0 1024 1024" version="1.1"
-                        xmlns="http://www.w3.org/2000/svg" p-id="4943" width="150" height="150">
-                        <path d="M216.896 97.232l-55.792 106.24 704.784 8.928-24.352-75.888-38.496-39.28z"
-                            fill="#FFFFFF" p-id="4944"></path>
-                        <path d="M192.016 255.968h655.968v592H192.016z" fill="#FFFFFF" p-id="4945"></path>
-                        <path
-                            d="M921.904 187.008l-66.72-80.656a69.744 69.744 0 0 0-55.168-26.32h-576a71.296 71.296 0 0 0-55.664 26.416l-66.256 80.56a93.984 93.984 0 0 0-22.08 61.024v600a96.288 96.288 0 0 0 96 96h672a96.288 96.288 0 0 0 96-96v-600a93.984 93.984 0 0 0-22.112-61.024zM512.016 777.856L246.128 512.032h166.144v-132.976h199.392v132.976h166.128zM179.664 179.664l33.152-66.464h598.128l33.2 66.464z"
-                            fill="#909399" p-id="4946"></path>
-                    </svg>
-                    <span>{{ $gettext('软件暂未安装') }}</span>
-                    <div class="not_installed_btn" @click="openMode('app-meta-floatip')">{{ $gettext("立即安装") }}</div>
-                </div>
-                <div v-else>
-                    <div class="item_box">
-                        <div class="item_left">{{ $gettext('浮动网关') }}：</div>
-                        <SwitchVue v-model="floatGatewayData.enabled" @change="floatGatewayChange" />
-                    </div>
-                    <div class="item_box">
-                        <div class="item_left">{{ $gettext('节点角色') }}：</div>
-                        <select v-model="floatGatewayData.role" @change="">
-                            <option v-if="showPlaceholder" value="" disabled> {{ $gettext('请选择') }} </option>
-                            <option v-for="option in nodeRole" :value="option.value">
-                                {{ option.name }}
-                            </option>
-                        </select>
-                    </div>
-                    <div class="item_box">
-                        <div class="item_left">{{ $gettext('浮动网关') }}IP：</div>
-                        <input id="tagName" type="text" v-model.trim="floatGatewayData.setIP"
-                            :placeholder="$gettext('请输入') + '...'" class="tag-input" />
-                    </div>
-                    <div class="item_box">
-                        <div class="item_left">{{ $gettext('旁路由IP') }}：</div>
-                        <input id="tagName" type="text" v-model.trim="floatGatewayData.checkIP"
-                            :placeholder="$gettext('请输入') + '...'" class="tag-input" />
-                    </div>
-                    <div class="item_box">
-                        <div class="item_left">
-                            <button class="add-button add-button--danger" @click="floatGatewaySave">{{ $gettext('保存')
-                                }}</button>
-                        </div>
-                    </div>
-                    <!-- <div style="display: flex;justify-content: center;margin-top: 16px;">
-                        <button class="add-button" @click="">{{ $gettext('取消') }}</button>
-                        <button class="add-button add-button--danger" style="width: 100px;" @click="">{{ $gettext('保存') }}</button>
-                    </div> -->
-                </div>
+                <FloatingGatewayWizard @install="openMode('app-meta-floatip')" />
             </div>
 
             <!-- 局域网DHCP -->
@@ -181,13 +131,11 @@ import request from '/@/request';
 import CustomTable from "./components/CustomTable.vue";
 import LoadError from "./components/loadError.vue";
 import PageState from "./components/pageState.vue";
+import FloatingGatewayWizard from "./components/floatingGatewayWizard.vue";
 import { requestErrorMessage } from "./requestError";
 import { capabilityAllowsConfiguration, resolveCapability, type DeviceCapability } from "./deviceCapabilities";
 import { useGettext } from '/@/plugins/i18n'
-import { on } from 'events';
 const { $gettext } = useGettext()
-
-const showPlaceholder = computed(() => !floatGatewayData.role)
 // const showPlaceholder1 = computed(() => !DHCPData.dhcpGateway)
 const tableData = ref([])
 const columns = ref([
@@ -197,10 +145,6 @@ const columns = ref([
     { label: '操作', prop: 'action', slot: 'action' }
 ])
 
-const nodeRole = ref([
-    { name: $gettext('主路由'), value: 'fallback' },
-    { name: $gettext('旁路由'), value: 'main' }
-])
 // DHCP数据
 const DHCPData = reactive({
     dhcpEnabled: false,
@@ -212,14 +156,6 @@ const speedLimitData = reactive({
     uploadSpeed: '' as string | number,
     downloadSpeed: '' as string | number,
     installed: true,
-    // action: 'post'
-})
-// 浮动网格数据
-const floatGatewayData = reactive({
-    enabled: false,
-    role: '',
-    setIP: '',
-    checkIP: '',
     // action: 'post'
 })
 
@@ -252,10 +188,6 @@ const getGlobalData = async () => {
             speedLimitData.enabled = data.result?.speedLimit?.enabled || false
             speedLimitData.uploadSpeed = data.result?.speedLimit?.uploadSpeed || ''
             speedLimitData.downloadSpeed = data.result?.speedLimit?.downloadSpeed || ''
-            floatGatewayData.enabled = data.result?.floatGateway?.enabled || false
-            floatGatewayData.role = data.result?.floatGateway?.role || ''
-            floatGatewayData.setIP = data.result?.floatGateway?.setIP || ''
-            floatGatewayData.checkIP = data.result?.floatGateway?.checkIP || ''
         } else if (data.error) {
             loadError.value = String(data.error)
         }
@@ -292,7 +224,6 @@ const DHCPSave = async () => {
 }
 
 const eqosShow = computed(() => capabilityAllowsConfiguration(speedCapability.value))
-const floatipShow = computed(() => capabilityAllowsConfiguration(floatCapability.value))
 
 type Tab = {
     id: string;
@@ -398,61 +329,11 @@ const ipSave = async () => {
     }
 }
 
-// 校验ip和mac
-const validateNetworkAddress = (type: 'ip' | 'mac', value: string) => {
-    if (!value) return false;
-    const patterns = {
-        ip: /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(?:\/([0-9]|[1-2][0-9]|3[0-2]))?$/,
-        mac: /^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$|^([0-9A-Fa-f]{4}\.){2}([0-9A-Fa-f]{4})$/
-    };
-
-    return patterns[type].test(value.trim());
-}
-// 保存浮动网关配置
-const floatGatewaySave = async () => {
-    if (!floatGatewayData.role) {
-        return Toast.Warning($gettext('请选择节点角色'))
-    }
-    if (!floatGatewayData.setIP) {
-        return Toast.Warning(`${$gettext('请输入')}${$gettext('浮动网关')}IP`)
-    }
-    if (!validateNetworkAddress('ip', floatGatewayData.setIP)) {
-        return Toast.Warning(`${$gettext('请输入正确的浮动网关IP地址')}`);
-    }
-    if (!floatGatewayData.checkIP) {
-        return Toast.Warning(`${$gettext('请输入')}${$gettext('旁路由')}IP`)
-    }
-    if (!validateNetworkAddress('ip', floatGatewayData.checkIP)) {
-        return Toast.Warning(`${$gettext('请输入正确的旁路由IP地址')}`);
-    }
-    let load = Toast.Loading($gettext("保存中..."))
-    try {
-        const { data } = await request.DeviceMangement.enableFloatGateway.POST(floatGatewayData)
-        if (JSON.stringify(data) === '{}') {
-            Toast.Success($gettext("保存成功"));
-            getGlobalData()
-        } else {
-            Toast.Warning(data?.error || $gettext('配置失败'))
-        }
-    } catch (error: any) {
-        Toast.Warning(requestErrorMessage(error, $gettext('配置失败')))
-    } finally {
-        load.Close()
-    }
-}
 
 const dhcpChange = (val: boolean) => {
     if (!val) {
         if (!confirm($gettext("温馨提示：关闭DHCP可能影响局域网内设备的IP分配和联网，请谨慎操作！"))) {
             DHCPData.dhcpEnabled = true
-        }
-    }
-}
-// 浮动网关关闭提示
-const floatGatewayChange = (val: boolean) => {
-    if(!val){
-        if(!confirm($gettext("温馨提示：关闭浮动网关可能影响正在使用浮动网关的设备，请谨慎操作！"))){
-            floatGatewayData.enabled = true
         }
     }
 }

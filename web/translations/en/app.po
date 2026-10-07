@@ -1,6 +1,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
 "Language-Team: none\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
@@ -12,6 +16,14 @@ msgstr ""
 #: src/components/editable-select/index.vue:10
 msgid "- -自定义- -"
 msgstr "- -Custom- -"
+
+#: src/pages/device/components/devicePolicyPanel.vue:24
+#: src/pages/device/components/devicePolicyPanel.vue:25
+#: src/pages/device/components/devicePolicyPanel.vue:26
+#: src/pages/device/deviceGroupsPanel.vue:22
+#: src/pages/device/deviceGroupsPanel.vue:23
+msgid "（不可用）"
+msgstr "(not available)"
 
 #: src/pages/network/gateway/index.vue:107
 #: src/pages/network/gateway/index.vue:108
@@ -158,13 +170,19 @@ msgstr ""
 msgid "DDNSTO控制台"
 msgstr "DDNSTO Console"
 
-#: src/pages/device/configure.vue:303
+#: src/pages/device/configure.vue:234
 msgid "DHCP"
-msgstr ""
+msgstr "DHCP"
 
-#: src/pages/device/components/devicePolicyPanel.vue:19
-msgid "DHCP 标签"
+#: src/pages/device/components/devicePolicyPanel.vue:35
+#: src/pages/device/deviceList.vue:81 src/pages/device/staticStateList.vue:48
+msgid "DHCP 主机名（可选）"
+msgstr "DHCP hostname (optional)"
+
+#: src/pages/device/deviceList.vue:438 src/pages/device/staticStateList.vue:322
+msgid "DHCP 主机名仅支持 1～63 位英文、数字或中间连字符"
 msgstr ""
+"DHCP hostnames only support 1-63 digits English, numbers or middle hyphens"
 
 #: src/components/action-edit/index.vue:27
 msgid "DHCP客户端"
@@ -173,6 +191,10 @@ msgstr "DHCP Client"
 #: src/components/action-netip/index.vue:220
 msgid "DHCP的IP池格式错误或超出子网范围"
 msgstr "DHCP IP pool format error or out of subnet range"
+
+#: src/pages/device/components/advancedNetworkTools.vue:26
+msgid "DNS 洞察"
+msgstr "DNS Insights"
 
 #: src/pages/network/dhcp/index.vue:48
 msgid "DNS 配置方式"
@@ -247,12 +269,12 @@ msgstr ""
 
 #: src/pages/device/components/dialog.vue:47
 msgid "ID"
-msgstr ""
+msgstr "Id"
 
-#: src/pages/device/deviceList.vue:453 src/pages/device/speedLimitList.vue:321
-#: src/pages/device/staticStateList.vue:334
+#: src/pages/device/deviceList.vue:452 src/pages/device/speedLimitList.vue:321
+#: src/pages/device/staticStateList.vue:336
 msgid "IP"
-msgstr ""
+msgstr "IP"
 
 #: src/pages/network/gateway/index.vue:39
 msgid "IP 地址"
@@ -262,10 +284,9 @@ msgstr "IP Address"
 msgid "IP 地址: "
 msgstr "IP Address: "
 
-#: src/pages/device/components/devicePolicyPanel.vue:15
-#, fuzzy
+#: src/pages/device/components/devicePolicyPanel.vue:32
 msgid "IPv4 地址"
-msgstr "IPv4 Address"
+msgstr "IPv4 address"
 
 #: src/components/action-domain/setup-ddns.vue:45
 #: src/components/action-netip/index.vue:11
@@ -286,11 +307,15 @@ msgstr "IPv4 Subnet Mask"
 msgid "IPv4子网掩码格式错误"
 msgstr "IPv4 Subnet Mask Format Error"
 
+#: src/pages/device/components/advancedNetworkTools.vue:26
+msgid "IPv6 地址策略"
+msgstr "IPv6 address policy"
+
 #: src/components/action-domain/setup-ddns.vue:46
 msgid "IPv6地址"
 msgstr "IPv6 Address"
 
-#: src/pages/device/deviceList.vue:128 src/pages/device/speedLimitList.vue:59
+#: src/pages/device/deviceList.vue:130 src/pages/device/speedLimitList.vue:59
 #: src/pages/network/dhcp/index.vue:24 src/pages/network/gateway/index.vue:41
 msgid "IP地址"
 msgstr "IP Address"
@@ -307,10 +332,10 @@ msgstr "IP Pool End Address"
 msgid "IP池起始地址"
 msgstr "IP Pool Start Address"
 
-#: src/pages/device/configure.vue:305 src/pages/device/configure.vue:337
+#: src/pages/device/configure.vue:236 src/pages/device/configure.vue:268
 #: src/pages/device/configure.vue:34
 msgid "IP限速"
-msgstr ""
+msgstr "IP Speed Limit"
 
 #: src/pages/index/index.vue:5
 msgid "iStoreOS官网"
@@ -330,11 +355,10 @@ msgstr ""
 "LAN port not associated with any physical network port, may cause router "
 "disconnection, continue?"
 
-#: src/pages/device/deviceList.vue:443 src/pages/device/speedLimitList.vue:327
-#: src/pages/device/staticStateList.vue:324
-#, fuzzy
+#: src/pages/device/deviceList.vue:442 src/pages/device/speedLimitList.vue:327
+#: src/pages/device/staticStateList.vue:326
 msgid "MAC"
-msgstr "MAC:"
+msgstr "MAC"
 
 #: src/components/tooltip/index.vue:6
 msgid "MAC："
@@ -342,15 +366,23 @@ msgstr "MAC:"
 
 #: src/pages/device/speedLimitList.vue:64
 msgid "MAC地址"
-msgstr ""
+msgstr "MAC address"
 
-#: src/pages/device/deviceList.vue:102 src/pages/device/staticStateList.vue:69
+#: src/pages/device/deviceList.vue:104 src/pages/device/staticStateList.vue:71
 msgid "MAC地址与IP绑定"
-msgstr ""
+msgstr "MAC address is tied to IP"
 
 #: src/pages/index/service/DownloadService.vue:18
 msgid "qBittorrent高级配置"
 msgstr "qBittorrent Adv."
+
+#: src/pages/device/lanSettingsPanel.vue:164
+msgid ""
+"Quickstart 限速服务未就绪。请安装或启动服务后重新检查；系统不会自动改用其他方"
+"式。"
+msgstr ""
+"Quickstart speed limiting is not ready. Install or start the service, then "
+"check again; the system will not switch modes automatically."
 
 #: src/pages/raid/index/index.vue:6
 msgid ""
@@ -457,6 +489,11 @@ msgstr ""
 msgid "Wi-Fi名称（SSID）"
 msgstr ""
 
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:65
+#: src/pages/device/deviceGroupsPanel.vue:52
+msgid "一"
+msgstr "Mon"
+
 #: src/components/action-sandbox/index.vue:9
 #: src/components/action-sandboxenvironment/index.vue:9
 msgid ""
@@ -467,40 +504,81 @@ msgstr ""
 "programs, and for developing unfinished software, but does not protect "
 "Docker and hard disk data"
 
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:65
+#: src/pages/device/deviceGroupsPanel.vue:52
+msgid "三"
+msgstr "Wed"
+
+#: src/pages/device/components/floatingGatewayWizard.vue:60
+#: src/pages/device/components/floatingGatewayWizard.vue:61
+#: src/pages/device/components/floatingGatewayWizard.vue:62
+msgid "上一步"
+msgstr "Back"
+
 #: src/pages/device/components/flow.vue:245
 #: src/pages/device/components/flow.vue:287
 #: src/pages/device/components/flow.vue:361
-#: src/pages/device/deviceCenterList.vue:158
+#: src/pages/device/components/trafficInsightsPanel.vue:8
+#: src/pages/device/deviceCenterList.vue:145
 #: src/pages/index/network/NetworkFlow.vue:17
 #: src/pages/index/network/NetworkFlow.vue:307
 #: src/pages/index/network/NetworkFlow.vue:417
 msgid "上传"
 msgstr "Upload"
 
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:25
+#: src/pages/device/deviceGroupsPanel.vue:24
+#: src/pages/device/deviceGroupsPanel.vue:33
+msgid "上传 Mbit/s"
+msgstr "Upload (Mbit/s)"
+
 #: src/pages/device/components/flow.vue:5
 msgid "上传:"
 msgstr "Upload:"
 
-#: src/pages/device/components/devicePolicyPanel.vue:33
+#: src/pages/device/components/devicePolicyPanel.vue:56
 msgid "上传上限（Mbit/s）"
-msgstr ""
+msgstr "Upload limit (Mbit/s)"
 
-#: src/pages/device/configure.vue:373 src/pages/device/configure.vue:45
-#: src/pages/device/deviceList.vue:493 src/pages/device/deviceList.vue:57
+#: src/pages/device/configure.vue:304 src/pages/device/configure.vue:45
+#: src/pages/device/deviceList.vue:492 src/pages/device/deviceList.vue:57
 #: src/pages/device/speedLimitList.vue:340
 #: src/pages/index/network/NetworkFlow.vue:38
 #: src/pages/networkSpeedTest/components/item.vue:80
 msgid "上传速度"
-msgstr ""
+msgstr "Upload Speed"
 
 #: src/pages/device/speedLimitList.vue:84
 msgid "上传限速（Mbit/s）"
-msgstr ""
+msgstr "Upload speed limit (Mbit/s)"
 
-#: src/pages/device/configure.vue:322 src/pages/device/deviceList.vue:242
-#: src/pages/device/staticStateList.vue:129
+#: src/pages/device/configure.vue:253 src/pages/device/deviceList.vue:240
+#: src/pages/device/staticStateList.vue:132
 msgid "上级路由"
-msgstr ""
+msgstr "Upstream router"
+
+#: src/pages/device/components/advancedNetworkTools.vue:30
+#: src/pages/device/components/devicePolicyPanel.vue:23
+#: src/pages/device/components/devicePolicyPanel.vue:241
+#: src/pages/device/deviceGroupsPanel.vue:23
+#: src/pages/device/lanSettingsPanel.vue:152
+#: src/pages/device/lanSettingsPanel.vue:185
+#: src/pages/device/networkRulesHub.vue:38
+#: src/pages/device/networkRulesHub.vue:9
+msgid "上网路线"
+msgstr "Internet path"
+
+#: src/pages/device/lanSettingsPanel.vue:275
+msgid "上网路线已更新"
+msgstr "Internet path updated"
+
+#: src/pages/device/lanSettingsPanel.vue:275
+msgid "上网路线没有变化"
+msgstr "No changes to the Internet path"
+
+#: src/pages/device/components/devicePolicyPanel.vue:30
+msgid "上网路线状态"
+msgstr "Internet Route Status"
 
 #: src/components/action-disk-format/index.vue:108
 #: src/components/action-disk-format/index.vue:129
@@ -516,26 +594,44 @@ msgstr ""
 #: src/components/action-disk/index.vue:28
 #: src/components/action-domain/setup-index.vue:44
 #: src/components/action-nas/index.vue:17
+#: src/pages/device/components/floatingGatewayWizard.vue:61
+#: src/pages/device/components/floatingGatewayWizard.vue:62
+#: src/pages/device/components/floatingGatewayWizard.vue:63
 msgid "下一步"
 msgstr "Next"
+
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:13
+msgid "下次变化"
+msgstr "Next change"
+
+#: src/pages/device/deviceGroupsPanel.vue:7
+msgid "下次检查"
+msgstr "Next check"
 
 #: src/pages/device/components/flow.vue:219
 #: src/pages/device/components/flow.vue:293
 #: src/pages/device/components/flow.vue:348
-#: src/pages/device/deviceCenterList.vue:158
+#: src/pages/device/components/trafficInsightsPanel.vue:8
+#: src/pages/device/deviceCenterList.vue:145
 #: src/pages/index/network/NetworkFlow.vue:13
 #: src/pages/index/network/NetworkFlow.vue:281
 #: src/pages/index/network/NetworkFlow.vue:404
 msgid "下载"
 msgstr "Download"
 
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:25
+#: src/pages/device/deviceGroupsPanel.vue:24
+#: src/pages/device/deviceGroupsPanel.vue:33
+msgid "下载 Mbit/s"
+msgstr "Download (Mbit/s)"
+
 #: src/pages/device/components/flow.vue:6
 msgid "下载:"
 msgstr "Download:"
 
-#: src/pages/device/components/devicePolicyPanel.vue:34
+#: src/pages/device/components/devicePolicyPanel.vue:57
 msgid "下载上限（Mbit/s）"
-msgstr ""
+msgstr "Download limit (Mbit/s)"
 
 #: src/pages/index/index.vue:346
 msgid "下载任务与服务状态"
@@ -580,17 +676,28 @@ msgstr "Download Directory:"
 msgid "下载管理"
 msgstr ""
 
-#: src/pages/device/configure.vue:367 src/pages/device/configure.vue:39
-#: src/pages/device/deviceList.vue:487 src/pages/device/deviceList.vue:51
+#: src/pages/device/configure.vue:298 src/pages/device/configure.vue:39
+#: src/pages/device/deviceList.vue:486 src/pages/device/deviceList.vue:51
 #: src/pages/device/speedLimitList.vue:334
 #: src/pages/index/network/NetworkFlow.vue:34
 #: src/pages/networkSpeedTest/components/item.vue:73
 msgid "下载速度"
-msgstr ""
+msgstr "Download speed"
 
 #: src/pages/device/speedLimitList.vue:78
 msgid "下载限速（Mbit/s）"
-msgstr ""
+msgstr "Download Speed Limit (Mbit/s)"
+
+#: src/pages/device/components/floatingGatewayWizard.vue:90
+msgid "不可达"
+msgstr "Unreachable"
+
+#: src/pages/device/components/advancedNetworkTools.vue:27
+#: src/pages/device/components/trafficInsightsPanel.vue:38
+#: src/pages/device/lanSettingsPanel.vue:184
+#: src/pages/device/lanSettingsPanel.vue:250
+msgid "不支持"
+msgstr "Unsupported"
 
 #: src/components/action-disk-part/item.vue:29
 msgid "不支持挂载"
@@ -600,16 +707,48 @@ msgstr "Not Supported for Mounting"
 msgid "不格式化,使用原文件系统"
 msgstr "Do Not Format, Use Original File System"
 
+#: src/pages/device/deviceGroupsPanel.vue:22
+#: src/pages/device/deviceGroupsPanel.vue:23
+msgid "不设置"
+msgstr "Not set"
+
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:77
+#: src/pages/device/rateLimitI18n.ts:9
+msgid "不设置时段规则"
+msgstr "No scheduled rule"
+
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:78
+msgid "不设置流量额度"
+msgstr "No data quota"
+
+#: src/pages/device/components/floatingGatewayWizard.vue:33
+msgid "两台节点必须配置相同的虚拟 IP，并选择互补的职责。"
+msgstr ""
+"Both nodes must be configured with the same virtual IP and select "
+"complementary responsibilities."
+
 #: src/components/firstOpen/index.vue:207
 msgid "两次密码不一致"
 msgstr ""
+
+#: src/pages/device/components/advancedNetworkTools.vue:11
+msgid "个分组"
+msgstr "groups"
 
 #: src/pages/index/components/ModuleSettings.vue:11
 msgid "个模块"
 msgstr ""
 
+#: src/pages/device/components/advancedNetworkTools.vue:11
+msgid "个设备例外"
+msgstr "device exceptions"
+
+#: src/pages/device/components/advancedNetworkTools.vue:11
+msgid "个额度"
+msgstr "Quota"
+
 #: src/components/firstOpen/form.vue:36
-#: src/pages/device/deviceCenterList.vue:290
+#: src/pages/device/deviceCenterList.vue:339
 #: src/pages/quickwifi/components/form.vue:36
 msgid "中"
 msgstr "Medium"
@@ -623,13 +762,55 @@ msgstr "Medium"
 msgid "为拥有动态IP的主机配置一个固定的可访问域名"
 msgstr "Configure a fixed accessible domain name for hosts with dynamic IPs"
 
-#: src/pages/device/configure.vue:201
-msgid "主路由"
+#: src/pages/device/lanSettingsPanel.vue:48
+msgid "为设备设置最高上传和下载速度；联网权限不依赖此服务。"
 msgstr ""
+"Set the maximum upload and download speeds for your device; network "
+"permissions do not depend on this service."
+
+#: src/pages/device/deviceCenterList.vue:125
+msgid "主要地址"
+msgstr "Primary address"
+
+#: src/pages/device/lanSettingsPanel.vue:109
+msgid "主路由与旁路由共享一个稳定入口，旁路由异常时自动切回主路由。"
+msgstr ""
+"The main route and the bypass route share a stable entrance, and when the "
+"bypass route is abnormal, the main route is automatically switched back."
+
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:65
+#: src/pages/device/deviceGroupsPanel.vue:52
+msgid "二"
+msgstr "Tue"
+
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:65
+#: src/pages/device/deviceGroupsPanel.vue:52
+msgid "五"
+msgstr "Fri"
+
+#: src/pages/device/deviceGroupsPanel.vue:63
+msgid "仅分组，不覆盖设备设置"
+msgstr "Group only, do not override device settings"
+
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:38
+#: src/pages/device/components/trafficInsightsPanel.vue:16
+#: src/pages/device/deviceGroupsPanel.vue:25
+msgid "仅提醒"
+msgstr "Notify only"
+
+#: src/pages/device/lanSettingsPanel.vue:165
+msgid "仅用于查看和迁移现有规则，不再作为新规则的默认执行方式。"
+msgstr ""
+"Only used to review and migrate existing rules; it is no longer the default "
+"mode for new rules."
 
 #: src/pages/index/components/DiskItem.vue:40
 msgid "仅统计已挂载分区"
 msgstr "Only Count Mounted Partitions"
+
+#: src/pages/device/components/trafficInsightsPanel.vue:34
+msgid "今天"
+msgstr "Today"
 
 #: src/components/action-sandboxenvironment/index.vue:16
 msgid ""
@@ -639,12 +820,36 @@ msgstr ""
 "automatically refresh after the device restarts. If the IP changes, you may "
 "need to "
 
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:18
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:77
+#: src/pages/device/deviceGroupsPanel.vue:28
+#: src/pages/device/deviceGroupsPanel.vue:63
+msgid "休息时段"
+msgstr "Downtime schedule"
+
+#: src/pages/device/components/deviceProfileEditor.vue:22
+msgid "优先依据品牌，其次依据设备类型"
+msgstr "First by brand, then by device type"
+
+#: src/pages/device/components/floatingGatewayWizard.vue:35
+#: src/pages/device/components/floatingGatewayWizard.vue:87
+msgid "优先服务节点"
+msgstr "Priority Service Node"
+
+#: src/pages/device/deviceGroupsPanel.vue:19
+msgid "优先级"
+msgstr "Priority"
+
+#: src/pages/device/components/floatingGatewayWizard.vue:36
+msgid "优先节点不可达时接管"
+msgstr "Take over when priority nodes are unreachable"
+
 #: src/components/smart/add-task.vue:33 src/pages/smart/task/index.vue:61
 msgid "传输时自检"
 msgstr "Self-Test During Transfer"
 
 #: src/components/firstOpen/form.vue:37
-#: src/pages/device/deviceCenterList.vue:291
+#: src/pages/device/deviceCenterList.vue:340
 #: src/pages/quickwifi/components/form.vue:37
 msgid "低"
 msgstr "Low"
@@ -666,6 +871,42 @@ msgstr "Use Linkease APP for Remote Downloads Anytime, Anywhere"
 msgid "使用率"
 msgstr "CPU Usage"
 
+#: src/pages/device/deviceCenterList.vue:188
+#: src/pages/device/deviceCenterList.vue:272
+msgid "使用管理"
+msgstr "Usage controls"
+
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:113
+msgid "使用规则已应用"
+msgstr "Usage rules applied"
+
+#: src/pages/device/components/deviceProfileEditor.vue:16
+msgid "例如：ASUS"
+msgstr "Ex: Asus"
+
+#: src/pages/device/deviceGroupsPanel.vue:18
+msgid "例如：儿童设备"
+msgstr "Ex: Children's devices"
+
+#: src/pages/device/deviceCenterList.vue:22
+msgid "例如：孩子的电脑"
+msgstr "Ex: Child's computer"
+
+#: src/pages/device/components/deviceAliasEditor.vue:5
+#: src/pages/device/components/deviceProfileEditor.vue:11
+msgid "例如：客厅电视"
+msgstr "Ex: Living room TV"
+
+#: src/pages/device/lanSettingsPanel.vue:89
+msgid "例如：旁路由"
+msgstr "Ex: Bypass routing"
+
+#: src/pages/device/deviceGroupsPanel.vue:9
+msgid "例如创建“儿童设备”，设置晚间暂停联网和每月流量额度。"
+msgstr ""
+"For example, create a “child device” to set a nightly pause and monthly "
+"traffic limit."
+
 #: src/components/action-domain/setup-ddns.vue:96
 #: src/components/action-edit/index.vue:35
 #: src/components/action-raid/setup-edit.vue:45
@@ -674,31 +915,64 @@ msgstr "CPU Usage"
 #: src/components/dialog/index.vue:23 src/components/firstOpen/index.vue:82
 #: src/components/firstOpen/index.vue:84 src/components/smart/add-task.vue:91
 #: src/components/smart/add-task.vue:92 src/components/smart/edit-disk.vue:56
-#: src/components/smart/edit-disk.vue:57 src/pages/device/configure.vue:105
-#: src/pages/device/configure.vue:107 src/pages/device/configure.vue:111
-#: src/pages/device/configure.vue:137 src/pages/device/configure.vue:49
+#: src/components/smart/edit-disk.vue:57 src/pages/device/configure.vue:49
 #: src/pages/device/configure.vue:50 src/pages/device/configure.vue:53
-#: src/pages/device/configure.vue:56 src/pages/device/configure.vue:94
-#: src/pages/device/configure.vue:95 src/pages/device/configure.vue:96
-#: src/pages/device/configure.vue:97
+#: src/pages/device/configure.vue:56 src/pages/device/configure.vue:87
 msgid "保存"
 msgstr "Save"
+
+#: src/pages/device/deviceCenterList.vue:22
+msgid "保存 MAC 和备注，设备首次出现后会自动合并，不会创建孤立规则。"
+msgstr ""
+"Save the Mac and notes, the device will be merged automatically after the "
+"first appearance, and no orphan rules will be created."
 
 #: src/components/action-raid/setup-edit.vue:84
 #: src/components/action-raid/setup-recover.vue:84
 #: src/components/action-raid/setup-remove.vue:73
-#: src/pages/device/configure.vue:277 src/pages/device/configure.vue:384
-#: src/pages/device/configure.vue:428 src/pages/device/configure.vue:510
-#: src/pages/device/deviceList.vue:461 src/pages/device/deviceList.vue:504
-#: src/pages/device/speedLimitList.vue:351
-#: src/pages/device/staticStateList.vue:342
+#: src/pages/device/configure.vue:209 src/pages/device/configure.vue:315
+#: src/pages/device/configure.vue:391 src/pages/device/deviceList.vue:460
+#: src/pages/device/deviceList.vue:503 src/pages/device/speedLimitList.vue:351
+#: src/pages/device/staticStateList.vue:344
 #: src/pages/interfaceconfig/index.vue:270 src/pages/smart/index.vue:94
 msgid "保存中..."
 msgstr "Saving..."
 
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:41
+#: src/pages/device/deviceGroupsPanel.vue:35
+msgid "保存前预览"
+msgstr "Review before saving"
+
+#: src/pages/device/components/devicePolicyPanel.vue:11
+msgid "保存后设备需要重新获取地址，实际生效前会保持等待状态。"
+msgstr ""
+"After saving, the device needs to get the address again, and it will remain "
+"in a waiting state until it actually takes effect."
+
+#: src/pages/device/components/deviceAliasEditor.vue:13
+#: src/pages/device/components/deviceAliasEditor.vue:14
+#: src/pages/device/components/deviceAliasEditor.vue:15
+msgid "保存备注"
+msgstr "Save note"
+
+#: src/pages/device/components/devicePolicyPanel.vue:111
+#: src/pages/device/components/trafficInsightsPanel.vue:43
+#: src/pages/device/deviceGroupsPanel.vue:75
+msgid "保存失败"
+msgstr "Save failed"
+
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:113
+msgid "保存失败，原设置未改变"
+msgstr "Save failed; the original settings are unchanged"
+
 #: src/pages/device/components/deviceClassificationEditor.vue:67
 msgid "保存失败，请检查设备存储空间后重试"
 msgstr "Could not save. Check available device storage and try again."
+
+#: src/pages/device/components/deviceAliasEditor.vue:78
+#: src/pages/device/components/deviceProfileEditor.vue:99
+msgid "保存失败，请稍后重试"
+msgstr "Save failed. Try again later."
 
 #: src/pages/index/index.vue:540
 msgid "保存失败！"
@@ -711,9 +985,9 @@ msgstr "Save and Apply"
 #: src/components/action-raid/setup-edit.vue:96
 #: src/components/action-raid/setup-recover.vue:96
 #: src/components/action-raid/setup-remove.vue:85
-#: src/pages/device/configure.vue:281 src/pages/device/configure.vue:388
-#: src/pages/device/configure.vue:432 src/pages/device/configure.vue:521
-#: src/pages/index/index.vue:536 src/pages/smart/index.vue:104
+#: src/pages/device/configure.vue:213 src/pages/device/configure.vue:319
+#: src/pages/device/configure.vue:402 src/pages/index/index.vue:536
+#: src/pages/smart/index.vue:104
 msgid "保存成功"
 msgstr "Saved Successfully"
 
@@ -722,9 +996,18 @@ msgstr "Saved Successfully"
 msgid "保存类型"
 msgstr "Save type"
 
+#: src/pages/device/components/deviceProfileEditor.vue:35
+#: src/pages/device/components/deviceProfileEditor.vue:36
+msgid "保存设备资料"
+msgstr "Save device data"
+
 #: src/pages/index/components/ModuleSettings.vue:41
 msgid "保存设置"
 msgstr ""
+
+#: src/pages/device/components/advancedNetworkTools.vue:10
+msgid "保存通知设置"
+msgstr "Save notification settings"
 
 #: src/components/firstOpen/form.vue:181 src/pages/network/dhcp/index.vue:85
 #: src/pages/network/gateway/index.vue:80 src/pages/network/pppoe/index.vue:29
@@ -732,18 +1015,9 @@ msgstr ""
 msgid "保存配置"
 msgstr "Save Configuration"
 
-#: src/pages/device/components/devicePolicyPanel.vue:34
-#: src/pages/device/components/devicePolicyPanel.vue:35
-#: src/pages/device/components/devicePolicyPanel.vue:36
-msgid "保存限速"
-msgstr ""
-
-#: src/pages/device/components/devicePolicyPanel.vue:20
-#: src/pages/device/components/devicePolicyPanel.vue:21
-#: src/pages/device/components/devicePolicyPanel.vue:22
-#, fuzzy
-msgid "保存静态地址"
-msgstr "Static"
+#: src/pages/device/components/trafficInsightsPanel.vue:17
+msgid "保存额度"
+msgstr "Save Limit"
 
 #: src/pages/index/index.vue:189
 msgid "保护"
@@ -782,11 +1056,35 @@ msgstr "Healthy"
 msgid "儿童上网保护"
 msgstr ""
 
-#: src/pages/device/components/devicePolicyPanel.vue:40
-#: src/pages/device/components/devicePolicyPanel.vue:41
-#: src/pages/device/components/devicePolicyPanel.vue:42
+#: src/pages/device/components/devicePolicyPanel.vue:62
+#: src/pages/device/components/devicePolicyPanel.vue:63
+#: src/pages/device/components/devicePolicyPanel.vue:64
+#: src/pages/device/components/devicePolicyPanel.vue:65
 msgid "允许"
+msgstr "Allow"
+
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:69
+#: src/pages/device/deviceGroupsPanel.vue:22
+#: src/pages/device/deviceGroupsPanel.vue:62
+#: src/pages/device/deviceGroupsPanel.vue:63
+msgid "允许联网"
+msgstr "Allow Internet"
+
+#: src/pages/device/lanSettingsPanel.vue:70
+msgid "先扫描并逐条检查；不会自动停止、卸载或改写 Bandix。"
 msgstr ""
+"Scan and review every rule first. Bandix will not be stopped, uninstalled, "
+"or modified automatically."
+
+#: src/pages/device/lanSettingsPanel.vue:13
+msgid "先预览并接管现有设置，之后只使用当前设备管理界面维护。"
+msgstr ""
+"Preview and take over the existing settings before using only the current "
+"device management interface for maintenance."
+
+#: src/pages/device/components/advancedNetworkTools.vue:29
+msgid "入口探测"
+msgstr "Entry detection"
 
 #: src/components/tooltip/index.vue:36
 msgid "全双工"
@@ -794,15 +1092,40 @@ msgstr "Full Duplex"
 
 #: src/pages/device/speedLimitList.vue:17
 msgid "全局限速尚未开启"
-msgstr ""
+msgstr "Global speed limit has not been activated"
 
-#: src/pages/device/deviceCenterList.vue:226
+#: src/pages/device/deviceCenterList.vue:265
 msgid "全部"
-msgstr ""
+msgstr "All"
+
+#: src/pages/device/deviceCenterList.vue:35
+msgid "全部品牌"
+msgstr "All brands"
 
 #: src/pages/index/components/ModuleSettings.vue:15
 msgid "全部显示"
 msgstr ""
+
+#: src/pages/device/networkRulesHub.vue:10
+msgid "全部状态"
+msgstr "All Statuses"
+
+#: src/pages/device/deviceCenterList.vue:36
+msgid "全部策略"
+msgstr "All policies"
+
+#: src/pages/device/networkRulesHub.vue:9
+msgid "全部类型"
+msgstr "All types"
+
+#: src/pages/device/deviceCenterList.vue:34
+msgid "全部连接"
+msgstr "All connections"
+
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:65
+#: src/pages/device/deviceGroupsPanel.vue:52
+msgid "六"
+msgstr "Sat"
 
 #: src/pages/index/components/ModuleSettings.vue:11
 msgid "共"
@@ -846,6 +1169,10 @@ msgstr ""
 msgid "共享路径不能为空"
 msgstr "Share Path Cannot Be Empty"
 
+#: src/pages/device/deviceGroupsPanel.vue:21
+msgid "共同规则"
+msgstr "Shared rules"
+
 #: src/components/firstOpen/index.vue:103
 msgid "关注iStoreOS公众号"
 msgstr ""
@@ -861,9 +1188,22 @@ msgstr ""
 #: src/components/action/index.vue:14 src/components/smart/disk-info.vue:58
 #: src/components/smart/test-task.vue:13
 #: src/pages/device/components/dialog.vue:11
-#: src/pages/device/deviceCenterList.vue:108
+#: src/pages/device/deviceCenterList.vue:121
+#: src/pages/device/deviceGroupsPanel.vue:17
 msgid "关闭"
 msgstr "Close"
+
+#: src/pages/device/lanSettingsPanel.vue:39
+msgid "关闭后预计影响设备"
+msgstr "Estimated affected devices after disabling"
+
+#: src/pages/device/lanSettingsPanel.vue:16
+msgid "其余设置会在同一次安全接管中处理。"
+msgstr "The rest of the settings will be handled in the same safety takeover."
+
+#: src/pages/device/lanSettingsPanel.vue:162
+msgid "兼容模式（按 IPv4）"
+msgstr "Compatibility mode (by IPv4)"
 
 #: src/pages/index/info/SystemInfo.vue:32
 msgid "内存使用率"
@@ -892,13 +1232,25 @@ msgstr ""
 msgid "最大"
 msgstr ""
 
-#: src/pages/device/deviceCenterList.vue:121
+#: src/pages/device/networkRulesHub.vue:14
+msgid "最终设置"
+msgstr "Final Setup"
+
+#: src/pages/device/deviceCenterList.vue:161
 msgid "最近出现"
-msgstr ""
+msgstr "Recent"
+
+#: src/pages/device/components/advancedNetworkTools.vue:9
+msgid "最近变更"
+msgstr "Recent Changes"
+
+#: src/pages/device/components/advancedNetworkTools.vue:9
+msgid "最近变更仅在展开后读取，记录数量有上限。"
+msgstr "Recent changes load only when expanded and keep a limited number of records."
 
 #: src/pages/device/deviceCenterList.vue:14
 msgid "最近活跃"
-msgstr ""
+msgstr "Recently active"
 
 #: src/components/action-disk-part/index.vue:9
 msgid "分区 / 挂载点"
@@ -916,6 +1268,14 @@ msgstr "Partition Abnormal, Click Partition List to View Errors"
 #: src/components/action-disk-part/item.vue:18
 msgid "分区并格式化"
 msgstr "Partition and Format"
+
+#: src/pages/device/deviceGroupsPanel.vue:3 src/pages/device/index.vue:27
+msgid "分组与计划"
+msgstr "Groups & schedules"
+
+#: src/pages/device/deviceGroupsPanel.vue:18
+msgid "分组名称"
+msgstr "Group name"
 
 #: src/components/action-softwaresource/index.vue:21
 msgid "切换软件源"
@@ -952,7 +1312,9 @@ msgstr "Initializing..."
 msgid "初始化成功"
 msgstr "Initialized Successfully"
 
-#: src/pages/device/configure.vue:153 src/pages/device/configure.vue:154
+#: src/pages/device/configure.vue:103 src/pages/device/configure.vue:104
+#: src/pages/device/deviceGroupsPanel.vue:11
+#: src/pages/device/lanSettingsPanel.vue:95
 #: src/pages/device/speedLimitList.vue:24
 #: src/pages/device/staticStateList.vue:19
 #: src/pages/interfaceconfig/index.vue:38
@@ -966,19 +1328,35 @@ msgstr "Delete"
 msgid "删除 RAID 设备之前请先卸载文件系统"
 msgstr "Please Uninstall File System Before Deleting RAID Device"
 
-#: src/pages/device/configure.vue:471 src/pages/device/speedLimitList.vue:231
-#: src/pages/device/staticStateList.vue:235 src/pages/raid/index/index.vue:197
+#: src/pages/device/configure.vue:352 src/pages/device/speedLimitList.vue:231
+#: src/pages/device/staticStateList.vue:233 src/pages/raid/index/index.vue:197
 msgid "删除中..."
 msgstr "Deleting..."
 
-#: src/pages/device/configure.vue:481 src/pages/raid/index/index.vue:209
+#: src/pages/device/deviceGroupsPanel.vue:76
+msgid "删除分组"
+msgstr "Delete Group"
+
+#: src/pages/device/deviceGroupsPanel.vue:76
+msgid "删除失败"
+msgstr "Delete failed"
+
+#: src/pages/device/networkRulesHub.vue:53
+msgid "删除失败，原配置已恢复"
+msgstr "Deletion failed, original configuration restored"
+
+#: src/pages/device/configure.vue:362 src/pages/raid/index/index.vue:209
 msgid "删除成功"
 msgstr "Deleted Successfully"
 
+#: src/pages/device/networkRulesHub.vue:12
+msgid "删除所选规则"
+msgstr "Delete the selected rule"
+
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:5
 #: src/pages/device/deviceCenterList.vue:17
-#, fuzzy
 msgid "刷新"
-msgstr "Refresh Page"
+msgstr "Refresh"
 
 #: src/components/action-netip/index.vue:116
 #: src/components/action-netip/index.vue:120
@@ -993,7 +1371,7 @@ msgstr "Go to "
 #: src/pages/device/speedLimitList.vue:12
 #: src/pages/device/speedLimitList.vue:18
 msgid "前往全局设置"
-msgstr ""
+msgstr "Go to global settings"
 
 #: src/pages/smart/task/index.vue:10
 msgid "功能"
@@ -1001,7 +1379,7 @@ msgstr "Function"
 
 #: src/pages/device/components/loadError.vue:2
 msgid "加载失败"
-msgstr ""
+msgstr "Loading failed"
 
 #: src/components/action-sandbox/index.vue:143
 msgid "加载磁盘信息失败"
@@ -1024,19 +1402,46 @@ msgstr "Half Duplex"
 msgid "协议（网络获取方式）"
 msgstr "Protocol (Network Acquisition Method)"
 
+#: src/pages/device/deviceGroupsPanel.vue:61
+msgid "单设备例外"
+msgstr "Single Device Exceptions"
+
+#: src/pages/device/deviceGroupsPanel.vue:17
+#: src/pages/device/deviceGroupsPanel.vue:19
+msgid "单设备例外始终优先；多个分组冲突时，优先级较高的生效。"
+msgstr ""
+"Single-device exceptions always take precedence; when multiple groups "
+"conflict, the higher priority takes effect."
+
 #: src/components/action-sandbox/index.vue:60
 msgid "即将重启设备"
 msgstr "Device Will Restart Soon"
 
-#: src/pages/device/deviceCenterList.vue:284
+#: src/pages/device/deviceCenterList.vue:333
 msgid "厂商默认类型"
 msgstr "Manufacturer default"
 
-#: src/pages/device/deviceCenterList.vue:137
+#: src/pages/device/deviceCenterList.vue:178
 msgid "历史地址"
-msgstr ""
+msgstr "Previous addresses"
 
-#: src/pages/device/deviceCenterList.vue:115
+#: src/pages/device/components/trafficInsightsPanel.vue:9
+msgid "历史流量趋势"
+msgstr "Historical Traffic Trends"
+
+#: src/pages/device/components/trafficInsightsPanel.vue:3
+msgid "历史用量"
+msgstr "Usage history"
+
+#: src/pages/device/components/trafficInsightsPanel.vue:41
+msgid "历史用量读取失败"
+msgstr "Historical usage read failed"
+
+#: src/pages/device/deviceCenterList.vue:156
+msgid "原始主机名"
+msgstr "Original hostname"
+
+#: src/pages/device/deviceCenterList.vue:155
 msgid "原始厂商"
 msgstr "Original manufacturer"
 
@@ -1052,6 +1457,24 @@ msgstr "Mount"
 #: src/pages/quickwifi/components/form.vue:30
 msgid "发射功率"
 msgstr ""
+
+#: src/pages/device/lanSettingsPanel.vue:17
+msgid "发现冲突或无法识别的设置，当前不会写入任何配置。请先在规则台账中处理。"
+msgstr ""
+"Conflicting or unrecognized settings were found and no configurations are "
+"currently being written.Please process it in the rules ledger first."
+
+#: src/pages/device/deviceList.vue:126
+msgid "发现名称"
+msgstr "Discovery Name"
+
+#: src/pages/device/components/advancedNetworkTools.vue:29
+msgid "发现新设备"
+msgstr "Discover new devices"
+
+#: src/pages/device/lanSettingsPanel.vue:13
+msgid "发现现有设备设置"
+msgstr "Discover existing device settings"
 
 #: src/components/tooltip/index.vue:9
 msgid "发送："
@@ -1092,16 +1515,76 @@ msgstr "Send:"
 #: src/components/dialog/index.vue:22 src/components/firstOpen/wifi.vue:52
 #: src/components/smart/add-task.vue:91 src/components/smart/edit-disk.vue:56
 #: src/pages/device/components/deviceClassificationEditor.vue:25
-#: src/pages/device/components/dialog.vue:56 src/pages/device/configure.vue:104
-#: src/pages/device/configure.vue:110 src/pages/device/configure.vue:48
-#: src/pages/device/configure.vue:49 src/pages/device/configure.vue:55
-#: src/pages/device/configure.vue:93 src/pages/device/configure.vue:94
-#: src/pages/device/configure.vue:95 src/pages/device/configure.vue:96
+#: src/pages/device/components/devicePolicyPanel.vue:13
+#: src/pages/device/components/dialog.vue:56
+#: src/pages/device/components/floatingGatewayWizard.vue:61
+#: src/pages/device/configure.vue:48 src/pages/device/configure.vue:49
+#: src/pages/device/configure.vue:55 src/pages/device/deviceGroupsPanel.vue:36
+#: src/pages/device/lanSettingsPanel.vue:105
+#: src/pages/device/lanSettingsPanel.vue:43
+#: src/pages/device/lanSettingsPanel.vue:63
+#: src/pages/device/lanSettingsPanel.vue:86
 #: src/pages/index/components/ModuleSettings.vue:38
 #: src/pages/quickwifi/index.vue:56 src/pages/raid/index/index.vue:184
 #: src/pages/raid/index/index.vue:275
 msgid "取消"
 msgstr "Cancel"
+
+#: src/pages/device/deviceCenterList.vue:18
+msgid "取消添加"
+msgstr "Cancel adding"
+
+#: src/pages/device/lanSettingsPanel.vue:183
+msgid "受保护地址"
+msgstr "Protected Address"
+
+#: src/pages/device/lanSettingsPanel.vue:100
+msgid "受影响分组"
+msgstr "Affected Groups"
+
+#: src/pages/device/lanSettingsPanel.vue:100
+msgid "受影响设备"
+msgstr "Affected devices"
+
+#: src/pages/device/components/trafficInsightsPanel.vue:38
+msgid "受硬件卸载限制"
+msgstr "Restricted by hardware uninstallation"
+
+#: src/pages/device/components/advancedNetworkTools.vue:27
+msgid "受限"
+msgstr "Restricted"
+
+#: src/pages/device/deviceGroupsPanel.vue:17
+msgid "只为没有更具体规则的设备提供默认值。"
+msgstr ""
+"Provide default values only for devices that do not have more specific rules."
+
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:4
+msgid ""
+"只为这台设备设置休息时段和累计流量额度；单设备设置优先于分组和默认规则。"
+msgstr ""
+"Only set breaks and cumulative traffic limits for this device; single device "
+"settings take precedence over grouping and default rules."
+
+#: src/pages/device/components/advancedNetworkTools.vue:31
+msgid ""
+"只会替换设备分组、设备例外与流量额度；地址、路线、限速和防火墙规则保持不变。"
+msgstr ""
+"Only replaces device groupings, device exceptions, and traffic limits; "
+"addresses, routes, speed limits, and firewall rules remain the same."
+
+#: src/pages/device/components/advancedNetworkTools.vue:8
+msgid ""
+"只探测设备当前局域网地址和常用管理端口；不会扫描其他地址，也不会跟随跳转。"
+msgstr ""
+"Only the device's current LAN address and common management ports are "
+"probed; no other addresses are scanned and no jump is followed."
+
+#: src/pages/device/lanSettingsPanel.vue:110
+msgid "只有浮动网关功能会被锁定，设备和其他路线仍可管理。"
+msgstr ""
+"Only the floating gateway feature will be locked and devices and other "
+"routes can still be managed."
 
 #: src/components/action-disk-part/item.vue:33
 #: src/components/action-disk-part/item.vue:34
@@ -1109,26 +1592,90 @@ msgstr "Cancel"
 msgid "只读"
 msgstr "Read-Only"
 
-#: src/pages/device/deviceCenterList.vue:38
-msgid "可以切换到“全部”查看本次开机发现过的设备。"
+#: src/pages/device/lanSettingsPanel.vue:181
+msgid "只读引导"
+msgstr "Read-only bootstrap"
+
+#: src/pages/device/networkRulesHub.vue:13
+msgid "可从设备详情添加地址、路线和使用限制。"
 msgstr ""
+"You can add addresses, directions, and usage restrictions from your device "
+"details."
+
+#: src/pages/device/deviceCenterList.vue:51
+msgid "可以切换到“全部”查看本次开机发现过的设备。"
+msgstr "You can switch to \"All\" to see the devices found this time."
+
+#: src/pages/device/components/floatingGatewayWizard.vue:49
+#: src/pages/device/components/floatingGatewayWizard.vue:50
+#: src/pages/device/components/floatingGatewayWizard.vue:51
+msgid "可以安全应用"
+msgstr "Can be applied safely"
+
+#: src/pages/device/lanSettingsPanel.vue:186
+msgid "可以接管"
+msgstr "Can take over"
+
+#: src/pages/device/components/devicePolicyPanel.vue:193
+#: src/pages/device/rateLimitI18n.ts:10
+msgid "可以设置限速"
+msgstr "Ready for speed limiting"
+
+#: src/pages/device/lanSettingsPanel.vue:250
+msgid "可以迁移"
+msgstr "Ready to migrate"
 
 #: src/components/action-ddnsto/setup-ddnsto-save.vue:17
 #: src/components/action-domain/setup-ddns-success.vue:17
 msgid "可前往"
 msgstr "Can Go"
 
+#: src/pages/device/lanSettingsPanel.vue:171
+msgid "可在设备详情中设置上网路线。"
+msgstr "You can set your internet routes in your device details."
+
+#: src/pages/device/components/advancedNetworkTools.vue:27
+#: src/pages/device/components/trafficInsightsPanel.vue:38
+#: src/pages/device/lanSettingsPanel.vue:184
+msgid "可用"
+msgstr "Available"
+
+#: src/pages/device/components/advancedNetworkTools.vue:34
+msgid "可访问"
+msgstr "Accessible"
+
 #: src/components/action-disk-part/item.vue:35
 msgid "可读写状态："
 msgstr "R/W Status: "
+
+#: src/pages/device/components/floatingGatewayWizard.vue:90
+msgid "可达"
+msgstr "Reachable"
+
+#: src/pages/device/deviceGroupsPanel.vue:11
+#: src/pages/device/deviceGroupsPanel.vue:20
+msgid "台设备"
+msgstr "devices"
 
 #: src/pages/index/nav/QuickActions.vue:25
 msgid "台设备在线"
 msgstr ""
 
-#: src/components/action-edit/index.vue:15 src/pages/device/deviceList.vue:124
-#: src/pages/device/deviceList.vue:440 src/pages/device/deviceList.vue:81
-#: src/pages/device/staticStateList.vue:48 src/pages/raid/index/index.vue:26
+#: src/pages/device/deviceGroupsPanel.vue:35
+msgid "台设备有单设备例外，最终值仍以例外为准。"
+msgstr ""
+"There are single-device exceptions for devices, and the final value is still "
+"subject to the exception."
+
+#: src/pages/device/components/trafficInsightsPanel.vue:8
+msgid "合计"
+msgstr "Total"
+
+#: src/pages/device/lanSettingsPanel.vue:102
+msgid "同时影响全局或局域网默认路线。"
+msgstr "Affects global or local area network default routes at the same time."
+
+#: src/components/action-edit/index.vue:15 src/pages/raid/index/index.vue:26
 msgid "名称"
 msgstr "Name"
 
@@ -1150,7 +1697,7 @@ msgstr "Name:"
 #: src/pages/device/staticStateList.vue:32
 #: src/pages/device/staticStateList.vue:33
 msgid "否"
-msgstr ""
+msgstr "No"
 
 #: src/components/action-download/index.vue:211
 #: src/components/action-download/index.vue:212
@@ -1158,7 +1705,7 @@ msgstr ""
 #: src/components/action-download/index.vue:214
 #: src/components/action-download/index.vue:215
 #: src/components/action-download/index.vue:217
-#: src/pages/device/configure.vue:122 src/pages/smart/index/index.vue:5
+#: src/pages/device/configure.vue:72 src/pages/smart/index/index.vue:5
 msgid "启用"
 msgstr "Enable"
 
@@ -1173,9 +1720,43 @@ msgstr ""
 msgid "启用Wi-Fi"
 msgstr ""
 
-#: src/pages/device/deviceCenterList.vue:113
+#: src/pages/device/components/floatingGatewayWizard.vue:32
+msgid "启用浮动网关"
+msgstr "Enable Floating Gateway"
+
+#: src/pages/device/lanSettingsPanel.vue:134
+msgid "启用设备限速"
+msgstr "Enable device speed limits"
+
+#: src/pages/device/components/devicePolicyPanel.vue:46
+#: src/pages/device/components/devicePolicyPanel.vue:47
+#: src/pages/device/components/devicePolicyPanel.vue:48
+#: src/pages/device/components/devicePolicyPanel.vue:49
+msgid "启用限速服务"
+msgstr "Enable speed limit service"
+
+#: src/pages/device/components/devicePolicyPanel.vue:322
+msgid "启用限速服务？"
+msgstr "Enable speed limit service?"
+
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:38
+#: src/pages/device/components/trafficInsightsPanel.vue:16
+#: src/pages/device/deviceGroupsPanel.vue:25
+msgid "周期"
+msgstr "Period"
+
+#: src/pages/device/deviceCenterList.vue:35
 msgid "品牌"
 msgstr "Brand"
+
+#: src/pages/device/components/deviceProfileEditor.vue:16
+msgid "品牌（可选）"
+msgstr "Brand (optional)"
+
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:65
+#: src/pages/device/deviceGroupsPanel.vue:52
+msgid "四"
+msgstr "Thu"
 
 #: src/pages/index/nav/Item.vue:18
 msgid "固件更新"
@@ -1189,40 +1770,96 @@ msgstr "OTA Options"
 msgid "固件版本"
 msgstr "Firmware Ver."
 
-#: src/pages/device/deviceCenterList.vue:107
-#: src/pages/device/deviceCenterList.vue:108
-#: src/pages/device/deviceCenterList.vue:109
-#: src/pages/device/deviceCenterList.vue:110
-#: src/pages/device/deviceCenterList.vue:112
-#: src/pages/device/deviceCenterList.vue:225
-#: src/pages/device/deviceCenterList.vue:62
-#: src/pages/device/deviceCenterList.vue:63
-#: src/pages/device/deviceCenterList.vue:64
-#: src/pages/device/deviceCenterList.vue:65
-#: src/pages/device/deviceCenterList.vue:67
-#: src/pages/device/deviceCenterList.vue:85
-#: src/pages/device/deviceCenterList.vue:86
-#: src/pages/device/deviceCenterList.vue:87
-#: src/pages/device/deviceCenterList.vue:88
-#: src/pages/device/deviceCenterList.vue:90
+#: src/pages/device/lanSettingsPanel.vue:183
+msgid "固定地址"
+msgstr "Reserved address"
+
+#: src/pages/device/components/devicePolicyPanel.vue:17
+msgid "固定设备地址，并选择它通过哪台路由器上网"
+msgstr ""
+"Fixed device address and select which router it uses to access the internet"
+
+#: src/pages/device/components/deviceProfileEditor.vue:7
+#: src/pages/device/components/deviceProfileEditor.vue:8
+msgid "图标由品牌和类型自动推荐"
+msgstr "Icons are automatically recommended by brand and type"
+
+#: src/pages/device/rateLimitI18n.ts:38
+msgid "在指定时段执行规则"
+msgstr "Run a rule during selected times"
+
+#: src/pages/device/deviceCenterList.vue:264
+#: src/pages/device/deviceCenterList.vue:306
 msgid "在线"
-msgstr ""
+msgstr "Online"
 
-#: src/pages/device/deviceCenterList.vue:165
-msgid "在经典列表中管理"
-msgstr ""
-
-#: src/pages/device/deviceCenterList.vue:46
-#: src/pages/device/deviceCenterList.vue:93
+#: src/pages/device/deviceCenterList.vue:106
+#: src/pages/device/deviceCenterList.vue:59
 #: src/pages/index/Storage/samba.vue:16
 msgid "地址"
 msgstr "Address"
+
+#: src/pages/device/components/devicePolicyPanel.vue:17
+msgid "地址与上网路线"
+msgstr "Address and Internet Directions"
+
+#: src/pages/device/components/floatingGatewayWizard.vue:91
+msgid "地址与检测"
+msgstr "Address & Inspection"
+
+#: src/pages/device/components/advancedNetworkTools.vue:30
+msgid "地址与路线"
+msgstr "Address & Directions"
+
+#: src/pages/device/components/advancedNetworkTools.vue:30
+msgid "地址保留"
+msgstr "Address retention"
+
+#: src/pages/device/components/advancedNetworkTools.vue:29
+msgid "地址冲突"
+msgstr "Address conflict"
+
+#: src/pages/device/lanSettingsPanel.vue:38
+msgid "地址分配影响"
+msgstr "DHCP impact"
+
+#: src/pages/device/lanSettingsPanel.vue:29
+msgid "地址分配服务"
+msgstr "DHCP service"
+
+#: src/pages/device/lanSettingsPanel.vue:229
+msgid "地址分配设置已保存"
+msgstr "DHCP settings saved"
+
+#: src/pages/device/lanSettingsPanel.vue:32
+msgid "地址池结束地址"
+msgstr "Pool end address"
+
+#: src/pages/device/lanSettingsPanel.vue:32
+msgid "地址池起始地址"
+msgstr "Pool start address"
+
+#: src/pages/device/lanSettingsPanel.vue:33
+msgid "地址租期"
+msgstr "Lease time"
+
+#: src/pages/device/deviceCenterList.vue:169
+msgid "地址详情"
+msgstr "Address Details"
+
+#: src/pages/device/components/devicePolicyPanel.vue:18
+#: src/pages/device/components/devicePolicyPanel.vue:241
+#: src/pages/device/lanSettingsPanel.vue:185
+#: src/pages/device/networkRulesHub.vue:38
+#: src/pages/device/networkRulesHub.vue:9
+msgid "地址预留"
+msgstr "Address reservation"
 
 #: src/components/smart/disk-info.vue:36 src/pages/smart/index/index.vue:86
 msgid "型号"
 msgstr "Model"
 
-#: src/pages/device/deviceCenterList.vue:282
+#: src/pages/device/deviceCenterList.vue:331
 msgid "型号特征"
 msgstr "Model evidence"
 
@@ -1247,6 +1884,10 @@ msgstr "DDNS"
 msgid "域名配置向导"
 msgstr "DDNS Guide"
 
+#: src/pages/device/rateLimitI18n.ts:11
+msgid "增强设备识别模式"
+msgstr "Enhanced device identity"
+
 #: src/components/action-disk-part/item.vue:112
 msgid "处理中..."
 msgstr "Processing..."
@@ -1254,6 +1895,12 @@ msgstr "Processing..."
 #: src/pages/index/info/SystemInfo.vue:14
 msgid "备份升级"
 msgstr "Backup/Flash"
+
+#: src/pages/device/components/deviceAliasEditor.vue:10
+msgid "备注名最多 64 个字符，不能包含控制字符。"
+msgstr ""
+"The note name is a maximum of 64 characters and cannot contain control "
+"characters."
 
 #: src/components/action-dns/index.vue:31
 msgid "备用DNS地址"
@@ -1267,30 +1914,59 @@ msgstr "Backup DNS Server"
 msgid "备用DNS服务器地址"
 msgstr "Backup DNS Server Address"
 
-#: src/pages/device/deviceCenterList.vue:127
-#: src/pages/device/deviceCenterList.vue:128
-#: src/pages/device/deviceCenterList.vue:129
-#: src/pages/device/deviceCenterList.vue:130
-#: src/pages/device/deviceCenterList.vue:132
-#: src/pages/device/deviceCenterList.vue:133
-#: src/pages/device/deviceCenterList.vue:134
-#: src/pages/device/deviceCenterList.vue:135
-#: src/pages/device/deviceCenterList.vue:136
-#: src/pages/device/deviceCenterList.vue:137
-#: src/pages/device/deviceCenterList.vue:139
-#: src/pages/device/deviceCenterList.vue:140
-#: src/pages/device/deviceCenterList.vue:141
+#: src/pages/device/deviceCenterList.vue:168
+#: src/pages/device/deviceCenterList.vue:169
+#: src/pages/device/deviceCenterList.vue:170
+#: src/pages/device/deviceCenterList.vue:171
+#: src/pages/device/deviceCenterList.vue:173
+#: src/pages/device/deviceCenterList.vue:174
+#: src/pages/device/deviceCenterList.vue:175
+#: src/pages/device/deviceCenterList.vue:176
+#: src/pages/device/deviceCenterList.vue:177
+#: src/pages/device/deviceCenterList.vue:178
+#: src/pages/device/deviceCenterList.vue:180
+#: src/pages/device/deviceCenterList.vue:181
+#: src/pages/device/deviceCenterList.vue:182
 msgid "复制"
-msgstr ""
+msgstr "Copy"
 
-#: src/pages/device/deviceCenterList.vue:132
-#: src/pages/device/deviceCenterList.vue:140
+#: src/pages/device/deviceCenterList.vue:173
+#: src/pages/device/deviceCenterList.vue:181
 msgid "复制地址"
-msgstr ""
+msgstr "Copy address"
+
+#: src/pages/device/components/floatingGatewayWizard.vue:16
+msgid "外网检测"
+msgstr "Extranet Inspection"
+
+#: src/pages/device/components/floatingGatewayWizard.vue:43
+msgid "外网检测地址（可选）"
+msgstr "Extranet detection address (optional)"
+
+#: src/pages/device/components/advancedNetworkTools.vue:26
+msgid "多 WAN 策略"
+msgstr "Multi-WAN Policy"
+
+#: src/pages/device/components/floatingGatewayWizard.vue:42
+msgid "多个地址用逗号分隔"
+msgstr "Separate multiple addresses with commas"
 
 #: src/components/smart/add-task.vue:57
 msgid "天"
 msgstr "Day"
+
+#: src/pages/device/components/floatingGatewayWizard.vue:90
+#: src/pages/device/deviceGroupsPanel.vue:8
+msgid "失败"
+msgstr "Failed"
+
+#: src/pages/device/networkRulesHub.vue:53
+msgid "失败时将恢复"
+msgstr "Will resume on failure"
+
+#: src/pages/device/components/devicePolicyPanel.vue:12
+msgid "失败时恢复原设置"
+msgstr "Restore original settings on failure"
 
 #: src/pages/raid/index/index.vue:84
 msgid ""
@@ -1341,7 +2017,8 @@ msgid "子网掩码: "
 msgstr "Subnet Mask: "
 
 #: src/pages/device/components/deviceClassificationEditor.vue:61
-#: src/pages/device/deviceCenterList.vue:272
+#: src/pages/device/components/deviceProfileEditor.vue:70
+#: src/pages/device/deviceCenterList.vue:318
 msgid "存储与服务器"
 msgstr "Storage & servers"
 
@@ -1349,13 +2026,32 @@ msgstr "Storage & servers"
 msgid "存储服务"
 msgstr "Share"
 
-#: src/pages/device/deviceCenterList.vue:285
+#: src/pages/device/lanSettingsPanel.vue:74
+msgid "存在不支持或冲突的规则，全部处理完成前不会迁移。"
+msgstr ""
+"Migration is blocked until every unsupported or conflicting rule is resolved."
+
+#: src/pages/device/lanSettingsPanel.vue:186
+#: src/pages/device/lanSettingsPanel.vue:250
+msgid "存在冲突"
+msgstr "Conflict Exists"
+
+#: src/pages/device/deviceCenterList.vue:334
 msgid "安全回退"
 msgstr "Safe fallback"
 
 #: src/components/action-ddnsto/setup-ddnsto-install.vue:39
 msgid "安装中..."
 msgstr "Installing..."
+
+#: src/pages/device/components/advancedNetworkTools.vue:28
+msgid "安装兼容的 Bandix 后才可用"
+msgstr "Available after installing compatible Bandix"
+
+#: src/pages/device/components/floatingGatewayWizard.vue:8
+msgid "安装后可让两台路由器共同提供一个稳定的虚拟网关。"
+msgstr ""
+"Once installed, the two routers together provide a stable virtual gateway."
 
 #: src/components/action-ddnsto/setup-ddnsto-install.vue:46
 msgid "安装失败"
@@ -1365,18 +2061,43 @@ msgstr "Installation Failed"
 msgid "安装失败，"
 msgstr "Installation Failed,"
 
-#: src/pages/device/configure.vue:356 src/utils/app.ts:76
+#: src/pages/device/lanSettingsPanel.vue:305
+msgid "安装失败，可稍后重试"
+msgstr "Installation failed. Try again later."
+
+#: src/pages/device/configure.vue:287 src/utils/app.ts:76
 msgid "安装失败或超时，请检查软件源或稍候重试"
 msgstr ""
 "Installation Failed or Timed Out, Please Check Software Source or Retry Later"
 
 #: src/pages/device/components/dialog.vue:23
 msgid "安装成功"
-msgstr ""
+msgstr "Installation successful"
+
+#: src/pages/device/lanSettingsPanel.vue:49
+msgid "安装所需服务"
+msgstr "Install required service"
+
+#: src/pages/device/lanSettingsPanel.vue:110
+msgid "安装浮动网关"
+msgstr "Install Floating Gateway"
 
 #: src/pages/device/speedLimitList.vue:11
 msgid "安装限速插件后，才能查看和配置设备限速。"
 msgstr ""
+"The device speed limit cannot be viewed and configured until the speed limit "
+"plugin is installed."
+
+#: src/pages/device/components/devicePolicyPanel.vue:46
+#: src/pages/device/components/devicePolicyPanel.vue:47
+#: src/pages/device/components/devicePolicyPanel.vue:48
+#: src/pages/device/components/devicePolicyPanel.vue:49
+msgid "安装限速服务"
+msgstr "Install Speed Limit Service"
+
+#: src/pages/device/components/devicePolicyPanel.vue:322
+msgid "安装限速服务？"
+msgstr "Install Speed Limit Service?"
 
 #: src/components/action-disk-format/index.vue:129
 #: src/components/action-disk-format/index.vue:132
@@ -1390,10 +2111,10 @@ msgstr ""
 msgid "完成"
 msgstr "Complete"
 
-#: src/pages/device/deviceCenterList.vue:48
-#: src/pages/device/deviceCenterList.vue:95
+#: src/pages/device/deviceCenterList.vue:108
+#: src/pages/device/deviceCenterList.vue:61
 msgid "实时流量"
-msgstr ""
+msgstr "Live traffic"
 
 #: src/pages/index/index.vue:316
 #, fuzzy
@@ -1403,6 +2124,10 @@ msgstr "Traffic"
 #: src/pages/networkSpeedTest/components/item.vue:55
 msgid "实时测速过程记录"
 msgstr ""
+
+#: src/pages/device/components/devicePolicyPanel.vue:30
+msgid "实际生效情况"
+msgstr "Observed result"
 
 #: src/pages/index/index.vue:187
 msgid "家长控制"
@@ -1447,9 +2172,56 @@ msgstr "Password Cannot Be Empty"
 msgid "密码格式不正确"
 msgstr ""
 
+#: src/pages/device/components/floatingGatewayWizard.vue:15
+msgid "对端状态"
+msgstr "Peer status"
+
+#: src/pages/device/components/floatingGatewayWizard.vue:89
+msgid "对端节点"
+msgstr "Peer Node"
+
+#: src/pages/device/components/floatingGatewayWizard.vue:22
+#: src/pages/device/components/floatingGatewayWizard.vue:42
+msgid "对端节点 IPv4"
+msgstr "Peer node IPv4"
+
 #: src/pages/device/deviceList.vue:37 src/pages/device/speedLimitList.vue:54
 msgid "对设备开启限速"
+msgstr "Turn on the speed limit for the device"
+
+#: src/pages/device/components/advancedNetworkTools.vue:11
+msgid ""
+"导出和恢复设备分组、单设备例外与流量额度；地址、路线、限速和防火墙规则不会被"
+"替换。"
 msgstr ""
+"Export and restore device groupings, single-device exceptions, and traffic "
+"limits; addresses, routes, speed limits, and firewall rules are not replaced."
+
+#: src/pages/device/components/advancedNetworkTools.vue:36
+msgid "导出失败"
+msgstr "Export failed"
+
+#: src/pages/device/components/advancedNetworkTools.vue:11
+msgid "导出策略包"
+msgstr "Export Policy Package"
+
+#: src/pages/device/components/devicePolicyPanel.vue:240
+msgid "将修改这台设备的最高速度。"
+msgstr "This will change the maximum speed for this device."
+
+#: src/pages/device/components/devicePolicyPanel.vue:240
+msgid "将修改这台设备的联网权限。"
+msgstr "The networking permissions for this device will be modified."
+
+#: src/pages/device/components/devicePolicyPanel.vue:239
+msgid "将同时检查地址、上网路线、DNS 和 DHCP 分配权。"
+msgstr ""
+"Addresses, internet routes, DNS and DHCP allocations will be checked "
+"simultaneously."
+
+#: src/pages/device/lanSettingsPanel.vue:186
+msgid "将安全整理"
+msgstr "Organize security"
 
 #: src/pages/raid/index/index.vue:251
 msgid "将扫描磁盘里 RAID 的磁盘阵列配置并恢复，确定要恢复 RAID 磁盘阵列吗？"
@@ -1457,9 +2229,58 @@ msgstr ""
 "Will Scan Disk RAID Array Configuration and Restore, Are You Sure to Restore "
 "RAID Array?"
 
+#: src/pages/device/lanSettingsPanel.vue:100
+#: src/pages/device/lanSettingsPanel.vue:101
+msgid "将更新路线名称和网关，已有引用会继续保留。"
+msgstr ""
+"Route names and gateways will be updated and existing references will "
+"continue to be retained."
+
+#: src/pages/device/lanSettingsPanel.vue:60
+#: src/pages/device/lanSettingsPanel.vue:61
+msgid "将更新限速执行方式，现有规则保持不变。"
+msgstr ""
+"The enforcement mode will be updated and existing rules will remain "
+"unchanged."
+
+#: src/pages/device/lanSettingsPanel.vue:100
+#: src/pages/device/lanSettingsPanel.vue:101
+msgid "将添加一条可供设备和分组选择的路线。"
+msgstr "A route will be added for devices and groups to choose from."
+
+#: src/pages/device/rateLimitI18n.ts:12
+msgid "将重新加载限速服务，已有设备规则会按新的总带宽继续执行。"
+msgstr ""
+"The speed limit service will reload and existing device rules will continue "
+"with the new total bandwidth."
+
 #: src/components/smart/add-task.vue:41
 msgid "小时"
 msgstr "Hour"
+
+#: src/pages/device/deviceCenterList.vue:306
+msgid "尚未上线"
+msgstr "Not yet online"
+
+#: src/pages/device/components/devicePolicyPanel.vue:323
+msgid "尚未保存的限速输入会保留。"
+msgstr "Unsaved speed limit inputs are preserved."
+
+#: src/pages/device/components/floatingGatewayWizard.vue:7
+msgid "尚未安装浮动网关组件"
+msgstr "Floating gateway components are not installed"
+
+#: src/pages/device/lanSettingsPanel.vue:169
+msgid "尚未检测到地址分配服务"
+msgstr "Address Assignment Service has not been detected"
+
+#: src/pages/device/deviceGroupsPanel.vue:58
+msgid "尚未选择设备"
+msgstr "No devices selected"
+
+#: src/pages/device/components/floatingGatewayWizard.vue:90
+msgid "尚未验证"
+msgstr "Not verified"
 
 #: src/pages/smart/index.vue:15
 msgid ""
@@ -1469,6 +2290,10 @@ msgstr ""
 "the host's monitoring hardware or software can automatically warn the user "
 "and perform minor automatic repairs to ensure the safety of the hard disk "
 "data in advance."
+
+#: src/pages/device/lanSettingsPanel.vue:185
+msgid "局域网主机名"
+msgstr "LAN hostname"
 
 #: src/components/action-nas/index.vue:11
 #, fuzzy
@@ -1480,9 +2305,30 @@ msgstr "Local Network File Sharing (WebDAV)"
 msgid "局域网文件共享配置"
 msgstr "Local Network File Sharing (Samba)"
 
-#: src/pages/index/index.vue:157
+#: src/pages/device/lanSettingsPanel.vue:169
+msgid "局域网角色待确认"
+msgstr "LAN role to be confirmed"
+
+#: src/pages/device/components/devicePolicyPanel.vue:209
+#: src/pages/device/components/devicePolicyPanel.vue:210
+#: src/pages/device/lanSettingsPanel.vue:169
+#: src/pages/device/lanSettingsPanel.vue:174
+#: src/pages/device/lanSettingsPanel.vue:176
+msgid "局域网角色需要确认"
+msgstr "LAN Role Needs Confirmation"
+
+#: src/pages/device/index.vue:3 src/pages/device/index.vue:4
+#: src/pages/device/index.vue:5 src/pages/index/index.vue:157
 msgid "局域网设备管理"
-msgstr ""
+msgstr "LAN device management"
+
+#: src/pages/device/index.vue:28 src/pages/device/lanSettingsPanel.vue:3
+msgid "局域网设置"
+msgstr "LAN settings"
+
+#: src/pages/device/lanSettingsPanel.vue:5
+msgid "局域网设置读取失败"
+msgstr "Failed to read LAN settings"
 
 #: src/components/smart/disk-info.vue:14
 msgid "属性"
@@ -1493,9 +2339,18 @@ msgstr "Attributes"
 msgid "已使用"
 msgstr "Started"
 
-#: src/pages/device/components/devicePolicyPanel.vue:129
+#: src/pages/device/components/devicePolicyPanel.vue:308
 msgid "已保存并生效"
-msgstr ""
+msgstr "Saved and in effect"
+
+#: src/pages/device/lanSettingsPanel.vue:28
+#: src/pages/device/lanSettingsPanel.vue:29
+msgid "已关闭"
+msgstr "Off"
+
+#: src/pages/device/components/devicePolicyPanel.vue:234
+msgid "已写入"
+msgstr "Written"
 
 #: src/pages/index/info/SystemInfo.vue:60 src/pages/index/service/aria2.vue:8
 #: src/pages/index/service/qbittorrent.vue:8
@@ -1503,12 +2358,13 @@ msgstr ""
 msgid "已启动"
 msgstr "Started"
 
-#: src/pages/device/components/devicePolicyPanel.vue:10
-#: src/pages/device/components/devicePolicyPanel.vue:11
-#: src/pages/device/components/devicePolicyPanel.vue:26
-#: src/pages/device/components/devicePolicyPanel.vue:27
-#: src/pages/device/components/devicePolicyPanel.vue:28
-#: src/pages/device/components/devicePolicyPanel.vue:9
+#: src/pages/device/components/devicePolicyPanel.vue:16
+#: src/pages/device/components/devicePolicyPanel.vue:17
+#: src/pages/device/components/devicePolicyPanel.vue:18
+#: src/pages/device/components/devicePolicyPanel.vue:44
+#: src/pages/device/components/devicePolicyPanel.vue:45
+#: src/pages/device/components/devicePolicyPanel.vue:46
+#: src/pages/device/components/devicePolicyPanel.vue:47
 #: src/pages/index/nav/QuickActions.vue:20
 #: src/pages/index/nav/QuickActions.vue:21
 #: src/pages/index/nav/QuickActions.vue:22
@@ -1524,25 +2380,38 @@ msgstr "Started"
 msgid "已启用"
 msgstr "Started"
 
-#: src/pages/device/deviceCenterList.vue:127
-#: src/pages/device/deviceCenterList.vue:128
-#: src/pages/device/deviceCenterList.vue:129
-#: src/pages/device/deviceCenterList.vue:130
-#: src/pages/device/deviceCenterList.vue:132
-#: src/pages/device/deviceCenterList.vue:133
-#: src/pages/device/deviceCenterList.vue:134
-#: src/pages/device/deviceCenterList.vue:135
-#: src/pages/device/deviceCenterList.vue:136
-#: src/pages/device/deviceCenterList.vue:137
-#: src/pages/device/deviceCenterList.vue:139
-#: src/pages/device/deviceCenterList.vue:140
-#: src/pages/device/deviceCenterList.vue:141
+#: src/pages/device/deviceCenterList.vue:168
+#: src/pages/device/deviceCenterList.vue:169
+#: src/pages/device/deviceCenterList.vue:170
+#: src/pages/device/deviceCenterList.vue:171
+#: src/pages/device/deviceCenterList.vue:173
+#: src/pages/device/deviceCenterList.vue:174
+#: src/pages/device/deviceCenterList.vue:175
+#: src/pages/device/deviceCenterList.vue:176
+#: src/pages/device/deviceCenterList.vue:177
+#: src/pages/device/deviceCenterList.vue:178
+#: src/pages/device/deviceCenterList.vue:180
+#: src/pages/device/deviceCenterList.vue:181
+#: src/pages/device/deviceCenterList.vue:182
 msgid "已复制"
-msgstr ""
+msgstr "Copied"
+
+#: src/pages/device/lanSettingsPanel.vue:28
+#: src/pages/device/lanSettingsPanel.vue:29
+msgid "已开启"
+msgstr "On"
+
+#: src/pages/device/components/deviceProfileEditor.vue:103
+msgid "已恢复系统自动推荐"
+msgstr "System automatic recommendation restored"
 
 #: src/pages/device/components/deviceClassificationEditor.vue:117
 msgid "已恢复自动判断"
 msgstr "Automatic detection restored"
+
+#: src/pages/device/lanSettingsPanel.vue:253
+msgid "已恢复迁移前设置"
+msgstr "Settings from before the migration were restored"
 
 #: src/components/action-disk-mount/index.vue:118
 msgid "已成功将分区 %{dev} 挂载到 <a>%{mount}</a>"
@@ -1561,31 +2430,51 @@ msgstr "Mounted as Swap Area"
 msgid "已挂载磁盘"
 msgstr "Mounted Disks"
 
-#: src/pages/device/deviceCenterList.vue:227
-#, fuzzy
-msgid "已控制"
-msgstr "Dashboard"
+#: src/pages/device/deviceCenterList.vue:342
+#: src/pages/device/deviceCenterList.vue:36
+#: src/pages/device/deviceGroupsPanel.vue:62
+msgid "已指定路线"
+msgstr "Routes Assigned"
 
 #: src/components/interfacer/item.vue:38
 #: src/pages/index/network/NetworkInterface.vue:40
 msgid "已断开"
 msgstr "Disconnected"
 
-#: src/pages/device/components/devicePolicyPanel.vue:40
-#: src/pages/device/components/devicePolicyPanel.vue:41
-#: src/pages/device/components/devicePolicyPanel.vue:42
-#: src/pages/device/deviceCenterList.vue:293
-#, fuzzy
+#: src/pages/device/components/devicePolicyPanel.vue:62
+#: src/pages/device/components/devicePolicyPanel.vue:63
+#: src/pages/device/components/devicePolicyPanel.vue:64
+#: src/pages/device/components/devicePolicyPanel.vue:65
+#: src/pages/device/deviceCenterList.vue:342
+#: src/pages/device/deviceCenterList.vue:36
 msgid "已断网"
-msgstr "Disconnected"
+msgstr "Internet blocked"
 
 #: src/pages/index/components/ModuleSettings.vue:10
 msgid "已显示模块"
 msgstr ""
 
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:69
+msgid "已暂停联网"
+msgstr "Internet paused"
+
 #: src/pages/device/speedLimitList.vue:17
 msgid "已有规则会保留，但在全局限速开启前不会生效。"
 msgstr ""
+"Existing rules will be retained, but will not take effect until the global "
+"speed limit is turned on."
+
+#: src/pages/device/components/floatingGatewayWizard.vue:55
+msgid "已有设备使用该虚拟网关，请先迁移这些设备。"
+msgstr ""
+"This virtual gateway is already in use by an existing device, please migrate "
+"these devices first."
+
+#: src/pages/device/components/advancedNetworkTools.vue:28
+msgid "已检测到 Bandix，但当前固件尚未启用经验证的连接洞察适配器"
+msgstr ""
+"Bandix has been detected, but the current firmware has not enabled the "
+"Proven Connection Insight adapter"
 
 #: src/components/action-disk-format/index.vue:127
 msgid "已经成功初始化分区"
@@ -1595,25 +2484,56 @@ msgstr "Partition Initialized Successfully"
 msgid "已经成功格式化磁盘"
 msgstr "Disk Formatted Successfully"
 
+#: src/pages/device/components/devicePolicyPanel.vue:113
+msgid "已观察到新租约，终端网关与 DNS 无法验证"
+msgstr ""
+"A new lease was observed; the device gateway and DNS cannot be verified."
+
+#: src/pages/device/deviceCenterList.vue:266
+msgid "已设置"
+msgstr "Configured"
+
+#: src/pages/device/components/trafficInsightsPanel.vue:10
+#: src/pages/device/components/trafficInsightsPanel.vue:11
+msgid "已达到额度"
+msgstr "Limit reached"
+
 #: src/pages/index/network/NetworkInterface.vue:44
 #, fuzzy
 msgid "已连接"
 msgstr "Connected Devices"
 
+#: src/pages/device/deviceGroupsPanel.vue:20
+#: src/pages/device/networkRulesHub.vue:12
+msgid "已选择"
+msgstr "Selected"
+
+#: src/pages/device/components/deviceProfileEditor.vue:7
+#: src/pages/device/components/deviceProfileEditor.vue:8
+msgid "已选择自定义图标"
+msgstr "Custom Icon Selected"
+
 #: src/pages/index/Storage/index.vue:23 src/pages/index/Storage/linkease.vue:8
 msgid "已配置"
 msgstr "Configured"
 
-#: src/pages/device/deviceCenterList.vue:293
+#: src/pages/device/components/advancedNetworkTools.vue:10
+msgid "已配置；如需更换请输入新地址"
+msgstr "Configured; enter a new address to replace"
+
+#: src/pages/device/deviceCenterList.vue:342
+#: src/pages/device/deviceCenterList.vue:36
+#: src/pages/device/deviceGroupsPanel.vue:62
 msgid "已限速"
-msgstr ""
+msgstr "Speed Limited"
 
 #: src/pages/smart/index.vue:47
 msgid "常规设置"
 msgstr "General Settings"
 
 #: src/pages/device/components/deviceClassificationEditor.vue:59
-#: src/pages/device/deviceCenterList.vue:266
+#: src/pages/device/components/deviceProfileEditor.vue:70
+#: src/pages/device/deviceCenterList.vue:312
 msgid "平板"
 msgstr "Tablet"
 
@@ -1625,9 +2545,50 @@ msgstr "And Mount to"
 msgid "序号"
 msgstr "Serial Number"
 
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:44
+msgid "应用后会立即重新计算这台设备的最终规则；失败时保留原设置。"
+msgstr ""
+"The final rule for this device will be recalculated as soon as it is "
+"applied; if it fails, the original settings will be preserved."
+
+#: src/pages/device/components/floatingGatewayWizard.vue:56
+msgid "应用后建议在维护窗口执行受控切换演练。"
+msgstr ""
+"After application, it is recommended to perform a controlled switching "
+"exercise in the maintenance window."
+
 #: src/pages/index/index.vue:198
 msgid "应用商店"
 msgstr ""
+
+#: src/pages/device/lanSettingsPanel.vue:277
+msgid "应用失败，原设置已保留"
+msgstr "Apply failed; original settings were preserved."
+
+#: src/pages/device/components/devicePolicyPanel.vue:106
+#: src/pages/device/lanSettingsPanel.vue:229
+#: src/pages/device/lanSettingsPanel.vue:247
+msgid "应用失败，原设置已恢复"
+msgstr "Apply failed; original settings were restored."
+
+#: src/pages/device/components/devicePolicyPanel.vue:107
+msgid "应用失败，原设置已恢复，可以重试"
+msgstr "Apply failed; original settings were restored. You can try again."
+
+#: src/pages/device/components/floatingGatewayWizard.vue:108
+msgid "应用失败，原配置已恢复"
+msgstr "App failed, original configuration restored"
+
+#: src/pages/device/components/floatingGatewayWizard.vue:62
+#: src/pages/device/components/floatingGatewayWizard.vue:63
+#: src/pages/device/components/floatingGatewayWizard.vue:64
+msgid "应用配置"
+msgstr "App Configuration"
+
+#: src/pages/device/components/devicePolicyPanel.vue:197
+#: src/pages/device/rateLimitI18n.ts:13
+msgid "应由上网网关执行"
+msgstr "Runs on the Internet gateway"
 
 #: src/pages/network/gateway/index.vue:76
 msgid "开启 NAT（可修复某些无线热点不能访问外网问题）"
@@ -1643,6 +2604,11 @@ msgstr "Enable Sandbox"
 #, fuzzy
 msgid "开启远程域名访问"
 msgstr "DDNS"
+
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:27
+#: src/pages/device/deviceGroupsPanel.vue:33
+msgid "开始"
+msgstr "Start"
 
 #: src/pages/networkSpeedTest/components/item.vue:12
 #, fuzzy
@@ -1661,29 +2627,87 @@ msgstr ""
 msgid "当前 IPv4 上游信息（点此刷新）"
 msgstr "Current IPv4 upstream information (click here to refresh)"
 
-#: src/pages/device/components/devicePolicyPanel.vue:39
-#: src/pages/device/components/devicePolicyPanel.vue:40
-#: src/pages/device/components/devicePolicyPanel.vue:41
-msgid "当前允许访问互联网"
-msgstr ""
+#: src/pages/device/lanSettingsPanel.vue:163
+#: src/pages/device/rateLimitI18n.ts:14
+msgid "当前不可用"
+msgstr "Currently unavailable"
 
-#: src/pages/device/deviceCenterList.vue:129
-msgid "当前地址"
+#: src/pages/device/components/devicePolicyPanel.vue:255
+#: src/pages/device/components/devicePolicyPanel.vue:282
+msgid "当前不能应用这项修改"
+msgstr "This change cannot be applied at this time"
+
+#: src/pages/device/components/advancedNetworkTools.vue:28
+msgid "当前仅使用内置可回滚规则"
+msgstr "Only built-in rollback rules are currently used"
+
+#: src/pages/device/components/devicePolicyPanel.vue:211
+#: src/pages/device/lanSettingsPanel.vue:177
+#: src/pages/device/lanSettingsPanel.vue:179
+msgid "当前仅提供查看与引导，不会自动修改其他设备。"
 msgstr ""
+"Currently only viewing and guiding are available, no other devices are "
+"automatically modified."
+
+#: src/pages/device/components/devicePolicyPanel.vue:61
+#: src/pages/device/components/devicePolicyPanel.vue:62
+#: src/pages/device/components/devicePolicyPanel.vue:63
+#: src/pages/device/components/devicePolicyPanel.vue:64
+msgid "当前允许访问互联网"
+msgstr "Internet access is currently allowed"
+
+#: src/pages/device/components/advancedNetworkTools.vue:28
+msgid "当前固件尚未验证，未展示假控件"
+msgstr ""
+"The current firmware has not been verified, no fake controls are presented"
+
+#: src/pages/device/deviceCenterList.vue:170
+msgid "当前地址"
+msgstr "Current addresses"
 
 #: src/components/action-sandboxenvironment/index.vue:11
 msgid "当前处于沙箱环境："
 msgstr "Currently in sandbox environment:"
 
-#: src/pages/device/components/devicePolicyPanel.vue:39
-#: src/pages/device/components/devicePolicyPanel.vue:40
-#: src/pages/device/components/devicePolicyPanel.vue:41
-msgid "当前已断开互联网"
+#: src/pages/device/components/devicePolicyPanel.vue:202
+#: src/pages/device/rateLimitI18n.ts:15
+msgid "当前实现按 IPv4 限速，预留当前地址后规则才不会漂移。"
 msgstr ""
+"This mode limits by IPv4 address. Reserve the current address first so the "
+"rule stays with this device."
 
-#: src/pages/device/deviceCenterList.vue:136
-msgid "当前没有地址"
+#: src/pages/device/components/devicePolicyPanel.vue:61
+#: src/pages/device/components/devicePolicyPanel.vue:62
+#: src/pages/device/components/devicePolicyPanel.vue:63
+#: src/pages/device/components/devicePolicyPanel.vue:64
+msgid "当前已断开互联网"
+msgstr "Currently disconnected from the internet"
+
+#: src/pages/device/lanSettingsPanel.vue:164
+msgid "当前执行方式不可用，请先安装或启用对应服务。"
 msgstr ""
+"This enforcement mode is unavailable. Install or enable its service first."
+
+#: src/pages/device/lanSettingsPanel.vue:299
+msgid "当前无法安装，请检查存储空间和软件源。"
+msgstr ""
+"Unable to install at this time, please check storage space and software "
+"source."
+
+#: src/pages/device/components/devicePolicyPanel.vue:212
+#: src/pages/device/lanSettingsPanel.vue:173
+msgid "当前无法读取地址分配状态，其他设置仍可使用。"
+msgstr ""
+"The address assignment status is currently unavailable; other settings "
+"remain available."
+
+#: src/pages/device/components/devicePolicyPanel.vue:103
+msgid "当前暂不可用"
+msgstr "Currently unavailable"
+
+#: src/pages/device/deviceCenterList.vue:177
+msgid "当前没有地址"
+msgstr "No current address"
 
 #: src/pages/index/info/status.vue:5 src/pages/index/service/aria2.vue:5
 #: src/pages/index/service/qbittorrent.vue:5
@@ -1695,17 +2719,34 @@ msgstr ""
 msgid "当前状态:"
 msgstr "Current status:"
 
-#: src/pages/device/deviceCenterList.vue:37
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:11
+msgid "当前生效"
+msgstr "Effective now"
+
+#: src/pages/device/lanSettingsPanel.vue:175
+msgid "当前由其他设备负责地址分配，本页只读。"
+msgstr "Another device provides DHCP; this page is read-only."
+
+#: src/pages/device/deviceCenterList.vue:50
 msgid "当前筛选下没有设备"
-msgstr ""
+msgstr "No devices under current filter"
+
+#: src/pages/device/components/floatingGatewayWizard.vue:89
+msgid "当前节点"
+msgstr "Current Node"
+
+#: src/pages/device/components/devicePolicyPanel.vue:193
+#: src/pages/device/rateLimitI18n.ts:16
+msgid "当前节点无法执行限速"
+msgstr "This node cannot enforce the speed limit"
 
 #: src/components/action-softwaresource/index.vue:12
 msgid "当前软件源"
 msgstr "Current software source"
 
-#: src/pages/device/deviceCenterList.vue:148
+#: src/pages/device/deviceCenterList.vue:135
 msgid "当前速率"
-msgstr ""
+msgstr "Current rate"
 
 #: src/components/action-docker/index.vue:5
 msgid ""
@@ -1716,6 +2757,18 @@ msgstr ""
 "Docker root directory to an external hard disk to ensure the normal "
 "operation of the system (the target partition does not support NTFS, FAT and "
 "other file systems)"
+
+#: src/pages/device/lanSettingsPanel.vue:99
+msgid "影响范围"
+msgstr "Impact"
+
+#: src/pages/device/networkRulesHub.vue:53
+msgid "影响规则"
+msgstr "Impact Rules"
+
+#: src/pages/device/deviceGroupsPanel.vue:35
+msgid "影响设备"
+msgstr "Affected devices"
 
 #: src/pages/smart/index/index.vue:35
 msgid "待机"
@@ -1734,6 +2787,21 @@ msgstr ""
 msgid "快捷入口"
 msgstr ""
 
+#: src/pages/device/lanSettingsPanel.vue:53
+msgid "总上传带宽（Mbit/s）"
+msgstr "Total upload bandwidth (Mbit/s)"
+
+#: src/pages/device/lanSettingsPanel.vue:53
+msgid "总下载带宽（Mbit/s）"
+msgstr "Total download bandwidth (Mbit/s)"
+
+#: src/pages/device/lanSettingsPanel.vue:54
+#: src/pages/device/rateLimitI18n.ts:17
+msgid "总带宽用于计算设备限速队列，不会自动平均分配给每台设备。"
+msgstr ""
+"Total bandwidth is used to calculate device queues; it is not divided "
+"equally among devices."
+
 #: src/pages/smart/index/index.vue:33
 msgid "总是"
 msgstr "Always"
@@ -1751,20 +2819,56 @@ msgstr ""
 msgid "恢复"
 msgstr "Restore"
 
+#: src/pages/device/components/deviceProfileEditor.vue:35
+msgid "恢复全部自动推荐"
+msgstr "Restore all auto referrals"
+
+#: src/pages/device/components/advancedNetworkTools.vue:38
+msgid "恢复失败，原配置已回滚"
+msgstr "Restore failed, the original configuration has been rolled back"
+
+#: src/pages/device/lanSettingsPanel.vue:253
+msgid "恢复失败，请按提示处理"
+msgstr "Restore failed. Follow the guidance to resolve it."
+
 #: src/pages/raid/index/index.vue:264
 msgid "恢复完成"
 msgstr "Restore complete"
-
-#: src/pages/device/components/devicePolicyPanel.vue:44
-#: src/pages/device/components/devicePolicyPanel.vue:45
-#: src/pages/device/components/devicePolicyPanel.vue:46
-msgid "恢复联网"
-msgstr ""
 
 #: src/pages/device/components/deviceClassificationEditor.vue:29
 #: src/pages/device/components/deviceClassificationEditor.vue:30
 msgid "恢复自动判断"
 msgstr "Restore automatic detection"
+
+#: src/pages/device/lanSettingsPanel.vue:40
+msgid "恢复路径"
+msgstr "Recovery path"
+
+#: src/pages/device/lanSettingsPanel.vue:77
+#: src/pages/device/lanSettingsPanel.vue:78
+msgid "恢复迁移前设置"
+msgstr "Restore pre-migration settings"
+
+#: src/pages/device/networkRulesHub.vue:14
+#: src/pages/device/networkRulesHub.vue:19
+#: src/pages/device/networkRulesHub.vue:20
+msgid "恢复默认路线"
+msgstr "Restore default path"
+
+#: src/pages/device/networkRulesHub.vue:41
+msgid "恢复默认路线，或在设备详情中选择其他可用路线"
+msgstr ""
+"Restore the default path, or choose another available path in device details."
+
+#: src/pages/device/networkRulesHub.vue:43
+msgid "恢复默认路线，或编辑路线后重新应用"
+msgstr "Restore the default path, or edit the path and apply it again."
+
+#: src/pages/device/networkRulesHub.vue:56
+msgid "恢复默认路线？设备重新获取地址后生效。"
+msgstr ""
+"Restore the default path? It takes effect after the device renews its "
+"address."
 
 #: src/pages/network/gateway/index.vue:6
 msgid "您可以用上一级路由（主路由）拨号，然后用本路由来实现一些高级功能。"
@@ -1787,9 +2891,22 @@ msgstr ""
 msgid "想要更精确的配置？请前往"
 msgstr "Want more precise configuration? Please go to "
 
+#: src/pages/device/components/devicePolicyPanel.vue:30
+msgid "想要的路线"
+msgstr "Desired route"
+
+#: src/pages/device/deviceGroupsPanel.vue:8
+msgid "成功"
+msgstr "Succeeded"
+
 #: src/pages/raid/index/index.vue:31
 msgid "成员"
 msgstr "Member"
+
+#: src/pages/device/lanSettingsPanel.vue:42
+#: src/pages/device/lanSettingsPanel.vue:43
+msgid "我已了解影响，继续"
+msgstr "I understand the impact; continue"
 
 #: src/components/firstOpen/index.vue:59
 msgid "我已完整阅读并同意"
@@ -1801,9 +2918,13 @@ msgid "我知道了"
 msgstr "Got it"
 
 #: src/pages/device/speedLimitList.vue:270
-#: src/pages/device/staticStateList.vue:274
+#: src/pages/device/staticStateList.vue:272
 msgid "所有删除操作已完成"
-msgstr ""
+msgstr "All deletions have been completed"
+
+#: src/pages/device/components/devicePolicyPanel.vue:101
+msgid "所需组件尚未安装"
+msgstr "Required component is not installed."
 
 #: src/components/action-sandboxenvironment/index.vue:16
 msgid "手动在地址栏输入地址"
@@ -1814,7 +2935,7 @@ msgstr "manually enter address in the address bar"
 msgid "手动挂载"
 msgstr "Manual mount"
 
-#: src/pages/device/deviceCenterList.vue:286
+#: src/pages/device/deviceCenterList.vue:335
 msgid "手动设置"
 msgstr "Manual setting"
 
@@ -1841,18 +2962,34 @@ msgid "手工配置"
 msgstr "Manual configuration"
 
 #: src/pages/device/components/deviceClassificationEditor.vue:59
-#: src/pages/device/deviceCenterList.vue:264
+#: src/pages/device/components/deviceProfileEditor.vue:70
+#: src/pages/device/deviceCenterList.vue:310
 msgid "手机"
 msgstr "Phone"
 
 #: src/pages/device/components/deviceClassificationEditor.vue:61
-#: src/pages/device/deviceCenterList.vue:273
+#: src/pages/device/components/deviceProfileEditor.vue:70
+#: src/pages/device/deviceCenterList.vue:319
 msgid "打印机"
 msgstr "Printer"
 
 #: src/components/action-sandboxenvironment/index.vue:112
 msgid "执行中..."
 msgstr "Executing..."
+
+#: src/pages/device/lanSettingsPanel.vue:67
+#: src/pages/device/rateLimitI18n.ts:18
+msgid "执行方式"
+msgstr "Enforcement mode"
+
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:26
+msgid "执行日期"
+msgstr "Days"
+
+#: src/pages/device/components/devicePolicyPanel.vue:197
+#: src/pages/device/rateLimitI18n.ts:19
+msgid "执行节点待确认"
+msgstr "Enforcement node not confirmed"
 
 #: src/pages/raid/index/index.vue:75
 msgid "扩充"
@@ -1870,9 +3007,39 @@ msgstr "Scanning ..."
 msgid "扫描恢复RAID"
 msgstr "Scan to restore RAID"
 
+#: src/pages/device/lanSettingsPanel.vue:71
+msgid "扫描现有规则"
+msgstr "Scan existing rules"
+
 #: src/pages/device/components/search.vue:7
 msgid "批量删除"
+msgstr "Bulk Delete"
+
+#: src/pages/device/deviceGroupsPanel.vue:65
+msgid "批量检查完成"
+msgstr "Batch Check Complete"
+
+#: src/pages/device/deviceGroupsPanel.vue:65
+msgid "批量规则已应用"
+msgstr "Bulk Rule Applied"
+
+#: src/pages/device/deviceGroupsPanel.vue:65
+msgid "批量规则未应用"
+msgstr "Bulk rule not applied"
+
+#: src/pages/device/lanSettingsPanel.vue:86
+msgid ""
+"把复杂网络工作交给旁路由或指定网关，设备可在详情中选择路线。DNS 跟随路线。"
 msgstr ""
+"Leave complex network work to the bypass or designated gateway, and the "
+"device can choose the route in the details.DNS follows the route."
+
+#: src/pages/device/deviceGroupsPanel.vue:3
+msgid ""
+"把需要相同安排的设备放在一起，一次设置联网、速度、路线、时段或流量额度。"
+msgstr ""
+"Put together devices that need the same setup to set up networking, speeds, "
+"routes, time periods, or traffic limits all at once."
 
 #: src/pages/index/network/NetworkConnection.vue:229
 msgid "拨号上网"
@@ -1901,10 +3068,39 @@ msgstr "Mount Points"
 msgid "挂载路径:"
 msgstr "Mount path:"
 
+#: src/pages/device/lanSettingsPanel.vue:182
+#: src/pages/device/lanSettingsPanel.vue:90
+msgid "指定网关"
+msgstr "Custom gateway"
+
+#: src/pages/device/deviceGroupsPanel.vue:63
+msgid "指定路线"
+msgstr "Specify route"
+
 #: src/pages/device/deviceCenterList.vue:15
-#, fuzzy
 msgid "按名称"
-msgstr "Name"
+msgstr "Sort by name"
+
+#: src/pages/device/lanSettingsPanel.vue:165
+msgid "按设备身份同时覆盖 IPv4 与 IPv6，并验证规则是否真正生效。"
+msgstr ""
+"Covers IPv4 and IPv6 by device identity and verifies that rules are actually "
+"enforced."
+
+#: src/pages/device/rateLimitI18n.ts:20
+msgid "按设备身份执行，可同时覆盖 IPv4 与 IPv6；会占用更多系统资源。"
+msgstr ""
+"Enforces by device identity across IPv4 and IPv6, using more system "
+"resources."
+
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:15
+#: src/pages/device/deviceGroupsPanel.vue:7
+msgid "按路由器时间执行"
+msgstr "Uses router time"
+
+#: src/pages/device/components/advancedNetworkTools.vue:3
+msgid "按需诊断、审计和策略备份"
+msgstr "On-demand diagnostics, audits, and policy backups"
 
 #: src/components/firstOpen/index.vue:104
 msgid "掌握最新动态"
@@ -1912,15 +3108,23 @@ msgstr ""
 
 #: src/pages/device/deviceCenterList.vue:13
 msgid "排序方式"
-msgstr ""
+msgstr "Sort by"
 
-#: src/pages/device/deviceList.vue:140
+#: src/pages/device/deviceList.vue:142
 msgid "接口"
-msgstr ""
+msgstr "Interface"
 
 #: src/components/tooltip/index.vue:8
 msgid "接收："
 msgstr "Receive:"
+
+#: src/pages/device/lanSettingsPanel.vue:289
+msgid "接管失败，原设置已保留"
+msgstr "Takeover failed, original settings preserved"
+
+#: src/pages/device/lanSettingsPanel.vue:289
+msgid "接管失败，原设置已恢复，可以重试"
+msgstr "Apply failed; original settings were restored. You can try again."
 
 #: src/pages/index/service/RemoteDomain.vue:48
 msgid "控制台"
@@ -1960,16 +3164,25 @@ msgstr "Tip"
 msgid "插件备份"
 msgstr "APP Backup"
 
+#: src/pages/device/deviceGroupsPanel.vue:20
+msgid "搜索名称、IP 或 MAC"
+msgstr "Search Name, IP or Mac"
+
 #: src/pages/device/deviceCenterList.vue:11
 msgid "搜索名称、IP、MAC 或厂商"
-msgstr ""
+msgstr "Search name, IP, MAC, or vendor"
 
 #: src/pages/device/deviceCenterList.vue:10
 msgid "搜索设备"
-msgstr ""
+msgstr "Search Devices"
+
+#: src/pages/device/networkRulesHub.vue:8
+msgid "搜索设备、MAC、IP 或规则"
+msgstr "Search for a device, Mac, IP or rule"
 
 #: src/pages/device/components/deviceClassificationEditor.vue:60
-#: src/pages/device/deviceCenterList.vue:270
+#: src/pages/device/components/deviceProfileEditor.vue:70
+#: src/pages/device/deviceCenterList.vue:316
 msgid "摄像头"
 msgstr "Camera"
 
@@ -1981,6 +3194,31 @@ msgstr "Operation"
 msgid "操作失败，请稍后重试"
 msgstr "The operation failed. Please try again later."
 
+#: src/pages/device/components/deviceAliasEditor.vue:8
+msgid "支持中文，仅用于本页面显示，不会修改 DHCP 主机名。"
+msgstr ""
+"Chinese is supported, only for display on this page, and the DHCP hostname "
+"will not be modified."
+
+#: src/pages/device/components/deviceProfileEditor.vue:12
+msgid "支持中文，只用于设备管理显示，不会写入网络主机名。"
+msgstr ""
+"Supports Chinese, only used for device management display, does not write "
+"network host name."
+
+#: src/pages/device/components/trafficInsightsPanel.vue:3
+msgid "收起额度"
+msgstr "Collapse Limit"
+
+#: src/pages/device/components/floatingGatewayWizard.vue:68
+msgid "故障切换演练"
+msgstr "Failover Walkthrough"
+
+#: src/pages/device/components/floatingGatewayWizard.vue:36
+#: src/pages/device/components/floatingGatewayWizard.vue:87
+msgid "故障接管节点"
+msgstr "Fault takeover node"
+
 #: src/pages/index/info/DiskInfo.vue:9
 msgid "文件管理"
 msgstr "File Manager"
@@ -1989,26 +3227,31 @@ msgstr "File Manager"
 msgid "文件系统："
 msgstr "File System: "
 
-#: src/pages/device/components/devicePolicyPanel.vue:44
-#: src/pages/device/components/devicePolicyPanel.vue:45
-#: src/pages/device/components/devicePolicyPanel.vue:46
-msgid "断开网络"
-msgstr ""
-
 #: src/pages/smart/task/index.vue:1 src/pages/smart/task/index.vue:2
 msgid "新建"
 msgstr "Create new"
 
-#: src/pages/device/configure.vue:202 src/pages/device/configure.vue:324
-#: src/pages/device/configure.vue:423 src/pages/device/deviceList.vue:244
-#: src/pages/device/staticStateList.vue:131
-#, fuzzy
-msgid "旁路由"
-msgstr "Configure as bypass router"
+#: src/pages/device/deviceGroupsPanel.vue:16
+#: src/pages/device/deviceGroupsPanel.vue:17
+#: src/pages/device/deviceGroupsPanel.vue:3
+msgid "新建分组"
+msgstr "New group"
 
-#: src/pages/device/configure.vue:101
-msgid "旁路由IP"
-msgstr ""
+#: src/pages/device/components/advancedNetworkTools.vue:10
+msgid "新设备与网关切换通知"
+msgstr "New Device and Gateway Switching Notification"
+
+#: src/pages/device/components/devicePolicyPanel.vue:218
+#: src/pages/device/configure.vue:255 src/pages/device/deviceGroupsPanel.vue:57
+#: src/pages/device/deviceList.vue:242
+#: src/pages/device/lanSettingsPanel.vue:182
+#: src/pages/device/lanSettingsPanel.vue:190
+#: src/pages/device/lanSettingsPanel.vue:197
+#: src/pages/device/lanSettingsPanel.vue:90
+#: src/pages/device/networkRulesHub.vue:47
+#: src/pages/device/staticStateList.vue:134
+msgid "旁路由"
+msgstr "Secondary router"
 
 #: src/pages/network/gateway/index.vue:5
 msgid "旁路由模式，也叫单臂路由模式。"
@@ -2026,13 +3269,21 @@ msgstr "Bypass routing auto-configuration"
 msgid "旁路由配置前的准备工作"
 msgstr "Preparation before bypass routing configuration"
 
-#: src/pages/device/configure.vue:66
-msgid "无法确认浮动网关状态"
-msgstr ""
+#: src/pages/device/components/floatingGatewayWizard.vue:89
+msgid "无人持有"
+msgstr "Unowned"
+
+#: src/pages/device/lanSettingsPanel.vue:251
+msgid "无法扫描现有规则"
+msgstr "Could not scan existing rules"
+
+#: src/pages/device/components/floatingGatewayWizard.vue:109
+msgid "无法生成演练计划"
+msgstr "Unable to generate walkthrough plan"
 
 #: src/pages/device/configure.vue:17 src/pages/device/speedLimitList.vue:14
 msgid "无法确认限速功能状态"
-msgstr ""
+msgstr "Unable to confirm speed limit function status"
 
 #: src/components/action-disk-format/index.vue:248
 msgid "无法识别数据"
@@ -2042,23 +3293,60 @@ msgstr "Unrecognized data"
 msgid "无法识别路径"
 msgstr "Unrecognized path"
 
-#: src/pages/device/deviceCenterList.vue:75
-#: src/pages/device/deviceCenterList.vue:91
-#: src/pages/device/deviceCenterList.vue:92
-#: src/pages/device/deviceCenterList.vue:93
-#: src/pages/device/deviceCenterList.vue:94
-#: src/pages/device/deviceCenterList.vue:96
+#: src/pages/device/lanSettingsPanel.vue:226
+msgid "无法预览地址分配设置"
+msgstr "Could not review DHCP settings"
+
+#: src/pages/device/lanSettingsPanel.vue:264
+msgid "无法预览这次修改"
+msgstr "This edit cannot be previewed"
+
+#: src/pages/device/lanSettingsPanel.vue:238
+#: src/pages/device/rateLimitI18n.ts:44
+msgid "无法预览限速服务设置"
+msgstr "Could not preview speed limit settings"
+
+#: src/pages/device/deviceCenterList.vue:104
+#: src/pages/device/deviceCenterList.vue:105
+#: src/pages/device/deviceCenterList.vue:106
+#: src/pages/device/deviceCenterList.vue:107
+#: src/pages/device/deviceCenterList.vue:109
+#: src/pages/device/deviceCenterList.vue:36
+#: src/pages/device/deviceCenterList.vue:88
 msgid "无策略"
-msgstr ""
+msgstr "No policies"
 
 #: src/components/firstOpen/form.vue:98
 #: src/pages/quickwifi/components/form.vue:98
 msgid "无线模式"
 msgstr ""
 
+#: src/pages/device/components/devicePolicyPanel.vue:10
+#: src/pages/device/components/devicePolicyPanel.vue:11
+#: src/pages/device/components/devicePolicyPanel.vue:12
+msgid "无需重载服务"
+msgstr "No need to reload services"
+
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:65
+#: src/pages/device/deviceGroupsPanel.vue:52
+msgid "日"
+msgstr "Sun"
+
 #: src/pages/index/nav/Item.vue:69
 msgid "日志查看"
 msgstr ""
+
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:24
+#: src/pages/device/deviceGroupsPanel.vue:33
+#: src/pages/device/rateLimitI18n.ts:21
+msgid "时段内执行"
+msgstr "During this period"
+
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:77
+#: src/pages/device/deviceGroupsPanel.vue:63
+#: src/pages/device/rateLimitI18n.ts:22
+msgid "时段限速"
+msgstr "Scheduled speed limit"
 
 #: src/components/action-nas/index.vue:69 src/pages/index/info/DiskInfo.vue:135
 #: src/pages/index/Storage/index.vue:22
@@ -2078,9 +3366,8 @@ msgstr "LinkEase"
 #: src/pages/device/staticStateList.vue:31
 #: src/pages/device/staticStateList.vue:32
 #: src/pages/device/staticStateList.vue:33
-#, fuzzy
 msgid "是"
-msgstr "Always"
+msgstr "Yes"
 
 #: src/pages/smart/index.vue:9
 msgid ""
@@ -2119,25 +3406,79 @@ msgid "智能内网穿透服务"
 msgstr ""
 
 #: src/pages/device/components/deviceClassificationEditor.vue:60
-#: src/pages/device/deviceCenterList.vue:269
+#: src/pages/device/components/deviceProfileEditor.vue:70
+#: src/pages/device/deviceCenterList.vue:315
 msgid "智能家居"
 msgstr "Smart home"
+
+#: src/pages/device/lanSettingsPanel.vue:162
+msgid "智能设备限速（推荐）"
+msgstr "Smart device speed limits (recommended)"
 
 #: src/pages/index/index.vue:149
 msgid "智能配置"
 msgstr ""
 
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:24
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:38
+#: src/pages/device/components/trafficInsightsPanel.vue:16
+#: src/pages/device/deviceGroupsPanel.vue:22
+#: src/pages/device/deviceGroupsPanel.vue:25
+#: src/pages/device/deviceGroupsPanel.vue:33
+#: src/pages/device/deviceGroupsPanel.vue:62
+#: src/pages/device/deviceGroupsPanel.vue:63
+msgid "暂停联网"
+msgstr "Pause Internet"
+
+#: src/pages/device/components/advancedNetworkTools.vue:9
+msgid "暂无与此设备有关的审计事件"
+msgstr "There are no audit events related to this device"
+
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:68
+msgid "暂无计划"
+msgstr "No schedule"
+
 #: src/pages/device/deviceList.vue:11
 msgid "暂无设备"
-msgstr ""
+msgstr "No devices yet"
 
 #: src/pages/device/speedLimitList.vue:21
 msgid "暂无限速规则"
-msgstr ""
+msgstr "No speed limit rule"
 
 #: src/pages/device/staticStateList.vue:12
 msgid "暂无静态分配"
+msgstr "No static assignments yet"
+
+#: src/pages/device/components/devicePolicyPanel.vue:213
+#: src/pages/device/lanSettingsPanel.vue:169
+#: src/pages/device/lanSettingsPanel.vue:178
+msgid "暂时无法判断局域网角色"
+msgstr "Unable to determine LAN role temporarily"
+
+#: src/pages/device/components/devicePolicyPanel.vue:109
+msgid "暂时无法安全保存，请稍后重试"
+msgstr "Cannot save safely right now. Try again later."
+
+#: src/pages/device/lanSettingsPanel.vue:21
+msgid "暂时无法检查现有设置，不影响其他局域网设置。"
 msgstr ""
+"Existing settings cannot be checked at this time and will not affect other "
+"LAN settings."
+
+#: src/pages/device/components/devicePolicyPanel.vue:115
+msgid "暂时无法读取续租状态"
+msgstr "Could not read the lease renewal state."
+
+#: src/pages/device/components/devicePolicyPanel.vue:120
+msgid "暂时无法连接该网关，请确认设备已开机并接入当前局域网后重试"
+msgstr ""
+"The gateway is currently unreachable. Confirm it is powered on and connected "
+"to this LAN, then try again."
+
+#: src/pages/device/deviceCenterList.vue:32
+msgid "更多筛选"
+msgstr "More filters"
 
 #: src/components/action-docker/index.vue:68
 msgid "更换目录（不覆盖目标路径，仅将Docker目录修改为目标路径）"
@@ -2149,17 +3490,55 @@ msgstr ""
 msgid "更换配置"
 msgstr "Change configuration"
 
+#: src/pages/device/components/floatingGatewayWizard.vue:92
+msgid "更改健康检测"
+msgstr "Change health test"
+
+#: src/pages/device/components/floatingGatewayWizard.vue:92
+msgid "更改启用状态"
+msgstr "Change enablement status"
+
+#: src/pages/device/components/floatingGatewayWizard.vue:92
+msgid "更改对端节点"
+msgstr "Change Peer Node"
+
+#: src/pages/device/components/floatingGatewayWizard.vue:92
+msgid "更改节点职责"
+msgstr "Change Node Responsibilities"
+
+#: src/pages/device/components/floatingGatewayWizard.vue:92
+msgid "更改虚拟 IP"
+msgstr "Change Virtual IP"
+
+#: src/pages/device/lanSettingsPanel.vue:103
+msgid "替代路线"
+msgstr "Replacement path"
+
 #: src/components/smart/add-task.vue:73
 msgid "月"
 msgstr "Month"
 
-#: src/pages/device/deviceCenterList.vue:262
+#: src/pages/device/deviceGroupsPanel.vue:20
+msgid "有单设备例外"
+msgstr "There are single device exceptions"
+
+#: src/pages/device/deviceGroupsPanel.vue:62
+msgid "有流量额度"
+msgstr "Has Traffic Limit"
+
+#: src/pages/device/deviceCenterList.vue:308
+#: src/pages/device/deviceCenterList.vue:34
 msgid "有线"
-msgstr ""
+msgstr "Ethernet"
 
 #: src/components/action-domain/setup-ddns-success.vue:18
 msgid "服务-动态DNS"
 msgstr "Service - Dynamic DNS"
+
+#: src/pages/device/components/devicePolicyPanel.vue:114
+msgid "服务器配置可读，终端效果无法验证"
+msgstr ""
+"Router configuration is readable; the device result cannot be verified."
 
 #: src/pages/index/Storage/linkease.vue:15
 msgid "服务地址:"
@@ -2169,6 +3548,16 @@ msgstr "Service address:"
 #: src/components/action-nas/linkease/index.vue:14
 msgid "服务已启动"
 msgstr "Service started"
+
+#: src/pages/device/lanSettingsPanel.vue:56
+msgid "服务已就绪，请在设备详情中为需要的设备设置速度上限。"
+msgstr ""
+"The service is ready. Set speed limits for individual devices in their "
+"details."
+
+#: src/pages/device/lanSettingsPanel.vue:163
+msgid "服务未运行"
+msgstr "Service is not running"
 
 #: src/components/action-nas/unishare/index.vue:11
 msgid "服务目录路径"
@@ -2194,13 +3583,16 @@ msgstr "Unpartitioned (%{total})"
 msgid "未启动"
 msgstr "Not Started"
 
-#: src/pages/device/components/devicePolicyPanel.vue:10
-#: src/pages/device/components/devicePolicyPanel.vue:11
-#: src/pages/device/components/devicePolicyPanel.vue:26
-#: src/pages/device/components/devicePolicyPanel.vue:27
-#: src/pages/device/components/devicePolicyPanel.vue:28
-#: src/pages/device/components/devicePolicyPanel.vue:9
-#: src/pages/index/info/status.vue:20 src/pages/index/nav/QuickActions.vue:20
+#: src/pages/device/components/devicePolicyPanel.vue:16
+#: src/pages/device/components/devicePolicyPanel.vue:17
+#: src/pages/device/components/devicePolicyPanel.vue:18
+#: src/pages/device/components/devicePolicyPanel.vue:44
+#: src/pages/device/components/devicePolicyPanel.vue:45
+#: src/pages/device/components/devicePolicyPanel.vue:46
+#: src/pages/device/components/devicePolicyPanel.vue:47
+#: src/pages/device/components/floatingGatewayWizard.vue:88
+#: src/pages/device/lanSettingsPanel.vue:184 src/pages/index/info/status.vue:20
+#: src/pages/index/nav/QuickActions.vue:20
 #: src/pages/index/nav/QuickActions.vue:21
 #: src/pages/index/nav/QuickActions.vue:22
 #: src/pages/index/network/NetworkConnection.vue:95
@@ -2214,16 +3606,34 @@ msgstr "Not Started"
 msgid "未启用"
 msgstr "Not enabled"
 
-#: src/pages/device/components/devicePolicyPanel.vue:144
-#: src/pages/device/deviceCenterList.vue:260
+#: src/pages/device/components/deviceProfileEditor.vue:7
+#: src/pages/device/components/deviceProfileEditor.vue:8
+#: src/pages/device/deviceCenterList.vue:304
+#: src/pages/device/deviceGroupsPanel.vue:19
+#: src/pages/device/deviceGroupsPanel.vue:20
+#: src/pages/device/networkRulesHub.vue:13
+#: src/pages/device/networkRulesHub.vue:14
+#: src/pages/device/networkRulesHub.vue:17
+#: src/pages/device/networkRulesHub.vue:18
 #: src/pages/device/speedLimitList.vue:216
-#: src/pages/device/staticStateList.vue:219
+#: src/pages/device/staticStateList.vue:217
 msgid "未命名设备"
 msgstr "Unnamed device"
 
-#: src/pages/index/info/status.vue:9
+#: src/pages/device/components/advancedNetworkTools.vue:27
+#: src/pages/device/components/trafficInsightsPanel.vue:38
+#: src/pages/device/lanSettingsPanel.vue:163
+#: src/pages/device/lanSettingsPanel.vue:184 src/pages/index/info/status.vue:9
 msgid "未安装"
 msgstr "Not Installed"
+
+#: src/pages/device/components/advancedNetworkTools.vue:28
+msgid "未安装分段适配器"
+msgstr "Segmentation adapter not installed"
+
+#: src/pages/device/components/advancedNetworkTools.vue:28
+msgid "未安装多 WAN 适配器"
+msgstr "Multi-WAN adapter not installed"
 
 #: src/pages/index/service/RemoteDomain.vue:46
 msgid "未安装或未配置"
@@ -2243,20 +3653,16 @@ msgid "未格式化"
 msgstr "Not formatted"
 
 #: src/components/action-disk-part/item.vue:13
-#: src/pages/device/deviceCenterList.vue:262 src/pages/smart/task/index.vue:65
+#: src/pages/device/components/floatingGatewayWizard.vue:88
+#: src/pages/device/deviceCenterList.vue:308
+#: src/pages/device/deviceCenterList.vue:34
+#: src/pages/device/lanSettingsPanel.vue:184 src/pages/smart/task/index.vue:65
 msgid "未知"
 msgstr "Unknown"
 
-#: src/pages/device/deviceCenterList.vue:108
-#: src/pages/device/deviceCenterList.vue:109
-#: src/pages/device/deviceCenterList.vue:110
-#: src/pages/device/deviceCenterList.vue:111
-#: src/pages/device/deviceCenterList.vue:113
-msgid "未知品牌"
-msgstr "Unknown brand"
-
 #: src/pages/device/components/deviceClassificationEditor.vue:62
-#: src/pages/device/deviceCenterList.vue:275
+#: src/pages/device/components/deviceProfileEditor.vue:70
+#: src/pages/device/deviceCenterList.vue:321
 msgid "未知设备"
 msgstr "Unknown device"
 
@@ -2280,6 +3686,11 @@ msgstr "Unknown error"
 msgid "未联网"
 msgstr "Internet Down"
 
+#: src/pages/device/components/devicePolicyPanel.vue:193
+#: src/pages/device/rateLimitI18n.ts:23
+msgid "未设置限速"
+msgstr "No speed limit"
+
 #: src/pages/index/network/NetworkInterface.vue:43
 msgid "未连接"
 msgstr ""
@@ -2292,20 +3703,59 @@ msgstr "Not Configured"
 msgid "本向导支持自动或手动配置："
 msgstr "This wizard supports automatic or manual configuration:"
 
-#: src/pages/device/deviceCenterList.vue:119
-#: src/pages/device/deviceCenterList.vue:149
+#: src/pages/device/components/trafficInsightsPanel.vue:34
+msgid "本周"
+msgstr "This week"
+
+#: src/pages/device/components/trafficInsightsPanel.vue:12
+msgid "本地轻量统计"
+msgstr "Local Lightweight Statistics"
+
+#: src/pages/device/components/trafficInsightsPanel.vue:34
+msgid "本月"
+msgstr "This month"
+
+#: src/pages/device/components/devicePolicyPanel.vue:208
+#: src/pages/device/components/devicePolicyPanel.vue:214
+msgid "本机当前不负责地址分配，请到实际分配地址的路由器上修改。"
+msgstr ""
+"This machine is not currently responsible for address assignment, please "
+"modify it on the router where the address is actually assigned."
+
+#: src/pages/device/lanSettingsPanel.vue:169
+msgid "本机负责局域网地址分配"
+msgstr "This machine is responsible for LAN address allocation"
+
+#: src/pages/device/components/devicePolicyPanel.vue:217
+#: src/pages/device/deviceGroupsPanel.vue:57
+#: src/pages/device/lanSettingsPanel.vue:189
+#: src/pages/device/lanSettingsPanel.vue:197
+#: src/pages/device/networkRulesHub.vue:47
+msgid "本机路由"
+msgstr "This router"
+
+#: src/pages/device/deviceCenterList.vue:136
+#: src/pages/device/deviceCenterList.vue:160
 msgid "本次开机"
 msgstr "This boot"
 
-#: src/pages/device/configure.vue:323 src/pages/device/deviceList.vue:243
-#: src/pages/device/staticStateList.vue:130
-#, fuzzy
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:72
+#: src/pages/device/configure.vue:254 src/pages/device/deviceList.vue:241
+#: src/pages/device/staticStateList.vue:133
 msgid "本设备"
-msgstr "Device"
+msgstr "This device"
+
+#: src/pages/device/components/advancedNetworkTools.vue:26
+msgid "来宾 / IoT 分段"
+msgstr "Guest/IoT Segmentation"
+
+#: src/pages/device/deviceGroupsPanel.vue:14
+msgid "查看最终生效结果与来源"
+msgstr "View Final Effective Results and Sources"
 
 #: src/pages/device/deviceCenterList.vue:6
 msgid "查看当前在线和本次开机发现过的局域网设备"
-msgstr ""
+msgstr "View online devices and devices discovered since startup"
 
 #: src/components/action-domain/setup-ddns.vue:15
 #: src/components/action-domain/setup-ddns.vue:25
@@ -2322,17 +3772,25 @@ msgstr "View log"
 msgid "查看更多详情"
 msgstr " to check details"
 
+#: src/pages/device/components/floatingGatewayWizard.vue:68
+msgid "查看演练计划"
+msgstr "View Walkthrough Plan"
+
+#: src/pages/device/lanSettingsPanel.vue:18
+msgid "查看规则台账"
+msgstr "View Rule Ledger"
+
 #: src/pages/index/components/DiskItem.vue:102
 msgid "查看详情"
 msgstr "View details"
 
-#: src/pages/device/deviceList.vue:144
+#: src/pages/device/deviceList.vue:146
 msgid "标签"
-msgstr ""
+msgstr "Tag"
 
 #: src/pages/device/components/dialog.vue:43
 msgid "标题"
-msgstr ""
+msgstr "Title"
 
 #: src/components/action-disk-format/index.vue:94
 msgid "格式化"
@@ -2405,6 +3863,10 @@ msgstr ""
 "right corner of the page and click View, Save and Apply, or Restore the "
 "configuration to continue"
 
+#: src/pages/device/lanSettingsPanel.vue:169
+msgid "检测到其他设备负责地址分配"
+msgstr "Additional Devices Detected for Address Assignment"
+
 #: src/components/action-domain/setup-ddns.vue:171
 msgid "检测到您的wan口没有公网IP或者IPv6地址，可以使用DDNSTO配置远程域名访问"
 msgstr ""
@@ -2425,6 +3887,12 @@ msgstr ""
 msgid "检测到新版本"
 msgstr ""
 
+#: src/pages/device/components/devicePolicyPanel.vue:204
+#: src/pages/device/rateLimitI18n.ts:24
+msgid "检测到流量卸载，部分流量可能绕过限速。"
+msgstr ""
+"Traffic offloading was detected; some traffic may bypass the speed limit."
+
 #: src/pages/networkSpeedTest/components/item.vue:8
 msgid "检测本地网络环境，获取内网访问地址"
 msgstr ""
@@ -2432,6 +3900,15 @@ msgstr ""
 #: src/pages/index/index.vue:179
 msgid "检测网络速度"
 msgstr ""
+
+#: src/pages/device/components/floatingGatewayWizard.vue:44
+msgid "检测超时（秒）"
+msgstr "Detection timeout (seconds)"
+
+#: src/pages/device/deviceCenterList.vue:133
+#: src/pages/device/deviceCenterList.vue:269
+msgid "概览"
+msgstr "Overview"
 
 #: src/pages/index/components/ModuleSettings.vue:2
 msgid "模块显示设置"
@@ -2453,18 +3930,15 @@ msgstr ""
 msgid "欢迎使用网络配置向导"
 msgstr "Welcome to the network configuration wizard"
 
-#: src/pages/device/index.vue:25
-msgid "正在使用经典列表进行设备配置"
-msgstr ""
-
+#: src/pages/device/components/advancedNetworkTools.vue:10
+#: src/pages/device/components/deviceAliasEditor.vue:13
+#: src/pages/device/components/deviceAliasEditor.vue:14
+#: src/pages/device/components/deviceAliasEditor.vue:15
 #: src/pages/device/components/deviceClassificationEditor.vue:25
 #: src/pages/device/components/deviceClassificationEditor.vue:26
-#: src/pages/device/components/devicePolicyPanel.vue:20
-#: src/pages/device/components/devicePolicyPanel.vue:21
-#: src/pages/device/components/devicePolicyPanel.vue:22
-#: src/pages/device/components/devicePolicyPanel.vue:34
-#: src/pages/device/components/devicePolicyPanel.vue:35
-#: src/pages/device/components/devicePolicyPanel.vue:36
+#: src/pages/device/components/deviceProfileEditor.vue:35
+#: src/pages/device/components/deviceProfileEditor.vue:36
+#: src/pages/device/components/trafficInsightsPanel.vue:17
 msgid "正在保存…"
 msgstr "Saving…"
 
@@ -2482,44 +3956,101 @@ msgstr "Loading..."
 
 #: src/pages/device/configure.vue:9
 msgid "正在加载全局设置"
-msgstr ""
+msgstr "Loading global settings"
 
-#: src/pages/device/deviceCenterList.vue:32 src/pages/device/deviceList.vue:7
-#, fuzzy
+#: src/pages/device/deviceCenterList.vue:45 src/pages/device/deviceList.vue:7
 msgid "正在加载设备"
-msgstr "Loading..."
+msgstr "Loading devices"
 
 #: src/pages/device/speedLimitList.vue:7
 msgid "正在加载限速规则"
-msgstr ""
+msgstr "Loading Speed Limit Rules"
 
 #: src/pages/device/staticStateList.vue:7
 msgid "正在加载静态分配"
-msgstr ""
+msgstr "Loading Static Assignments"
+
+#: src/pages/device/components/devicePolicyPanel.vue:46
+#: src/pages/device/components/devicePolicyPanel.vue:47
+#: src/pages/device/components/devicePolicyPanel.vue:48
+#: src/pages/device/components/devicePolicyPanel.vue:49
+msgid "正在处理…"
+msgstr "Processing..."
 
 #: src/pages/device/components/dialog.vue:10
-#, fuzzy
 msgid "正在安装"
-msgstr "Installing..."
+msgstr "Installing"
+
+#: src/pages/device/lanSettingsPanel.vue:110
+#: src/pages/device/lanSettingsPanel.vue:49
+msgid "正在安装…"
+msgstr "Installing…"
 
 #: src/utils/app.ts:70
 msgid "正在安装中..."
 msgstr "Installing..."
 
-#: src/pages/device/components/devicePolicyPanel.vue:44
-#: src/pages/device/components/devicePolicyPanel.vue:45
-#: src/pages/device/components/devicePolicyPanel.vue:46
+#: src/pages/device/components/devicePolicyPanel.vue:11
+#: src/pages/device/components/devicePolicyPanel.vue:12
+#: src/pages/device/components/devicePolicyPanel.vue:13
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:45
+#: src/pages/device/components/floatingGatewayWizard.vue:62
+#: src/pages/device/components/floatingGatewayWizard.vue:63
+#: src/pages/device/components/floatingGatewayWizard.vue:64
+#: src/pages/device/deviceGroupsPanel.vue:35
+#: src/pages/device/lanSettingsPanel.vue:104
+#: src/pages/device/lanSettingsPanel.vue:105
+#: src/pages/device/lanSettingsPanel.vue:42
+#: src/pages/device/lanSettingsPanel.vue:43
+#: src/pages/device/lanSettingsPanel.vue:62
+#: src/pages/device/lanSettingsPanel.vue:63
+#: src/pages/device/networkRulesHub.vue:12
 msgid "正在应用…"
-msgstr ""
+msgstr "Applying…"
 
+#: src/pages/device/components/advancedNetworkTools.vue:10
+#: src/pages/device/components/advancedNetworkTools.vue:11
 #: src/pages/device/components/deviceClassificationEditor.vue:29
 #: src/pages/device/components/deviceClassificationEditor.vue:30
 msgid "正在恢复…"
 msgstr "Restoring…"
 
-#: src/pages/device/deviceCenterList.vue:32
+#: src/pages/device/lanSettingsPanel.vue:71
+msgid "正在扫描…"
+msgstr "Scanning…"
+
+#: src/pages/device/components/floatingGatewayWizard.vue:88
+msgid "正在接管"
+msgstr "Taking over"
+
+#: src/pages/device/lanSettingsPanel.vue:18
+msgid "正在接管…"
+msgstr "Taking over..."
+
+#: src/pages/device/deviceCenterList.vue:45
 msgid "正在整理设备身份和在线状态…"
-msgstr ""
+msgstr "Organizing device identities and online status…"
+
+#: src/pages/device/components/devicePolicyPanel.vue:38
+#: src/pages/device/components/devicePolicyPanel.vue:39
+#: src/pages/device/components/devicePolicyPanel.vue:40
+#: src/pages/device/components/devicePolicyPanel.vue:41
+#: src/pages/device/components/devicePolicyPanel.vue:56
+#: src/pages/device/components/devicePolicyPanel.vue:57
+#: src/pages/device/components/devicePolicyPanel.vue:58
+#: src/pages/device/components/devicePolicyPanel.vue:59
+#: src/pages/device/components/devicePolicyPanel.vue:66
+#: src/pages/device/components/devicePolicyPanel.vue:67
+#: src/pages/device/components/devicePolicyPanel.vue:68
+#: src/pages/device/components/devicePolicyPanel.vue:69
+#: src/pages/device/lanSettingsPanel.vue:35
+#: src/pages/device/lanSettingsPanel.vue:36
+#: src/pages/device/lanSettingsPanel.vue:57
+#: src/pages/device/lanSettingsPanel.vue:58
+#: src/pages/device/lanSettingsPanel.vue:91
+#: src/pages/device/lanSettingsPanel.vue:92
+msgid "正在检查…"
+msgstr "Checking..."
 
 #: src/components/action-ddnsto/setup-ddnsto-install.vue:55
 msgid "正在检测中..."
@@ -2529,13 +4060,54 @@ msgstr "Detecting ..."
 msgid "正在检测插件是否已启动..."
 msgstr "Checking if plugin has started..."
 
+#: src/pages/device/deviceCenterList.vue:22
+msgid "正在添加…"
+msgstr "Adding..."
+
+#: src/pages/device/components/trafficInsightsPanel.vue:10
+msgid "正在积累历史数据，首次使用后会按小时形成趋势。"
+msgstr ""
+"Historical data is accumulating and trending by the hour after first use."
+
 #: src/pages/index/info/DiskInfo.vue:24
 msgid "正在获取磁盘信息..."
 msgstr "Fetching Disk List..."
 
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:7
+msgid "正在读取使用规则"
+msgstr "Loading usage rules"
+
+#: src/pages/device/components/trafficInsightsPanel.vue:5
+msgid "正在读取历史用量"
+msgstr "Reading historical usage"
+
+#: src/pages/device/lanSettingsPanel.vue:4
+msgid "正在读取局域网设置"
+msgstr "Reading LAN settings"
+
+#: src/pages/device/components/floatingGatewayWizard.vue:3
+msgid "正在读取浮动网关状态"
+msgstr "Reading floating gateway status"
+
+#: src/pages/device/networkRulesHub.vue:4
+msgid "正在读取网络规则"
+msgstr "Reading network rules"
+
+#: src/pages/device/deviceGroupsPanel.vue:4
+msgid "正在读取设备分组"
+msgstr "Reading device groups"
+
 #: src/pages/device/components/devicePolicyPanel.vue:3
 msgid "正在读取设备策略"
-msgstr ""
+msgstr "Reading device policies"
+
+#: src/pages/device/components/deviceProfileEditor.vue:3
+msgid "正在读取设备资料"
+msgstr "Reading device data"
+
+#: src/pages/device/components/advancedNetworkTools.vue:4
+msgid "正在读取高级能力"
+msgstr "Reading advanced capabilities"
 
 #: src/components/action-docker/index.vue:149
 msgid "正在迁移中..."
@@ -2545,6 +4117,13 @@ msgstr "Migrating..."
 msgid "正在配置…请稍等"
 msgstr "Configuring...please wait"
 
+#: src/pages/device/components/floatingGatewayWizard.vue:48
+msgid "正在预检配置"
+msgstr "Pre-checking configuration"
+
+#: src/pages/device/components/floatingGatewayWizard.vue:90
+#: src/pages/device/networkRulesHub.vue:10
+#: src/pages/device/networkRulesHub.vue:39
 #: src/pages/index/service/RemoteDomain.vue:17
 #: src/pages/index/service/RemoteDomain.vue:24
 #: src/pages/index/service/RemoteDomain.vue:30
@@ -2552,7 +4131,11 @@ msgstr "Configuring...please wait"
 #: src/pages/index/service/RemoteDomain.vue:58
 #: src/pages/index/service/RemoteDomain.vue:80
 msgid "正常"
-msgstr ""
+msgstr "Normal"
+
+#: src/pages/device/components/floatingGatewayWizard.vue:35
+msgid "正常情况下提供虚拟网关"
+msgstr "Virtual gateway provided as normal"
 
 #: src/components/action-disk-part/item.vue:39
 msgid "此分区为只读状态，可能无法写入数据"
@@ -2576,10 +4159,60 @@ msgstr ""
 "This file system does not support Docker and other application data, it is "
 "recommended to format as EXT4 file system"
 
+#: src/pages/device/deviceCenterList.vue:128
+msgid "此设备不在当前筛选结果中"
+msgstr "This device is outside the current filters"
+
 #: src/components/firstOpen/index.vue:69
 msgid ""
 "此设备还未设置密码，请先设置密码。如遗忘密码，可以通过重置设备恢复初始密码。"
 msgstr ""
+
+#: src/pages/device/components/advancedNetworkTools.vue:10
+msgid ""
+"此设置对本路由器全部设备生效。可选 Webhook 默认关闭，只发送事件类型、时间和设"
+"备标识，不发送 DNS 内容。"
+msgstr ""
+"This setting applies to all devices on this router.The optional webhook is "
+"turned off by default, only the event type, time, and device identity are "
+"sent, and DNS content is not sent."
+
+#: src/pages/device/components/trafficInsightsPanel.vue:12
+msgid "每 5 分钟最多写入一次"
+msgstr "Write at most once every 5 minutes"
+
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:38
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:81
+#: src/pages/device/components/trafficInsightsPanel.vue:16
+#: src/pages/device/deviceGroupsPanel.vue:25
+msgid "每周"
+msgstr "Weekly"
+
+#: src/pages/device/components/trafficInsightsPanel.vue:37
+msgid "每周额度"
+msgstr "Weekly Quota"
+
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:38
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:81
+#: src/pages/device/components/trafficInsightsPanel.vue:16
+#: src/pages/device/deviceGroupsPanel.vue:25
+msgid "每天"
+msgstr "Daily"
+
+#: src/pages/device/components/trafficInsightsPanel.vue:37
+msgid "每日额度"
+msgstr "Daily Quota"
+
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:38
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:81
+#: src/pages/device/components/trafficInsightsPanel.vue:16
+#: src/pages/device/deviceGroupsPanel.vue:25
+msgid "每月"
+msgstr "Monthly"
+
+#: src/pages/device/components/trafficInsightsPanel.vue:37
+msgid "每月额度"
+msgstr "Monthly Limit"
 
 #: src/pages/index/nav/Item.vue:64
 msgid "沙箱已开启"
@@ -2599,35 +4232,58 @@ msgstr "Couldn't find the desired configuration? Please use %{link}"
 msgid "没找到想要的配置？请使用%{link}"
 msgstr "Couldn't find the desired configuration? Please use %{link}"
 
-#: src/pages/device/deviceCenterList.vue:37
+#: src/pages/device/networkRulesHub.vue:13
+msgid "没有匹配的网络规则"
+msgstr "No matching network rules"
+
+#: src/pages/device/deviceCenterList.vue:50
 msgid "没有匹配的设备"
-msgstr ""
+msgstr "No matching devices"
 
 #: src/pages/device/components/dialog.vue:39
 msgid ""
 "注意：添加ID时，请勿将“odhcpd”或网络接口（例如“lan”,“wan”,“wan6”等）作为ID，"
 "此举将产生冲突。建议在ID前面加上前缀“t_”以杜绝此类冲突。"
 msgstr ""
+"Note: When adding an ID, do not use \"odhcpd\" or network interfaces (such "
+"as \"lan\", \"wan\", \"wan6\", etc.) as IDs, as this will cause conflicts.It "
+"is recommended to prefix the ID with “t_” to prevent such conflicts."
 
 #: src/pages/device/deviceList.vue:63 src/pages/device/speedLimitList.vue:90
 msgid "注解"
-msgstr ""
+msgstr "Annotation"
 
-#: src/pages/device/deviceCenterList.vue:27
-#: src/pages/device/deviceCenterList.vue:28
-#: src/pages/device/deviceCenterList.vue:29
+#: src/pages/device/deviceCenterList.vue:40
+#: src/pages/device/deviceCenterList.vue:41
+#: src/pages/device/deviceCenterList.vue:42
 msgid "流量数据更新延迟，正在恢复采样"
-msgstr ""
+msgstr "Traffic data update delay, resuming sampling"
 
 #: src/pages/device/components/flow.vue:181
 msgid "流量统计"
 msgstr "Traffic"
 
-#: src/pages/device/deviceCenterList.vue:27
-#: src/pages/device/deviceCenterList.vue:28
-#: src/pages/device/deviceCenterList.vue:29
+#: src/pages/device/deviceCenterList.vue:40
+#: src/pages/device/deviceCenterList.vue:41
+#: src/pages/device/deviceCenterList.vue:42
 msgid "流量采样暂不可用，设备清单仍可正常使用"
 msgstr ""
+"Traffic sampling is temporarily unavailable, the device list can still be "
+"used normally"
+
+#: src/pages/device/components/advancedNetworkTools.vue:30
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:33
+#: src/pages/device/deviceGroupsPanel.vue:63
+msgid "流量额度"
+msgstr "Data quota"
+
+#: src/pages/device/components/trafficInsightsPanel.vue:43
+msgid "流量额度已保存"
+msgstr "Traffic Limit Saved"
+
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:105
+msgid "流量额度至少为 0.1 GB"
+msgstr "The data quota must be at least 0.1 GB."
 
 #: src/pages/smart/index/index.vue:40
 msgid "测试时磁盘会转动，请选择合适的模式来控制磁盘转动。"
@@ -2651,17 +4307,28 @@ msgstr ""
 msgid "测速进度"
 msgstr ""
 
-#: src/pages/device/configure.vue:304 src/pages/device/configure.vue:325
-#: src/pages/device/configure.vue:335 src/pages/device/configure.vue:417
-#: src/pages/device/configure.vue:83 src/pages/device/configure.vue:96
-#: src/pages/device/deviceList.vue:245 src/pages/device/staticStateList.vue:132
+#: src/pages/device/components/advancedNetworkTools.vue:30
+#: src/pages/device/components/devicePolicyPanel.vue:219
+#: src/pages/device/configure.vue:235 src/pages/device/configure.vue:256
+#: src/pages/device/configure.vue:266 src/pages/device/deviceGroupsPanel.vue:57
+#: src/pages/device/deviceList.vue:243
+#: src/pages/device/lanSettingsPanel.vue:109
+#: src/pages/device/lanSettingsPanel.vue:183
+#: src/pages/device/lanSettingsPanel.vue:185
+#: src/pages/device/lanSettingsPanel.vue:191
+#: src/pages/device/lanSettingsPanel.vue:197
+#: src/pages/device/networkRulesHub.vue:47
+#: src/pages/device/staticStateList.vue:135
 msgid "浮动网关"
-msgstr ""
+msgstr "Failover gateway"
 
-#: src/pages/device/components/search.vue:4 src/pages/device/configure.vue:144
-#, fuzzy
+#: src/pages/device/components/floatingGatewayWizard.vue:4
+msgid "浮动网关状态不可用"
+msgstr "Floating Gateway Status Unavailable"
+
+#: src/pages/device/components/search.vue:4 src/pages/device/configure.vue:94
 msgid "添加"
-msgstr "Add LAN"
+msgstr "Add"
 
 #: src/components/action-edit/index.vue:8
 #: src/components/action-edit/index.vue:9
@@ -2673,6 +4340,18 @@ msgstr "Add LAN"
 msgid "添加WAN"
 msgstr "Add WAN"
 
+#: src/pages/device/deviceCenterList.vue:396
+msgid "添加失败"
+msgstr "Failed to add"
+
+#: src/pages/device/deviceCenterList.vue:398
+msgid "添加失败，请检查 MAC 地址"
+msgstr "Add failed, please check MAC address"
+
+#: src/pages/device/deviceCenterList.vue:22
+msgid "添加尚未上线的设备"
+msgstr "Add devices that aren't online yet"
+
 #: src/components/action-ddnsto/setup-ddnsto-save.vue:10
 #: src/components/action-domain/setup-ddns-success.vue:10
 msgid "添加成功"
@@ -2681,7 +4360,24 @@ msgstr "Added successfully"
 #: src/pages/device/components/dialog.vue:31
 #: src/pages/device/components/dialog.vue:33
 msgid "添加标签"
-msgstr ""
+msgstr "Add tags"
+
+#: src/pages/device/deviceCenterList.vue:18
+msgid "添加设备"
+msgstr "Add device"
+
+#: src/pages/device/lanSettingsPanel.vue:86
+msgid "添加路线"
+msgstr "Add Route"
+
+#: src/pages/device/components/deviceAliasEditor.vue:13
+msgid "清除备注"
+msgstr "Clear notes"
+
+#: src/pages/device/deviceCenterList.vue:128
+#: src/pages/device/deviceCenterList.vue:37
+msgid "清除筛选"
+msgstr "Clear filters"
 
 #: src/pages/smart/index/index.vue:89
 msgid "温度"
@@ -2701,26 +4397,41 @@ msgstr "Temperature monitoring (difference)"
 msgid "温馨提示"
 msgstr "Kind reminder"
 
-#: src/pages/device/configure.vue:446
+#: src/pages/device/configure.vue:335
 msgid "温馨提示：关闭DHCP可能影响局域网内设备的IP分配和联网，请谨慎操作！"
 msgstr ""
+"Reminder: Turning off DHCP may affect the IP allocation and networking of "
+"devices in the local area network, please be careful!"
 
-#: src/pages/device/configure.vue:454
-msgid "温馨提示：关闭浮动网关可能影响正在使用浮动网关的设备，请谨慎操作！"
-msgstr ""
-
-#: src/pages/device/configure.vue:462
+#: src/pages/device/configure.vue:343
 msgid "温馨提示：关闭限速会让已配置限速的设备的带宽限制全部失效，请谨慎操作！"
 msgstr ""
+"Reminder: Turning off the speed limit will invalidate all bandwidth limits "
+"for devices that have been configured with the speed limit, please proceed "
+"with caution!"
 
-#: src/pages/device/configure.vue:470
+#: src/pages/device/configure.vue:351
 msgid "温馨提示：删除网关标签可能影响正在使用此标签的设备，请谨慎操作！"
 msgstr ""
+"Reminder: Deleting the gateway label may affect devices that are using this "
+"label, please proceed with caution!"
 
 #: src/pages/device/components/deviceClassificationEditor.vue:61
-#: src/pages/device/deviceCenterList.vue:271
+#: src/pages/device/components/deviceProfileEditor.vue:70
+#: src/pages/device/deviceCenterList.vue:317
 msgid "游戏设备"
 msgstr "Gaming device"
+
+#: src/pages/device/components/floatingGatewayWizard.vue:68
+msgid "演练会短暂改变网关持有者，必须先完成双端配对校验。系统不会自动开始。"
+msgstr ""
+"The drill will change the gateway holder briefly, and the double-ended "
+"pairing check must be completed first.The system will not start "
+"automatically."
+
+#: src/pages/device/components/floatingGatewayWizard.vue:109
+msgid "演练计划已就绪"
+msgstr "Walkthrough Plan Ready"
 
 #: src/pages/network/gateway/index.vue:9
 msgid "点击“自动配置”按钮开始自动配置向导；"
@@ -2731,19 +4442,27 @@ msgid "点击按钮获取内网测速地址，通过访问这些地址来测试�
 msgstr ""
 
 #: src/pages/device/deviceList.vue:42 src/pages/device/speedLimitList.vue:69
-#, fuzzy
 msgid "点我跳转全局配置"
-msgstr "Use Global Configuration"
+msgstr "Go to global settings"
 
 #: src/pages/index/service/aria2.vue:39
 msgid "点此自动配置 AriaNg"
 msgstr "Click here to auto-configure AriaNg"
 
-#: src/pages/device/deviceCenterList.vue:112
-#: src/pages/device/deviceCenterList.vue:45 src/pages/raid/index/index.vue:28
+#: src/pages/device/lanSettingsPanel.vue:163
+msgid "版本不兼容"
+msgstr "Incompatible version"
+
+#: src/pages/device/deviceCenterList.vue:124
+#: src/pages/device/deviceCenterList.vue:58
+#: src/pages/device/networkRulesHub.vue:14 src/pages/raid/index/index.vue:28
 #: src/pages/smart/index/index.vue:90
 msgid "状态"
 msgstr "Status"
+
+#: src/pages/device/components/devicePolicyPanel.vue:117
+msgid "状态未知"
+msgstr "Unknown status"
 
 #: src/pages/network/gateway/index.vue:90
 msgid ""
@@ -2757,6 +4476,44 @@ msgstr ""
 #: src/pages/network/gateway/index.vue:22
 msgid "现在，请你配置旁路由信息"
 msgstr "Now, please configure bypass routing information"
+
+#: src/pages/device/lanSettingsPanel.vue:57
+msgid "现有 Bandix 仅用于迁移，请先完成下方步骤。"
+msgstr ""
+"The existing Bandix installation is only used for migration. Complete the "
+"steps below first."
+
+#: src/pages/device/lanSettingsPanel.vue:162
+msgid "现有 Bandix（仅用于迁移）"
+msgstr "Existing Bandix (migration only)"
+
+#: src/pages/device/components/advancedNetworkTools.vue:10
+msgid "现有地址已隐藏；更换时需重新输入。"
+msgstr ""
+"The existing address is hidden; you will need to re-enter it when replacing "
+"it."
+
+#: src/pages/device/lanSettingsPanel.vue:285
+msgid "现有设置已安全接管"
+msgstr "Existing settings safely taken over"
+
+#: src/pages/device/lanSettingsPanel.vue:285
+msgid "现有设置无需重复接管"
+msgstr "Existing settings do not need to be taken over repeatedly"
+
+#: src/pages/device/deviceList.vue:86 src/pages/device/staticStateList.vue:53
+msgid "用于局域网名称解析，仅支持英文、数字和中间连字符"
+msgstr ""
+"For LAN name resolution, only English, numbers and middle hyphens are "
+"supported"
+
+#: src/pages/device/components/devicePolicyPanel.vue:37
+msgid ""
+"用于局域网名称解析，仅支持英文、数字和中间连字符；与可使用中文的设备备注名分"
+"开保存"
+msgstr ""
+"For LAN name resolution, use only letters, numbers, and interior hyphens. "
+"This is stored separately from the device note, which can use Chinese."
 
 #: src/components/action-download/index.vue:149
 #: src/components/action-download/index.vue:193
@@ -2831,6 +4588,17 @@ msgstr ""
 "Since your device <span>does not have a WAN port</span>, you cannot use this "
 "setup wizard. For details, please see %{link}"
 
+#: src/pages/device/lanSettingsPanel.vue:29
+msgid "由本机为局域网设备分配地址。关闭后，设备应由其他路由器分配地址。"
+msgstr ""
+"The LAN device is assigned an address by the machine.When turned off, the "
+"device should be assigned an address by another router."
+
+#: src/pages/device/components/devicePolicyPanel.vue:196
+#: src/pages/device/rateLimitI18n.ts:25
+msgid "由本机执行"
+msgstr "Runs on this router"
+
 #: src/pages/device/components/deviceClassificationEditor.vue:5
 #: src/pages/device/components/deviceClassificationEditor.vue:6
 msgid "由系统自动判断"
@@ -2841,12 +4609,14 @@ msgid "电源模式"
 msgstr "Power mode"
 
 #: src/pages/device/components/deviceClassificationEditor.vue:59
-#: src/pages/device/deviceCenterList.vue:267
+#: src/pages/device/components/deviceProfileEditor.vue:70
+#: src/pages/device/deviceCenterList.vue:313
 msgid "电视与影音"
 msgstr "TV & media"
 
 #: src/pages/device/components/deviceClassificationEditor.vue:59
-#: src/pages/device/deviceCenterList.vue:265
+#: src/pages/device/components/deviceProfileEditor.vue:70
+#: src/pages/device/deviceCenterList.vue:311
 msgid "电脑"
 msgstr "Computer"
 
@@ -2899,6 +4669,10 @@ msgstr "Sleep - Do not check devices in sleep mode."
 #: src/components/smart/add-task.vue:31 src/pages/smart/task/index.vue:57
 msgid "短暂自检"
 msgstr "Short self-test"
+
+#: src/pages/device/components/advancedNetworkTools.vue:28
+msgid "硬件卸载已开启，统计可能不完整"
+msgstr "Hardware uninstallation is on, statistics may be incomplete"
 
 #: src/components/action-disk-format/index.vue:6
 msgid "硬盘配置"
@@ -2957,25 +4731,92 @@ msgstr ""
 msgid "确认"
 msgstr "Confirm"
 
+#: src/pages/device/networkRulesHub.vue:54
+msgid "确认删除所选规则？"
+msgstr "Are you sure you want to delete the selected rule?"
+
 #: src/pages/device/speedLimitList.vue:217
 msgid "确认删除此设备的限速配置？"
 msgstr ""
+"Are you sure you want to delete the speed limit configuration for this "
+"device?"
 
-#: src/pages/device/staticStateList.vue:220
+#: src/pages/device/staticStateList.vue:218
 msgid "确认删除此设备的静态分配？"
+msgstr "Are you sure you want to delete the static assignment for this device?"
+
+#: src/pages/device/lanSettingsPanel.vue:300
+msgid "确认安装所需组件？"
+msgstr "Are you sure you want to install the required components?"
+
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:45
+#: src/pages/device/deviceGroupsPanel.vue:35
+msgid "确认并应用"
+msgstr "Confirm & apply"
+
+#: src/pages/device/components/devicePolicyPanel.vue:11
+#: src/pages/device/components/devicePolicyPanel.vue:12
+#: src/pages/device/components/devicePolicyPanel.vue:13
+#: src/pages/device/lanSettingsPanel.vue:104
+#: src/pages/device/lanSettingsPanel.vue:105
+#: src/pages/device/lanSettingsPanel.vue:42
+#: src/pages/device/lanSettingsPanel.vue:43
+#: src/pages/device/lanSettingsPanel.vue:62
+#: src/pages/device/lanSettingsPanel.vue:63
+msgid "确认应用"
+msgstr "Confirm & apply"
+
+#: src/pages/device/components/advancedNetworkTools.vue:10
+#: src/pages/device/components/advancedNetworkTools.vue:11
+msgid "确认恢复"
+msgstr "Confirm Recovery"
+
+#: src/pages/device/components/advancedNetworkTools.vue:38
+msgid "确认恢复这个策略包？现有分组和额度会被替换。"
 msgstr ""
+"Are you sure you want to restore this tactical package?Existing groups and "
+"credits will be replaced."
 
 #: src/pages/device/speedLimitList.vue:255
 msgid "确认批量删除限速配置？"
-msgstr ""
+msgstr "Confirm batch deletion of speed limit configuration?"
 
-#: src/pages/device/staticStateList.vue:258
+#: src/pages/device/staticStateList.vue:256
 msgid "确认批量删除静态分配？"
-msgstr ""
+msgstr "Confirm bulk deletion of static assignments?"
 
-#: src/pages/device/components/devicePolicyPanel.vue:146
-msgid "确认断开设备网络？"
+#: src/pages/device/lanSettingsPanel.vue:18
+msgid "确认接管现有设置"
+msgstr "Confirm takeover of existing settings"
+
+#: src/pages/device/lanSettingsPanel.vue:280
+msgid "确认接管现有设置？接管前会创建快照，失败时自动恢复。"
 msgstr ""
+"Are you sure you want to take over the existing settings?A snapshot is "
+"created before takeover and automatically recovered if it fails."
+
+#: src/pages/device/deviceCenterList.vue:22
+msgid "确认添加"
+msgstr "Confirm Add"
+
+#: src/pages/device/networkRulesHub.vue:42
+msgid "确认网关设备已开机并接入当前局域网；仍不可达时恢复默认路线"
+msgstr ""
+"Confirm the gateway is powered on and connected to this LAN; if it remains "
+"unreachable, restore the default path."
+
+#: src/pages/device/lanSettingsPanel.vue:76
+msgid "确认迁移并验证"
+msgstr "Migrate and verify"
+
+#: src/pages/device/components/devicePolicyPanel.vue:9
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:42
+msgid "确认这次修改"
+msgstr "Review this change"
+
+#: src/pages/device/deviceGroupsPanel.vue:35
+msgid "确认这次调整"
+msgstr "Confirm this adjustment"
 
 #: src/components/smart/add-task.vue:12 src/components/smart/edit-disk.vue:12
 msgid "磁盘"
@@ -2999,34 +4840,25 @@ msgstr "RAID array members:"
 
 #: src/pages/device/deviceList.vue:46 src/pages/device/speedLimitList.vue:73
 msgid "禁止该设备访问网络"
-msgstr ""
+msgstr "Prevent this device from accessing the network"
 
 #: src/components/smart/edit-disk.vue:28 src/components/smart/edit-disk.vue:45
 #: src/pages/smart/index/index.vue:55 src/pages/smart/index/index.vue:71
 msgid "禁用"
 msgstr "Disable"
 
-#: src/pages/device/deviceCenterList.vue:107
-#: src/pages/device/deviceCenterList.vue:108
-#: src/pages/device/deviceCenterList.vue:109
-#: src/pages/device/deviceCenterList.vue:110
-#: src/pages/device/deviceCenterList.vue:112
-#: src/pages/device/deviceCenterList.vue:62
-#: src/pages/device/deviceCenterList.vue:63
-#: src/pages/device/deviceCenterList.vue:64
-#: src/pages/device/deviceCenterList.vue:65
-#: src/pages/device/deviceCenterList.vue:67
-#: src/pages/device/deviceCenterList.vue:85
-#: src/pages/device/deviceCenterList.vue:86
-#: src/pages/device/deviceCenterList.vue:87
-#: src/pages/device/deviceCenterList.vue:88
-#: src/pages/device/deviceCenterList.vue:90
+#: src/pages/device/deviceCenterList.vue:306
 #: src/pages/index/service/RemoteDomain.vue:23
 #: src/pages/index/service/RemoteDomain.vue:29
 #: src/pages/index/service/RemoteDomain.vue:56
 #: src/pages/index/service/RemoteDomain.vue:78
 msgid "离线"
-msgstr ""
+msgstr "Offline"
+
+#: src/pages/device/networkRulesHub.vue:10
+#: src/pages/device/networkRulesHub.vue:39
+msgid "离线或孤立"
+msgstr "Offline or Orphaned"
 
 #: src/components/smart/add-task.vue:34 src/pages/smart/task/index.vue:63
 msgid "离线时自检"
@@ -3042,7 +4874,8 @@ msgid "稍后提醒"
 msgstr ""
 
 #: src/pages/device/components/deviceClassificationEditor.vue:62
-#: src/pages/device/deviceCenterList.vue:274
+#: src/pages/device/components/deviceProfileEditor.vue:70
+#: src/pages/device/deviceCenterList.vue:320
 msgid "穿戴设备"
 msgstr "Wearable"
 
@@ -3054,30 +4887,81 @@ msgstr "Window %{ item }"
 msgid "立即启用"
 msgstr ""
 
+#: src/pages/device/components/floatingGatewayWizard.vue:9
 #: src/pages/device/configure.vue:26 src/pages/device/configure.vue:30
-#: src/pages/device/configure.vue:75 src/pages/device/configure.vue:79
 msgid "立即安装"
-msgstr ""
+msgstr "Install now"
 
 #: src/pages/index/components/SystemUpdateBanner.vue:12
 msgid "立即更新"
 msgstr ""
 
+#: src/pages/device/components/floatingGatewayWizard.vue:88
+msgid "等待状态确认"
+msgstr "Awaiting status confirmation"
+
+#: src/pages/device/components/devicePolicyPanel.vue:234
+#: src/pages/device/components/floatingGatewayWizard.vue:89
+msgid "等待确认"
+msgstr "Awaiting confirmation"
+
 #: src/components/action-sandbox/index.vue:61
 msgid "等待设备重启，重启完成后"
 msgstr "Waiting for device to restart, after restart"
 
-#: src/pages/device/deviceCenterList.vue:96
-msgid "策略"
-msgstr ""
+#: src/pages/device/components/devicePolicyPanel.vue:112
+msgid "等待设备重新获取地址"
+msgstr "Waiting for the device to renew its address."
 
-#: src/pages/device/deviceCenterList.vue:49
+#: src/pages/device/deviceCenterList.vue:109
+msgid "策略"
+msgstr "Policies"
+
+#: src/pages/device/deviceCenterList.vue:62
 msgid "策略与操作"
-msgstr ""
+msgstr "Policies & actions"
+
+#: src/pages/device/components/advancedNetworkTools.vue:38
+msgid "策略包已恢复"
+msgstr "Policy package restored"
+
+#: src/pages/device/components/advancedNetworkTools.vue:37
+msgid "策略包预检失败，未写入任何配置"
+msgstr "Policy package pre-check failed, no configuration written"
+
+#: src/pages/device/components/advancedNetworkTools.vue:29
+msgid "策略变更"
+msgstr "Strategic Changes"
+
+#: src/pages/device/components/advancedNetworkTools.vue:30
+msgid "策略备份"
+msgstr "Strategic Backups"
+
+#: src/pages/device/components/advancedNetworkTools.vue:11
+msgid "策略备份与恢复"
+msgstr "Strategic Backup and Recovery"
+
+#: src/pages/device/deviceCenterList.vue:36
+msgid "策略状态"
+msgstr "Policy status"
 
 #: src/pages/device/components/devicePolicyPanel.vue:4
 msgid "策略读取失败"
+msgstr "Policy read failed"
+
+#: src/pages/device/components/advancedNetworkTools.vue:30
+msgid "管理入口"
+msgstr "Manage entrances"
+
+#: src/pages/device/components/advancedNetworkTools.vue:26
+msgid "管理入口探测"
+msgstr "Manage Entry Probes"
+
+#: src/pages/device/lanSettingsPanel.vue:3
+msgid "管理本机提供的网络服务，并集中处理需要维护的设备规则。"
 msgstr ""
+"Manage the network services provided by the machine and centrally handle the "
+"device rules that need to be maintained."
 
 #: src/pages/index/index.vue:158
 msgid "管理网络中的所有设备"
@@ -3087,13 +4971,18 @@ msgstr ""
 msgid "类型"
 msgstr "Type"
 
-#: src/pages/device/deviceCenterList.vue:278
+#: src/pages/device/deviceCenterList.vue:325
 msgid "类型待确认"
 msgstr "Type not confirmed"
 
 #: src/pages/index/index.vue:355 src/pages/index/info/SystemInfo.vue:2
 msgid "系统信息"
 msgstr "System Info"
+
+#: src/pages/device/lanSettingsPanel.vue:163
+#: src/pages/device/rateLimitI18n.ts:26
+msgid "系统内核不支持"
+msgstr "Unsupported by this kernel"
 
 #: src/components/firstOpen/index.vue:212
 msgid "系统密码设置成功"
@@ -3119,17 +5008,51 @@ msgstr "System Monitor"
 msgid "系统维护"
 msgstr ""
 
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:69
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:73
+#: src/pages/device/deviceGroupsPanel.vue:61
+msgid "系统默认"
+msgstr "System default"
+
 #: src/pages/raid/index/index.vue:29
 msgid "级别"
 msgstr "Level"
+
+#: src/pages/device/lanSettingsPanel.vue:302
+msgid "组件仍在安装，稍后刷新即可继续，草稿已经保留。"
+msgstr ""
+"Component is still being installed, refresh later to continue, draft has "
+"been retained."
+
+#: src/pages/device/lanSettingsPanel.vue:304
+msgid "组件安装完成，草稿已恢复"
+msgstr "Component installed, draft restored"
+
+#: src/pages/device/components/devicePolicyPanel.vue:325
+msgid "组件状态仍在更新，稍后刷新即可继续，草稿已经保留。"
+msgstr ""
+"The component state is still updating. Refresh later to continue; your draft "
+"is preserved."
 
 #: src/pages/index/nav/Item.vue:9
 msgid "终端"
 msgstr "Terminal"
 
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:27
+#: src/pages/device/deviceGroupsPanel.vue:33
+msgid "结束"
+msgstr "End"
+
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:28
+#: src/pages/device/deviceGroupsPanel.vue:33
+msgid "结束时间早于开始时间时，会自动跨到第二天。"
+msgstr ""
+"When the end time is earlier than the start time, it automatically spans to "
+"the next day."
+
 #: src/pages/device/components/dialog.vue:19
 msgid "结果"
-msgstr ""
+msgstr "Results"
 
 #: src/pages/index/Storage/index.vue:16
 #, fuzzy
@@ -3155,7 +5078,10 @@ msgstr "Continue saving"
 msgid "继续配置"
 msgstr " to continue configuration"
 
-#: src/pages/device/configure.vue:151 src/pages/device/staticStateList.vue:16
+#: src/pages/device/components/floatingGatewayWizard.vue:23
+#: src/pages/device/configure.vue:101 src/pages/device/deviceGroupsPanel.vue:11
+#: src/pages/device/lanSettingsPanel.vue:95
+#: src/pages/device/staticStateList.vue:16
 #: src/pages/interfaceconfig/index.vue:32
 #: src/pages/interfaceconfig/index.vue:33
 #: src/pages/interfaceconfig/index.vue:67
@@ -3173,21 +5099,34 @@ msgstr "Edit LAN"
 msgid "编辑WAN"
 msgstr "Edit WAN"
 
+#: src/pages/device/deviceGroupsPanel.vue:16
+#: src/pages/device/deviceGroupsPanel.vue:17
+msgid "编辑分组"
+msgstr "Edit group"
+
 #: src/pages/device/components/dialog.vue:31
 #: src/pages/device/components/dialog.vue:33
 msgid "编辑标签"
-msgstr ""
+msgstr "Edit Label"
 
-#: src/pages/device/components/dialog.vue:51 src/pages/device/configure.vue:126
-#: src/pages/device/deviceList.vue:136 src/pages/device/deviceList.vue:449
-#: src/pages/device/deviceList.vue:91 src/pages/device/staticStateList.vue:330
-#: src/pages/device/staticStateList.vue:58
-#, fuzzy
+#: src/pages/device/components/dialog.vue:51 src/pages/device/configure.vue:76
+#: src/pages/device/deviceList.vue:138 src/pages/device/deviceList.vue:448
+#: src/pages/device/deviceList.vue:93 src/pages/device/staticStateList.vue:332
+#: src/pages/device/staticStateList.vue:60
 msgid "网关"
-msgstr "Gateway address"
+msgstr "Gateway"
 
-#: src/pages/network/dhcp/index.vue:40 src/pages/network/dhcp/index.vue:42
-#: src/pages/network/gateway/index.vue:51
+#: src/pages/device/networkRulesHub.vue:10
+#: src/pages/device/networkRulesHub.vue:39
+msgid "网关不可达"
+msgstr "Gateway unreachable"
+
+#: src/pages/device/components/advancedNetworkTools.vue:29
+msgid "网关切换"
+msgstr "Gateway switching"
+
+#: src/pages/device/lanSettingsPanel.vue:91 src/pages/network/dhcp/index.vue:40
+#: src/pages/network/dhcp/index.vue:42 src/pages/network/gateway/index.vue:51
 #: src/pages/network/gateway/index.vue:53
 msgid "网关地址"
 msgstr "Gateway address"
@@ -3195,6 +5134,10 @@ msgstr "Gateway address"
 #: src/pages/network/gateway/index.vue:107
 msgid "网关地址: "
 msgstr "Gateway address: "
+
+#: src/pages/device/lanSettingsPanel.vue:183
+msgid "网关节点"
+msgstr "Gateway Node"
 
 #: src/pages/interfaceconfig/index.vue:3
 msgid "网口配置"
@@ -3204,6 +5147,11 @@ msgstr "NIC Assignment"
 #, fuzzy
 msgid "网络"
 msgstr "Static"
+
+#: src/pages/device/deviceCenterList.vue:166
+#: src/pages/device/deviceCenterList.vue:271
+msgid "网络与上网"
+msgstr "Network & Internet"
 
 #: src/pages/index/index.vue:147
 msgid "网络向导"
@@ -3228,6 +5176,10 @@ msgstr "NIC Status"
 msgid "网络接口详细信息"
 msgstr "NIC Info"
 
+#: src/pages/device/lanSettingsPanel.vue:152
+msgid "网络服务"
+msgstr "Network services"
+
 #: src/pages/index/index.vue:315 src/pages/index/network/NetworkFlow.vue:7
 msgid "网络流量"
 msgstr ""
@@ -3236,8 +5188,17 @@ msgstr ""
 msgid "网络测速"
 msgstr ""
 
+#: src/pages/device/components/advancedNetworkTools.vue:30
+msgid "网络规则"
+msgstr "Network Rules"
+
+#: src/pages/device/networkRulesHub.vue:5
+msgid "网络规则读取失败"
+msgstr "Network rule read failed"
+
 #: src/pages/device/components/deviceClassificationEditor.vue:60
-#: src/pages/device/deviceCenterList.vue:268
+#: src/pages/device/components/deviceProfileEditor.vue:70
+#: src/pages/device/deviceCenterList.vue:314
 msgid "网络设备"
 msgstr "Network device"
 
@@ -3260,9 +5221,18 @@ msgstr "Welcome to the network configuration wizard"
 msgid "联网时间和设备信息"
 msgstr "Device Info"
 
-#: src/pages/device/components/devicePolicyPanel.vue:41
+#: src/pages/device/components/devicePolicyPanel.vue:241
+#: src/pages/device/components/devicePolicyPanel.vue:64
+#: src/pages/device/deviceGroupsPanel.vue:22
+#: src/pages/device/lanSettingsPanel.vue:185
+#: src/pages/device/networkRulesHub.vue:38
+#: src/pages/device/networkRulesHub.vue:9
 msgid "联网权限"
-msgstr ""
+msgstr "Internet access"
+
+#: src/pages/device/components/advancedNetworkTools.vue:7
+msgid "能力与兼容性"
+msgstr "Capabilities and compatibility"
 
 #: src/components/smart/edit-disk.vue:33 src/pages/smart/index/index.vue:60
 msgid "自上次报告以来温度变化至少 N 度，则需报告."
@@ -3279,6 +5249,15 @@ msgstr "Auto"
 #: src/pages/network/gateway/index.vue:115
 msgid "自动填写..."
 msgstr "Auto-fill..."
+
+#: src/pages/device/components/devicePolicyPanel.vue:108
+#: src/pages/device/lanSettingsPanel.vue:289
+msgid "自动恢复未完成，请按提示处理"
+msgstr "Automatic recovery did not finish. Follow the recovery instructions."
+
+#: src/pages/device/rateLimitI18n.ts:7
+msgid "自动推荐"
+msgstr "Automatic"
 
 #: src/pages/index/nav/Item.vue:29
 msgid "自动检查更新"
@@ -3312,6 +5291,22 @@ msgstr "Auto..."
 msgid "自定义DNS"
 msgstr "Custom DNS"
 
+#: src/pages/device/lanSettingsPanel.vue:86
+msgid "自定义上网路线"
+msgstr "Customize your route to the internet"
+
+#: src/pages/device/components/devicePolicyPanel.vue:220
+#: src/pages/device/deviceGroupsPanel.vue:57
+#: src/pages/device/lanSettingsPanel.vue:192
+#: src/pages/device/lanSettingsPanel.vue:197
+#: src/pages/device/networkRulesHub.vue:47
+msgid "自定义网关"
+msgstr "Custom gateway"
+
+#: src/pages/device/lanSettingsPanel.vue:182
+msgid "自定义路线"
+msgstr "Custom path"
+
 #: src/components/action-download/index.vue:102
 msgid "自己添加"
 msgstr "Custom"
@@ -3319,6 +5314,10 @@ msgstr "Custom"
 #: src/components/smart/disk-info.vue:19
 msgid "自检日志"
 msgstr "Self-test log"
+
+#: src/pages/device/rateLimitI18n.ts:8
+msgid "自行选择"
+msgstr "Choose manually"
 
 #: src/pages/index/network/NetworkInterface.vue:147
 msgid "至少保留一个网络接口！"
@@ -3376,13 +5375,18 @@ msgstr ""
 "data protection level of RAID 1, combining the hard drives into groups of "
 "two hard drives that mirror data."
 
+#: src/pages/device/lanSettingsPanel.vue:300
+msgid "至少需要可用空间"
+msgstr "Requires at least free space"
+
 #: src/components/action-dns/index.vue:104
 msgid "至少需要填写一个DNS"
 msgstr "At least one DNS must be filled in"
 
-#: src/pages/device/configure.vue:87
-msgid "节点角色"
-msgstr ""
+#: src/pages/device/components/floatingGatewayWizard.vue:21
+#: src/pages/device/components/floatingGatewayWizard.vue:91
+msgid "节点职责"
+msgstr "Node Responsibilities"
 
 #: src/components/action-domain/setup-ddns.vue:30
 #: src/components/action-domain/setup-index.vue:35
@@ -3410,11 +5414,45 @@ msgstr "Cannot get device name"
 msgid "获取不到设备路径"
 msgstr "Cannot get device path"
 
+#: src/pages/device/components/floatingGatewayWizard.vue:14
+msgid "虚拟 IP 持有者"
+msgstr "Virtual IP Holder"
+
+#: src/pages/device/components/floatingGatewayWizard.vue:20
+#: src/pages/device/components/floatingGatewayWizard.vue:41
+msgid "虚拟网关 IPv4"
+msgstr "Virtual Gateway IPv4"
+
 #: src/components/action-docker/index.vue:72
 msgid "覆盖迁移（覆盖目标路径，继续迁移会清空该目标路径下的文件）"
 msgstr ""
 "Overwrite migration (overwrite target path, continuing migration will clear "
 "files under the target path)"
+
+#: src/pages/device/lanSettingsPanel.vue:152
+#: src/pages/device/networkRulesHub.vue:3
+msgid "规则台账"
+msgstr "Rules ledger"
+
+#: src/pages/device/lanSettingsPanel.vue:252
+msgid "规则已写入并验证，执行方式已切换"
+msgstr "Rules were written and verified; the enforcement mode was switched"
+
+#: src/pages/device/networkRulesHub.vue:53
+msgid "规则已删除"
+msgstr "Rule deleted"
+
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:12
+msgid "规则来源"
+msgstr "Rule source"
+
+#: src/pages/device/networkRulesHub.vue:14
+msgid "规则类型"
+msgstr "Rule Type"
+
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:4
+msgid "计划与额度"
+msgstr "Schedule & quota"
 
 #: src/pages/smart/index.vue:51
 msgid "计划任务"
@@ -3424,20 +5462,27 @@ msgstr "Scheduled tasks"
 msgid "认证失败？"
 msgstr "Authentication failed?"
 
-#: src/pages/device/components/devicePolicyPanel.vue:10
-msgid "让设备始终使用同一个 IPv4 地址"
+#: src/pages/device/index.vue:4
+msgid "认识每台设备，并用简单的方式安排它如何连接和上网。"
 msgstr ""
+"Know every device and easily decide how it connects and accesses the "
+"internet."
 
 #: src/components/action-raid/setup-edit.vue:9
 #: src/components/action-raid/setup-recover.vue:9
 #: src/components/action-raid/setup-remove.vue:9
 #: src/components/smart/disk-info.vue:32 src/components/smart/edit-disk.vue:6
-#: src/pages/device/deviceCenterList.vue:259
-#: src/pages/device/deviceCenterList.vue:44
-#: src/pages/device/deviceCenterList.vue:5 src/pages/raid/index/index.vue:27
+#: src/pages/device/deviceCenterList.vue:303
+#: src/pages/device/deviceCenterList.vue:5
+#: src/pages/device/deviceCenterList.vue:57 src/pages/device/index.vue:26
+#: src/pages/device/networkRulesHub.vue:14 src/pages/raid/index/index.vue:27
 #: src/pages/smart/index/index.vue:85 src/pages/smart/task/index.vue:7
 msgid "设备"
-msgstr "Device"
+msgstr "Devices"
+
+#: src/pages/device/components/advancedNetworkTools.vue:29
+msgid "设备上线"
+msgstr "Device Onboarding"
 
 #: src/components/smart/disk-info.vue:9
 msgid "设备信息"
@@ -3446,51 +5491,93 @@ msgstr "Device Info"
 #: src/pages/device/speedLimitList.vue:14
 msgid "设备信息仍可使用，请重试或检查插件状态。"
 msgstr ""
+"Device information is still available, please try again or check plugin "
+"status."
 
-#: src/pages/device/components/devicePolicyPanel.vue:18
-#: src/pages/device/deviceCenterList.vue:283
-#, fuzzy
+#: src/pages/device/components/advancedNetworkTools.vue:30
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:72
+#: src/pages/device/deviceGroupsPanel.vue:61
+msgid "设备分组"
+msgstr "Device groups"
+
+#: src/pages/device/deviceGroupsPanel.vue:5
+msgid "设备分组读取失败"
+msgstr "Device group read failed"
+
+#: src/pages/device/deviceCenterList.vue:332
 msgid "设备名称"
 msgstr "Device name"
+
+#: src/pages/device/deviceGroupsPanel.vue:76
+msgid "设备和单设备例外不会被删除。"
+msgstr "Device and single device exceptions will not be deleted."
+
+#: src/pages/device/components/deviceProfileEditor.vue:21
+msgid "设备图标"
+msgstr "Device icon"
 
 #: src/pages/index/info/SystemInfo.vue:39
 msgid "设备型号"
 msgstr "Model"
 
+#: src/pages/device/deviceCenterList.vue:22
+msgid "设备备注"
+msgstr "Device name"
+
+#: src/pages/device/components/deviceAliasEditor.vue:4
+#: src/pages/device/components/deviceProfileEditor.vue:11
+msgid "设备备注名"
+msgstr "Device Note Name"
+
+#: src/pages/device/components/deviceAliasEditor.vue:75
+msgid "设备备注已更新"
+msgstr "Device notes updated"
+
 #: src/pages/device/components/deviceClassificationEditor.vue:65
 msgid "设备已离线或身份发生变化，请刷新后重试"
 msgstr "The device is offline or its identity changed. Refresh and try again."
 
-#: src/pages/device/deviceCenterList.vue:161
+#: src/pages/device/components/advancedNetworkTools.vue:30
 msgid "设备控制"
-msgstr ""
+msgstr "Device Control"
 
-#: src/pages/device/deviceCenterList.vue:146
-msgid "设备流量"
-msgstr ""
-
-#: src/pages/device/deviceCenterList.vue:239
+#: src/pages/device/deviceCenterList.vue:284
 msgid "设备清单不可用"
-msgstr ""
+msgstr "Device list unavailable"
 
-#: src/pages/device/deviceCenterList.vue:35
+#: src/pages/device/deviceCenterList.vue:48
 msgid "设备清单仍可使用，缺失的信息会在数据源恢复后自动补齐。"
 msgstr ""
+"The list of devices is still available, and the missing information will be "
+"automatically filled in when the data source is restored."
 
-#: src/pages/device/components/devicePolicyPanel.vue:103
+#: src/pages/device/components/advancedNetworkTools.vue:30
+msgid "设备状态"
+msgstr "Device status"
+
+#: src/pages/device/components/advancedNetworkTools.vue:29
+msgid "设备离线"
+msgstr "Device offline"
+
+#: src/pages/device/components/devicePolicyPanel.vue:173
+#: src/pages/device/components/devicePolicyPanel.vue:299
+#: src/pages/device/components/devicePolicyPanel.vue:306
 msgid "设备策略不可用"
-msgstr ""
+msgstr "Device policy not available"
 
-#: src/pages/device/deviceCenterList.vue:21
+#: src/pages/device/deviceCenterList.vue:24
 msgid "设备筛选"
-msgstr ""
+msgstr "Device Screening"
 
-#: src/pages/device/index.vue:9 src/pages/index/network/NetworkConnection.vue:7
+#: src/pages/index/network/NetworkConnection.vue:7
 msgid "设备管理"
 msgstr ""
 
-#: src/pages/device/deviceCenterList.vue:114
-#: src/pages/device/deviceCenterList.vue:125
+#: src/pages/device/components/advancedNetworkTools.vue:8
+msgid "设备管理入口"
+msgstr "Device Management Portal"
+
+#: src/pages/device/components/deviceProfileEditor.vue:17
 msgid "设备类型"
 msgstr "Device type"
 
@@ -3508,9 +5595,36 @@ msgstr "Device type updated"
 msgid "设备系统信息概览"
 msgstr "System Info"
 
-#: src/pages/device/deviceCenterList.vue:102
+#: src/pages/device/lanSettingsPanel.vue:185
+msgid "设备规则"
+msgstr "Device Rules"
+
+#: src/pages/device/deviceCenterList.vue:115
 msgid "设备详情"
-msgstr ""
+msgstr "Device details"
+
+#: src/pages/device/deviceCenterList.vue:129
+msgid "设备详情区域"
+msgstr "Device detail sections"
+
+#: src/pages/device/deviceCenterList.vue:150
+#: src/pages/device/deviceCenterList.vue:270
+#: src/pages/device/lanSettingsPanel.vue:185
+msgid "设备资料"
+msgstr "Device profile"
+
+#: src/pages/device/components/deviceAliasEditor.vue:42
+#: src/pages/device/components/deviceProfileEditor.vue:75
+msgid "设备资料不可用"
+msgstr "Device data not available"
+
+#: src/pages/device/components/deviceProfileEditor.vue:102
+msgid "设备资料已更新"
+msgstr "Device information updated"
+
+#: src/pages/device/components/deviceProfileEditor.vue:4
+msgid "设备资料读取失败"
+msgstr "Device data read failed"
 
 #: src/components/action-sandboxenvironment/index.vue:79
 msgid "设备重启中..."
@@ -3523,23 +5637,62 @@ msgstr ""
 "Device rebooting... If the page does not refresh for a long time, you may "
 "need to manually enter the address"
 
-#: src/pages/device/components/devicePolicyPanel.vue:27
+#: src/pages/device/components/devicePolicyPanel.vue:241
+#: src/pages/device/components/devicePolicyPanel.vue:46
+#: src/pages/device/lanSettingsPanel.vue:185
+#: src/pages/device/networkRulesHub.vue:38
+#: src/pages/device/networkRulesHub.vue:9
 msgid "设备限速"
+msgstr "Device Speed Limit"
+
+#: src/pages/device/lanSettingsPanel.vue:48
+msgid "设备限速服务"
+msgstr "Device speed limit service"
+
+#: src/pages/device/lanSettingsPanel.vue:97
+msgid "设备默认通过本机上网；需要时再添加旁路由或指定网关。"
 msgstr ""
+"The device is connected to the Internet by default, and bypass routes or "
+"designated gateways are added when necessary."
 
 #: src/components/action-domain/setup-ddns.vue:63
 msgid "设定哪一个 IP 地址（IPv4 或 IPv6）会被发送给 DDNS 提供商"
 msgstr ""
 "Specify which IP address (IPv4 or IPv6) will be sent to the DDNS provider"
 
+#: src/pages/device/lanSettingsPanel.vue:23
+msgid "设置区域"
+msgstr "Set up area"
+
+#: src/pages/device/components/devicePolicyPanel.vue:31
+msgid "设置已保存，但设备可能需要断开并重新连接后才会使用新路线。"
+msgstr ""
+"The settings have been saved, but the device may need to be disconnected and "
+"reconnected before the new route can be used."
+
+#: src/pages/device/components/deviceAliasEditor.vue:75
 #: src/pages/device/components/deviceClassificationEditor.vue:117
-#: src/pages/device/components/devicePolicyPanel.vue:129
+#: src/pages/device/components/devicePolicyPanel.vue:302
+#: src/pages/device/components/devicePolicyPanel.vue:308
+#: src/pages/device/components/deviceProfileEditor.vue:98
+#: src/pages/device/lanSettingsPanel.vue:229
+#: src/pages/device/lanSettingsPanel.vue:246
 msgid "设置没有变化"
 msgstr "No changes"
+
+#: src/pages/device/lanSettingsPanel.vue:60
+#: src/pages/device/lanSettingsPanel.vue:61
+#: src/pages/device/rateLimitI18n.ts:43
+msgid "设置没有变化。"
+msgstr "No changes."
 
 #: src/components/firstOpen/index.vue:68
 msgid "设置系统密码"
 msgstr ""
+
+#: src/pages/device/components/trafficInsightsPanel.vue:3
+msgid "设置额度"
+msgstr "Set Limit"
 
 #: src/components/firstOpen/wifi.vue:20 src/components/firstOpen/wifi.vue:21
 #: src/components/firstOpen/wifi.vue:23 src/components/firstOpen/wifi.vue:39
@@ -3557,13 +5710,25 @@ msgstr ""
 msgid "访问地址："
 msgstr "Access address:"
 
-#: src/pages/device/deviceCenterList.vue:116
+#: src/pages/device/deviceCenterList.vue:153
+msgid "识别与技术信息"
+msgstr "Identification & technical info"
+
+#: src/pages/device/deviceCenterList.vue:157
 msgid "识别依据"
 msgstr "Detection source"
 
-#: src/pages/device/deviceCenterList.vue:117
+#: src/pages/device/deviceCenterList.vue:158
 msgid "识别可信度"
 msgstr "Detection confidence"
+
+#: src/pages/device/components/advancedNetworkTools.vue:26
+msgid "识别规则更新"
+msgstr "Identify Rule Updates"
+
+#: src/pages/device/components/advancedNetworkTools.vue:34
+msgid "该入口当前不可访问"
+msgstr "This portal is currently inaccessible"
 
 #: src/components/action-disk/index.vue:122
 msgid "该分区尚未挂载，请先去挂载"
@@ -3573,9 +5738,21 @@ msgstr "This partition is not yet mounted, please mount it first"
 msgid "该固件不支持沙箱模式"
 msgstr "Current firmware does not support sandbox"
 
+#: src/pages/device/components/devicePolicyPanel.vue:118
+msgid "该地址已分配给其他设备，请选择一个未占用地址后重试"
+msgstr ""
+"This address is assigned to another device. Choose an unused address and try "
+"again."
+
 #: src/components/action-docker/index.vue:64
 msgid "该目标路径不为空"
 msgstr "The target path is not empty"
+
+#: src/pages/device/components/devicePolicyPanel.vue:119
+msgid "该网关不在当前局域网，请检查网关 IP 或选择其他路线"
+msgstr ""
+"This gateway is outside the current LAN. Check its IP address or choose "
+"another path."
 
 #: src/pages/device/components/deviceClassificationEditor.vue:13
 msgid "该设备身份仅本次开机有效，修改会在路由器重启后自动清除。"
@@ -3583,37 +5760,62 @@ msgstr ""
 "This device identity is valid for this boot only. The change will be cleared "
 "after the router restarts."
 
-#: src/pages/device/deviceCenterList.vue:77 src/pages/device/deviceList.vue:19
+#: src/pages/device/components/deviceAliasEditor.vue:9
+msgid "该设备身份仅本次开机有效，备注会在路由器重启后清除。"
+msgstr ""
+"This device identity is valid only for this boot; its name is cleared after "
+"the router restarts."
+
+#: src/pages/device/components/deviceProfileEditor.vue:13
+msgid "该设备身份仅本次开机有效，重启后资料可能需要重新确认。"
+msgstr ""
+"This device identity is valid only for this boot; its profile may need "
+"confirmation after restart."
+
+#: src/pages/device/components/devicePolicyPanel.vue:104
+msgid "该设置与现有规则冲突"
+msgstr "This setting conflicts with an existing rule."
+
+#: src/pages/device/deviceCenterList.vue:90 src/pages/device/deviceList.vue:19
 #: src/pages/raid/index/index.vue:78 src/pages/raid/index/index.vue:81
 #: src/pages/smart/index/index.vue:121 src/pages/smart/index/index.vue:122
 msgid "详情"
 msgstr "Details"
+
+#: src/pages/device/components/devicePolicyPanel.vue:102
+msgid "请先在全局设置中启用该能力"
+msgstr "Enable this capability in LAN settings first."
+
+#: src/pages/device/lanSettingsPanel.vue:252
+msgid "请先手动停止 Bandix，并启动 Quickstart 限速服务后重试。"
+msgstr ""
+"Stop Bandix manually, start the Quickstart speed-limit service, and try "
+"again."
 
 #: src/components/firstOpen/index.vue:76 src/components/firstOpen/index.vue:79
 msgid "请再次填写密码"
 msgstr ""
 
 #: src/components/action-sandbox/index.vue:61
-#: src/pages/device/configure.vue:263 src/pages/device/deviceCenterList.vue:250
-#: src/pages/device/deviceList.vue:214 src/pages/device/deviceList.vue:285
+#: src/pages/device/configure.vue:195 src/pages/device/deviceCenterList.vue:294
+#: src/pages/device/deviceList.vue:212 src/pages/device/deviceList.vue:283
 #: src/pages/device/speedLimitList.vue:129
 #: src/pages/device/speedLimitList.vue:165
-#: src/pages/device/staticStateList.vue:105
-#: src/pages/device/staticStateList.vue:159
+#: src/pages/device/staticStateList.vue:108
+#: src/pages/device/staticStateList.vue:157
 msgid "请刷新界面"
 msgstr "Please refresh the interface"
 
-#: src/pages/device/deviceList.vue:262 src/pages/device/deviceList.vue:483
+#: src/pages/device/deviceList.vue:260 src/pages/device/deviceList.vue:482
 #: src/pages/device/speedLimitList.vue:287
 #: src/pages/device/speedLimitList.vue:318
 msgid "请前往全局配置开启限速"
-msgstr ""
+msgstr "Please go to the global configuration to turn on the speed limit"
 
-#: src/pages/device/deviceList.vue:571 src/pages/device/speedLimitList.vue:253
-#: src/pages/device/staticStateList.vue:256
-#, fuzzy
+#: src/pages/device/deviceList.vue:570 src/pages/device/speedLimitList.vue:253
+#: src/pages/device/staticStateList.vue:254
 msgid "请勾选要删除的数据"
-msgstr "Please select the hard drive to delete"
+msgstr "Select the data to delete."
 
 #: src/pages/interfaceconfig/index.vue:175
 msgid "请在保存以后前往'网络-接口'页面配置接口详细参数"
@@ -3621,17 +5823,35 @@ msgstr ""
 "Please go to the 'Network - Interface' page to configure interface details "
 "after saving"
 
+#: src/pages/device/networkRulesHub.vue:44
+msgid "请在设备详情中检查这条路线"
+msgstr "Check this path in device details."
+
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:105
+msgid "请填写完整时间"
+msgstr "Enter both start and end times"
+
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:105
+#: src/pages/device/deviceGroupsPanel.vue:73
+#: src/pages/device/rateLimitI18n.ts:45
+msgid "请填写完整的时段速度上限"
+msgstr "Enter both scheduled speed limits"
+
 #: src/components/firstOpen/index.vue:71 src/components/firstOpen/index.vue:73
 msgid "请填写密码"
 msgstr ""
 
-#: src/pages/device/deviceCenterList.vue:38
+#: src/pages/device/deviceCenterList.vue:51
 msgid "请尝试名称、IP、MAC 或厂商的其他关键词。"
-msgstr ""
+msgstr "Try a different keyword for name, IP, Mac, or vendor."
 
 #: src/components/action-netip/index.vue:97
 msgid "请尝试重新配置"
 msgstr "Please try to reconfigure"
+
+#: src/pages/device/components/devicePolicyPanel.vue:105
+msgid "请检查填写内容"
+msgstr "Check the entered values."
 
 #: src/pages/network/dhcp/index.vue:5
 msgid "请确保您已将本设备 WAN 口连接到上级路由器局域网（ LAN ）接口"
@@ -3647,7 +5867,7 @@ msgstr ""
 #: src/pages/device/configure.vue:10 src/pages/device/deviceList.vue:7
 #: src/pages/device/speedLimitList.vue:8 src/pages/device/staticStateList.vue:8
 msgid "请稍候…"
-msgstr ""
+msgstr "Please wait..."
 
 #: src/components/action-ddnsto/setup-ddnsto-save.vue:11
 #: src/components/action-domain/setup-ddns-success.vue:11
@@ -3658,22 +5878,24 @@ msgstr "Please wait 1 minute for the settings to take effect before using."
 msgid "请至少保留一项！"
 msgstr ""
 
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:105
+#: src/pages/device/deviceGroupsPanel.vue:73
+msgid "请至少选择一天"
+msgstr "Please select at least one day"
+
 #: src/components/action-nas/unishare/index.vue:140
 msgid "请至少选择一种共享协议"
 msgstr ""
 
 #: src/pages/device/components/dialog.vue:44
 #: src/pages/device/components/dialog.vue:48
-#: src/pages/device/components/dialog.vue:52 src/pages/device/configure.vue:103
-#: src/pages/device/configure.vue:367 src/pages/device/configure.vue:373
-#: src/pages/device/configure.vue:41 src/pages/device/configure.vue:417
-#: src/pages/device/configure.vue:423 src/pages/device/configure.vue:47
-#: src/pages/device/configure.vue:98 src/pages/device/deviceList.vue:108
-#: src/pages/device/deviceList.vue:440 src/pages/device/deviceList.vue:443
-#: src/pages/device/deviceList.vue:453 src/pages/device/deviceList.vue:487
-#: src/pages/device/deviceList.vue:493 src/pages/device/deviceList.vue:53
-#: src/pages/device/deviceList.vue:59 src/pages/device/deviceList.vue:65
-#: src/pages/device/deviceList.vue:83 src/pages/device/deviceList.vue:88
+#: src/pages/device/components/dialog.vue:52 src/pages/device/configure.vue:298
+#: src/pages/device/configure.vue:304 src/pages/device/configure.vue:41
+#: src/pages/device/configure.vue:47 src/pages/device/deviceList.vue:110
+#: src/pages/device/deviceList.vue:442 src/pages/device/deviceList.vue:452
+#: src/pages/device/deviceList.vue:486 src/pages/device/deviceList.vue:492
+#: src/pages/device/deviceList.vue:53 src/pages/device/deviceList.vue:59
+#: src/pages/device/deviceList.vue:65 src/pages/device/deviceList.vue:90
 #: src/pages/device/speedLimitList.vue:321
 #: src/pages/device/speedLimitList.vue:327
 #: src/pages/device/speedLimitList.vue:334
@@ -3683,14 +5905,18 @@ msgstr ""
 #: src/pages/device/speedLimitList.vue:80
 #: src/pages/device/speedLimitList.vue:86
 #: src/pages/device/speedLimitList.vue:92
-#: src/pages/device/staticStateList.vue:324
-#: src/pages/device/staticStateList.vue:334
-#: src/pages/device/staticStateList.vue:50
-#: src/pages/device/staticStateList.vue:55
-#: src/pages/device/staticStateList.vue:75
-#, fuzzy
+#: src/pages/device/staticStateList.vue:326
+#: src/pages/device/staticStateList.vue:336
+#: src/pages/device/staticStateList.vue:57
+#: src/pages/device/staticStateList.vue:77
 msgid "请输入"
-msgstr "Please enter the password"
+msgstr "Enter a value"
+
+#: src/pages/device/components/devicePolicyPanel.vue:38
+msgid "请输入 1～63 位英文、数字或中间连字符，不能以连字符开头或结尾"
+msgstr ""
+"Please enter 1-63 digits English, number or middle hyphen, cannot start or "
+"end with a hyphen"
 
 #: src/components/editable-select/index.vue:13
 msgid "请输入%{title}"
@@ -3730,7 +5956,7 @@ msgstr "Please enter a valid address"
 
 #: src/pages/device/components/search.vue:13
 msgid "请输入名称/IP/MAC…"
-msgstr ""
+msgstr "Please enter name/IP/Mac..."
 
 #: src/components/action-domain/setup-ddns.vue:90
 #: src/components/firstOpen/index.vue:201
@@ -3738,36 +5964,25 @@ msgid "请输入密码"
 msgstr "Please enter the password"
 
 #: src/pages/device/components/dialog.vue:155
-#: src/pages/device/deviceList.vue:456 src/pages/device/speedLimitList.vue:324
-#: src/pages/device/staticStateList.vue:337
-#, fuzzy
+#: src/pages/device/deviceList.vue:455 src/pages/device/speedLimitList.vue:324
+#: src/pages/device/staticStateList.vue:339
 msgid "请输入正确的IP地址"
-msgstr "Please enter a valid IP address"
+msgstr "Enter a valid IP address."
 
-#: src/pages/device/deviceList.vue:446 src/pages/device/speedLimitList.vue:330
-#: src/pages/device/staticStateList.vue:327
+#: src/pages/device/deviceList.vue:445 src/pages/device/speedLimitList.vue:330
+#: src/pages/device/staticStateList.vue:329
 msgid "请输入正确的MAC地址"
-msgstr ""
+msgstr "Please enter the correct MAC address"
 
-#: src/pages/device/configure.vue:376 src/pages/device/deviceList.vue:496
+#: src/pages/device/configure.vue:307 src/pages/device/deviceList.vue:495
 #: src/pages/device/speedLimitList.vue:343
 msgid "请输入正确的上传速度"
-msgstr ""
+msgstr "Please enter the correct upload speed"
 
-#: src/pages/device/configure.vue:370 src/pages/device/deviceList.vue:490
+#: src/pages/device/configure.vue:301 src/pages/device/deviceList.vue:489
 #: src/pages/device/speedLimitList.vue:337
 msgid "请输入正确的下载速度"
-msgstr ""
-
-#: src/pages/device/configure.vue:426
-#, fuzzy
-msgid "请输入正确的旁路由IP地址"
-msgstr "Please enter a valid IP address"
-
-#: src/pages/device/configure.vue:420
-#, fuzzy
-msgid "请输入正确的浮动网关IP地址"
-msgstr "Please enter a valid IP address"
+msgstr "Please enter the correct download speed"
 
 #: src/components/action-domain/setup-ddns.vue:81
 msgid "请输入用户名"
@@ -3777,13 +5992,12 @@ msgstr "Please enter the username"
 msgid "请输入迁移路径"
 msgstr "Please enter the migration path"
 
-#: src/pages/device/configure.vue:128 src/pages/device/configure.vue:89
-#: src/pages/device/deviceList.vue:449 src/pages/device/deviceList.vue:93
-#: src/pages/device/staticStateList.vue:330
-#: src/pages/device/staticStateList.vue:60
-#, fuzzy
+#: src/pages/device/configure.vue:78 src/pages/device/deviceList.vue:448
+#: src/pages/device/deviceList.vue:95 src/pages/device/lanSettingsPanel.vue:103
+#: src/pages/device/staticStateList.vue:332
+#: src/pages/device/staticStateList.vue:62
 msgid "请选择"
-msgstr "Please select the disk"
+msgstr "Select"
 
 #: src/components/editable-select/index.vue:5
 msgid "请选择%{title}"
@@ -3798,9 +6012,8 @@ msgid "请选择一个硬盘或分区"
 msgstr "Please select a hard drive or partition"
 
 #: src/pages/device/components/deviceClassificationEditor.vue:66
-#, fuzzy
 msgid "请选择有效的设备类型"
-msgstr "Please choose a valid device type."
+msgstr "Select a valid device type."
 
 #: src/pages/networkSpeedTest/components/item.vue:26
 msgid "请选择测速节点"
@@ -3830,10 +6043,6 @@ msgstr "Please select the disk"
 #: src/components/action-raid/setup-create.vue:208
 msgid "请选择至少%{min}块磁盘"
 msgstr "Please select at least %{min} disks"
-
-#: src/pages/device/configure.vue:414
-msgid "请选择节点角色"
-msgstr ""
 
 #: src/components/action-raid/setup-remove.vue:69
 msgid "请选择要删除的硬盘"
@@ -3865,10 +6074,9 @@ msgstr "Please select the NAS service to add"
 msgid "请配置网络名称"
 msgstr ""
 
-#: src/pages/device/configure.vue:17 src/pages/device/configure.vue:66
-#, fuzzy
+#: src/pages/device/configure.vue:17
 msgid "请重试或检查插件状态。"
-msgstr "Failed to check plugin status"
+msgstr "Try again or check the plugin state."
 
 #: src/components/action-disk-part/item.vue:33
 #: src/components/action-disk-part/item.vue:34
@@ -3876,18 +6084,35 @@ msgstr "Failed to check plugin status"
 msgid "读写"
 msgstr "Read/write"
 
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:104
+msgid "读取使用规则失败"
+msgstr "Failed to load usage rules"
+
 #: src/components/action-disk-format/index.vue:331
 #: src/components/action-disk-mount/index.vue:232
-#: src/pages/device/components/devicePolicyPanel.vue:107
-#: src/pages/device/components/flow.vue:124 src/pages/device/configure.vue:263
-#: src/pages/device/deviceCenterList.vue:250
-#: src/pages/device/deviceList.vue:214 src/pages/device/deviceList.vue:285
-#: src/pages/device/deviceList.vue:330 src/pages/device/speedLimitList.vue:129
+#: src/pages/device/components/devicePolicyPanel.vue:180
+#: src/pages/device/components/floatingGatewayWizard.vue:104
+#: src/pages/device/components/flow.vue:124 src/pages/device/configure.vue:195
+#: src/pages/device/deviceCenterList.vue:294
+#: src/pages/device/deviceList.vue:212 src/pages/device/deviceList.vue:283
+#: src/pages/device/deviceList.vue:328
+#: src/pages/device/lanSettingsPanel.vue:222
+#: src/pages/device/networkRulesHub.vue:52
+#: src/pages/device/speedLimitList.vue:129
 #: src/pages/device/speedLimitList.vue:165
-#: src/pages/device/staticStateList.vue:105
-#: src/pages/device/staticStateList.vue:159
+#: src/pages/device/staticStateList.vue:108
+#: src/pages/device/staticStateList.vue:157
 msgid "读取结果失败"
 msgstr "Failed to read result"
+
+#: src/pages/device/deviceGroupsPanel.vue:77
+msgid "读取设备分组失败"
+msgstr "Failed to read device group"
+
+#: src/pages/device/components/deviceAliasEditor.vue:56
+#: src/pages/device/components/deviceProfileEditor.vue:89
+msgid "读取设备资料失败"
+msgstr "Failed to read device data"
 
 #: src/pages/smart/task/index.vue:9
 msgid "调度"
@@ -3917,6 +6142,11 @@ msgstr "Account cannot be empty"
 msgid "账号用户名"
 msgstr "Account username"
 
+#: src/pages/device/lanSettingsPanel.vue:165
+#: src/pages/device/rateLimitI18n.ts:27
+msgid "资源占用较低，按固定 IPv4 执行。"
+msgstr "Uses fewer resources and enforces limits by reserved IPv4 address."
+
 #: src/components/action-nas/index.vue:10
 msgid "跨设备共享（易有云）"
 msgstr "Cross-device sharing (Linkease)"
@@ -3929,6 +6159,26 @@ msgstr ""
 "The router IP may have been modified successfully. If refreshing the page "
 "fails, please reconnect to the router, otherwise try to reconfigure it."
 
+#: src/pages/device/lanSettingsPanel.vue:183
+msgid "路由器地址"
+msgstr "Router address"
+
+#: src/pages/device/components/devicePolicyPanel.vue:30
+msgid "路由器配置"
+msgstr "Router Configuration"
+
+#: src/pages/device/lanSettingsPanel.vue:181
+msgid "路线可编辑"
+msgstr "Route editable"
+
+#: src/pages/device/lanSettingsPanel.vue:89
+msgid "路线名称"
+msgstr "Route name"
+
+#: src/pages/device/lanSettingsPanel.vue:90
+msgid "路线类型"
+msgstr "Path type"
+
 #: src/components/help/index.vue:2
 msgid "跳转教程"
 msgstr "Jump to tutorial"
@@ -3939,16 +6189,17 @@ msgstr "Jump to tutorial"
 #: src/components/firstOpen/index.vue:83 src/components/firstOpen/index.vue:85
 #: src/components/firstOpen/index.vue:90 src/components/firstOpen/index.vue:91
 #: src/components/firstOpen/index.vue:96
+#: src/pages/device/deviceGroupsPanel.vue:8
 msgid "跳过"
-msgstr ""
+msgstr "Skip"
 
-#: src/pages/device/deviceCenterList.vue:119
+#: src/pages/device/deviceCenterList.vue:160
 msgid "身份稳定性"
 msgstr "Identity scope"
 
-#: src/pages/device/configure.vue:29 src/pages/device/configure.vue:78
+#: src/pages/device/configure.vue:29
 msgid "软件暂未安装"
-msgstr ""
+msgstr "Software not yet installed"
 
 #: src/components/action-softwaresource/index.vue:45
 #: src/components/action-softwaresource/index.vue:6
@@ -3961,13 +6212,31 @@ msgstr "Feeds Mirror"
 msgid "软件源错误"
 msgstr "Feeds Inaccessible"
 
+#: src/pages/device/rateLimitI18n.ts:28
+msgid "轻量兼容模式"
+msgstr "Lightweight compatibility"
+
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:38
+#: src/pages/device/components/trafficInsightsPanel.vue:16
+#: src/pages/device/deviceGroupsPanel.vue:25
+msgid "达到后"
+msgstr "When reached"
+
 #: src/components/action-docker/index.vue:12
 msgid "迁移到："
 msgstr "Migrate to: "
 
+#: src/pages/device/lanSettingsPanel.vue:252
+msgid "迁移失败，原设置已保留"
+msgstr "Migration failed; the original settings were preserved."
+
 #: src/components/action-docker/index.vue:54
 msgid "迁移成功！"
 msgstr "Migration successful!"
+
+#: src/pages/device/lanSettingsPanel.vue:69
+msgid "迁移现有 Bandix 规则"
+msgstr "Migrate existing Bandix rules"
 
 #: src/components/smart/test-task.vue:14
 msgid "运行"
@@ -3978,13 +6247,25 @@ msgstr "Run"
 msgid "运行中"
 msgstr "Run"
 
+#: src/pages/device/components/floatingGatewayWizard.vue:88
+msgid "运行异常"
+msgstr "Exception running"
+
+#: src/pages/device/components/floatingGatewayWizard.vue:88
+msgid "运行正常"
+msgstr "Normal operation"
+
+#: src/pages/device/components/floatingGatewayWizard.vue:13
+msgid "运行状态"
+msgstr "Operational Status"
+
 #: src/components/smart/test-task.vue:6
 msgid "运行调试"
 msgstr "Run debugging"
 
-#: src/pages/device/deviceCenterList.vue:152
+#: src/pages/device/deviceCenterList.vue:139
 msgid "近期流量趋势"
-msgstr ""
+msgstr "Recent Traffic Trends"
 
 #: src/components/action-confirm/index.vue:10
 #: src/components/action-confirm/index.vue:11
@@ -4004,9 +6285,28 @@ msgstr ""
 msgid "返回"
 msgstr "Return"
 
-#: src/pages/device/index.vue:26
-msgid "返回新设备列表"
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:45
+#: src/pages/device/deviceGroupsPanel.vue:35
+msgid "返回修改"
+msgstr "Back to editing"
+
+#: src/pages/device/lanSettingsPanel.vue:97
+msgid "还没有自定义上网路线"
+msgstr "No custom internet routes yet"
+
+#: src/pages/device/deviceGroupsPanel.vue:9
+msgid "还没有设备分组"
+msgstr "No device groupings yet"
+
+#: src/pages/device/components/devicePolicyPanel.vue:203
+#: src/pages/device/rateLimitI18n.ts:29
+msgid "这台设备的 IPv6 流量暂不受此限速约束。"
 msgstr ""
+"IPv6 traffic from this device is not currently covered by this speed limit."
+
+#: src/pages/device/components/trafficInsightsPanel.vue:3
+msgid "这是累计流量额度，不是速度上限或定时限速。"
+msgstr "This is a cumulative flow limit, not a speed cap or timed speed limit."
 
 #: src/pages/network/dhcp/index.vue:97 src/pages/network/gateway/index.vue:92
 #: src/pages/network/pppoe/index.vue:41
@@ -4025,15 +6325,23 @@ msgstr "DDNS"
 msgid "远程访问域名管理"
 msgstr ""
 
-#: src/pages/device/deviceCenterList.vue:120
-#: src/pages/device/deviceCenterList.vue:47
-#: src/pages/device/deviceCenterList.vue:94
+#: src/pages/device/deviceCenterList.vue:107
+#: src/pages/device/deviceCenterList.vue:126
+#: src/pages/device/deviceCenterList.vue:60
 msgid "连接"
-msgstr ""
+msgstr "Connection"
 
-#: src/pages/device/deviceCenterList.vue:150
+#: src/pages/device/deviceCenterList.vue:137
 msgid "连接数"
-msgstr ""
+msgstr "Connections"
+
+#: src/pages/device/deviceCenterList.vue:34
+msgid "连接方式"
+msgstr "Connection type"
+
+#: src/pages/device/components/advancedNetworkTools.vue:26
+msgid "连接洞察"
+msgstr "Connect insights"
 
 #: src/components/firstOpen/index.vue:29 src/pages/network/index/index.vue:21
 msgid "连接现有路由器"
@@ -4044,6 +6352,13 @@ msgstr "Connect to existing router"
 #: src/components/action-sandboxenvironment/index.vue:25
 msgid "退出"
 msgstr "Exit"
+
+#: src/pages/device/networkRulesHub.vue:13
+#: src/pages/device/networkRulesHub.vue:14
+#: src/pages/device/networkRulesHub.vue:16
+#: src/pages/device/networkRulesHub.vue:17
+msgid "选择"
+msgstr "Select"
 
 #: src/components/firstOpen/index.vue:11 src/pages/network/index/index.vue:4
 msgid "选择一种连接方式以开始"
@@ -4056,6 +6371,10 @@ msgid ""
 msgstr ""
 "Select the hard disk that will be used to create the RAID. Devices connected "
 "via USB will not be displayed in the list (USB connection is unstable)."
+
+#: src/pages/device/networkRulesHub.vue:14
+msgid "选择当前结果"
+msgstr "Select Current Result"
 
 #: src/pages/networkSpeedTest/components/item.vue:24
 msgid "选择测速节点"
@@ -4082,21 +6401,64 @@ msgstr ""
 msgid "选择磁盘"
 msgstr "Choose disk"
 
+#: src/pages/device/components/advancedNetworkTools.vue:11
+msgid "选择策略包"
+msgstr "Select Policy Package"
+
 #: src/pages/index/components/ModuleSettings.vue:4
 msgid "选择要在首页显示的功能模块，隐藏不常用的模块可以让界面更简洁"
 msgstr ""
+
+#: src/pages/device/deviceGroupsPanel.vue:20
+msgid "选择设备"
+msgstr "Select devices"
+
+#: src/pages/device/components/deviceProfileEditor.vue:24
+msgid "选择设备图标"
+msgstr "Select a device icon"
 
 #: src/pages/device/components/deviceClassificationEditor.vue:17
 msgid "选择设备类型"
 msgstr "Choose device type"
 
+#: src/pages/device/components/advancedNetworkTools.vue:35
+msgid "通知已关闭"
+msgstr "Notifications are off"
+
+#: src/pages/device/components/advancedNetworkTools.vue:35
+msgid "通知已启用"
+msgstr "Notifications Enabled"
+
+#: src/pages/device/components/advancedNetworkTools.vue:35
+msgid "通知设置保存失败"
+msgstr "Failed to save notification settings"
+
 #: src/components/firstOpen/index.vue:91
 msgid "通过安全加密通道，随时随地远程管理你的iStoreOS"
 msgstr ""
 
-#: src/pages/device/deviceCenterList.vue:34
-msgid "部分设备信息暂不可用"
+#: src/pages/device/lanSettingsPanel.vue:40
+msgid ""
+"通过路由器局域网地址重新进入，并重新开启地址分配；或先确认外部 DHCP 已就绪。"
 msgstr ""
+"Re-enter with the router LAN address and reopen the address assignment; or "
+"confirm that the external DHCP is ready."
+
+#: src/pages/device/deviceGroupsPanel.vue:63
+msgid "速度上限"
+msgstr "Speed limit"
+
+#: src/pages/device/components/floatingGatewayWizard.vue:88
+msgid "部分异常"
+msgstr "Partially abnormal"
+
+#: src/pages/device/deviceCenterList.vue:47
+msgid "部分设备信息暂不可用"
+msgstr "Some device information is temporarily unavailable"
+
+#: src/pages/device/deviceGroupsPanel.vue:65
+msgid "部分设备需要处理"
+msgstr "Some devices need to be handled"
 
 #: src/components/action-dns/index.vue:113
 #: src/components/action-domain/setup-ddns.vue:187
@@ -4121,23 +6483,22 @@ msgstr "Configure as bypass router"
 msgid "配置互联网"
 msgstr "Configure internet"
 
-#: src/components/action-netip/index.vue:96 src/pages/device/configure.vue:284
-#: src/pages/device/configure.vue:288 src/pages/device/configure.vue:391
-#: src/pages/device/configure.vue:395 src/pages/device/configure.vue:435
-#: src/pages/device/configure.vue:438 src/pages/device/configure.vue:484
-#: src/pages/device/configure.vue:487 src/pages/device/configure.vue:524
-#: src/pages/device/configure.vue:527 src/pages/device/deviceList.vue:471
-#: src/pages/device/deviceList.vue:474 src/pages/device/deviceList.vue:514
-#: src/pages/device/deviceList.vue:517 src/pages/device/speedLimitList.vue:238
+#: src/components/action-netip/index.vue:96 src/pages/device/configure.vue:216
+#: src/pages/device/configure.vue:220 src/pages/device/configure.vue:322
+#: src/pages/device/configure.vue:326 src/pages/device/configure.vue:365
+#: src/pages/device/configure.vue:368 src/pages/device/configure.vue:405
+#: src/pages/device/configure.vue:408 src/pages/device/deviceList.vue:470
+#: src/pages/device/deviceList.vue:473 src/pages/device/deviceList.vue:513
+#: src/pages/device/deviceList.vue:516 src/pages/device/speedLimitList.vue:238
 #: src/pages/device/speedLimitList.vue:244
 #: src/pages/device/speedLimitList.vue:273
 #: src/pages/device/speedLimitList.vue:359
 #: src/pages/device/speedLimitList.vue:364
-#: src/pages/device/staticStateList.vue:242
-#: src/pages/device/staticStateList.vue:248
-#: src/pages/device/staticStateList.vue:277
-#: src/pages/device/staticStateList.vue:351
-#: src/pages/device/staticStateList.vue:354
+#: src/pages/device/staticStateList.vue:240
+#: src/pages/device/staticStateList.vue:246
+#: src/pages/device/staticStateList.vue:275
+#: src/pages/device/staticStateList.vue:353
+#: src/pages/device/staticStateList.vue:356
 msgid "配置失败"
 msgstr "Configuration failed"
 
@@ -4149,6 +6510,24 @@ msgstr "Share"
 #: src/pages/network/pppoe/index.vue:3
 msgid "配置宽带账号"
 msgstr "Configure PPPoE account"
+
+#: src/pages/device/components/devicePolicyPanel.vue:302
+msgid "配置已保存，等待设备重新获取地址"
+msgstr "Configuration saved, waiting for device to reacquire address"
+
+#: src/pages/device/components/floatingGatewayWizard.vue:108
+msgid "配置已保存，请在双端完成后验证实际持有者"
+msgstr ""
+"The configuration has been saved, please verify the actual holder after the "
+"two-end completion"
+
+#: src/pages/device/components/devicePolicyPanel.vue:110
+msgid "配置已写入，但状态记录需要恢复"
+msgstr "Configuration was written, but the state record needs recovery."
+
+#: src/pages/device/components/devicePolicyPanel.vue:116
+msgid "配置应用失败"
+msgstr "Configuration apply failed."
 
 #: src/components/action-dns/index.vue:122
 #: src/components/action-netip/index.vue:82
@@ -4171,9 +6550,20 @@ msgstr "Configure bypass router network"
 msgid "配置模块"
 msgstr ""
 
+#: src/pages/device/components/floatingGatewayWizard.vue:27
+msgid "配置步骤"
+msgstr "Configuration Steps"
+
 #: src/components/action-sandbox/index.vue:214
 msgid "配置沙箱重启中..."
 msgstr "Configuring sandbox rebooting..."
+
+#: src/pages/device/components/floatingGatewayWizard.vue:108
+#: src/pages/device/components/floatingGatewayWizard.vue:49
+#: src/pages/device/components/floatingGatewayWizard.vue:50
+#: src/pages/device/components/floatingGatewayWizard.vue:51
+msgid "配置没有变化"
+msgstr "No configuration changes"
 
 #: src/components/action-download/index.vue:138
 #: src/components/action-download/index.vue:182
@@ -4196,26 +6586,33 @@ msgstr "NIC Status"
 msgid "配置超时"
 msgstr "Configuration timeout"
 
-#: src/pages/device/deviceCenterList.vue:143
-#: src/pages/device/deviceCenterList.vue:144
-#: src/pages/device/deviceCenterList.vue:145
-#: src/pages/device/deviceCenterList.vue:146
-#: src/pages/device/deviceCenterList.vue:148
-#: src/pages/device/deviceCenterList.vue:150
-#: src/pages/device/deviceCenterList.vue:296
+#: src/pages/device/deviceCenterList.vue:132
+#: src/pages/device/deviceCenterList.vue:133
+#: src/pages/device/deviceCenterList.vue:134
+#: src/pages/device/deviceCenterList.vue:135
+#: src/pages/device/deviceCenterList.vue:137
+#: src/pages/device/deviceCenterList.vue:345
 msgid "采集中"
-msgstr ""
+msgstr "Acquisition"
 
 #: src/components/action-raid/setup-create.vue:72
 msgid "重新创建"
 msgstr "Recreate"
 
 #: src/pages/device/components/devicePolicyPanel.vue:5
+#: src/pages/device/components/deviceProfileEditor.vue:4
+#: src/pages/device/components/floatingGatewayWizard.vue:5
 #: src/pages/device/components/loadError.vue:3
-#: src/pages/device/configure.vue:18 src/pages/device/configure.vue:67
+#: src/pages/device/configure.vue:18 src/pages/device/deviceGroupsPanel.vue:5
+#: src/pages/device/lanSettingsPanel.vue:5
+#: src/pages/device/networkRulesHub.vue:5
 #: src/pages/device/speedLimitList.vue:15
 msgid "重新加载"
-msgstr ""
+msgstr "Reload"
+
+#: src/pages/device/lanSettingsPanel.vue:49
+msgid "重新检查"
+msgstr "Check again"
 
 #: src/components/action-sandboxenvironment/index.vue:22
 #: src/components/action-sandboxenvironment/index.vue:23
@@ -4226,6 +6623,12 @@ msgstr "Reset"
 #: src/components/action-sandboxenvironment/index.vue:92
 msgid "重置中..."
 msgstr "Reseting…"
+
+#: src/pages/device/components/advancedNetworkTools.vue:5
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:8
+#: src/pages/device/components/trafficInsightsPanel.vue:6
+msgid "重试"
+msgstr "Retry"
 
 #: src/pages/network/dhcp/index.vue:114 src/pages/network/pppoe/index.vue:60
 msgid "链接"
@@ -4264,26 +6667,115 @@ msgstr "Aliyun"
 msgid "附加的 BT Tracker："
 msgstr "Additional BT Tracker:"
 
-#: src/pages/device/components/devicePolicyPanel.vue:27
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:61
+msgid "限制累计用量"
+msgstr "Limit cumulative usage"
+
+#: src/pages/device/components/devicePolicyPanel.vue:46
 msgid "限制这台设备的最高速率"
-msgstr ""
+msgstr "Limit the maximum rate for this device"
+
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:24
+#: src/pages/device/deviceGroupsPanel.vue:33
+#: src/pages/device/rateLimitI18n.ts:30
+msgid "限制速度"
+msgstr "Limit speed"
 
 #: src/pages/device/speedLimitList.vue:11
 msgid "限速功能未安装"
+msgstr "Speed Limit Feature Not Installed"
+
+#: src/pages/device/components/devicePolicyPanel.vue:191
+#: src/pages/device/rateLimitI18n.ts:31
+msgid "限速地址不稳定"
+msgstr "Speed limit address is unstable"
+
+#: src/pages/device/components/devicePolicyPanel.vue:191
+#: src/pages/device/rateLimitI18n.ts:32
+msgid "限速已保存，服务尚未加载"
+msgstr "Speed limit saved but not loaded"
+
+#: src/pages/device/components/devicePolicyPanel.vue:190
+#: src/pages/device/rateLimitI18n.ts:33
+msgid "限速已加载，效果待验证"
+msgstr "Speed limit loaded; effect not yet verified"
+
+#: src/pages/device/components/devicePolicyPanel.vue:190
+#: src/pages/device/rateLimitI18n.ts:34
+msgid "限速已生效"
+msgstr "Speed limit verified"
+
+#: src/pages/device/components/devicePolicyPanel.vue:328
+msgid "限速服务准备失败，可稍后重试"
+msgstr "Could not prepare the speed limit service. Try again later."
+
+#: src/pages/device/components/devicePolicyPanel.vue:327
+msgid "限速服务已启用，输入内容已恢复"
+msgstr "Speed limit service enabled; your input was restored."
+
+#: src/pages/device/components/devicePolicyPanel.vue:327
+msgid "限速服务已安装，请继续启用，输入内容已恢复"
 msgstr ""
+"Speed limit service installed. Enable it to continue; your input was "
+"restored."
+
+#: src/pages/device/lanSettingsPanel.vue:60
+#: src/pages/device/rateLimitI18n.ts:41
+msgid "限速服务影响"
+msgstr "Speed limit service impact"
+
+#: src/pages/device/lanSettingsPanel.vue:246
+#: src/pages/device/rateLimitI18n.ts:42
+msgid "限速服务设置已应用"
+msgstr "Speed limit settings applied"
+
+#: src/pages/device/components/devicePolicyPanel.vue:194
+#: src/pages/device/rateLimitI18n.ts:35
+msgid "限速状态待确认"
+msgstr "Speed limit status not confirmed"
+
+#: src/pages/device/components/devicePolicyPanel.vue:192
+#: src/pages/device/rateLimitI18n.ts:36
+msgid "限速规则不在实际上网节点"
+msgstr "The speed limit rule is not on the active Internet gateway"
 
 #: src/pages/device/deviceList.vue:16
 msgid "限速配置"
-msgstr ""
+msgstr "Speed Limit Configuration"
 
 #: src/components/firstOpen/form.vue:91
 #: src/pages/quickwifi/components/form.vue:91
 msgid "隐藏"
 msgstr ""
 
+#: src/pages/device/networkRulesHub.vue:3
+msgid "集中检查离线、孤立或需要修复的规则；新设置请从对应设备详情进入。"
+msgstr ""
+"Focus on checking for rules that are offline, orphaned, or need to be fixed; "
+"new settings can be accessed from the corresponding device details."
+
+#: src/pages/device/components/devicePolicyPanel.vue:192
+#: src/pages/device/rateLimitI18n.ts:39
+msgid "需先预留当前地址"
+msgstr "Reserve the current address first"
+
+#: src/pages/device/networkRulesHub.vue:10
+#: src/pages/device/networkRulesHub.vue:39
+msgid "需要修复"
+msgstr "Needs fixing"
+
 #: src/components/action-ddnsto/setup-ddnsto-install.vue:75
 msgid "需要安装DDNSTO插件，点击“确定”开始安装"
 msgstr "DDNSTO plugin needs to be installed, click 'OK' to start installation"
+
+#: src/pages/device/lanSettingsPanel.vue:184
+msgid "需要检查"
+msgstr "Needs Inspection"
+
+#: src/pages/device/lanSettingsPanel.vue:186
+#: src/pages/device/lanSettingsPanel.vue:250
+msgid "需要确认"
+msgstr "Confirmation required"
 
 #: src/pages/network/dhcp/index.vue:18 src/pages/network/dhcp/index.vue:26
 msgid "静态IP地址"
@@ -4291,11 +6783,11 @@ msgstr "Static IP Address"
 
 #: src/pages/device/deviceList.vue:14
 msgid "静态分配"
-msgstr ""
+msgstr "Static Assignment"
 
 #: src/components/action-edit/index.vue:29
-#: src/pages/device/components/devicePolicyPanel.vue:10
-#: src/pages/device/deviceCenterList.vue:293
+#: src/pages/device/deviceCenterList.vue:342
+#: src/pages/device/deviceCenterList.vue:36
 msgid "静态地址"
 msgstr "Static"
 
@@ -4307,23 +6799,117 @@ msgstr "Static"
 msgid "非法的用户名"
 msgstr "Invalid username"
 
+#: src/pages/device/index.vue:3
+msgid "面包屑"
+msgstr "Breadcrumbs"
+
 #: src/pages/index/index.vue:311
 msgid "顶部快捷捷径按钮组"
 msgstr ""
 
+#: src/pages/device/lanSettingsPanel.vue:13
 #: src/pages/device/speedLimitList.vue:255
-#: src/pages/device/staticStateList.vue:258
+#: src/pages/device/staticStateList.vue:256
 msgid "项"
-msgstr ""
+msgstr "Item"
+
+#: src/pages/device/components/floatingGatewayWizard.vue:91
+msgid "预检与应用"
+msgstr "Pre-inspection and application"
+
+#: src/pages/device/components/floatingGatewayWizard.vue:107
+msgid "预检失败"
+msgstr "Pre-check failed"
+
+#: src/pages/device/components/floatingGatewayWizard.vue:49
+#: src/pages/device/components/floatingGatewayWizard.vue:50
+#: src/pages/device/components/floatingGatewayWizard.vue:51
+msgid "预检未通过"
+msgstr "Pre-test failed"
+
+#: src/pages/device/components/advancedNetworkTools.vue:11
+msgid "预检通过"
+msgstr "Pre-test passed"
 
 #: src/pages/smart/task/index.vue:29
 msgid "预览"
 msgstr "Preview"
 
+#: src/pages/device/lanSettingsPanel.vue:91
+#: src/pages/device/lanSettingsPanel.vue:92
+msgid "预览修改"
+msgstr "Review changes"
+
+#: src/pages/device/components/devicePolicyPanel.vue:38
+#: src/pages/device/components/devicePolicyPanel.vue:39
+#: src/pages/device/components/devicePolicyPanel.vue:40
+#: src/pages/device/components/devicePolicyPanel.vue:41
+msgid "预览地址与上网路线"
+msgstr "Review address & Internet path"
+
+#: src/pages/device/lanSettingsPanel.vue:35
+#: src/pages/device/lanSettingsPanel.vue:36
+msgid "预览地址分配设置"
+msgstr "Review DHCP settings"
+
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:47
+#: src/pages/device/deviceGroupsPanel.vue:36
+msgid "预览影响"
+msgstr "Review impact"
+
+#: src/pages/device/components/devicePolicyPanel.vue:66
+#: src/pages/device/components/devicePolicyPanel.vue:67
+#: src/pages/device/components/devicePolicyPanel.vue:68
+#: src/pages/device/components/devicePolicyPanel.vue:69
+msgid "预览恢复联网"
+msgstr "Review restoring Internet access"
+
+#: src/pages/device/components/devicePolicyPanel.vue:66
+#: src/pages/device/components/devicePolicyPanel.vue:67
+#: src/pages/device/components/devicePolicyPanel.vue:68
+#: src/pages/device/components/devicePolicyPanel.vue:69
+msgid "预览断开网络"
+msgstr "Review blocking Internet access"
+
+#: src/pages/device/lanSettingsPanel.vue:91
+#: src/pages/device/lanSettingsPanel.vue:92
+msgid "预览添加"
+msgstr "Review addition"
+
+#: src/pages/device/components/devicePolicyPanel.vue:56
+#: src/pages/device/components/devicePolicyPanel.vue:57
+#: src/pages/device/components/devicePolicyPanel.vue:58
+#: src/pages/device/components/devicePolicyPanel.vue:59
+msgid "预览限速"
+msgstr "Review speed limit"
+
+#: src/pages/device/lanSettingsPanel.vue:57
+#: src/pages/device/lanSettingsPanel.vue:58
+#: src/pages/device/rateLimitI18n.ts:40
+msgid "预览限速服务设置"
+msgstr "Review speed limit settings"
+
+#: src/pages/device/components/devicePolicyPanel.vue:12
+msgid "预计重载"
+msgstr "Services to reload"
+
 #: src/components/firstOpen/form.vue:134
 #: src/pages/quickwifi/components/form.vue:134
 msgid "频宽"
 msgstr ""
+
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:38
+#: src/pages/device/deviceGroupsPanel.vue:25
+msgid "额度 GB"
+msgstr "Quota (GB)"
+
+#: src/pages/device/components/trafficInsightsPanel.vue:16
+msgid "额度（GB）"
+msgstr "Quota (GB)"
+
+#: src/pages/device/components/advancedNetworkTools.vue:29
+msgid "额度已用尽"
+msgstr "Quota exhausted"
 
 #: src/pages/network/gateway/index.vue:99
 msgid ""
@@ -4337,31 +6923,56 @@ msgstr ""
 "change it to DHCP client). Then connect the WAN port of this router to the "
 "LAN of the main router to automatically obtain the configuration."
 
-#: src/pages/device/index.vue:4 src/pages/networkSpeedTest/index.vue:5
+#: src/pages/device/index.vue:3 src/pages/networkSpeedTest/index.vue:5
 msgid "首页"
-msgstr ""
+msgstr "Home"
 
 #: src/components/firstOpen/form.vue:35
-#: src/pages/device/deviceCenterList.vue:289
+#: src/pages/device/deviceCenterList.vue:338
 #: src/pages/quickwifi/components/form.vue:35
 msgid "高"
 msgstr "High"
+
+#: src/pages/device/lanSettingsPanel.vue:66
+msgid "高级：执行方式与迁移"
+msgstr "Advanced: enforcement mode and migration"
+
+#: src/pages/device/rateLimitI18n.ts:37
+msgid "高级：限速执行方式"
+msgstr "Advanced: enforcement mode"
 
 #: src/components/firstOpen/index.vue:45 src/pages/network/index/index.vue:49
 msgid "高级模式"
 msgstr "Advanced mode"
 
+#: src/pages/device/components/advancedNetworkTools.vue:3
+msgid "高级网络工具"
+msgstr "Advanced network tools"
+
+#: src/pages/device/components/advancedNetworkTools.vue:32
+msgid "高级能力读取失败"
+msgstr "Advanced Ability Read Failed"
+
 #: src/components/action-disk/index.vue:21
+#: src/pages/device/deviceGroupsPanel.vue:19
 msgid "高级设置"
 msgstr "Advanced settings"
 
-#: src/pages/device/components/devicePolicyPanel.vue:17
+#: src/pages/device/components/devicePolicyPanel.vue:34
 msgid "高级选项"
-msgstr ""
+msgstr "Advanced options"
 
 #: src/components/action-download/index.vue:98
 msgid "默认"
 msgstr "Default"
+
+#: src/pages/device/lanSettingsPanel.vue:34
+msgid "默认上网路线"
+msgstr "Default Internet path"
+
+#: src/pages/device/components/advancedNetworkTools.vue:28
+msgid "默认不采集或记录 DNS 名称"
+msgstr "Do not collect or log DNS names by default"
 
 #: src/pages/index/service/qbittorrent.vue:38
 msgid "默认密码："
@@ -4371,10 +6982,112 @@ msgstr "Default password:"
 msgid "默认用户名："
 msgstr "Default username:"
 
-#: src/pages/device/configure.vue:321 src/pages/device/deviceList.vue:241
-#: src/pages/device/staticStateList.vue:128
+#: src/pages/device/configure.vue:252 src/pages/device/deviceList.vue:239
+#: src/pages/device/staticStateList.vue:131
 msgid "默认网关"
-msgstr ""
+msgstr "Default Gateway"
+
+#: src/pages/device/components/deviceUsagePolicyEditor.vue:72
+#: src/pages/device/deviceGroupsPanel.vue:17
+#: src/pages/device/deviceGroupsPanel.vue:3
+#: src/pages/device/deviceGroupsPanel.vue:61
+msgid "默认规则"
+msgstr "Default rules"
+
+#: src/pages/device/components/devicePolicyPanel.vue:216
+#: src/pages/device/components/devicePolicyPanel.vue:226
+#: src/pages/device/deviceGroupsPanel.vue:57
+#: src/pages/device/lanSettingsPanel.vue:188
+#: src/pages/device/networkRulesHub.vue:47
+msgid "默认路线"
+msgstr "Default path"
+
+#~ msgid "诊断与高级工具"
+#~ msgstr "Diagnostics & advanced tools"
+
+#~ msgid "安装后会回到当前区域，尚未保存的输入会保留。"
+#~ msgstr ""
+#~ "After installation, it will return to the current area, and inputs that "
+#~ "have not been saved will be retained."
+
+#~ msgid "当前无法读取限速服务状态，其他设置仍可使用。"
+#~ msgstr ""
+#~ "The speed limit service status cannot be read at this time, other "
+#~ "settings are still available."
+
+#~ msgid "不设置休息时段"
+#~ msgstr "No downtime schedule"
+
+#~ msgid "本机不负责地址分配，上网路线当前为只读。"
+#~ msgstr ""
+#~ "The machine is not responsible for address assignment, and the Internet "
+#~ "access route is currently read-only."
+
+#~ msgid "上网路线已删除"
+#~ msgstr "Internet route deleted"
+
+#~ msgid "使用限制"
+#~ msgstr "Usage Restrictions"
+
+#~ msgid "保存地址与上网路线"
+#~ msgstr "Save address and internet directions"
+
+#~ msgid "保存路线"
+#~ msgstr "Save Directions"
+
+#~ msgid "保存限速"
+#~ msgstr "Save Speed Limit"
+
+#~ msgid "关闭地址分配服务后，新设备可能无法联网。确定继续吗？"
+#~ msgstr ""
+#~ "When the address assignment service is turned off, new devices may not be "
+#~ "able to connect to the internet.Are you sure you want to continue?"
+
+#~ msgid "删除上网路线"
+#~ msgstr "Remove Internet Directions"
+
+#~ msgid "用量"
+#~ msgstr "Usage"
+
+#~ msgid "由系统管理"
+#~ msgstr "Managed by the system"
+
+#~ msgid "确认断开设备网络？"
+#~ msgstr "Are you sure you want to disconnect the device network?"
+
+#, fuzzy
+#~ msgid "设备当前状态"
+#~ msgstr "Current status:"
+
+#~ msgid "诊断"
+#~ msgstr "Diagnostics"
+
+#~ msgid "资料"
+#~ msgstr "Profile"
+
+#~ msgid "限制"
+#~ msgstr "Limit"
+
+#~ msgid "默认上网出口"
+#~ msgstr "Default Internet Exit"
+
+#~ msgid "默认出口"
+#~ msgstr "Default outlet"
+
+#, fuzzy
+#~ msgid "保存静态地址"
+#~ msgstr "Static"
+
+#~ msgid "未知品牌"
+#~ msgstr "Unknown brand"
+
+#, fuzzy
+#~ msgid "请输入正确的旁路由IP地址"
+#~ msgstr "Please enter a valid IP address"
+
+#, fuzzy
+#~ msgid "请输入正确的浮动网关IP地址"
+#~ msgstr "Please enter a valid IP address"
 
 #~ msgid "测速"
 #~ msgstr "Speedtest"
