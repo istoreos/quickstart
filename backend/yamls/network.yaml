@@ -29,9 +29,11 @@ definitions:
         description: "统计结束时间"
       uploadSpeed:
         type: integer
+        x-omitempty: false
         description: "该时段上传平均网速，单位Byte"
       downloadSpeed:
         type: integer
+        x-omitempty: false
         description: "该时段下载平均网速，单位Byte"
 
   DeviceInfo:

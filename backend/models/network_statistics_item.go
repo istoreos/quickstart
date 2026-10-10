@@ -4,7 +4,7 @@ package models
 type NetworkStatisticsItem struct {
 
 	// 该时段下载平均网速，单位Byte
-	DownloadSpeed int64 `json:"downloadSpeed,omitempty"`
+	DownloadSpeed int64 `json:"downloadSpeed"`
 
 	// 统计结束时间
 	EndTime int64 `json:"endTime,omitempty"`
@@ -13,5 +13,5 @@ type NetworkStatisticsItem struct {
 	StartTime int64 `json:"startTime,omitempty"`
 
 	// 该时段上传平均网速，单位Byte
-	UploadSpeed int64 `json:"uploadSpeed,omitempty"`
+	UploadSpeed int64 `json:"uploadSpeed"`
 }

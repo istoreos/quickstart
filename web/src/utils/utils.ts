@@ -10,7 +10,10 @@ export const UnixDate = () => {
     return new Date().getTime()
 }
 // 字节转换
-export const byteToSize = (b: number) => {
+export const byteToSize = (b: number = 0) => {
+    if (!Number.isFinite(b) || b < 0) {
+        return "0 B"
+    }
     const unit = 1000;
     if (b < unit) {
         return `${b} B`
