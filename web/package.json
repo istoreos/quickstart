@@ -6,6 +6,7 @@
     "build": "vue-tsc --noEmit && npm run builds",
     "builds": "vite build && npm run zip",
     "preview": "vite preview",
+    "test": "node --test test/*.test.cjs",
     "tsc": "vue-tsc --noEmit",
     "gettext": "vue-gettext-extract && vue-gettext-compile",
     "zip": "rm -f dist/quickstart_web.zip dist/luci-static/.DS_Store && (cd dist && zip -r quickstart_web.zip luci-static)"
