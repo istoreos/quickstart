@@ -47,10 +47,11 @@ func jsonArrayLen(j *simplejson.Json) int {
 }
 
 type ubusNetworkInterfaceRoute struct {
-	Nexthop string `json:"nexthop"`
-	Target  string `json:"target"`
-	Mask    int    `json:"mask"`
-	Source  string `json:"source"`
+	Nexthop string  `json:"nexthop"`
+	Target  string  `json:"target"`
+	Mask    int     `json:"mask"`
+	Source  string  `json:"source"`
+	Metric  *uint32 `json:"metric"`
 }
 
 type ubusNetworkInterfaceAddress struct {
@@ -75,6 +76,7 @@ type ubusNetworkInterface struct {
 	Ipv6      []*ubusNetworkInterfaceAddress `json:"ipv6-address"`
 	Ipv6PA    []*ubusIPV6PrefixAssignment    `json:"ipv6-prefix-assignment"`
 	UpTime    int64                          `json:"uptime"`
+	Metric    uint32                         `json:"metric"`
 	Ip4Table  *int                           `json:"ip4table"`
 	Ip6Table  *int                           `json:"ip6table"`
 }
@@ -90,10 +92,16 @@ func outboundInterfaces() (*DefaultInterfaces, error) {
 	err := UbusCallWithObject(ctx, "network.interface dump", &blk)
 	var ipv4 DefaultInterface
 	var ipv6 DefaultInterface
+	var ipv4Metric, ipv6Metric uint32
 	if err == nil {
 		for _, iface := range blk.Interfaces {
 			for _, route := range iface.Route {
-				if ipv4.ip == "" &&
+				// netifd omits the route metric when it inherits the interface metric.
+				metric := iface.Metric
+				if route.Metric != nil {
+					metric = *route.Metric
+				}
+				if (ipv4.ip == "" || metric < ipv4Metric) &&
 					(iface.Ip4Table == nil || 254 == *iface.Ip4Table) &&
 					route.Target == "0.0.0.0" &&
 					route.Mask == 0 &&
@@ -108,9 +116,10 @@ func outboundInterfaces() (*DefaultInterfaces, error) {
 						dns:        iface.DnsServer,
 						gateway:    route.Nexthop}
 					ipv4 = *result
+					ipv4Metric = metric
 				}
 				//ipv6
-				if ipv6.ip == "" &&
+				if (ipv6.ip == "" || metric < ipv6Metric) &&
 					(iface.Ip6Table == nil || 254 == *iface.Ip6Table) &&
 					route.Target == "::" &&
 					route.Mask == 0 &&
@@ -132,10 +141,8 @@ func outboundInterfaces() (*DefaultInterfaces, error) {
 						dns:        iface.DnsServer,
 						gateway:    route.Nexthop}
 					ipv6 = *result
+					ipv6Metric = metric
 				}
-			}
-			if ipv4.ip != "" && ipv6.ip != "" {
-				break
 			}
 		}
 	} else {
@@ -147,46 +154,16 @@ func outboundInterfaces() (*DefaultInterfaces, error) {
 }
 
 func outboundInterface() (*DefaultInterface, error) {
-	ctx := context.Background()
-
-	var blk ubusNetworkInterfaceDump
-	err := UbusCallWithObject(ctx, "network.interface dump", &blk)
-	if err == nil {
-		for _, iface := range blk.Interfaces {
-			for _, route := range iface.Route {
-				if route.Target == "0.0.0.0" &&
-					route.Mask == 0 &&
-					len(iface.Ipv4) > 0 {
-					result := &DefaultInterface{interfaceName: iface.Name,
-						deviceName: iface.Device,
-						l3Device:   iface.L3Device,
-						proto:      iface.Proto,
-						upTime:     iface.UpTime,
-						ip:         iface.Ipv4[0].Address,
-						mask:       iface.Ipv4[0].Mask,
-						dns:        iface.DnsServer,
-						gateway:    route.Nexthop}
-					return result, nil
-				}
-				//ipv6
-				if route.Target == "::" &&
-					route.Mask == 0 &&
-					len(iface.Ipv6) > 0 {
-					result := &DefaultInterface{interfaceName: iface.Name,
-						deviceName: iface.Device,
-						l3Device:   iface.L3Device,
-						proto:      iface.Proto,
-						upTime:     iface.UpTime,
-						ip:         iface.Ipv6[0].Address,
-						mask:       iface.Ipv6[0].Mask,
-						dns:        iface.DnsServer,
-						gateway:    route.Nexthop}
-					return result, nil
-				}
-			}
-		}
-	} else {
-		return nil, errors.New("获取当前联网接口失败")
+	interfaces, err := outboundInterfaces()
+	if err != nil {
+		return nil, err
+	}
+	// Prefer IPv4 so traffic statistics follow the same WAN as network status.
+	if interfaces.ipv4.ip != "" {
+		return interfaces.ipv4, nil
+	}
+	if interfaces.ipv6.ip != "" {
+		return interfaces.ipv6, nil
 	}
 
 	result := &DefaultInterface{interfaceName: "wan", deviceName: "eth0"}
