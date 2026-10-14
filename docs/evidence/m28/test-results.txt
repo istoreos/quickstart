@@ -1,0 +1,19 @@
+M28 self-check — 2026-09-25
+
+PASS backend full suite: 1456 tests / 89 packages
+PASS backend race suite: 686 tests / service package
+PASS frontend node suite: 43 tests
+PASS frontend vue-tsc --noEmit
+PASS five-layer matrix validation: 55 requirements / 48 migrated / 7 P0 additions
+
+Injected failures:
+- network preflight -> failed / zero write
+- network snapshot -> failed / zero write
+- network mutation -> rolled_back
+- dnsmasq reload/verify -> rolled_back
+- network restore -> recovery_required
+- restrictions apply -> rolled_back
+- restrictions restore -> recovery_required
+- profile atomic persistence -> rolled_back
+- interrupted persistent journal -> recovery_required on restart
+- same idempotency key + different fingerprint -> conflict

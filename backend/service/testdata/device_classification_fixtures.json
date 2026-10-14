@@ -1,0 +1,74 @@
+[
+  {"name":"phone-iphone","group":"phone","input":{"hostname":"family-iphone","manufacturer":"Apple, Inc."},"expected":{"brand":"Apple","category":"phone","source":"hostname","confidence":"medium"}},
+  {"name":"phone-pixel","group":"phone","input":{"displayName":"Pixel 9 phone","manufacturer":"Google LLC"},"expected":{"brand":"Google","category":"phone","source":"hostname","confidence":"medium"}},
+  {"name":"phone-galaxy","group":"phone","input":{"hostname":"android-phone","manufacturer":"Samsung Electronics Co., Ltd."},"expected":{"brand":"Samsung","category":"phone","source":"hostname","confidence":"medium"}},
+  {"name":"phone-chinese","group":"phone","input":{"hostname":"家庭手机","manufacturer":"北京小米电子产品有限公司"},"expected":{"brand":"Xiaomi","category":"phone","source":"hostname","confidence":"medium"}},
+  {"name":"phone-mobile","group":"phone","input":{"hostname":"mobile-client","manufacturer":"Huawei Technologies Co., Ltd."},"expected":{"brand":"HUAWEI","category":"phone","source":"hostname","confidence":"medium"}},
+
+  {"name":"network-asus-default","group":"network","input":{"manufacturer":"ASUSTeK COMPUTER INC."},"expected":{"brand":"ASUS","category":"network","source":"manufacturer_default","confidence":"medium"}},
+  {"name":"computer-dell-laptop","group":"computer","input":{"hostname":"study-laptop","manufacturer":"Dell Inc."},"expected":{"brand":"Dell","category":"computer","source":"hostname","confidence":"medium"}},
+  {"name":"computer-lenovo-workstation","group":"computer","input":{"hostname":"office-workstation","manufacturer":"Lenovo Group Limited"},"expected":{"brand":"Lenovo","category":"computer","source":"hostname","confidence":"medium"}},
+  {"name":"computer-macbook","group":"computer","input":{"displayName":"MacBook Air","manufacturer":"Apple"},"expected":{"brand":"Apple","category":"computer","source":"hostname","confidence":"medium"}},
+  {"name":"computer-windows","group":"computer","input":{"hostname":"windows-pc","manufacturer":"Microsoft Corporation"},"expected":{"brand":"Microsoft","category":"computer","source":"hostname","confidence":"medium"}},
+  {"name":"computer-generic-desktop","group":"computer","input":{"hostname":"family-desktop"},"expected":{"brand":"","category":"computer","source":"hostname","confidence":"medium"}},
+
+  {"name":"tablet-ipad","group":"tablet","input":{"displayName":"Kids iPad","manufacturer":"Apple Inc."},"expected":{"brand":"Apple","category":"tablet","source":"hostname","confidence":"medium"}},
+  {"name":"tablet-galaxy","group":"tablet","input":{"hostname":"galaxy-tablet","manufacturer":"Samsung"},"expected":{"brand":"Samsung","category":"tablet","source":"hostname","confidence":"medium"}},
+  {"name":"tablet-kindle","group":"tablet","input":{"hostname":"kindle-reader"},"expected":{"brand":"","category":"tablet","source":"hostname","confidence":"medium"}},
+  {"name":"tablet-chinese","group":"tablet","input":{"hostname":"客厅平板","manufacturer":"华为技术有限公司"},"expected":{"brand":"HUAWEI","category":"tablet","source":"hostname","confidence":"medium"}},
+  {"name":"tablet-ereader","group":"tablet","input":{"displayName":"bedroom e-reader","manufacturer":"Xiaomi Communications Co., Ltd."},"expected":{"brand":"Xiaomi","category":"tablet","source":"hostname","confidence":"medium"}},
+
+  {"name":"tv-living-room","group":"tv","input":{"hostname":"living-room-tv","manufacturer":"Samsung Electronics"},"expected":{"brand":"Samsung","category":"tv","source":"hostname","confidence":"medium"}},
+  {"name":"tv-lg","group":"tv","input":{"hostname":"smart-tv","manufacturer":"LG Electronics Inc."},"expected":{"brand":"LG","category":"tv","source":"hostname","confidence":"medium"}},
+  {"name":"tv-chromecast","group":"tv","input":{"hostname":"chromecast-bedroom","manufacturer":"Google LLC"},"expected":{"brand":"Google","category":"tv","source":"hostname","confidence":"medium"}},
+  {"name":"tv-streaming-box","group":"tv","input":{"displayName":"streaming-box","manufacturer":"Xiaomi"},"expected":{"brand":"Xiaomi","category":"tv","source":"hostname","confidence":"medium"}},
+  {"name":"tv-projector","group":"tv","input":{"hostname":"家庭投影","manufacturer":"Sony"},"expected":{"brand":"Sony","category":"tv","source":"hostname","confidence":"medium"}},
+
+  {"name":"network-asus-router-model","group":"network","input":{"displayName":"ASUS RT-AX88U","manufacturer":"ASUS"},"expected":{"brand":"ASUS","category":"network","source":"model","confidence":"high"}},
+  {"name":"network-zenwifi","group":"network","input":{"model":"ZenWifi XT9","manufacturer":"ASUSTeK COMPUTER INC."},"expected":{"brand":"ASUS","category":"network","source":"model","confidence":"high"}},
+  {"name":"network-router","group":"network","input":{"hostname":"office-router","manufacturer":"Huawei"},"expected":{"brand":"HUAWEI","category":"network","source":"hostname","confidence":"medium"}},
+  {"name":"network-switch","group":"network","input":{"hostname":"core-switch","manufacturer":"QNAP Systems, Inc."},"expected":{"brand":"QNAP","category":"network","source":"hostname","confidence":"medium"}},
+  {"name":"network-openwrt","group":"network","input":{"hostname":"openwrt-gateway"},"expected":{"brand":"","category":"network","source":"hostname","confidence":"medium"}},
+
+  {"name":"smart-home-speaker","group":"smart-home","input":{"hostname":"kitchen-speaker","manufacturer":"Google LLC"},"expected":{"brand":"Google","category":"smart-home","source":"hostname","confidence":"medium"}},
+  {"name":"smart-home-hub","group":"smart-home","input":{"hostname":"smart-home-hub","manufacturer":"Xiaomi"},"expected":{"brand":"Xiaomi","category":"smart-home","source":"hostname","confidence":"medium"}},
+  {"name":"smart-home-thermostat","group":"smart-home","input":{"hostname":"hall-thermostat","manufacturer":"Samsung Electronics Co.,Ltd."},"expected":{"brand":"Samsung","category":"smart-home","source":"hostname","confidence":"medium"}},
+  {"name":"smart-home-sensor","group":"smart-home","input":{"hostname":"客厅传感器","manufacturer":"Huawei"},"expected":{"brand":"HUAWEI","category":"smart-home","source":"hostname","confidence":"medium"}},
+  {"name":"smart-home-vacuum","group":"smart-home","input":{"displayName":"robot-vacuum"},"expected":{"brand":"","category":"smart-home","source":"hostname","confidence":"medium"}},
+
+  {"name":"camera-front","group":"camera","input":{"hostname":"front-camera","manufacturer":"Canon Inc."},"expected":{"brand":"Canon","category":"camera","source":"hostname","confidence":"medium"}},
+  {"name":"camera-doorbell","group":"camera","input":{"hostname":"porch-doorbell","manufacturer":"Google LLC"},"expected":{"brand":"Google","category":"camera","source":"hostname","confidence":"medium"}},
+  {"name":"camera-ipc","group":"camera","input":{"hostname":"ipc-camera","manufacturer":"Xiaomi"},"expected":{"brand":"Xiaomi","category":"camera","source":"hostname","confidence":"medium"}},
+  {"name":"camera-chinese","group":"camera","input":{"hostname":"门口摄像头","manufacturer":"Huawei Technologies Co., Ltd."},"expected":{"brand":"HUAWEI","category":"camera","source":"hostname","confidence":"medium"}},
+  {"name":"camera-cctv","group":"camera","input":{"displayName":"garage-cctv","manufacturer":"Sony Interactive Entertainment Inc."},"expected":{"brand":"Sony","category":"camera","source":"hostname","confidence":"medium"}},
+
+  {"name":"gaming-nintendo-switch-conflict","group":"gaming","input":{"hostname":"Nintendo-Switch","manufacturer":"Nintendo Co., Ltd."},"expected":{"brand":"Nintendo","category":"gaming","source":"model","confidence":"high"}},
+  {"name":"gaming-playstation","group":"gaming","input":{"displayName":"PlayStation 5","manufacturer":"Sony Interactive Entertainment"},"expected":{"brand":"Sony","category":"gaming","source":"model","confidence":"high"}},
+  {"name":"gaming-xbox","group":"gaming","input":{"hostname":"Xbox","manufacturer":"Microsoft"},"expected":{"brand":"Microsoft","category":"gaming","source":"model","confidence":"high"}},
+  {"name":"gaming-steamdeck","group":"gaming","input":{"hostname":"steam-deck"},"expected":{"brand":"","category":"gaming","source":"model","confidence":"high"}},
+  {"name":"gaming-console","group":"gaming","input":{"hostname":"game-console","manufacturer":"Samsung"},"expected":{"brand":"Samsung","category":"gaming","source":"hostname","confidence":"medium"}},
+
+  {"name":"storage-synology","group":"storage","input":{"hostname":"family-nas","manufacturer":"Synology Incorporated"},"expected":{"brand":"Synology","category":"storage","source":"hostname","confidence":"medium"}},
+  {"name":"storage-qnap","group":"storage","input":{"hostname":"backup-nas","manufacturer":"QNAP Systems, Inc."},"expected":{"brand":"QNAP","category":"storage","source":"hostname","confidence":"medium"}},
+  {"name":"storage-server","group":"storage","input":{"hostname":"file-server","manufacturer":"Dell"},"expected":{"brand":"Dell","category":"storage","source":"hostname","confidence":"medium"}},
+  {"name":"storage-node","group":"storage","input":{"hostname":"storage-node","manufacturer":"Lenovo"},"expected":{"brand":"Lenovo","category":"storage","source":"hostname","confidence":"medium"}},
+  {"name":"storage-chinese","group":"storage","input":{"hostname":"家庭群晖","manufacturer":"Synology Inc."},"expected":{"brand":"Synology","category":"storage","source":"hostname","confidence":"medium"}},
+
+  {"name":"printer-laserjet","group":"printer","input":{"hostname":"LaserJet","manufacturer":"HP Inc."},"expected":{"brand":"HP","category":"printer","source":"hostname","confidence":"medium"}},
+  {"name":"printer-canon","group":"printer","input":{"hostname":"office-printer","manufacturer":"Canon"},"expected":{"brand":"Canon","category":"printer","source":"hostname","confidence":"medium"}},
+  {"name":"printer-chinese","group":"printer","input":{"hostname":"书房打印机","manufacturer":"Samsung Electronics"},"expected":{"brand":"Samsung","category":"printer","source":"hostname","confidence":"medium"}},
+  {"name":"printer-deskjet","group":"printer","input":{"displayName":"DeskJet 2700","manufacturer":"Hewlett-Packard Company"},"expected":{"brand":"HP","category":"printer","source":"hostname","confidence":"medium"}},
+  {"name":"printer-mfp","group":"printer","input":{"hostname":"办公室一体机","manufacturer":"Xiaomi"},"expected":{"brand":"Xiaomi","category":"printer","source":"hostname","confidence":"medium"}},
+
+  {"name":"wearable-apple-watch","group":"wearable","input":{"displayName":"Apple Watch","manufacturer":"Apple, Inc."},"expected":{"brand":"Apple","category":"wearable","source":"model","confidence":"high"}},
+  {"name":"wearable-galaxy-watch","group":"wearable","input":{"hostname":"Galaxy-Watch","manufacturer":"Samsung"},"expected":{"brand":"Samsung","category":"wearable","source":"model","confidence":"high"}},
+  {"name":"wearable-smartwatch","group":"wearable","input":{"hostname":"smart-watch","manufacturer":"Huawei"},"expected":{"brand":"HUAWEI","category":"wearable","source":"hostname","confidence":"medium"}},
+  {"name":"wearable-band","group":"wearable","input":{"hostname":"fitness-band","manufacturer":"Xiaomi Communications Co., Ltd."},"expected":{"brand":"Xiaomi","category":"wearable","source":"hostname","confidence":"medium"}},
+  {"name":"wearable-chinese","group":"wearable","input":{"hostname":"儿童手环","manufacturer":"Samsung Electronics Co., Ltd."},"expected":{"brand":"Samsung","category":"wearable","source":"hostname","confidence":"medium"}},
+
+  {"name":"fallback-empty","group":"fallback","input":{},"expected":{"brand":"","category":"computer","source":"fallback","confidence":"low"}},
+  {"name":"fallback-component-intel","group":"fallback","input":{"hostname":"client","manufacturer":"Intel Corporate"},"expected":{"brand":"","category":"computer","source":"fallback","confidence":"low"}},
+  {"name":"fallback-component-realtek","group":"fallback","input":{"manufacturer":"Realtek Semiconductor Corp."},"expected":{"brand":"","category":"computer","source":"fallback","confidence":"low"}},
+  {"name":"fallback-near-match-asus","group":"fallback","input":{"manufacturer":"ASUSTeK Router Components"},"expected":{"brand":"","category":"computer","source":"fallback","confidence":"low"}},
+  {"name":"fallback-near-match-apple","group":"fallback","input":{"displayName":"guest","manufacturer":"Appleton Systems"},"expected":{"brand":"","category":"computer","source":"fallback","confidence":"low"}}
+]

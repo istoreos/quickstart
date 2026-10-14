@@ -48,11 +48,9 @@ func (store *defaultDhcpConfigStore) LoadLanState(ctx context.Context) (*LanDhcp
 	uci.LoadConfig("floatip", true)
 
 	lanDhcpOptions, _ := uci.Get("dhcp", "lan", "dhcp_option")
-	dhcpIgnore := false
-	ignoreValue, ok := uci.GetLast("dhcp", "lan", "ignore")
-	if ok && ignoreValue == "1" {
-		dhcpIgnore = true
-	}
+	ignoreValue, _ := uci.GetLast("dhcp", "lan", "ignore")
+	dhcpv4Mode, _ := uci.GetLast("dhcp", "lan", "dhcpv4")
+	dhcpIgnore := !dhcpIPv4ServingEnabled(ignoreValue, dhcpv4Mode)
 
 	state := &LanDhcpState{
 		DhcpOptions: lanDhcpOptions,
@@ -79,6 +77,8 @@ func (store *defaultDhcpConfigStore) LoadLanState(ctx context.Context) (*LanDhcp
 	for _, name := range tagSecs {
 		tag := DhcpTagRecord{TagName: name}
 		tag.TagTitle, _ = uci.GetLast("dhcp", name, "tag_title")
+		tag.TargetID, _ = uci.GetLast("dhcp", name, "quickstart_target_id")
+		tag.TargetKind, _ = uci.GetLast("dhcp", name, "quickstart_target_kind")
 		listValues, _ := uci.Get("dhcp", name, "dhcp_option")
 		sort.Strings(listValues)
 		tag.DhcpOption = listValues
@@ -96,6 +96,20 @@ func (store *defaultDhcpConfigStore) LoadLanState(ctx context.Context) (*LanDhcp
 	}
 
 	return state, nil
+}
+
+func dhcpIPv4ServingEnabled(ignoreValue, dhcpv4Mode string) bool {
+	if strings.TrimSpace(ignoreValue) == "1" {
+		return false
+	}
+	switch strings.ToLower(strings.TrimSpace(dhcpv4Mode)) {
+	case "disabled", "relay":
+		return false
+	default:
+		// An omitted mode is the dnsmasq-compatible legacy default. Server and
+		// hybrid modes both provide local DHCPv4 service.
+		return true
+	}
 }
 
 func (store *defaultDhcpConfigStore) ApplyTagConfig(ctx context.Context, input DhcpTagConfigInput) error {

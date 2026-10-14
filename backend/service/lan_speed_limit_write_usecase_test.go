@@ -7,6 +7,8 @@ import (
 	"strings"
 	"sync"
 	"testing"
+
+	"github.com/istoreos/quickstart/backend/models"
 )
 
 var lanSpeedLimitWriteFacadeTestMu sync.Mutex
@@ -218,26 +220,15 @@ func TestServiceBackendLanSpeedLimitWriteCompatibilitySpeedLimitConfigDelegatesT
 	}
 }
 
-func TestServiceBackendLanSpeedLimitWriteCompatibilityEnableSpeedLimitDelegatesDefaults(t *testing.T) {
-	lanSpeedLimitWriteFacadeTestMu.Lock()
-	defer lanSpeedLimitWriteFacadeTestMu.Unlock()
-
-	original := newLanSpeedLimitWriteService
-	t.Cleanup(func() {
-		newLanSpeedLimitWriteService = original
-	})
-
-	fake := &fakeLanSpeedLimitWriteFacade{}
-	newLanSpeedLimitWriteService = func() lanSpeedLimitWriteFacade {
-		return fake
-	}
-
+func TestServiceBackendLanSpeedLimitWriteCompatibilityUsesTransactionalModuleDefaults(t *testing.T) {
+	store := &fakeRateLimitSettingsStore{current: models.RateLimitSettings{UploadSpeed: 50, DownloadSpeed: 500}}
+	backend := &ServiceBackend{rateLimitSettings: NewRateLimitSettingsModule(store)}
 	req := httptest.NewRequest("POST", "/cgi-bin/luci/istore/lanctrl/enableSpeedLimit/", strings.NewReader(`{"enabled":true}`))
-	resp, err := (&ServiceBackend{}).PostLanEnableSpeedLimit(context.Background(), req)
+	resp, err := backend.PostLanEnableSpeedLimit(context.Background(), req)
 	if err != nil || resp == nil {
 		t.Fatalf("PostLanEnableSpeedLimit returned resp=%#v err=%v", resp, err)
 	}
-	if !fake.moduleInput.Enabled || fake.moduleInput.UploadSpeed != 200 || fake.moduleInput.DownloadSpeed != 2000 {
-		t.Fatalf("moduleInput = %+v", fake.moduleInput)
+	if !store.current.Enabled || store.current.UploadSpeed != 200 || store.current.DownloadSpeed != 2000 {
+		t.Fatalf("settings = %+v", store.current)
 	}
 }

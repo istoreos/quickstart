@@ -2,6 +2,8 @@ package models
 
 // swagger:model lANCtrlGlobalConfig
 type LANCtrlGlobalConfig struct {
+	// capabilities
+	Capabilities *DeviceManagementCapabilities `json:"capabilities,omitempty"`
 
 	// dhcp global
 	DhcpGlobal *LANDhcpGlobalConfig `json:"dhcpGlobal,omitempty"`

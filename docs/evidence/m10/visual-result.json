@@ -1,0 +1,42 @@
+{
+  "targetDevices": 26,
+  "invalidClassifications": 0,
+  "sourceDistribution": {
+    "fallback": 25,
+    "manufacturer_default": 1
+  },
+  "viewports": [
+    {
+      "width": 1440,
+      "height": 900,
+      "pageOverflow": false,
+      "drawerOverflow": false,
+      "choices": 11,
+      "brokenIcons": 0,
+      "focusVisible": true
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "pageOverflow": false,
+      "drawerOverflow": false,
+      "choices": 11,
+      "brokenIcons": 0,
+      "focusVisible": true
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "pageOverflow": false,
+      "drawerOverflow": false,
+      "choices": 11,
+      "brokenIcons": 0,
+      "focusVisible": true
+    }
+  ],
+  "icons": 12,
+  "consoleErrors": 0,
+  "longBrandEllipsized": true,
+  "longBrandFullInDrawer": true,
+  "assetVersion": "0.14.0-r1"
+}

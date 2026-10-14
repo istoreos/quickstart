@@ -79,6 +79,7 @@ type ubusNetworkInterface struct {
 	Metric    uint32                         `json:"metric"`
 	Ip4Table  *int                           `json:"ip4table"`
 	Ip6Table  *int                           `json:"ip6table"`
+	Data      map[string]interface{}         `json:"data"`
 }
 
 type ubusNetworkInterfaceDump struct {

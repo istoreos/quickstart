@@ -1,0 +1,9 @@
+M21 verification, 2026-09-25
+
+- Product/domain baseline marker: exactly one authoritative document
+- Frozen P0 decisions: 7/7 present
+- Required glossary terms: 9/9 present
+- git diff --check: pass
+- backend: go test ./... — 1406 passed in 89 packages
+- web: npm run tsc — pass
+- web: node --test test/*.test.mjs — 42 passed, 0 failed

@@ -1,0 +1,2433 @@
+{
+  "schemaVersion": 1,
+  "title": "局域网设备管理五层覆盖矩阵",
+  "baseline": "docs/lan-device-management-product-architecture.md",
+  "updated": "2026-09-28",
+  "requirements": [
+    {
+      "id": "DEV-PRES-001",
+      "priority": "P0",
+      "requirement": "区分在线、离线和从未上线设备",
+      "acceptance": "三种存在状态不能与联网权限混同",
+      "source": "legacy-48",
+      "milestone": "M30",
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#52-设备列表"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/prototypes/lan-device-management/coverage.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/service/device_inventory_v2.go",
+          "backend/service/device_inventory_v2_test.go"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/deviceCenterList.vue",
+          "web/test/formalDeviceUi.test.mjs",
+          "docs/evidence/m30/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/m31/acceptance.md"
+        ]
+      },
+      "overall": "verified",
+      "blocker": ""
+    },
+    {
+      "id": "DEV-PRES-002",
+      "priority": "P0",
+      "requirement": "展示名称、品牌和可理解的设备形态",
+      "acceptance": "品牌文字可靠可见且形态不冒充型号",
+      "source": "legacy-48",
+      "milestone": "M24",
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#11-结论"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/prototypes/lan-device-management/coverage.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/service/device_classifier.go",
+          "backend/service/device_icon_registry.go",
+          "backend/service/device_profile_test.go"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/deviceCenterList.vue",
+          "web/src/pages/device/components/deviceSceneIcon.vue",
+          "docs/evidence/m30/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/m31/acceptance.md"
+        ]
+      },
+      "overall": "verified",
+      "blocker": ""
+    },
+    {
+      "id": "DEV-PRES-003",
+      "priority": "P1",
+      "requirement": "搜索、筛选和排序设备",
+      "acceptance": "操作不丢失当前设备编辑上下文",
+      "source": "legacy-48",
+      "milestone": "M30",
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#52-设备列表"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/prototypes/lan-device-management/coverage.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/service/device_inventory_v2.go"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/deviceCenterList.vue",
+          "web/test/deviceInventory.test.mjs"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/m17/acceptance.md",
+          "docs/evidence/m62/acceptance.md"
+        ]
+      },
+      "overall": "verified",
+      "blocker": ""
+    },
+    {
+      "id": "DEV-PRES-004",
+      "priority": "P1",
+      "requirement": "手动添加尚未上线的 MAC 设备",
+      "acceptance": "创建从未上线设备而不是不可解释的孤立规则",
+      "source": "legacy-48",
+      "milestone": "M30",
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#52-设备列表"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/prototypes/lan-device-management/coverage.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/service/device_inventory_v2.go",
+          "backend/service/device_inventory_v2_test.go"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/deviceCenterList.vue",
+          "docs/evidence/m30/acceptance.md",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/m55/acceptance.md"
+        ]
+      },
+      "overall": "verified",
+      "blocker": ""
+    },
+    {
+      "id": "DEV-PROFILE-001",
+      "priority": "P0",
+      "requirement": "保存支持中文的设备备注",
+      "acceptance": "中文备注跨重启保留且不写入 DHCP Hostname",
+      "source": "legacy-48",
+      "milestone": "M24",
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#12-三个用户写入任务"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/prototypes/lan-device-management/coverage.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/service/device_profile.go",
+          "backend/service/device_profile_test.go"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/components/deviceProfileEditor.vue",
+          "web/test/formalDeviceUi.test.mjs",
+          "docs/evidence/m30/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/m31/acceptance.md"
+        ]
+      },
+      "overall": "verified",
+      "blocker": ""
+    },
+    {
+      "id": "DEV-PROFILE-002",
+      "priority": "P0",
+      "requirement": "人工修正品牌和设备类型",
+      "acceptance": "人工值与原始识别证据分开且可恢复自动",
+      "source": "legacy-48",
+      "milestone": "M24",
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#72-deviceprofile-module"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/prototypes/lan-device-management/coverage.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/service/device_profile.go",
+          "backend/service/device_classification_store.go",
+          "backend/service/device_profile_test.go"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/components/deviceProfileEditor.vue",
+          "web/test/formalDeviceUi.test.mjs",
+          "docs/evidence/m30/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/m31/acceptance.md"
+        ]
+      },
+      "overall": "verified",
+      "blocker": ""
+    },
+    {
+      "id": "DEV-PROFILE-003",
+      "priority": "P0",
+      "requirement": "自动推荐品牌与类型匹配的图标",
+      "acceptance": "解析顺序为品牌加类型、类型、通用电脑",
+      "source": "legacy-48",
+      "milestone": "M24",
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#72-deviceprofile-module"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/prototypes/lan-device-management/coverage.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/service/device_icon_registry.go",
+          "backend/service/device_profile_test.go"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/deviceScene.ts",
+          "web/src/pages/device/components/deviceSceneIcon.vue",
+          "web/src/pages/device/components/deviceProfileEditor.vue",
+          "docs/evidence/m30/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/m31/acceptance.md"
+        ]
+      },
+      "overall": "verified",
+      "blocker": ""
+    },
+    {
+      "id": "DEV-PROFILE-004",
+      "priority": "P0",
+      "requirement": "手动选择图标并恢复自动推荐",
+      "acceptance": "手动选择跨重启不被识别覆盖且可单独恢复自动",
+      "source": "legacy-48",
+      "milestone": "M24",
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#72-deviceprofile-module"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/prototypes/lan-device-management/coverage.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/service/device_classification_store.go",
+          "backend/service/device_profile_test.go"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/components/deviceProfileEditor.vue",
+          "web/test/formalDeviceUi.test.mjs",
+          "docs/evidence/m30/acceptance.md",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/m31/acceptance.md"
+        ]
+      },
+      "overall": "verified",
+      "blocker": ""
+    },
+    {
+      "id": "DEV-PROFILE-005",
+      "priority": "P1",
+      "requirement": "按需查看原始厂商、识别依据和可信度",
+      "acceptance": "默认折叠且不把推断当事实",
+      "source": "legacy-48",
+      "milestone": "M30",
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#53-设备详情"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/prototypes/lan-device-management/coverage.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/service/device_classifier.go"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/deviceCenterList.vue",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/m31/acceptance.md"
+        ]
+      },
+      "overall": "verified",
+      "blocker": ""
+    },
+    {
+      "id": "DEV-PROFILE-006",
+      "priority": "P1",
+      "requirement": "区分当前地址与历史地址",
+      "acceptance": "默认突出当前地址且历史地址不抢占身份",
+      "source": "legacy-48",
+      "milestone": "M30",
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#53-设备详情"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/prototypes/lan-device-management/coverage.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/service/device_inventory_v2.go"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/deviceInventory.ts",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/m55/acceptance.md"
+        ]
+      },
+      "overall": "verified",
+      "blocker": ""
+    },
+    {
+      "id": "NET-DEVICE-001",
+      "priority": "P0",
+      "requirement": "暂停和恢复单个设备联网",
+      "acceptance": "与设备在线状态分开且不依赖限速组件",
+      "source": "legacy-48",
+      "milestone": "M25",
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#11-七个-p0-的冻结结论"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/prototypes/lan-device-management/coverage.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/service/device_policy_store.go",
+          "backend/service/device_restriction_store.go",
+          "backend/service/device_restriction_store_test.go"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/components/devicePolicyPanel.vue",
+          "web/src/pages/device/deviceCapabilities.ts",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/m39/acceptance.md"
+        ]
+      },
+      "overall": "verified",
+      "blocker": ""
+    },
+    {
+      "id": "NET-DEVICE-002",
+      "priority": "P0",
+      "requirement": "在自动地址、保留当前和指定地址之间切换",
+      "acceptance": "同一任务完成且冲突时零写入",
+      "source": "legacy-48",
+      "milestone": "M28",
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#12-三个用户写入任务"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/prototypes/lan-device-management/coverage.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/service/device_network_policy.go",
+          "backend/service/device_network_policy_store.go",
+          "backend/service/task_transaction.go",
+          "backend/service/device_network_policy_test.go"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/components/devicePolicyPanel.vue",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/t0-t8/acceptance.md"
+        ]
+      },
+      "overall": "verified",
+      "blocker": ""
+    },
+    {
+      "id": "NET-DEVICE-003",
+      "priority": "P0",
+      "requirement": "安全设置 DHCP Hostname",
+      "acceptance": "只接受 ASCII 单标签且中文备注不会自动复制",
+      "source": "legacy-48",
+      "milestone": "M28",
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#12-三个用户写入任务"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/prototypes/lan-device-management/coverage.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/service/lan_input_validation.go",
+          "backend/service/lan_input_validation_test.go"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/devicePolicy.ts",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/m55/acceptance.md"
+        ]
+      },
+      "overall": "verified",
+      "blocker": ""
+    },
+    {
+      "id": "NET-DEVICE-004",
+      "priority": "P0",
+      "requirement": "选择本机、上级、旁路由、浮动或指定 IP 路线",
+      "acceptance": "使用用户语言并隐藏 DHCP 标签",
+      "source": "legacy-48",
+      "milestone": "M27",
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#55-上网路线交互"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/prototypes/lan-device-management/coverage.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/service/gateway_policy.go",
+          "backend/service/device_network_policy.go",
+          "backend/service/router_context.go"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/components/devicePolicyPanel.vue",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/t0-t8/acceptance.md"
+        ]
+      },
+      "overall": "verified",
+      "blocker": ""
+    },
+    {
+      "id": "NET-DEVICE-005",
+      "priority": "P0",
+      "requirement": "DNS 跟随所选上网路线",
+      "acceptance": "网关与 DNS 同次编译且不增加普通用户开关",
+      "source": "legacy-48",
+      "milestone": "M27",
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#55-上网路线交互"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/prototypes/lan-device-management/coverage.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/service/gateway_policy.go",
+          "backend/service/policy_effect_test.go",
+          "backend/service/device_network_policy_store.go"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/components/devicePolicyPanel.vue",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/t0-t8/acceptance.md"
+        ]
+      },
+      "overall": "verified",
+      "blocker": ""
+    },
+    {
+      "id": "NET-DEVICE-006",
+      "priority": "P0",
+      "requirement": "外部 DHCP 时上网路线只读引导",
+      "acceptance": "显示权威原因和本机地址且不诱导开启 DHCP",
+      "source": "legacy-48",
+      "milestone": "M26",
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#76-routercontext-module"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/prototypes/lan-device-management/coverage.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/models/router_context.go",
+          "backend/service/router_context.go",
+          "backend/service/router_context_test.go",
+          "backend/modules/lancontrol/routes.go"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-m32-m40-closeout-milestones.md",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/m56/acceptance.md"
+        ]
+      },
+      "overall": "verified"
+    },
+    {
+      "id": "NET-DEVICE-007",
+      "priority": "P0",
+      "requirement": "设置上传和下载限速",
+      "acceptance": "显示执行节点、加载与验证状态；依赖缺失只锁限速；原生引擎可事务应用、重启恢复和回滚",
+      "source": "legacy-48",
+      "milestone": "M52",
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#74-devicerestrictions-module",
+          "docs/lan-device-management-rate-limit-p0-p2.md"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/prototypes/lan-device-management/coverage.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/service/rate_limit.go",
+          "backend/service/rate_limit_native_provider.go",
+          "backend/service/rate_limit_migration.go",
+          "backend/service/rate_limit_native_provider_test.go"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/components/devicePolicyPanel.vue",
+          "web/src/pages/device/lanSettingsPanel.vue",
+          "web/test/formalDeviceUi.test.mjs"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/m41-m52/acceptance.md"
+        ]
+      },
+      "overall": "verified",
+      "blocker": ""
+    },
+    {
+      "id": "NET-DEVICE-008",
+      "priority": "P1",
+      "requirement": "设置上网时段或时段限速",
+      "acceptance": "可选暂停联网或上下行限速，支持跨午夜且展示下一次执行结果",
+      "source": "legacy-48",
+      "milestone": "P1",
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#53-设备详情",
+          "docs/lan-device-management-rate-limit-p0-p2.md"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/prototypes/lan-device-management/coverage.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/service/device_groups.go",
+          "backend/service/device_groups_test.go",
+          "docs/evidence/m29/acceptance.md"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/deviceGroupsPanel.vue",
+          "web/src/pages/device/components/deviceUsagePolicyEditor.vue",
+          "web/test/formalDeviceUi.test.mjs"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/m59/acceptance.md"
+        ]
+      },
+      "overall": "verified"
+    },
+    {
+      "id": "NET-DEVICE-009",
+      "priority": "P1",
+      "requirement": "设置周期流量额度",
+      "acceptance": "显示周期、已用量和超限动作",
+      "source": "legacy-48",
+      "milestone": "M37",
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#61-必须优先补齐"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/prototypes/lan-device-management/coverage.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/service/traffic_insights.go",
+          "backend/service/traffic_insights_test.go",
+          "docs/evidence/m29/acceptance.md"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/components/trafficInsightsPanel.vue",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/m60/acceptance.md"
+        ]
+      },
+      "overall": "verified"
+    },
+    {
+      "id": "NET-DEVICE-010",
+      "priority": "P0",
+      "requirement": "解释分组规则与单设备例外",
+      "acceptance": "展示最终值和来源链而非调用顺序",
+      "source": "legacy-48",
+      "milestone": "M29",
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#61-必须优先补齐"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/prototypes/lan-device-management/coverage.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/service/device_groups.go",
+          "backend/service/device_groups_test.go",
+          "docs/evidence/m29/acceptance.md"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/deviceGroupsPanel.vue",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/t0-t8/acceptance.md"
+        ]
+      },
+      "overall": "verified",
+      "blocker": ""
+    },
+    {
+      "id": "NET-DEVICE-011",
+      "priority": "P1",
+      "requirement": "查看实时和历史用量",
+      "acceptance": "历史按需加载且不阻塞设备列表",
+      "source": "legacy-48",
+      "milestone": "M30",
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#79-trafficinsights-module"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/prototypes/lan-device-management/coverage.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/service/traffic_insights.go",
+          "backend/service/device_traffic.go"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/components/trafficInsightsPanel.vue",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/m60/acceptance.md"
+        ]
+      },
+      "overall": "verified"
+    },
+    {
+      "id": "NET-DEVICE-012",
+      "priority": "P0",
+      "requirement": "区分保存、应用和终端效果",
+      "acceptance": "等待、无法验证和失败不显示为已生效",
+      "source": "legacy-48",
+      "milestone": "M27",
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#77-policyeffect-module"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/prototypes/lan-device-management/coverage.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/models/device_network_policy.go",
+          "backend/service/policy_effect.go",
+          "backend/service/policy_effect_test.go"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/devicePolicy.ts",
+          "web/src/pages/device/components/devicePolicyPanel.vue",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/t0-t8/acceptance.md"
+        ]
+      },
+      "overall": "verified",
+      "blocker": ""
+    },
+    {
+      "id": "NET-DEVICE-013",
+      "priority": "P0",
+      "requirement": "浮动网关缺失时局部降级",
+      "acceptance": "只禁用浮动路线且其他网络字段仍可保存",
+      "source": "legacy-48",
+      "milestone": "M25",
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#11-七个-p0-的冻结结论"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/prototypes/lan-device-management/coverage.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/service/lan_global_config_usecase.go",
+          "backend/service/capability_action.go",
+          "backend/service/capability_action_test.go"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/components/floatingGatewayWizard.vue",
+          "web/src/pages/device/deviceCapabilities.ts",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/m56/acceptance.md"
+        ]
+      },
+      "overall": "verified"
+    },
+    {
+      "id": "NET-DEVICE-014",
+      "priority": "P0",
+      "requirement": "限速能力缺失时局部降级",
+      "acceptance": "只禁用限速且联网权限、计划与额度可用",
+      "source": "legacy-48",
+      "milestone": "M25",
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#74-devicerestrictions-module"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/prototypes/lan-device-management/coverage.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/service/device_policy_store.go",
+          "backend/service/device_restriction_store.go",
+          "backend/service/device_restriction_store_test.go"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/components/devicePolicyPanel.vue",
+          "web/src/pages/device/deviceCapabilities.ts",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/m56/acceptance.md"
+        ]
+      },
+      "overall": "verified"
+    },
+    {
+      "id": "NET-DEVICE-015",
+      "priority": "P0",
+      "requirement": "安装能力后返回原编辑任务",
+      "acceptance": "取消或失败不丢草稿且成功后不自动应用策略",
+      "source": "legacy-48",
+      "milestone": "M25",
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#8-前端实现原则"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/prototypes/lan-device-management/coverage.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/service/capability_action.go",
+          "backend/service/capability_action_test.go",
+          "backend/modules/lancontrol/routes.go"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-m32-m40-closeout-milestones.md",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/m56/acceptance.md"
+        ]
+      },
+      "overall": "verified"
+    },
+    {
+      "id": "GROUP-001",
+      "priority": "P1",
+      "requirement": "设置全局默认策略",
+      "acceptance": "只表达用户结果且不暴露底层规则",
+      "source": "legacy-48",
+      "milestone": "M29",
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#51-一级结构"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/prototypes/lan-device-management/coverage.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/service/device_groups.go",
+          "backend/service/device_groups_test.go"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/deviceGroupsPanel.vue",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/m59/acceptance.md"
+        ]
+      },
+      "overall": "verified"
+    },
+    {
+      "id": "GROUP-002",
+      "priority": "P1",
+      "requirement": "新建和编辑设备分组",
+      "acceptance": "设备选择与共同规则位于同一流程",
+      "source": "legacy-48",
+      "milestone": "M30",
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#51-一级结构"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/prototypes/lan-device-management/coverage.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/service/device_groups.go",
+          "backend/service/device_groups_test.go"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/deviceGroupsPanel.vue",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/m31/acceptance.md"
+        ]
+      },
+      "overall": "verified",
+      "blocker": ""
+    },
+    {
+      "id": "GROUP-003",
+      "priority": "P0",
+      "requirement": "批量设置暂停、限速、路线、时段和额度",
+      "acceptance": "保存前预览影响且每个服务每批最多重载一次",
+      "source": "legacy-48",
+      "milestone": "M29",
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#51-一级结构"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/prototypes/lan-device-management/coverage.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/service/device_groups.go",
+          "backend/service/device_groups_apply.go",
+          "backend/service/device_groups_test.go",
+          "backend/service/traffic_insights.go",
+          "docs/evidence/m29/acceptance.md"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/deviceGroupsPanel.vue",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/m59/acceptance.md"
+        ]
+      },
+      "overall": "verified"
+    },
+    {
+      "id": "GROUP-004",
+      "priority": "P1",
+      "requirement": "提示单设备例外",
+      "acceptance": "分组页面不静默覆盖设备选择",
+      "source": "legacy-48",
+      "milestone": "M30",
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#61-必须优先补齐"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/prototypes/lan-device-management/coverage.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/service/device_groups.go",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/deviceGroupsPanel.vue",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/m31/acceptance.md"
+        ]
+      },
+      "overall": "verified",
+      "blocker": ""
+    },
+    {
+      "id": "GROUP-005",
+      "priority": "P0",
+      "requirement": "展示最终策略及来源链",
+      "acceptance": "同一输入不受设备迭代或 UCI 顺序影响",
+      "source": "legacy-48",
+      "milestone": "M29",
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#61-必须优先补齐"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/prototypes/lan-device-management/coverage.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/service/device_groups.go",
+          "backend/service/device_groups_test.go",
+          "docs/evidence/m29/acceptance.md"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/deviceGroupsPanel.vue",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/m31/acceptance.md"
+        ]
+      },
+      "overall": "verified",
+      "blocker": ""
+    },
+    {
+      "id": "LAN-001",
+      "priority": "P0",
+      "requirement": "显示选定 LAN 的路由器上下文",
+      "acceptance": "拓扑角色与 DHCP 分配权分离",
+      "source": "legacy-48",
+      "milestone": "M26",
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#76-routercontext-module"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/prototypes/lan-device-management/coverage.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-m32-m40-closeout-milestones.md",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-m32-m40-closeout-milestones.md",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/t0-t8/acceptance.md"
+        ]
+      },
+      "overall": "verified",
+      "blocker": ""
+    },
+    {
+      "id": "LAN-002",
+      "priority": "P0",
+      "requirement": "解释主路由、旁路由和角色不明",
+      "acceptance": "角色只改变说明且不绕过 DHCP authority",
+      "source": "legacy-48",
+      "milestone": "M26",
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#76-routercontext-module"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/prototypes/lan-device-management/coverage.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-m32-m40-closeout-milestones.md",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-m32-m40-closeout-milestones.md",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/t0-t8/acceptance.md"
+        ]
+      },
+      "overall": "verified",
+      "blocker": ""
+    },
+    {
+      "id": "LAN-003",
+      "priority": "P0",
+      "requirement": "管理 DHCP 和地址池",
+      "acceptance": "关闭前显示影响设备和恢复路径",
+      "source": "legacy-48",
+      "milestone": "M35",
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#51-一级结构"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/prototypes/lan-device-management/coverage.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/service/lan_dhcp_usecase.go",
+          "backend/service/lan_dhcp_usecase_test.go",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/configure.vue",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/m55/acceptance.md"
+        ]
+      },
+      "overall": "verified",
+      "blocker": ""
+    },
+    {
+      "id": "LAN-004",
+      "priority": "P0",
+      "requirement": "设置局域网默认上网路线",
+      "acceptance": "与单设备路线清楚区分且 DNS 跟随",
+      "source": "legacy-48",
+      "milestone": "M27",
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#55-上网路线交互"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/prototypes/lan-device-management/coverage.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/service/gateway_policy.go",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/configure.vue",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/m57/acceptance.md"
+        ]
+      },
+      "overall": "verified"
+    },
+    {
+      "id": "LAN-005",
+      "priority": "P0",
+      "requirement": "新增、编辑和删除上网路线目标",
+      "acceptance": "使用中删除前必须选择替代路线",
+      "source": "legacy-48",
+      "milestone": "M32",
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#75-gatewaypolicy-module"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/prototypes/lan-device-management/coverage.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/service/gateway_policy.go",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/configure.vue",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/m39/acceptance.md"
+        ]
+      },
+      "overall": "verified",
+      "blocker": ""
+    },
+    {
+      "id": "LAN-006",
+      "priority": "P0",
+      "requirement": "查看浮动网关节点和健康",
+      "acceptance": "显示当前持有者且技术参数默认折叠",
+      "source": "legacy-48",
+      "milestone": "M27",
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#56-浮动网关设置向导"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/prototypes/lan-device-management/coverage.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/service/floating_gateway.go",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/components/floatingGatewayWizard.vue",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/t0-t8/acceptance.md"
+        ]
+      },
+      "overall": "verified",
+      "blocker": ""
+    },
+    {
+      "id": "LAN-007",
+      "priority": "P1",
+      "requirement": "设置总带宽、统计来源和限速执行方式",
+      "acceptance": "先预览再应用并可回滚；可选 Provider 缺失不影响设备管理",
+      "source": "legacy-48",
+      "milestone": "M52",
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#2-当前完整功能清单",
+          "docs/lan-device-management-rate-limit-p0-p2.md"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/prototypes/lan-device-management/coverage.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/service/rate_limit_settings.go",
+          "backend/service/rate_limit_bandix_provider.go",
+          "backend/service/rate_limit_native_provider.go",
+          "backend/service/rate_limit_bandix_provider_test.go"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/lanSettingsPanel.vue",
+          "web/test/formalDeviceUi.test.mjs"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/p0-p2-rate-limit/acceptance.md",
+          "docs/evidence/m41-m52/acceptance.md",
+          "docs/evidence/m61/acceptance.md"
+        ]
+      },
+      "overall": "verified",
+      "blocker": ""
+    },
+    {
+      "id": "LAN-008",
+      "priority": "P2",
+      "requirement": "管理通知和策略备份",
+      "acceptance": "低频入口且导入必须先预览",
+      "source": "legacy-48",
+      "milestone": "M36",
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#63-可选高级能力"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/prototypes/lan-device-management/coverage.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/service/advanced_network.go",
+          "backend/service/advanced_network_test.go",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/components/advancedNetworkTools.vue",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/m20/acceptance.md",
+          "docs/evidence/m63/acceptance.md"
+        ]
+      },
+      "overall": "verified",
+      "blocker": ""
+    },
+    {
+      "id": "OPS-001",
+      "priority": "P0",
+      "requirement": "处理地址冲突和网关不可达",
+      "acceptance": "每个问题给出可执行下一步",
+      "source": "legacy-48",
+      "milestone": "M30",
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#61-必须优先补齐"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/prototypes/lan-device-management/coverage.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/service/device_network_policy.go",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/networkRulesHub.vue",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/m57/acceptance.md"
+        ]
+      },
+      "overall": "verified"
+    },
+    {
+      "id": "OPS-002",
+      "priority": "P0",
+      "requirement": "解释等待设备续租",
+      "acceptance": "没有新租约证据时保持等待或无法验证",
+      "source": "legacy-48",
+      "milestone": "M27",
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#77-policyeffect-module"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/prototypes/lan-device-management/coverage.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/service/policy_effect.go",
+          "backend/service/policy_effect_test.go"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/devicePolicy.ts",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/t0-t8/acceptance.md"
+        ]
+      },
+      "overall": "verified",
+      "blocker": ""
+    },
+    {
+      "id": "OPS-003",
+      "priority": "P0",
+      "requirement": "解释应用失败和回滚结果",
+      "acceptance": "区分已恢复与需要人工恢复",
+      "source": "legacy-48",
+      "milestone": "M28",
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#710-任务级写入事务-seam"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/prototypes/lan-device-management/coverage.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/models/task_transaction.go",
+          "backend/service/task_transaction.go",
+          "backend/service/device_policy.go",
+          "backend/service/device_network_policy_store.go"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/devicePolicy.ts",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/m58/acceptance.md"
+        ]
+      },
+      "overall": "verified"
+    },
+    {
+      "id": "OPS-004",
+      "priority": "P0",
+      "requirement": "解释浮动网关切换与降级",
+      "acceptance": "普通用户看到持有者、健康和原因",
+      "source": "legacy-48",
+      "milestone": "M27",
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#56-浮动网关设置向导"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/prototypes/lan-device-management/coverage.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/service/floating_gateway.go",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/components/floatingGatewayWizard.vue",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/t0-t8/acceptance.md"
+        ]
+      },
+      "overall": "verified",
+      "blocker": ""
+    },
+    {
+      "id": "OPS-005",
+      "priority": "P1",
+      "requirement": "查看最近变更和审计",
+      "acceptance": "默认折叠且容量有界",
+      "source": "legacy-48",
+      "milestone": "M30",
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#63-可选高级能力"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/prototypes/lan-device-management/coverage.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/service/network_audit.go"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/components/advancedNetworkTools.vue",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/m31/acceptance.md",
+          "docs/lan-device-management-m32-m40-closeout-milestones.md",
+          "docs/evidence/m62/acceptance.md"
+        ]
+      },
+      "overall": "verified",
+      "blocker": ""
+    },
+    {
+      "id": "OPS-006",
+      "priority": "P2",
+      "requirement": "安全探测设备管理入口",
+      "acceptance": "仅按用户请求并限制目标网段和端口",
+      "source": "legacy-48",
+      "milestone": "M30",
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#62-第二优先级"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/prototypes/lan-device-management/coverage.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/service/advanced_network.go",
+          "backend/service/advanced_network_test.go"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/components/advancedNetworkTools.vue",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/t0-t8/acceptance.md",
+          "docs/lan-device-management-m32-m40-closeout-milestones.md",
+          "docs/evidence/m63/acceptance.md"
+        ]
+      },
+      "overall": "verified",
+      "blocker": ""
+    },
+    {
+      "id": "OPS-007",
+      "priority": "P2",
+      "requirement": "发送有界 Webhook 通知",
+      "acceptance": "失败退避、不阻塞核心策略且只发送稳定伪匿名设备标识",
+      "source": "legacy-48",
+      "milestone": "M36",
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#63-可选高级能力"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/prototypes/lan-device-management/coverage.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/service/network_audit.go",
+          "backend/service/advanced_network_test.go"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/components/advancedNetworkTools.vue",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/m20/acceptance.md",
+          "docs/evidence/m63/acceptance.md"
+        ]
+      },
+      "overall": "verified",
+      "blocker": ""
+    },
+    {
+      "id": "OPS-008",
+      "priority": "P1",
+      "requirement": "导入、导出和恢复策略",
+      "acceptance": "导入先 dry-run 且冲突时零写入",
+      "source": "legacy-48",
+      "milestone": "M31",
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#2-当前完整功能清单"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/prototypes/lan-device-management/coverage.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/service/advanced_network.go",
+          "backend/service/advanced_network_test.go"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/components/advancedNetworkTools.vue",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/m31/acceptance.md",
+          "docs/lan-device-management-m32-m40-closeout-milestones.md",
+          "docs/evidence/m63/acceptance.md"
+        ]
+      },
+      "overall": "verified",
+      "blocker": ""
+    },
+    {
+      "id": "OPS-009",
+      "priority": "P0",
+      "requirement": "在能力缺失或固件受限时诚实降级",
+      "acceptance": "不在首页堆插件状态且无关功能可用",
+      "source": "legacy-48",
+      "milestone": "M25",
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#8-前端实现原则"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/prototypes/lan-device-management/coverage.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/models/device_management_capability.go",
+          "backend/service/lan_global_config_usecase.go",
+          "backend/service/capability_action.go"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/components/devicePolicyPanel.vue",
+          "web/src/pages/device/deviceCapabilities.ts",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/m31/acceptance.md"
+        ]
+      },
+      "overall": "verified",
+      "blocker": ""
+    },
+    {
+      "id": "OPS-010",
+      "priority": "P0",
+      "requirement": "普通界面隐藏 DHCP tag、option 和 UCI",
+      "acceptance": "仅脱敏诊断可包含内部实现名词",
+      "source": "legacy-48",
+      "milestone": "M33",
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#1-结论"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/prototypes/lan-device-management/coverage.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/service/gateway_policy.go",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/components/devicePolicyPanel.vue",
+          "docs/evidence/m32-m38/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/m39/acceptance.md"
+        ]
+      },
+      "overall": "verified",
+      "blocker": ""
+    },
+    {
+      "id": "P0-IA-001",
+      "priority": "P0",
+      "requirement": "只提供一套产品导航和任务入口",
+      "acceptance": "正常、空数据、旧路由、刷新和迁移后均进入设备、分组与计划、局域网设置",
+      "source": "p0-addition",
+      "milestone": "M23",
+      "scenarios": [
+        "normal",
+        "missing",
+        "error",
+        "recovery",
+        "retry"
+      ],
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#51-一级结构"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-low-fidelity-design.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/modules/lancontrol/routes.go",
+          "backend/service/lan_device_migration.go"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/index.vue",
+          "web/test/formalDeviceUi.test.mjs",
+          "docs/evidence/m30/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/m31/acceptance.md"
+        ]
+      },
+      "overall": "verified",
+      "blocker": ""
+    },
+    {
+      "id": "P0-MIG-001",
+      "priority": "P0",
+      "requirement": "一次性迁移现有有效配置",
+      "acceptance": "正常、未知、冲突、恢复和重复执行均不丢配置且无双写",
+      "source": "p0-addition",
+      "milestone": "M23",
+      "scenarios": [
+        "normal",
+        "missing",
+        "error",
+        "recovery",
+        "retry"
+      ],
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/adr/0001-single-product-surface-and-one-time-migration.md",
+          "docs/lan-device-management-entry-migration.md"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-low-fidelity-design.md",
+          "docs/lan-device-management-entry-migration.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/service/lan_device_migration.go",
+          "backend/service/lan_device_migration_test.go",
+          "backend/modules/lancontrol/routes.go"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/lanSettingsPanel.vue",
+          "web/src/request/request.ts",
+          "web/test/formalDeviceUi.test.mjs",
+          "docs/evidence/m30/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/m58/acceptance.md"
+        ]
+      },
+      "overall": "verified"
+    },
+    {
+      "id": "P0-CAP-001",
+      "priority": "P0",
+      "requirement": "联网权限与限速能力独立",
+      "acceptance": "正常、原生限速缺失、状态读取错误、恢复和重复提交均不影响联网控制",
+      "source": "p0-addition",
+      "milestone": "M25",
+      "scenarios": [
+        "normal",
+        "missing",
+        "error",
+        "recovery",
+        "retry"
+      ],
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#74-devicerestrictions-module"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-low-fidelity-design.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/service/device_policy_store.go",
+          "backend/service/device_restriction_store.go",
+          "backend/service/device_restriction_store_test.go",
+          "backend/service/capability_action_test.go"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/components/devicePolicyPanel.vue",
+          "web/src/pages/device/deviceCapabilities.ts",
+          "web/test/formalDeviceUi.test.mjs",
+          "docs/evidence/m30/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/m56/acceptance.md"
+        ]
+      },
+      "overall": "verified"
+    },
+    {
+      "id": "P0-TXN-001",
+      "priority": "P0",
+      "requirement": "三个用户任务各自具备可恢复事务",
+      "acceptance": "正常、依赖缺失、步骤失败、回滚失败和重复提交都有确定结果",
+      "source": "p0-addition",
+      "milestone": "M28",
+      "scenarios": [
+        "normal",
+        "missing",
+        "error",
+        "recovery",
+        "retry"
+      ],
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/adr/0002-task-scoped-network-transactions.md"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-low-fidelity-design.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/models/task_transaction.go",
+          "backend/service/task_transaction.go",
+          "backend/service/task_transaction_test.go",
+          "backend/service/device_profile.go",
+          "backend/service/device_network_policy.go",
+          "backend/service/device_policy.go"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/components/deviceProfileEditor.vue",
+          "web/src/pages/device/components/devicePolicyPanel.vue",
+          "web/src/pages/device/deviceGroupsPanel.vue",
+          "docs/evidence/m30/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/m58/acceptance.md"
+        ]
+      },
+      "overall": "verified"
+    },
+    {
+      "id": "P0-EFFECT-001",
+      "priority": "P0",
+      "requirement": "诚实展示期望、应用和观察结果",
+      "acceptance": "正常、无租约源、读取错误、恢复和重复观察不会误报 active",
+      "source": "p0-addition",
+      "milestone": "M27",
+      "scenarios": [
+        "normal",
+        "missing",
+        "error",
+        "recovery",
+        "retry"
+      ],
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#77-policyeffect-module"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-low-fidelity-design.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/models/device_network_policy.go",
+          "backend/service/policy_effect.go",
+          "backend/service/policy_effect_test.go"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/devicePolicy.ts",
+          "web/src/pages/device/components/devicePolicyPanel.vue",
+          "web/test/formalDeviceUi.test.mjs",
+          "docs/evidence/m30/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/t0-t8/acceptance.md"
+        ]
+      },
+      "overall": "verified",
+      "blocker": ""
+    },
+    {
+      "id": "P0-CTX-001",
+      "priority": "P0",
+      "requirement": "按 LAN 权威判断 DHCP 分配权",
+      "acceptance": "本机、外部、不明、错误和恢复后均给出安全可编辑性",
+      "source": "p0-addition",
+      "milestone": "M26",
+      "scenarios": [
+        "normal",
+        "missing",
+        "error",
+        "recovery",
+        "retry"
+      ],
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#76-routercontext-module"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-low-fidelity-design.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/models/router_context.go",
+          "backend/service/router_context.go",
+          "backend/service/router_context_test.go",
+          "backend/yamls/lanctrl.yaml"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/lanSettingsPanel.vue",
+          "web/src/pages/device/components/devicePolicyPanel.vue",
+          "web/test/formalDeviceUi.test.mjs",
+          "docs/evidence/m30/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/m56/acceptance.md"
+        ]
+      },
+      "overall": "verified"
+    },
+    {
+      "id": "P0-ICON-001",
+      "priority": "P0",
+      "requirement": "持久化品牌类型修正和图标偏好",
+      "acceptance": "自动、手动、资源缺失、损坏恢复和重复保存均保持可解释 fallback",
+      "source": "p0-addition",
+      "milestone": "M24",
+      "scenarios": [
+        "normal",
+        "missing",
+        "error",
+        "recovery",
+        "retry"
+      ],
+      "product": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-product-architecture.md#72-deviceprofile-module"
+        ]
+      },
+      "prototype": {
+        "status": "verified",
+        "refs": [
+          "docs/lan-device-management-low-fidelity-design.md"
+        ]
+      },
+      "backend": {
+        "status": "verified",
+        "refs": [
+          "backend/service/device_profile.go",
+          "backend/service/device_icon_registry.go",
+          "backend/service/device_profile_test.go"
+        ]
+      },
+      "frontend": {
+        "status": "verified",
+        "refs": [
+          "web/src/pages/device/deviceScene.ts",
+          "web/src/pages/device/components/deviceProfileEditor.vue",
+          "web/public/luci-static/quickstart/device-icons/manifest.json",
+          "web/test/formalDeviceUi.test.mjs",
+          "docs/evidence/m30/acceptance.md"
+        ]
+      },
+      "device": {
+        "status": "verified",
+        "refs": [
+          "docs/evidence/m31/acceptance.md"
+        ]
+      },
+      "overall": "verified",
+      "blocker": ""
+    }
+  ]
+}

@@ -2,9 +2,14 @@ package service
 
 import (
 	"context"
+	"crypto/sha256"
+	"encoding/hex"
 	"errors"
 	"fmt"
+	"path/filepath"
+	"strconv"
 	"strings"
+	"unicode"
 
 	"github.com/digineo/go-uci"
 	"github.com/istoreos/quickstart/backend/utils"
@@ -20,6 +25,10 @@ type defaultLanSpeedLimitWriteStore struct{}
 
 var lanSpeedLimitWriteExec = func(ctx context.Context, commands []string) error {
 	return utils.BatchRun(ctx, commands, 0)
+}
+
+var lanSpeedLimitWriteApplyPlan = func(_ context.Context, plan SpeedLimitWritePlan) error {
+	return applySpeedLimitPlanAt(filepath.Dir(dhcpConfigPath), plan)
 }
 
 var lanSpeedLimitWriteLoadConfig = uci.LoadConfig
@@ -75,41 +84,87 @@ func BuildSpeedLimitWritePlan(input SpeedLimitWriteInput, eqosMatches, firewallM
 	return plan
 }
 
-func buildSpeedLimitWriteCommands(input SpeedLimitWriteInput, plan SpeedLimitWritePlan) []string {
-	commands := make([]string, 0, len(plan.DeleteSections)*2+7)
-	for _, match := range plan.DeleteSections {
-		commands = append(commands, fmt.Sprintf("uci del %s.%s", match.Config, match.SectionName))
-		commands = append(commands, fmt.Sprintf("uci commit %s", match.Config))
-	}
-
-	if plan.AddSpeedLimit {
-		commands = append(commands,
-			"uci add eqos device",
-			fmt.Sprintf("uci set eqos.@device[-1].ip='%s'", input.IP),
-			fmt.Sprintf("uci set eqos.@device[-1].download='%d'", input.DownloadSpeed),
-			fmt.Sprintf("uci set eqos.@device[-1].upload='%d'", input.UploadSpeed),
-			fmt.Sprintf("uci set eqos.@device[-1].comment='%s'", input.Comment),
-		)
-	}
-
-	if plan.AddBlockRule {
-		commands = append(commands,
-			"uci add firewall rule",
-			fmt.Sprintf("uci set firewall.@rule[-1].name='%s'", buildBlockedRuleName(input.MAC)),
-			"uci set firewall.@rule[-1].src='lan'",
-			"uci set firewall.@rule[-1].dest='wan'",
-			"uci set firewall.@rule[-1].target='REJECT'",
-			"uci set firewall.@rule[-1].proto='all'",
-			fmt.Sprintf("uci set firewall.@rule[-1].src_mac='%s'", normalizeLanSpeedLimitedDeviceMAC(input.MAC)),
-		)
-	}
-
-	return commands
-}
-
 func (store *defaultLanSpeedLimitWriteStore) ApplyPlan(ctx context.Context, plan SpeedLimitWritePlan) error {
 	_ = store
-	return lanSpeedLimitWriteExec(ctx, buildSpeedLimitWriteCommands(plan.Input, plan))
+	return lanSpeedLimitWriteApplyPlan(ctx, plan)
+}
+
+func applySpeedLimitPlanAt(configDir string, plan SpeedLimitWritePlan) error {
+	tree := uci.NewTree(configDir)
+	needEqos, needFirewall := plan.AddSpeedLimit, plan.AddBlockRule
+	for _, match := range plan.DeleteSections {
+		needEqos = needEqos || match.Config == "eqos"
+		needFirewall = needFirewall || match.Config == "firewall"
+	}
+	if needEqos {
+		if err := tree.LoadConfig("eqos", true); err != nil {
+			return err
+		}
+	}
+	if needFirewall {
+		if err := tree.LoadConfig("firewall", true); err != nil {
+			return err
+		}
+	}
+	if err := applySpeedLimitPlanToTree(tree, plan); err != nil {
+		return err
+	}
+	return tree.Commit()
+}
+
+func applySpeedLimitPlanToTree(tree uci.Tree, plan SpeedLimitWritePlan) error {
+	for _, match := range plan.DeleteSections {
+		if match.Config != "eqos" && match.Config != "firewall" {
+			return errors.New("unsupported speed policy config")
+		}
+		tree.DelSection(match.Config, match.SectionName)
+	}
+	sectionID := func(prefix, identity string) string {
+		sum := sha256.Sum256([]byte(identity))
+		return prefix + hex.EncodeToString(sum[:6])
+	}
+	if plan.AddSpeedLimit {
+		section := sectionID("quickstart_speed_", plan.Input.IP)
+		tree.DelSection("eqos", section)
+		if err := tree.AddSection("eqos", section, "device"); err != nil {
+			return err
+		}
+		if !tree.Set("eqos", section, "ip", plan.Input.IP) ||
+			!tree.Set("eqos", section, "download", strconv.FormatInt(plan.Input.DownloadSpeed, 10)) ||
+			!tree.Set("eqos", section, "upload", strconv.FormatInt(plan.Input.UploadSpeed, 10)) ||
+			!tree.Set("eqos", section, "comment", safeSpeedPolicyComment(plan.Input.Comment)) {
+			return errors.New("set speed policy")
+		}
+	}
+	if plan.AddBlockRule {
+		section := sectionID("quickstart_block_", normalizeLanSpeedLimitedDeviceMAC(plan.Input.MAC))
+		tree.DelSection("firewall", section)
+		if err := tree.AddSection("firewall", section, "rule"); err != nil {
+			return err
+		}
+		if !tree.Set("firewall", section, "name", buildBlockedRuleName(plan.Input.MAC)) ||
+			!tree.Set("firewall", section, "src", "lan") || !tree.Set("firewall", section, "dest", "wan") ||
+			!tree.Set("firewall", section, "target", "REJECT") || !tree.Set("firewall", section, "proto", "all") ||
+			!tree.Set("firewall", section, "src_mac", normalizeLanSpeedLimitedDeviceMAC(plan.Input.MAC)) {
+			return errors.New("set access policy")
+		}
+	}
+	return nil
+}
+
+func safeSpeedPolicyComment(value string) string {
+	runes := []rune(strings.TrimSpace(value))
+	if len(runes) > 64 {
+		runes = runes[:64]
+	}
+	for index, character := range runes {
+		if character == '\'' {
+			runes[index] = '’'
+		} else if unicode.IsControl(character) {
+			runes[index] = ' '
+		}
+	}
+	return strings.TrimSpace(string(runes))
 }
 
 func (store *defaultLanSpeedLimitWriteStore) ReadRuleMatches(ctx context.Context) ([]SpeedLimitRuleMatch, []SpeedLimitRuleMatch, error) {

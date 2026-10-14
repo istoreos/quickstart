@@ -94,8 +94,6 @@ func TestBuildNetworkInterfaceGetConfigResult(t *testing.T) {
 }
 
 func TestDefaultNetworkInterfaceInventoryReaderFiltersDockerAndLoopback(t *testing.T) {
-	t.Parallel()
-
 	original := readNetworkInterfaceInventorySnapshots
 	readNetworkInterfaceInventorySnapshots = func(ctx context.Context) ([]NetworkInterfaceInventorySnapshot, error) {
 		return []NetworkInterfaceInventorySnapshot{
@@ -121,8 +119,6 @@ func TestDefaultNetworkInterfaceInventoryReaderFiltersDockerAndLoopback(t *testi
 }
 
 func TestDefaultNetworkInterfaceInventoryReaderMapsLegacyError(t *testing.T) {
-	t.Parallel()
-
 	original := readNetworkInterfaceInventorySnapshots
 	readNetworkInterfaceInventorySnapshots = func(ctx context.Context) ([]NetworkInterfaceInventorySnapshot, error) {
 		return nil, errors.New("ubus failed")

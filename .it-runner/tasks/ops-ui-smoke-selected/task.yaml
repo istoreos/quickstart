@@ -1,0 +1,13 @@
+version: "1"
+name: ops-ui-smoke-selected
+description: Run authenticated desktop, tablet, and mobile UI smoke on the selected Quickstart target
+tags: [ops, smoke, ui, remote]
+workspace:
+  workdir: ${PROJECT_ROOT}
+watch:
+  stateFile: ${PROJECT_ROOT}/.it-runner/states/ops-ui-smoke-selected.STATE
+logs:
+  rootDir: .it-runner/logs
+run:
+  cmds:
+    - make ops-ui-smoke-selected

@@ -12,7 +12,9 @@ type LanDeviceSnapshot struct {
 }
 
 type HostHintSnapshot struct {
-	Hostname string
+	Hostname  string
+	IPAddrs   []string
+	IPv6Addrs []string
 }
 
 type TrafficStatSnapshot struct {

@@ -1,0 +1,27 @@
+{
+  "target": "http://192.168.30.244/cgi-bin/luci/admin/quickstart/devicemanagement",
+  "generatedAt": "2026-09-28T02:22:39.882Z",
+  "views": [
+    {
+      "name": "desktop",
+      "width": 1440,
+      "height": 900,
+      "exportedGroups": 0,
+      "exportedDevicePolicies": 0,
+      "exportedQuotas": 0,
+      "consoleErrors": [],
+      "requestFailures": []
+    },
+    {
+      "name": "mobile",
+      "width": 390,
+      "height": 844,
+      "exportedGroups": 0,
+      "exportedDevicePolicies": 0,
+      "exportedQuotas": 0,
+      "consoleErrors": [],
+      "requestFailures": []
+    }
+  ],
+  "failures": []
+}

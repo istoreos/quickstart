@@ -1,12 +1,24 @@
 <template>
     <div class="container">
-        <div style="display: flex;justify-content: end;">
+        <div v-if="capabilityAllowsConfiguration(speedCapability)" class="device-toolbar">
             <SearchVue @handleAdd="showModal = true" @refresh="handleRefresh" @batch-delete="handleBatchDelete"
                 @search="handleSearch" />
         </div>
-        <div>
+        <PageState v-if="isLoading" kind="loading" :title="$gettext('正在加载限速规则')"
+            :description="$gettext('请稍候…')" />
+        <LoadError v-if="loadError" :message="loadError" @retry="handleRefresh" />
+        <PageState v-else-if="speedCapability.state === 'not_installed'" kind="unavailable"
+            :title="$gettext('限速功能未安装')" :description="$gettext('安装限速插件后，才能查看和配置设备限速。')"
+            :action-label="$gettext('前往全局设置')" @action="getGloba" />
+        <PageState v-else-if="speedCapability.state === 'error' && !isLoading" kind="error"
+            :title="$gettext('无法确认限速功能状态')" :description="$gettext('设备信息仍可使用，请重试或检查插件状态。')"
+            :action-label="$gettext('重新加载')" @action="handleRefresh" />
+        <PageState v-else-if="speedCapability.state === 'disabled'" kind="info"
+            :title="$gettext('全局限速尚未开启')" :description="$gettext('已有规则会保留，但在全局限速开启前不会生效。')"
+            :action-label="$gettext('前往全局设置')" @action="getGloba" />
+        <div v-if="!isLoading && !loadError && capabilityAllowsConfiguration(speedCapability)">
             <CustomTable :data="tableData1" :columns="columns" rowKey="mac" :showSelection="showSelection"
-                :showPagination="false" @selection-change="handleSelectionChange">
+                :showPagination="false" :emptyText="$gettext('暂无限速规则')" @selection-change="handleSelectionChange">
                 <template #action="{ row }">
                     <button class="del-button del-button--danger" @click="handelDelete(row)">
                         <span>{{ $gettext('删除') }}</span>
@@ -86,29 +98,39 @@
     </div>
 </template>
 <script setup lang="ts">
-import { ref, computed, reactive } from 'vue'
+import { ref, computed, reactive, onMounted } from 'vue'
 import request from '/@/request';
 import CustomTable from "./components/CustomTable.vue";
 import SearchVue from "./components/search.vue";
 import SwitchVue from "./components/switch.vue";
 import DialogVue from "/@/components/dialog/index.vue";
 import Toast from "/@/components/toast";
+import LoadError from "./components/loadError.vue";
+import PageState from "./components/pageState.vue";
+import { requestErrorMessage } from "./requestError";
+import { capabilityAllowsConfiguration, resolveCapability, type DeviceCapability } from "./deviceCapabilities";
 import { useGettext } from '/@/plugins/i18n'
 const { $gettext } = useGettext()
 
 const emit = defineEmits(['openGloba'])
 const globalData = ref<any>({})
+const speedCapability = ref<DeviceCapability>({ state: 'error', reason: 'loading' })
 const getGlobalData = async () => {
     try {
         const { data } = await request.DeviceMangement.globalConfigs.GET()
         if (data.result) {
             globalData.value = data.result || {}
+            speedCapability.value = resolveCapability(globalData.value, 'speedLimit')
+            return true
+        } else if (data.error) {
+            loadError.value = String(data.error)
         }
     } catch (error) {
-
+        loadError.value = requestErrorMessage(error, `${$gettext('读取结果失败')}，${$gettext('请刷新界面')}`)
     }
+    speedCapability.value = { state: 'error', reason: 'status_unavailable' }
+    return false
 }
-getGlobalData()
 
 const tableData = ref([])
 const tableData1 = ref([])
@@ -126,22 +148,35 @@ const columns = ref([
     { label: '操作', prop: 'action', slot: 'action' }
 ])
 
+const loadError = ref('')
+const isLoading = ref(true)
 const getData = async () => {
-    let load = Toast.Loading($gettext("加载中..."))
     try {
         const { data } = await request.DeviceMangement.listSpeedLimitedDevices.GET()
         // console.log(data, '=======');
         if (data.result) {
             tableData.value = data.result || []
             tableData1.value = data.result || []
+            loadError.value = ''
+        } else if (data.error) {
+            loadError.value = String(data.error)
         }
     } catch (error) {
-
-    } finally {
-        load.Close()
+        loadError.value = requestErrorMessage(error, `${$gettext('读取结果失败')}，${$gettext('请刷新界面')}`)
     }
 }
-getData()
+
+const loadPage = async () => {
+    isLoading.value = true
+    loadError.value = ''
+    const hasConfig = await getGlobalData()
+    if (hasConfig && capabilityAllowsConfiguration(speedCapability.value)) {
+        await getData()
+    }
+    isLoading.value = false
+}
+
+onMounted(loadPage)
 
 // 英文转大写
 const upperCaseEnglish = (str: string) => {
@@ -160,19 +195,14 @@ const handleSelectionChange = (items: any) => {
 
 // 刷新
 const handleRefresh = async () => {
-    tableData.value = []
-    let load = Toast.Loading($gettext("加载中..."))
-    await getData()
-    load.Close()
+    await loadPage()
 }
 
 const searchDevices = (keyword: string) => {
+    const normalizedKeyword = keyword.toLowerCase()
     return tableData.value.filter((device: any) => {
-        // 检查IP地址是否包含关键词
-        const ipMatch = device.ip.includes(keyword);
-        // 检查MAC地址是否包含关键词（忽略大小写）
-        const macMatch = device.mac.toLowerCase().includes(keyword.toLowerCase());
-        return ipMatch || macMatch;
+        return [device.hostname, device.ip, device.mac, device.comment]
+            .some(value => String(value || '').toLowerCase().includes(normalizedKeyword))
     });
 }
 // 搜索
@@ -183,7 +213,8 @@ const handleSearch = (keyword: string) => {
 
 // 单项删除
 const handelDelete = async (row: any) => {
-    if (confirm($gettext("温馨提示：删除设备的限速配置可能影响此设备的带宽，请谨慎操作！"))) {
+    const identity = `${row.hostname || row.ip || $gettext('未命名设备')} · ${String(row.mac || '').slice(-5)}`
+    if (confirm(`${$gettext('确认删除此设备的限速配置？')}\n${identity}`)) {
         let obj = {
             ip: row.ip || '',
             mac: row.mac || '',
@@ -204,13 +235,13 @@ const deleteDevice = async (obj: any, type?: number) => {
             if (JSON.stringify(data) === '{}') {
                 Toast.Success('删除成功' + ' !')
             } else {
-                Toast.Success(data?.error || '删除失败！')
+                Toast.Warning(data?.error || $gettext('配置失败'))
             }
             getData()
         }
         return data;
     } catch (error) {
-
+        Toast.Warning(requestErrorMessage(error, $gettext('配置失败')))
     } finally {
         load.Close()
     }
@@ -221,7 +252,7 @@ const handleBatchDelete = async () => {
     if (selectedItems.value.length === 0) {
         return Toast.Warning($gettext("请勾选要删除的数据") + ' !')
     }
-    if (confirm($gettext("温馨提示：删除设备的限速配置可能影响此设备的带宽，请谨慎操作！"))) {
+    if (confirm(`${$gettext('确认批量删除限速配置？')}\n${selectedItems.value.length} ${$gettext('项')}`)) {
         try {
             const deletePromises = selectedItems.value.map((item: any) => {
                 const obj = {
@@ -239,7 +270,7 @@ const handleBatchDelete = async () => {
             Toast.Success($gettext('所有删除操作已完成'));
             getData();
         } catch (error) {
-
+            Toast.Warning(requestErrorMessage(error, $gettext('配置失败')))
         }
     }
 }
@@ -325,12 +356,12 @@ const speedLimitConfirm = async () => {
             handleRefresh()
             Toast.Success("保存成功" + ' !')
         } else {
-            Toast.Success(data?.error || '保存失败！')
+            Toast.Warning(data?.error || $gettext('配置失败'))
         }
         showModal.value = false
         handleCancel()
     } catch (error: any) {
-        Toast.Warning(`${error?.error} || ${error?.message}`)
+        Toast.Warning(requestErrorMessage(error, $gettext('配置失败')))
     } finally {
         speedLimitData.downloadSpeed = 1000
         speedLimitData.uploadSpeed = 100
@@ -355,6 +386,12 @@ const handleCancel = () => {
 
 
 <style lang="scss" scoped>
+.device-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    max-width: 100%;
+}
+
 .custom-content {
     position: relative;
 
@@ -412,6 +449,12 @@ const handleCancel = () => {
             width: 140px;
             text-align: right;
         }
+    }
+}
+
+@media (max-width: 480px) {
+    .device-toolbar {
+        justify-content: stretch;
     }
 }
 

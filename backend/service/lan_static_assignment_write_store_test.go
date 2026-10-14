@@ -3,245 +3,189 @@ package service
 import (
 	"context"
 	"errors"
-	"reflect"
+	"os"
+	"path/filepath"
+	"strings"
 	"sync"
 	"testing"
+
+	"github.com/digineo/go-uci"
+	"github.com/istoreos/quickstart/backend/modules/lancontrol/staticassignment"
 )
 
 var lanStaticAssignmentWriteTestMu sync.Mutex
 
-func TestDefaultStaticAssignmentWriteStoreRejectsDuplicateIPConflict(t *testing.T) {
-	lanStaticAssignmentWriteTestMu.Lock()
-	defer lanStaticAssignmentWriteTestMu.Unlock()
-
-	originalLoadConfig := lanStaticAssignmentWriteLoadConfig
-	originalGetSections := lanStaticAssignmentWriteGetSections
+func withStaticAssignmentWriteSeams(t *testing.T) {
+	t.Helper()
+	originalLoad := lanStaticAssignmentWriteLoadConfig
+	originalSections := lanStaticAssignmentWriteGetSections
 	originalGetLast := lanStaticAssignmentWriteGetLast
-	originalBatchRun := lanStaticAssignmentWriteBatchRun
-	originalCommitAndApply := lanStaticAssignmentWriteCommitAndApply
+	originalSnapshot := lanStaticAssignmentWriteSnapshot
+	originalPreflight := lanStaticAssignmentWritePreflight
+	originalMutate := lanStaticAssignmentWriteMutate
+	originalReload := lanStaticAssignmentWriteReload
+	originalRestore := lanStaticAssignmentWriteRestore
 	t.Cleanup(func() {
-		lanStaticAssignmentWriteLoadConfig = originalLoadConfig
-		lanStaticAssignmentWriteGetSections = originalGetSections
+		lanStaticAssignmentWriteLoadConfig = originalLoad
+		lanStaticAssignmentWriteGetSections = originalSections
 		lanStaticAssignmentWriteGetLast = originalGetLast
-		lanStaticAssignmentWriteBatchRun = originalBatchRun
-		lanStaticAssignmentWriteCommitAndApply = originalCommitAndApply
+		lanStaticAssignmentWriteSnapshot = originalSnapshot
+		lanStaticAssignmentWritePreflight = originalPreflight
+		lanStaticAssignmentWriteMutate = originalMutate
+		lanStaticAssignmentWriteReload = originalReload
+		lanStaticAssignmentWriteRestore = originalRestore
 	})
-
-	lanStaticAssignmentWriteLoadConfig = func(config string, overwrite bool) error {
-		return nil
-	}
-	lanStaticAssignmentWriteGetSections = func(config, stype string) ([]string, bool) {
-		return []string{"cfg01"}, true
-	}
-	lanStaticAssignmentWriteGetLast = func(config, section, option string) (string, bool) {
-		switch option {
-		case "mac":
-			return "AA:BB:CC:DD:EE:09", true
-		case "ip":
-			return "192.168.100.12", true
-		default:
-			return "", false
-		}
-	}
-	lanStaticAssignmentWriteBatchRun = func(ctx context.Context, cmdList []string, timeout int) error {
-		t.Fatalf("BatchRun should not be called on duplicate IP conflict")
-		return nil
-	}
-	lanStaticAssignmentWriteCommitAndApply = func(ctx context.Context, configs []string) error {
-		t.Fatalf("UciCommitAndApply should not be called on duplicate IP conflict")
-		return nil
-	}
-
-	store := NewDefaultStaticAssignmentWriteStore()
-	err := store.ApplyStaticAssignment(context.Background(), StaticAssignmentWriteInput{
-		Action:      "add",
-		AssignedMAC: "AA:BB:CC:DD:EE:03",
-		AssignedIP:  "192.168.100.12",
-		BindIP:      true,
-	})
-	if err == nil || err.Error() != "ip is already in use" {
-		t.Fatalf("err = %v, want ip is already in use", err)
-	}
 }
 
-func TestDefaultStaticAssignmentWriteStoreIgnoresDuplicateIPWhenBindIPDisabled(t *testing.T) {
+func configureStaticAssignmentHappyPath(t *testing.T) *[]string {
+	t.Helper()
+	calls := &[]string{}
+	lanStaticAssignmentWriteLoadConfig = func(string, bool) error { *calls = append(*calls, "load"); return nil }
+	lanStaticAssignmentWriteGetSections = func(string, string) ([]string, bool) { return nil, true }
+	lanStaticAssignmentWriteGetLast = func(string, string, string) (string, bool) { return "", false }
+	lanStaticAssignmentWritePreflight = func(context.Context, StaticAssignmentWriteInput) error {
+		*calls = append(*calls, "preflight")
+		return nil
+	}
+	lanStaticAssignmentWriteSnapshot = func() (dhcpConfigSnapshot, error) {
+		*calls = append(*calls, "snapshot")
+		return dhcpConfigSnapshot{Data: []byte("old"), Mode: 0o600}, nil
+	}
+	lanStaticAssignmentWriteMutate = func(StaticAssignmentWriteInput, []staticassignment.HostRecord) error {
+		*calls = append(*calls, "mutate")
+		return nil
+	}
+	lanStaticAssignmentWriteReload = func(context.Context) error { *calls = append(*calls, "reload"); return nil }
+	lanStaticAssignmentWriteRestore = func(context.Context, dhcpConfigSnapshot) error { *calls = append(*calls, "restore"); return nil }
+	return calls
+}
+
+func TestDefaultStaticAssignmentWriteStoreAppliesSafeTransaction(t *testing.T) {
 	lanStaticAssignmentWriteTestMu.Lock()
 	defer lanStaticAssignmentWriteTestMu.Unlock()
-
-	originalLoadConfig := lanStaticAssignmentWriteLoadConfig
-	originalGetSections := lanStaticAssignmentWriteGetSections
-	originalGetLast := lanStaticAssignmentWriteGetLast
-	originalBatchRun := lanStaticAssignmentWriteBatchRun
-	originalCommitAndApply := lanStaticAssignmentWriteCommitAndApply
-	t.Cleanup(func() {
-		lanStaticAssignmentWriteLoadConfig = originalLoadConfig
-		lanStaticAssignmentWriteGetSections = originalGetSections
-		lanStaticAssignmentWriteGetLast = originalGetLast
-		lanStaticAssignmentWriteBatchRun = originalBatchRun
-		lanStaticAssignmentWriteCommitAndApply = originalCommitAndApply
-	})
-
-	lanStaticAssignmentWriteLoadConfig = func(config string, overwrite bool) error {
+	withStaticAssignmentWriteSeams(t)
+	calls := configureStaticAssignmentHappyPath(t)
+	var gotInput StaticAssignmentWriteInput
+	lanStaticAssignmentWriteMutate = func(input StaticAssignmentWriteInput, _ []staticassignment.HostRecord) error {
+		*calls = append(*calls, "mutate")
+		gotInput = input
 		return nil
 	}
-	lanStaticAssignmentWriteGetSections = func(config, stype string) ([]string, bool) {
-		return []string{"cfg01"}, true
-	}
-	lanStaticAssignmentWriteGetLast = func(config, section, option string) (string, bool) {
-		switch option {
-		case "mac":
-			return "AA:BB:CC:DD:EE:09", true
-		case "ip":
-			return "192.168.100.12", true
-		default:
-			return "", false
-		}
-	}
-
-	var gotCommands []string
-	lanStaticAssignmentWriteBatchRun = func(ctx context.Context, cmdList []string, timeout int) error {
-		gotCommands = append(gotCommands, cmdList...)
-		return nil
-	}
-	lanStaticAssignmentWriteCommitAndApply = func(ctx context.Context, configs []string) error {
-		return nil
-	}
-
-	store := NewDefaultStaticAssignmentWriteStore()
-	err := store.ApplyStaticAssignment(context.Background(), StaticAssignmentWriteInput{
-		Action:      "add",
-		AssignedMAC: "AA:BB:CC:DD:EE:03",
-		AssignedIP:  "192.168.100.12",
-		BindIP:      false,
+	err := (&defaultStaticAssignmentWriteStore{}).ApplyStaticAssignment(context.Background(), StaticAssignmentWriteInput{
+		Action: "add", AssignedMAC: "AA:BB:CC:DD:EE:03", Hostname: "printer",
 	})
 	if err != nil {
-		t.Fatalf("ApplyStaticAssignment returned error: %v", err)
+		t.Fatalf("ApplyStaticAssignment: %v", err)
 	}
-	if len(gotCommands) == 0 {
-		t.Fatal("expected command plan to be executed")
+	if strings.Join(*calls, ",") != "load,preflight,snapshot,mutate,reload" {
+		t.Fatalf("calls = %v", *calls)
 	}
-	for _, command := range gotCommands {
-		if command == "uci set dhcp.@host[-1].ip='192.168.100.12'" {
-			t.Fatalf("unexpected ip write command: %q", command)
-		}
+	if gotInput.Hostname != "printer" {
+		t.Fatalf("mutate input = %+v", gotInput)
 	}
 }
 
-func TestDefaultStaticAssignmentWriteStoreAppliesPlannedCommands(t *testing.T) {
+func TestDefaultStaticAssignmentWriteStoreRejectsConflictBeforeMutation(t *testing.T) {
 	lanStaticAssignmentWriteTestMu.Lock()
 	defer lanStaticAssignmentWriteTestMu.Unlock()
-
-	originalLoadConfig := lanStaticAssignmentWriteLoadConfig
-	originalGetSections := lanStaticAssignmentWriteGetSections
-	originalGetLast := lanStaticAssignmentWriteGetLast
-	originalBatchRun := lanStaticAssignmentWriteBatchRun
-	originalCommitAndApply := lanStaticAssignmentWriteCommitAndApply
-	t.Cleanup(func() {
-		lanStaticAssignmentWriteLoadConfig = originalLoadConfig
-		lanStaticAssignmentWriteGetSections = originalGetSections
-		lanStaticAssignmentWriteGetLast = originalGetLast
-		lanStaticAssignmentWriteBatchRun = originalBatchRun
-		lanStaticAssignmentWriteCommitAndApply = originalCommitAndApply
-	})
-
-	lanStaticAssignmentWriteLoadConfig = func(config string, overwrite bool) error {
-		return nil
-	}
-	lanStaticAssignmentWriteGetSections = func(config, stype string) ([]string, bool) {
-		return []string{"cfg01"}, true
-	}
-	lanStaticAssignmentWriteGetLast = func(config, section, option string) (string, bool) {
-		switch option {
-		case "mac":
+	withStaticAssignmentWriteSeams(t)
+	calls := configureStaticAssignmentHappyPath(t)
+	lanStaticAssignmentWriteGetSections = func(string, string) ([]string, bool) { return []string{"cfg01"}, true }
+	lanStaticAssignmentWriteGetLast = func(_, _, option string) (string, bool) {
+		if option == "mac" {
 			return "AA:BB:CC:DD:EE:99", true
-		case "ip":
-			return "192.168.100.50", true
-		default:
-			return "", false
 		}
-	}
-
-	var gotCommands []string
-	lanStaticAssignmentWriteBatchRun = func(ctx context.Context, cmdList []string, timeout int) error {
-		gotCommands = append(gotCommands, cmdList...)
-		return nil
-	}
-	var committed []string
-	lanStaticAssignmentWriteCommitAndApply = func(ctx context.Context, configs []string) error {
-		committed = append(committed, configs...)
-		return nil
-	}
-
-	store := NewDefaultStaticAssignmentWriteStore()
-	err := store.ApplyStaticAssignment(context.Background(), StaticAssignmentWriteInput{
-		Action:      "add",
-		AssignedMAC: "AA:BB:CC:DD:EE:03",
-		AssignedIP:  "192.168.100.12",
-		BindIP:      true,
-		Hostname:    "printer",
-		TagName:     "guest",
-		TagTitle:    "Guest",
-	})
-	if err != nil {
-		t.Fatalf("ApplyStaticAssignment returned error: %v", err)
-	}
-	wantCommands := []string{
-		"uci add dhcp host",
-		"uci set dhcp.@host[-1].enabled='1'",
-		"uci set dhcp.@host[-1].mac='AA:BB:CC:DD:EE:03'",
-		"uci set dhcp.@host[-1].tag='guest'",
-		"uci set dhcp.@host[-1].tag_title='Guest'",
-		"uci set dhcp.@host[-1].name='printer'",
-		"uci set dhcp.@host[-1].ip='192.168.100.12'",
-	}
-	if !reflect.DeepEqual(gotCommands, wantCommands) {
-		t.Fatalf("commands = %#v, want %#v", gotCommands, wantCommands)
-	}
-	if len(committed) != 1 || committed[0] != "dhcp" {
-		t.Fatalf("committed = %+v, want [dhcp]", committed)
-	}
-}
-
-func TestDefaultStaticAssignmentWriteStorePropagatesBatchRunError(t *testing.T) {
-	lanStaticAssignmentWriteTestMu.Lock()
-	defer lanStaticAssignmentWriteTestMu.Unlock()
-
-	originalLoadConfig := lanStaticAssignmentWriteLoadConfig
-	originalGetSections := lanStaticAssignmentWriteGetSections
-	originalGetLast := lanStaticAssignmentWriteGetLast
-	originalBatchRun := lanStaticAssignmentWriteBatchRun
-	originalCommitAndApply := lanStaticAssignmentWriteCommitAndApply
-	t.Cleanup(func() {
-		lanStaticAssignmentWriteLoadConfig = originalLoadConfig
-		lanStaticAssignmentWriteGetSections = originalGetSections
-		lanStaticAssignmentWriteGetLast = originalGetLast
-		lanStaticAssignmentWriteBatchRun = originalBatchRun
-		lanStaticAssignmentWriteCommitAndApply = originalCommitAndApply
-	})
-
-	lanStaticAssignmentWriteLoadConfig = func(config string, overwrite bool) error {
-		return nil
-	}
-	lanStaticAssignmentWriteGetSections = func(config, stype string) ([]string, bool) {
-		return nil, true
-	}
-	lanStaticAssignmentWriteGetLast = func(config, section, option string) (string, bool) {
+		if option == "ip" {
+			return "192.168.100.20", true
+		}
 		return "", false
 	}
-	lanStaticAssignmentWriteBatchRun = func(ctx context.Context, cmdList []string, timeout int) error {
-		return errors.New("batch failed")
-	}
-	lanStaticAssignmentWriteCommitAndApply = func(ctx context.Context, configs []string) error {
-		t.Fatalf("UciCommitAndApply should not be called after batch failure")
-		return nil
-	}
-
-	store := NewDefaultStaticAssignmentWriteStore()
-	err := store.ApplyStaticAssignment(context.Background(), StaticAssignmentWriteInput{
-		Action:      "delete",
-		AssignedMAC: "AA:BB:CC:DD:EE:03",
+	err := (&defaultStaticAssignmentWriteStore{}).ApplyStaticAssignment(context.Background(), StaticAssignmentWriteInput{
+		Action: "add", AssignedMAC: "AA:BB:CC:DD:EE:03", AssignedIP: "192.168.100.20", BindIP: true,
 	})
-	if err == nil || err.Error() != "batch failed" {
-		t.Fatalf("err = %v, want batch failed", err)
+	if err == nil || err.Error() != "ip is already in use" {
+		t.Fatalf("err = %v", err)
+	}
+	if strings.Join(*calls, ",") != "load" {
+		t.Fatalf("unexpected calls = %v", *calls)
+	}
+}
+
+func TestDefaultStaticAssignmentWriteStoreStopsOnPreflightFailure(t *testing.T) {
+	lanStaticAssignmentWriteTestMu.Lock()
+	defer lanStaticAssignmentWriteTestMu.Unlock()
+	withStaticAssignmentWriteSeams(t)
+	calls := configureStaticAssignmentHappyPath(t)
+	lanStaticAssignmentWritePreflight = func(context.Context, StaticAssignmentWriteInput) error {
+		*calls = append(*calls, "preflight")
+		return errors.New("bad DHCP host name")
+	}
+	err := (&defaultStaticAssignmentWriteStore{}).ApplyStaticAssignment(context.Background(), StaticAssignmentWriteInput{Action: "add", AssignedMAC: "AA:BB:CC:DD:EE:03"})
+	if err == nil || !strings.Contains(err.Error(), "preflight") {
+		t.Fatalf("err = %v", err)
+	}
+	if strings.Join(*calls, ",") != "load,preflight" {
+		t.Fatalf("unexpected calls = %v", *calls)
+	}
+}
+
+func TestDefaultStaticAssignmentWriteStoreRollsBackMutationAndReloadFailures(t *testing.T) {
+	for _, stage := range []string{"mutate", "reload"} {
+		stage := stage
+		t.Run(stage, func(t *testing.T) {
+			lanStaticAssignmentWriteTestMu.Lock()
+			defer lanStaticAssignmentWriteTestMu.Unlock()
+			withStaticAssignmentWriteSeams(t)
+			calls := configureStaticAssignmentHappyPath(t)
+			if stage == "mutate" {
+				lanStaticAssignmentWriteMutate = func(StaticAssignmentWriteInput, []staticassignment.HostRecord) error {
+					*calls = append(*calls, "mutate")
+					return errors.New("write failed")
+				}
+			} else {
+				lanStaticAssignmentWriteReload = func(context.Context) error { *calls = append(*calls, "reload"); return errors.New("dnsmasq stopped") }
+			}
+			err := (&defaultStaticAssignmentWriteStore{}).ApplyStaticAssignment(context.Background(), StaticAssignmentWriteInput{Action: "add", AssignedMAC: "AA:BB:CC:DD:EE:03"})
+			if err == nil {
+				t.Fatal("expected error")
+			}
+			if (*calls)[len(*calls)-1] != "restore" {
+				t.Fatalf("rollback was not last call: %v", *calls)
+			}
+		})
+	}
+}
+
+func TestMutateStaticAssignmentConfigAtWritesTypedUCIWithoutShell(t *testing.T) {
+	t.Parallel()
+	dir := t.TempDir()
+	initial := "config dnsmasq 'main'\n\toption domainneeded '1'\n\nconfig host 'old_host'\n\toption mac 'AA:BB:CC:DD:EE:03'\n\toption name 'old'\n"
+	if err := os.WriteFile(filepath.Join(dir, "dhcp"), []byte(initial), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	input := StaticAssignmentWriteInput{
+		Action: "add", AssignedMAC: "AA:BB:CC:DD:EE:03", AssignedIP: "192.168.100.20", BindIP: true,
+		Hostname: "living-room-tv", TagName: "t_auto_c0a86401", TagTitle: "旁路由", MaterializeAutoTag: true,
+	}
+	hosts := []staticassignment.HostRecord{{SectionName: "old_host", MAC: input.AssignedMAC}}
+	if err := mutateStaticAssignmentConfigAt(dir, input, hosts); err != nil {
+		t.Fatalf("mutate config: %v", err)
+	}
+	tree := uci.NewTree(dir)
+	if err := tree.LoadConfig("dhcp", true); err != nil {
+		t.Fatal(err)
+	}
+	section := "quickstart_aabbccddee03"
+	if got, _ := tree.GetLast("dhcp", section, "name"); got != "living-room-tv" {
+		t.Fatalf("name = %q", got)
+	}
+	if got, _ := tree.GetLast("dhcp", section, "tag_title"); got != "旁路由" {
+		t.Fatalf("tag title = %q", got)
+	}
+	if got, _ := tree.GetLast("dhcp", section, "ip"); got != "192.168.100.20" {
+		t.Fatalf("ip = %q", got)
+	}
+	if sections, _ := tree.GetSections("dhcp", "host"); len(sections) != 1 || sections[0] != section {
+		t.Fatalf("host sections = %v", sections)
 	}
 }

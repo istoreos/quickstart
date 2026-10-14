@@ -1,0 +1,9 @@
+M23 verification, 2026-09-25
+
+- backend: go test ./... — 1413 passed in 89 packages
+- migration fixtures: 9 legacy kinds represented
+- dry-run write count: 0
+- apply: expected-version conflict, idempotent repeat, commit failure rollback, verification failure rollback, restore failure recovery_required all pass
+- route contract: GET migration plan and POST migration apply pass
+- coverage matrix validator/self-test: pass, 55 requirements
+- web regression: 42 passed, 0 failed

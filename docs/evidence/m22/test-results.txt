@@ -1,0 +1,10 @@
+M22 verification, 2026-09-25
+
+- make verify-product: pass
+- matrix requirements: 55
+- migrated prototype requirements: 48/48
+- P0 additions: 7/7
+- validator negative self-tests: duplicate ID, missing layer, illegal status, missing verified evidence all rejected
+- nine-row cross-domain spot check: each row has a truthful blocker
+- make help: pass; verify-product target visible
+- git diff --check: pass

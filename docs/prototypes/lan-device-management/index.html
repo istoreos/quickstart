@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PROTOTYPE — 局域网设备管理低保真</title>
+  <!--
+    PROTOTYPE — 不得作为生产代码。
+    验证问题：完整能力融入“设备优先”结构后，是否仍然清楚、轻量、容易操作？
+    三个布局方案通过 ?variant=A|B|C 切换；screen、context、device 和 modal 参数用于复现评审状态。
+    归档位置：docs/prototypes/lan-device-management/
+    后台运行：./scripts/run-lowfi-server.sh start
+  -->
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #20242c;
+      --muted: #6d7480;
+      --line: #d8dce3;
+      --soft: #f3f4f6;
+      --paper: #fff;
+      --accent: #5b4ae8;
+      --accent-soft: #eeecff;
+      --warn: #a75c00;
+      --warn-soft: #fff4df;
+      --ok: #20744a;
+      --shadow: 0 12px 36px rgba(25, 28, 38, .12);
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; color: var(--ink); background: #eef0f4; font: 14px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    .shell { width: min(1180px, calc(100% - 32px)); margin: 28px auto 100px; }
+    .prototype-note { display: flex; justify-content: space-between; gap: 16px; margin-bottom: 12px; color: var(--muted); font-size: 12px; }
+    .prototype-note strong { color: #8b4800; }
+    .page { min-height: 720px; padding: 26px; background: var(--paper); border: 1px solid var(--line); border-radius: 16px; box-shadow: 0 8px 24px rgba(30, 35, 46, .06); }
+    h1, h2, h3, h4, p { margin-top: 0; }
+    h1 { margin-bottom: 4px; font-size: 26px; }
+    h2 { font-size: 20px; }
+    h3 { margin-bottom: 6px; font-size: 16px; }
+    .muted { color: var(--muted); }
+    .header { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; margin-bottom: 20px; }
+    .button { min-height: 38px; padding: 8px 14px; color: var(--ink); background: var(--paper); border: 1px solid var(--line); border-radius: 9px; }
+    .button.primary { color: #fff; background: var(--accent); border-color: var(--accent); }
+    .button.quiet { background: transparent; }
+    .tabs { display: flex; gap: 6px; margin-bottom: 22px; padding-bottom: 10px; border-bottom: 1px solid var(--line); overflow-x: auto; }
+    .tabs button { flex: none; padding: 8px 14px; color: var(--muted); background: transparent; border: 0; border-radius: 8px; }
+    .tabs button.active { color: var(--accent); background: var(--accent-soft); font-weight: 650; }
+    .toolbar { display: flex; align-items: center; gap: 10px; margin: 14px 0; }
+    .search { flex: 1; min-width: 180px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 9px; }
+    .segmented { display: flex; gap: 4px; }
+    .segmented button { padding: 7px 11px; color: var(--muted); background: var(--soft); border: 0; border-radius: 8px; }
+    .segmented .active { color: var(--ink); background: #e1e4ea; font-weight: 650; }
+    .summary { display: flex; gap: 22px; color: var(--muted); }
+    .summary b { color: var(--ink); font-size: 17px; }
+    table { width: 100%; border-collapse: collapse; }
+    th { padding: 10px; color: var(--muted); background: var(--soft); text-align: left; font-size: 12px; font-weight: 600; }
+    td { padding: 14px 10px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+    tbody tr:hover { background: #fafaff; }
+    .device { display: flex; align-items: center; gap: 11px; }
+    .device-icon { display: grid; width: 40px; height: 40px; place-items: center; background: var(--soft); border: 1px solid var(--line); border-radius: 11px; font-size: 20px; }
+    .device strong, .device small { display: block; }
+    .device small { color: var(--muted); }
+    .status::before { content: ""; display: inline-block; width: 7px; height: 7px; margin-right: 6px; background: #2cab6e; border-radius: 50%; }
+    .status.offline::before { background: #adb2bc; }
+    .tag { display: inline-block; margin: 2px 4px 2px 0; padding: 3px 7px; color: #3d348a; background: var(--accent-soft); border-radius: 999px; font-size: 12px; }
+    .tag.warn { color: var(--warn); background: var(--warn-soft); }
+    .cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .card { padding: 17px; background: var(--paper); border: 1px solid var(--line); border-radius: 12px; }
+    .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+    .facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 16px; }
+    .fact { padding: 10px; background: var(--soft); border-radius: 8px; }
+    .fact small, .fact strong { display: block; }
+    .fact small { color: var(--muted); }
+    .drawer-backdrop { position: fixed; z-index: 10; inset: 0; display: none; justify-content: flex-end; background: rgba(25, 28, 36, .25); }
+    .drawer-backdrop.open { display: flex; }
+    .drawer { width: min(590px, 100%); height: 100%; padding: 22px; overflow: auto; background: var(--paper); box-shadow: var(--shadow); }
+    .drawer-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+    .section { margin-top: 18px; padding: 16px; border: 1px solid var(--line); border-radius: 11px; }
+    .section-head { display: flex; justify-content: space-between; gap: 12px; }
+    .row { display: grid; grid-template-columns: 150px 1fr; gap: 16px; padding: 8px 0; border-bottom: 1px dashed var(--line); }
+    .row:last-child { border-bottom: 0; }
+    .row span:first-child { color: var(--muted); }
+    .notice { margin: 12px 0; padding: 12px 14px; color: #704700; background: var(--warn-soft); border: 1px solid #f0d098; border-radius: 9px; }
+    .edit-panel { display: none; }
+    .edit-panel.open { display: block; }
+    .choice { display: block; padding: 9px 0; border-bottom: 1px solid var(--line); }
+    .choice:last-child { border-bottom: 0; }
+    .preview { margin-top: 12px; padding: 12px; background: var(--soft); border-radius: 9px; }
+    .form-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px; }
+    .split { display: grid; grid-template-columns: minmax(400px, 1.15fr) minmax(390px, .85fr); min-height: 580px; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+    .split-list { padding: 18px; border-right: 1px solid var(--line); }
+    .split-detail { padding: 18px; background: #fafafa; }
+    .compact-device { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 8px 0; padding: 12px; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; }
+    .compact-device.selected { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft); }
+    .task-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin: 18px 0; }
+    .task { min-height: 140px; padding: 18px; text-align: left; background: var(--paper); border: 1px solid var(--line); border-radius: 12px; }
+    .task b { display: block; margin-bottom: 8px; font-size: 16px; }
+    .task span { color: var(--muted); }
+    .settings-list { display: grid; gap: 12px; }
+    .setting { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 16px; border: 1px solid var(--line); border-radius: 11px; }
+    .setting p { margin: 4px 0 0; color: var(--muted); }
+    .role-switch { display: flex; align-items: center; gap: 7px; }
+    .role-switch button { padding: 5px 8px; color: var(--muted); background: transparent; border: 1px solid var(--line); border-radius: 7px; }
+    .role-switch button.active { color: var(--accent); border-color: var(--accent); }
+    .simulation-controls { display: grid; justify-items: end; gap: 7px; }
+    .capability-scenario { display: flex; align-items: center; gap: 7px; color: var(--muted); }
+    .capability-scenario select { padding: 5px 8px; color: var(--ink); background: var(--paper); border: 1px solid var(--line); border-radius: 7px; }
+    .variant-switcher { position: fixed; z-index: 30; left: 50%; bottom: 20px; display: flex; align-items: center; gap: 12px; padding: 9px 12px; color: #fff; background: #20232a; border-radius: 999px; box-shadow: var(--shadow); transform: translateX(-50%); }
+    .variant-switcher button { width: 32px; height: 32px; color: #fff; background: #393d47; border: 0; border-radius: 50%; font-size: 18px; }
+    .variant-label { min-width: 190px; text-align: center; font-weight: 650; }
+    .prototype-state { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin: -8px 0 18px; padding: 10px 12px; color: #454b57; background: #f7f7fa; border: 1px dashed #cdd1d9; border-radius: 9px; font-size: 12px; }
+    .prototype-state b { color: var(--ink); }
+    .prototype-state .button { min-height: 30px; padding: 4px 9px; font-size: 12px; }
+    .button.danger { color: #a33333; border-color: #e0b5b5; }
+    .button.small { min-height: 30px; padding: 4px 9px; font-size: 12px; }
+    .button:disabled { cursor: not-allowed; opacity: .48; }
+    .quick-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+    .status-line { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 14px; padding: 10px 12px; color: #245a3b; background: #ecf8f1; border-radius: 9px; }
+    .status-line.pending { color: #725000; background: var(--warn-soft); }
+    .status-line.failed { color: #8d3030; background: #fff0f0; }
+    .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 13px; }
+    .field { display: grid; gap: 6px; color: var(--muted); }
+    .field.full { grid-column: 1 / -1; }
+    .field input, .field select, .field textarea { width: 100%; padding: 10px 11px; color: var(--ink); background: var(--paper); border: 1px solid var(--line); border-radius: 8px; }
+    .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--accent); outline: 2px solid var(--accent-soft); }
+    .field-hint { color: var(--muted); font-size: 12px; }
+    .field-error { color: #a33333; font-size: 12px; }
+    .check-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+    .check-card { display: flex; gap: 9px; padding: 10px; border: 1px solid var(--line); border-radius: 9px; }
+    .icon-current { display: flex; align-items: center; gap: 14px; margin: 14px 0; padding: 13px; background: var(--soft); border-radius: 10px; }
+    .icon-preview { display: grid; width: 54px; height: 54px; place-items: center; background: var(--paper); border: 1px solid var(--line); border-radius: 14px; font-size: 28px; }
+    .icon-grid { display: grid; grid-template-columns: repeat(8, minmax(42px, 1fr)); gap: 7px; margin-top: 10px; }
+    .icon-option { display: grid; min-height: 46px; place-items: center; background: var(--paper); border: 1px solid var(--line); border-radius: 9px; font-size: 22px; }
+    .icon-option:hover, .icon-option.selected { border-color: var(--accent); background: var(--accent-soft); }
+    .capability-inline { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 10px 0; padding: 11px 12px; background: var(--warn-soft); border: 1px solid #f0d098; border-radius: 9px; }
+    .capability-inline p { margin: 3px 0 0; color: #704700; }
+    .modal-backdrop { position: fixed; z-index: 20; inset: 0; display: none; align-items: center; justify-content: center; padding: 18px; background: rgba(25, 28, 36, .32); }
+    .modal-backdrop.open { display: flex; }
+    .modal { width: min(680px, 100%); max-height: min(820px, calc(100vh - 36px)); padding: 22px; overflow: auto; background: var(--paper); border-radius: 14px; box-shadow: var(--shadow); }
+    .modal.wide { width: min(860px, 100%); }
+    .modal-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; margin-bottom: 18px; }
+    .modal-head h2 { margin-bottom: 3px; }
+    .modal-footer { position: sticky; bottom: -22px; display: flex; justify-content: flex-end; gap: 8px; margin: 20px -22px -22px; padding: 14px 22px; background: rgba(255,255,255,.96); border-top: 1px solid var(--line); }
+    .subtabs { display: flex; gap: 5px; margin: 4px 0 16px; overflow-x: auto; }
+    .subtabs button { flex: none; padding: 7px 10px; color: var(--muted); background: var(--soft); border: 0; border-radius: 8px; }
+    .subtabs button.active { color: var(--accent); background: var(--accent-soft); font-weight: 650; }
+    .progress { height: 8px; margin: 7px 0; overflow: hidden; background: #e5e7eb; border-radius: 999px; }
+    .progress i { display: block; height: 100%; background: var(--accent); border-radius: inherit; }
+    .chart { display: flex; align-items: end; gap: 5px; height: 92px; margin: 14px 0 6px; padding: 8px; background: var(--soft); border-radius: 9px; }
+    .chart i { flex: 1; min-width: 5px; background: #968bea; border-radius: 3px 3px 0 0; }
+    .timeline { display: grid; gap: 9px; margin: 12px 0; }
+    .timeline-item { display: grid; grid-template-columns: 82px 1fr; gap: 12px; padding-left: 10px; border-left: 2px solid var(--line); }
+    .timeline-item time { color: var(--muted); font-size: 12px; }
+    .route-item { display: grid; grid-template-columns: 1fr auto; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+    .route-item:last-child { border-bottom: 0; }
+    .route-item p { margin: 3px 0 0; color: var(--muted); }
+    .route-actions { display: flex; align-items: center; gap: 7px; }
+    .source-chain { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 9px; color: var(--muted); font-size: 12px; }
+    .source-chain b { padding: 3px 7px; color: var(--ink); background: var(--soft); border-radius: 6px; }
+    details { margin-top: 10px; }
+    summary { color: var(--accent); cursor: pointer; }
+    .toast { position: fixed; z-index: 50; right: 22px; bottom: 78px; display: none; max-width: 360px; padding: 11px 14px; color: #fff; background: #262a33; border-radius: 9px; box-shadow: var(--shadow); }
+    .toast.open { display: block; }
+    .coverage-note { margin-top: 18px; color: var(--muted); font-size: 12px; }
+    .hidden { display: none !important; }
+    @media (max-width: 820px) {
+      .shell { width: 100%; margin-top: 0; }
+      .page { min-height: 100vh; padding: 16px; border: 0; border-radius: 0; }
+      .header, .toolbar { align-items: stretch; flex-direction: column; }
+      .summary { justify-content: space-between; }
+      table, thead, tbody, tr, th, td { display: block; }
+      thead { display: none; }
+      tr { margin-bottom: 10px; padding: 12px; border: 1px solid var(--line); border-radius: 11px; }
+      td { padding: 6px 0; border: 0; }
+      td:nth-child(2), td:nth-child(3), td:nth-child(4) { display: inline-block; margin-right: 12px; }
+      .cards, .task-grid { grid-template-columns: 1fr; }
+      .split { display: block; border: 0; }
+      .split-list { padding: 0; border: 0; }
+      .split-detail { display: none; }
+      .facts { grid-template-columns: 1fr; }
+      .row { grid-template-columns: 120px 1fr; }
+      .prototype-note { flex-direction: column; padding: 10px 14px 0; }
+      .simulation-controls { width: 100%; justify-items: stretch; }
+      .role-switch { width: 100%; flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; }
+      .role-switch button { flex: none; }
+      .capability-scenario { justify-content: space-between; }
+      .prototype-state { align-items: flex-start; flex-direction: column; }
+      .form-grid, .check-grid { grid-template-columns: 1fr; }
+      .icon-grid { grid-template-columns: repeat(6, minmax(40px, 1fr)); }
+      .field.full { grid-column: auto; }
+      .modal-backdrop { align-items: flex-end; padding: 0; }
+      .modal { width: 100%; max-height: 94vh; border-radius: 14px 14px 0 0; }
+      .drawer { width: 100%; }
+      .variant-switcher { bottom: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <div class="prototype-note">
+      <span><strong>低保真原型，不是生产页面</strong> · 数据仅用于评审</span>
+      <div class="simulation-controls">
+        <div class="role-switch" aria-label="模拟路由器上下文">
+          场景：
+          <button data-context="main">主路由 · 本机 DHCP</button>
+          <button data-context="side-local">旁路由 · 本机 DHCP</button>
+          <button data-context="side-external">旁路由 · 外部 DHCP</button>
+          <button data-context="ambiguous">角色不明 · 本机 DHCP</button>
+        </div>
+        <label class="capability-scenario">可选能力：
+          <select id="capability-scenario">
+            <option value="all">全部可用</option>
+            <option value="no-floating">浮动网关未安装</option>
+            <option value="no-speed">设备限速未安装</option>
+            <option value="none">两项均未安装</option>
+            <option value="error">能力状态异常</option>
+          </select>
+        </label>
+      </div>
+    </div>
+    <section class="page">
+      <header class="header">
+        <div><h1>设备管理</h1><p class="muted">管理设备、分组计划和局域网基础能力</p></div>
+        <button class="button primary" id="global-add-device" data-action="add-device">添加设备</button>
+      </header>
+      <nav class="tabs" aria-label="设备管理导航">
+        <button data-screen="device">设备</button>
+        <button data-screen="groups">分组与计划</button>
+        <button data-screen="network">局域网设置</button>
+      </nav>
+
+      <div class="prototype-state" id="prototype-state" aria-live="polite"></div>
+
+      <div id="screen-device"></div>
+      <div id="screen-groups"></div>
+      <div id="screen-network"></div>
+    </section>
+  </main>
+
+  <div class="drawer-backdrop" id="drawer-backdrop">
+    <aside class="drawer" role="dialog" aria-modal="true" aria-label="设备详情" id="drawer-content"></aside>
+  </div>
+
+  <div class="modal-backdrop" id="modal-backdrop">
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" id="modal-content"></section>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <div class="variant-switcher" aria-label="原型方案切换">
+    <button id="previous" aria-label="上一个方案">←</button>
+    <div class="variant-label" id="variant-label"></div>
+    <button id="next" aria-label="下一个方案">→</button>
+  </div>
+
+  <script src="./app.js"></script>
+</body>
+</html>

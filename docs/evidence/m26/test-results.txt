@@ -1,0 +1,17 @@
+M26 self-check — 2026-09-25
+
+PASS backend full suite: 1437 tests / 89 packages
+PASS Router Context fixture and route contract tests
+PASS frontend regression suite: 43 tests
+PASS frontend vue-tsc --noEmit
+PASS API contract markers present in quickstart.yaml and lanctrl.yaml
+
+Fixtures:
+- ordinary primary router + local DHCP
+- downstream/bypass router + observed external DHCP
+- no DHCP evidence
+- local plus external DHCP ambiguity
+- two external DHCP servers
+- multiple default routes
+- local dnsmasq unhealthy
+- probe error then retry recovery

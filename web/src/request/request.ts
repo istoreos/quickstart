@@ -1014,6 +1014,156 @@ export const GuidePage = {
 
 // 设备管理
 export const DeviceMangement = {
+  routerContextV2: {
+    GET() { return Request<any>("/lanctrl/v2/router-context/", { method: "GET" }); },
+  },
+  lanDeviceMigrationV2: {
+    PLAN() { return Request<any>("/lanctrl/v2/migration/plan/", { method: "GET" }); },
+    APPLY(data: { expectedVersion: string }) { return Request<any>("/lanctrl/v2/migration/apply/", { method: "POST", headers: { "Content-Type": "application/json;charset=utf-8" }, body: JSON.stringify(data) }); },
+  },
+  rateLimitMigrationV2: {
+    PLAN() { return Request<any>("/lanctrl/v2/rate-limit-migration/plan/", { method: "GET" }); },
+    APPLY(data: { expectedVersion: string; plan: any }) { return Request<any>("/lanctrl/v2/rate-limit-migration/apply/", { method: "POST", headers: { "Content-Type": "application/json;charset=utf-8" }, body: JSON.stringify(data) }); },
+    ROLLBACK(data: { migrationId: string }) { return Request<any>("/lanctrl/v2/rate-limit-migration/rollback/", { method: "POST", headers: { "Content-Type": "application/json;charset=utf-8" }, body: JSON.stringify(data) }); },
+  },
+  capabilityActionV2: {
+    PLAN(data: { [key: string]: any }) { return Request<any>("/lanctrl/v2/capability-action/plan/", { method: "POST", headers: { "Content-Type": "application/json;charset=utf-8" }, body: JSON.stringify(data) }); },
+    APPLY(data: { [key: string]: any }) { return Request<any>("/lanctrl/v2/capability-action/apply/", { method: "POST", headers: { "Content-Type": "application/json;charset=utf-8" }, body: JSON.stringify(data) }); },
+  },
+  // 版本化设备清单（稳定身份、在线状态与历史地址）
+  deviceInventoryV2: {
+    GET() {
+      return Request<any>("/lanctrl/v2/devices/", {
+        method: "GET",
+      });
+    },
+    POST(data: { mac: string; alias?: string }) {
+      return Request<any>("/lanctrl/v2/devices/", { method: "POST", headers: { "Content-Type": "application/json;charset=utf-8" }, body: JSON.stringify(data) });
+    },
+  },
+  // 设备类型人工修正（稳定身份持久化，临时身份仅本次开机）
+  deviceClassificationV2: {
+    GET(deviceId: string) {
+      return Request<any>(`/lanctrl/v2/device-classification/?deviceId=${encodeURIComponent(deviceId)}`, {
+        method: "GET",
+      });
+    },
+    POST(data: { deviceId: string; action: "set" | "reset"; category?: string }) {
+      return Request<any>("/lanctrl/v2/device-classification/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json;charset=utf-8" },
+        body: JSON.stringify(data),
+      });
+    },
+  },
+  // 用户设备资料：Unicode 备注名与人工类型，不写入 DHCP
+  deviceProfileV2: {
+    GET(deviceId: string) {
+      return Request<any>(`/lanctrl/v2/device-profile/?deviceId=${encodeURIComponent(deviceId)}`, {
+        method: "GET",
+      });
+    },
+    POST(data: { deviceId: string; idempotencyKey?: string; action: "patch" | "reset" | "reset_brand" | "reset_category" | "reset_icon"; alias?: string; brand?: string; category?: string; iconMode?: "auto" | "manual"; iconKey?: string }) {
+      return Request<any>("/lanctrl/v2/device-profile/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json;charset=utf-8" },
+        body: JSON.stringify(data),
+      });
+    },
+  },
+  // 按稳定设备身份聚合的实时遥测
+  deviceTrafficV2: {
+    GET() {
+      return Request<any>("/lanctrl/v2/device-traffic/", {
+        method: "GET",
+      });
+    },
+  },
+  devicePolicyV2: {
+    GET(deviceId: string) {
+      return Request<any>(`/lanctrl/v2/device-policy/?deviceId=${encodeURIComponent(deviceId)}`, {
+        method: "GET",
+      });
+    },
+    POST(data: { [key: string]: any }) {
+      return Request<any>("/lanctrl/v2/device-policy/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json;charset=utf-8" },
+        body: JSON.stringify(data),
+      });
+    },
+  },
+  // 地址预留与上网路线使用同一 DHCP 事务，接口不暴露内部标签
+  deviceNetworkPolicyV2: {
+    GET(deviceId: string) {
+      return Request<any>(`/lanctrl/v2/device-network-policy/?deviceId=${encodeURIComponent(deviceId)}`, {
+        method: "GET",
+      });
+    },
+    PLAN(data: { [key: string]: any }) {
+      return Request<any>("/lanctrl/v2/device-network-policy/plan/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json;charset=utf-8" },
+        body: JSON.stringify(data),
+      });
+    },
+    APPLY(data: { [key: string]: any }) {
+      return Request<any>("/lanctrl/v2/device-network-policy/apply/", { method: "POST", headers: { "Content-Type": "application/json;charset=utf-8" }, body: JSON.stringify(data) });
+    },
+  },
+  deviceRestrictionsV2: {
+    PLAN(data: { [key: string]: any }) { return Request<any>("/lanctrl/v2/device-restrictions/plan/", { method: "POST", headers: { "Content-Type": "application/json;charset=utf-8" }, body: JSON.stringify(data) }); },
+    APPLY(data: { [key: string]: any }) { return Request<any>("/lanctrl/v2/device-restrictions/apply/", { method: "POST", headers: { "Content-Type": "application/json;charset=utf-8" }, body: JSON.stringify(data) }); },
+  },
+  rateLimitSettingsV2: {
+    PLAN(data: { [key: string]: any }) { return Request<any>("/lanctrl/v2/rate-limit-settings/plan/", { method: "POST", headers: { "Content-Type": "application/json;charset=utf-8" }, body: JSON.stringify(data) }); },
+    APPLY(data: { [key: string]: any }) { return Request<any>("/lanctrl/v2/rate-limit-settings/apply/", { method: "POST", headers: { "Content-Type": "application/json;charset=utf-8" }, body: JSON.stringify(data) }); },
+  },
+  gatewayTargetsV2: {
+    GET() { return Request<any>("/lanctrl/v2/gateway-targets/", { method: "GET" }); },
+  },
+  gatewayTargetV2: {
+    PLAN(data: { [key: string]: any }) { return Request<any>("/lanctrl/v2/gateway-target/plan/", { method: "POST", headers: { "Content-Type": "application/json;charset=utf-8" }, body: JSON.stringify(data) }); },
+    APPLY(data: { [key: string]: any }) { return Request<any>("/lanctrl/v2/gateway-target/apply/", { method: "POST", headers: { "Content-Type": "application/json;charset=utf-8" }, body: JSON.stringify(data) }); },
+    REFERENCES(targetId: string) { return Request<any>(`/lanctrl/v2/gateway-target-references/?targetId=${encodeURIComponent(targetId)}`, { method: "GET" }); },
+  },
+  lanDhcpSettingsV2: {
+    GET() { return Request<any>("/lanctrl/v2/lan-dhcp-settings/", { method: "GET" }); },
+    PLAN(data: { [key: string]: any }) { return Request<any>("/lanctrl/v2/lan-dhcp-settings/plan/", { method: "POST", headers: { "Content-Type": "application/json;charset=utf-8" }, body: JSON.stringify(data) }); },
+    APPLY(data: { [key: string]: any }) { return Request<any>("/lanctrl/v2/lan-dhcp-settings/apply/", { method: "POST", headers: { "Content-Type": "application/json;charset=utf-8" }, body: JSON.stringify(data) }); },
+  },
+  floatingGatewayV2: {
+    GET() { return Request<any>("/lanctrl/v2/floating-gateway/", { method: "GET" }); },
+    PLAN(data: { [key: string]: any }) { return Request<any>("/lanctrl/v2/floating-gateway/plan/", { method: "POST", headers: { "Content-Type": "application/json;charset=utf-8" }, body: JSON.stringify(data) }); },
+    APPLY(data: { [key: string]: any }) { return Request<any>("/lanctrl/v2/floating-gateway/apply/", { method: "POST", headers: { "Content-Type": "application/json;charset=utf-8" }, body: JSON.stringify(data) }); },
+    DRILL() { return Request<any>("/lanctrl/v2/floating-gateway/drill-plan/", { method: "GET" }); },
+  },
+  networkRulesV2: {
+    GET() { return Request<any>("/lanctrl/v2/network-rules/", { method: "GET" }); },
+    PLAN(data: { [key: string]: any }) { return Request<any>("/lanctrl/v2/network-rules/plan/", { method: "POST", headers: { "Content-Type": "application/json;charset=utf-8" }, body: JSON.stringify(data) }); },
+    APPLY(data: { [key: string]: any }) { return Request<any>("/lanctrl/v2/network-rules/apply/", { method: "POST", headers: { "Content-Type": "application/json;charset=utf-8" }, body: JSON.stringify(data) }); },
+  },
+  deviceGroupsV2: {
+    GET() { return Request<any>("/lanctrl/v2/device-groups/", { method: "GET" }); },
+    POST(data: { [key: string]: any }) { return Request<any>("/lanctrl/v2/device-groups/", { method: "POST", headers: { "Content-Type": "application/json;charset=utf-8" }, body: JSON.stringify(data) }); },
+  },
+  trafficInsightsV2: {
+    GET(deviceId: string, range: string) { return Request<any>(`/lanctrl/v2/traffic-insights/?deviceId=${encodeURIComponent(deviceId)}&range=${encodeURIComponent(range)}`, { method: "GET" }); },
+    QUOTA(data: { [key: string]: any }) { return Request<any>("/lanctrl/v2/traffic-quota/", { method: "POST", headers: { "Content-Type": "application/json;charset=utf-8" }, body: JSON.stringify(data) }); },
+  },
+  advancedNetworkV2: {
+    GET(deviceId: string) { return Request<any>(`/lanctrl/v2/advanced-network/?deviceId=${encodeURIComponent(deviceId)}`, { method: "GET" }); },
+    PROBE(data: { [key: string]: any }) { return Request<any>("/lanctrl/v2/management-probe/", { method: "POST", headers: { "Content-Type": "application/json;charset=utf-8" }, body: JSON.stringify(data) }); },
+    WEBHOOK(data: { [key: string]: any }) { return Request<any>("/lanctrl/v2/network-webhook/", { method: "POST", headers: { "Content-Type": "application/json;charset=utf-8" }, body: JSON.stringify(data) }); },
+    EXPORT() { return Request<any>("/lanctrl/v2/policy-bundle/", { method: "GET" }); },
+    IMPORT_PLAN(data: { [key: string]: any }) { return Request<any>("/lanctrl/v2/policy-import/plan/", { method: "POST", headers: { "Content-Type": "application/json;charset=utf-8" }, body: JSON.stringify(data) }); },
+    IMPORT_APPLY(data: { [key: string]: any }) { return Request<any>("/lanctrl/v2/policy-import/apply/", { method: "POST", headers: { "Content-Type": "application/json;charset=utf-8" }, body: JSON.stringify(data) }); },
+  },
+  devicePolicyRulesV2: {
+    GET() {
+      return Request<any>("/lanctrl/v2/device-policy/rules/", { method: "GET" });
+    },
+  },
   // 获取局域网内所有设备列表
   listDevices: {
     GET() {

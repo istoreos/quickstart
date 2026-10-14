@@ -46,6 +46,11 @@ func (svc *LanStaticAssignmentWriteService) ApplyStaticAssignment(ctx context.Co
 	default:
 		return errors.New("invalid action")
 	}
+	normalizedInput, err := normalizeStaticAssignmentInput(input)
+	if err != nil {
+		return err
+	}
+	input = normalizedInput
 
 	if input.Action == "modify" {
 		input.Action = "add"
@@ -55,6 +60,10 @@ func (svc *LanStaticAssignmentWriteService) ApplyStaticAssignment(ctx context.Co
 	}
 
 	normalized, err := svc.tagValidator.NormalizeTag(ctx, input)
+	if err != nil {
+		return err
+	}
+	normalized, err = normalizeStaticAssignmentInput(normalized)
 	if err != nil {
 		return err
 	}
