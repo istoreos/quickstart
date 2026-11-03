@@ -58,6 +58,7 @@ func PlanWANLANConflict(wanSec NetworkSection, lanSec NetworkSection, lanDHCPDis
 		return WANLANPlan{
 			NetworkUCICommands: []string{
 				fmt.Sprintf("set network.%s.ipaddr=%s", lanSec.Section, decision.NewLANIP),
+				fmt.Sprintf("set network.%s.netmask=255.255.255.0", lanSec.Section),
 				"commit network",
 			},
 			ReloadNetwork: true,
