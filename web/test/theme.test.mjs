@@ -26,8 +26,11 @@ test('production shell exposes an accessible persistent three-state selector',as
  assert.match(main,/initializeTheme\(\)/)
  assert.match(layout,/<ThemeSelector\/>/)
  for(const value of ['system','light','dark'])assert.match(selector,new RegExp("value:'"+value+"'"))
+ for(const value of ['system','light','dark'])assert.match(selector,new RegExp('data-theme-icon="'+value+'"'))
  assert.match(selector,/role="radiogroup"/)
  assert.match(selector,/role="radio"/)
+ assert.match(selector,/data-effective-theme="effective"/)
+ assert.match(selector,/selectorLabel/)
  assert.match(selector,/setThemePreference/)
 })
 
