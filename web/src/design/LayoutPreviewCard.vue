@@ -3,6 +3,7 @@
     <template v-if="id==='traffic'"><NetworkFlow v-if="nativeVisible" :key="theme"/><div class="traffic-header-actions widget-action-group"><WidgetPrimaryAction icon="activity" class="layout-speed" @click="$emit('navigate','/networkSpeedTest')" :aria-label="t('网络测速','Network speed test')">{{t('测速','Test')}}</WidgetPrimaryAction></div><span v-if="errors.network" class="layout-data-notice">{{t('流量采样暂不可用','Traffic sampling unavailable')}}</span></template>
     <NetworkConnectionCard v-else-if="id==='connection'" :data="data.network" :error="errors.network" :summary="resolved.id==='summary'" @navigate="$emit('navigate',$event)" @retry="$emit('retry')"/>
     <NetworkInterfaceCard :legacy-summary="resolved.legacy" v-else-if="id==='networkInterface'" :data="data.ports" :error="errors.ports" :summary="resolved.id==='summary'" @navigate="$emit('navigate',$event)" @retry="$emit('retry')"/>
+    <FastnetCard v-else-if="id===fastnetWidgetId" :summary="resolved.id==='summary'"/>
     <HomeApplications v-else-if="id==='applications'" :collapsed="false" :fallback-entries="[]" :contained="contained" :preference="preference" :natural="natural" :network="data.network" @navigate="$emit('navigate',$event)"/>
     <NativeBusinessCard v-else-if="nativeBusiness&&['storage','sharing','docker','downloads','remote','system'].includes(id)" :id="id" :data="data" :errors="errors" :summary="resolved.id==='summary'" @retry="$emit('retry')"/>
     <CompactPreviewCard v-else-if="resolved.id==='summary'&&id!=='devices'" :id="id" :data="data" :errors="errors" @navigate="$emit('navigate',$event)" @retry="$emit('retry')"/>
@@ -11,6 +12,8 @@
 </template>
 <script setup lang="ts">
 import WidgetPrimaryAction from './WidgetPrimaryAction.vue'
+import FastnetCard from './FastnetCard.vue'
+import {fastnetWidgetId} from './fastnetModel'
 import {computed,inject,onMounted,onUnmounted,ref} from 'vue'
 import type {DeviceListItem} from '../pages/device/deviceInventory'
 import type {CanvasModuleKey} from './canvasLayout'

@@ -4,6 +4,11 @@
 当前 Vue 预览入口为 `web/src/design/` 与 `web/vite.design.config.ts`，运行方式见
 [开发指南](../../development.md)。
 
+FastNet「外网测速」卡片见 [产品交互提案](../fastnet-card-design.md)。启动预览后直接访问
+`http://127.0.0.1:5180/`，卡片与网络接口并排，展示上次外网速率、时间、NAT 和 IPv6，
+支持原位快捷测速；使用统一首页编辑器添加、移动、隐藏和调整形态。右上「设计预览 → FastNet」可切换场景。
+交互检查入口为 `fastnet-card-review.cjs`，只使用模拟数据，不执行真实安装或测速。
+
 多局域网设计提案见 [产品与技术方案](../multi-lan-design.md)。启动预览后访问
 `http://127.0.0.1:5180/design/multi-lan`，可切换多 LAN、没有默认 LAN 和单 LAN 服务异常场景。
 交互检查入口为 `multi-lan-review.cjs`，需要可用的 Playwright；可用 `CHROMIUM_PATH` 指定已安装的浏览器，

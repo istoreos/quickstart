@@ -30,7 +30,7 @@ export async function mount() {
   const components = { 'svg-menu':SvgMenu,'svg-system':SvgSystem,'svg-download':SvgDownload,'svg-store':SvgStore,'svg-info':SvgInfo,'svg-disk':SvgDisk,'svg-nav':SvgNav,'progress-item':Progress,'switch-box':SwitchBox,'svg-view-show':SvgShow,'svg-view-hidden':SvgHidden,'article-item':ArticleItem,'editable-select':EditableSelect }
   Object.entries(components).forEach(([name,component])=>app.component(name,component))
   app.use(installComponents).use(createPinia())
-  const router=createRouter({ history:createWebHistory('/'),routes:[{path:'/',component:HomePreview},{path:'/devicemanagement',component:DevicePreview},{path:'/design/multi-lan',component:MultiLanPreview},{path:'/:pathMatch(.*)*',component:DestinationPreview}] })
+  const router=createRouter({ history:createWebHistory('/'),routes:[{path:'/',component:HomePreview},{path:'/devicemanagement',component:DevicePreview},{path:'/design/multi-lan',component:MultiLanPreview},{path:'/design/fastnet',redirect:to=>({path:'/',query:to.query})},{path:'/:pathMatch(.*)*',component:DestinationPreview}] })
   router.beforeEach((to,from)=>{
     const keys=['layout','variant','scenario','authority','theme','lang','tools','palette']
     const query={...to.query};let changed=false
