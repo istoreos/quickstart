@@ -1,0 +1,695 @@
+{
+  "generatedAt": "2026-11-08T20:07:33.785735+00:00",
+  "productionMatches": [
+    {
+      "file": "backend/service/lan_global_config_store.go",
+      "line": 55,
+      "source": "if selectedLAN(ctx) != defaultLAN {",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/device_classification_store.go",
+      "line": 67,
+      "source": "if store == nil || network == \"\" || network == defaultLAN {",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/floating_gateway.go",
+      "line": 326,
+      "source": "if selectedLAN(ctx) != defaultLAN {",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/rate_limit_native_provider.go",
+      "line": 296,
+      "source": "if binding.NetworkID != defaultLAN || binding.InstanceID != \"main\" || !legacyNativeProcessMatches(health.PID, binding.Interface, binding.Port) {",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/guide_transparent_gateway_write.go",
+      "line": 51,
+      "source": "\"uci -q del dhcp.lan.ignore || true\",",
+      "reason": "Existing first-run/default-network wizard contract; separate from scoped device management."
+    },
+    {
+      "file": "backend/service/guide_transparent_gateway_write.go",
+      "line": 52,
+      "source": "\"uci set dhcp.lan.dhcpv4=server\",",
+      "reason": "Existing first-run/default-network wizard contract; separate from scoped device management."
+    },
+    {
+      "file": "backend/service/guide_transparent_gateway_write.go",
+      "line": 53,
+      "source": "\"uci set dhcp.lan.start=100\",",
+      "reason": "Existing first-run/default-network wizard contract; separate from scoped device management."
+    },
+    {
+      "file": "backend/service/guide_transparent_gateway_write.go",
+      "line": 54,
+      "source": "\"uci set dhcp.lan.limit=150\",",
+      "reason": "Existing first-run/default-network wizard contract; separate from scoped device management."
+    },
+    {
+      "file": "backend/service/guide_transparent_gateway_write.go",
+      "line": 55,
+      "source": "\"uci set dhcp.lan.leasetime=12h\",",
+      "reason": "Existing first-run/default-network wizard contract; separate from scoped device management."
+    },
+    {
+      "file": "backend/service/guide_transparent_gateway_write.go",
+      "line": 59,
+      "source": "\"uci set dhcp.lan.ignore=1\",",
+      "reason": "Existing first-run/default-network wizard contract; separate from scoped device management."
+    },
+    {
+      "file": "backend/service/guide_transparent_gateway_write.go",
+      "line": 75,
+      "source": "\"set network.lan6=interface\",",
+      "reason": "Existing first-run/default-network wizard contract; separate from scoped device management."
+    },
+    {
+      "file": "backend/service/guide_transparent_gateway_write.go",
+      "line": 76,
+      "source": "\"set network.lan6.proto=dhcpv6\",",
+      "reason": "Existing first-run/default-network wizard contract; separate from scoped device management."
+    },
+    {
+      "file": "backend/service/guide_transparent_gateway_write.go",
+      "line": 77,
+      "source": "\"set network.lan6.device=@lan\",",
+      "reason": "Existing first-run/default-network wizard contract; separate from scoped device management."
+    },
+    {
+      "file": "backend/service/guide_transparent_gateway_write.go",
+      "line": 83,
+      "source": "\"uci -q delete network.lan6 || true\",",
+      "reason": "Existing first-run/default-network wizard contract; separate from scoped device management."
+    },
+    {
+      "file": "backend/service/lan_scope_backend.go",
+      "line": 31,
+      "source": "if network.NetworkID == defaultLAN {",
+      "reason": "Central discovery and omitted-network compatibility contract."
+    },
+    {
+      "file": "backend/service/lan_scope_backend.go",
+      "line": 32,
+      "source": "result.DefaultNetwork = defaultLAN",
+      "reason": "Central discovery and omitted-network compatibility contract."
+    },
+    {
+      "file": "backend/service/lan_scope_backend.go",
+      "line": 86,
+      "source": "if scope.NetworkID != defaultLAN {",
+      "reason": "Central discovery and omitted-network compatibility contract."
+    },
+    {
+      "file": "backend/service/lan_scope_backend.go",
+      "line": 138,
+      "source": "network = defaultLAN",
+      "reason": "Central discovery and omitted-network compatibility contract."
+    },
+    {
+      "file": "backend/service/capability_action.go",
+      "line": 262,
+      "source": "if selectedLAN(ctx) != defaultLAN && key != \"device_speed_limit\" {",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/rate_limit_eqos_provider.go",
+      "line": 91,
+      "source": "output, err := rateLimitCommandOutput(ctx, \"tc\", \"qdisc\", \"show\", \"dev\", \"br-lan\")",
+      "reason": "Legacy eQoS default-LAN-only adapter; additional LAN rejects this provider."
+    },
+    {
+      "file": "backend/service/capability_native_scope.go",
+      "line": 62,
+      "source": "network = defaultLAN",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/capability_native_scope.go",
+      "line": 80,
+      "source": "if scope.NetworkID == defaultLAN {",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/capability_native_scope.go",
+      "line": 131,
+      "source": "if scope.NetworkID == defaultLAN {",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/capability_native_scope.go",
+      "line": 201,
+      "source": "if scope.NetworkID != defaultLAN {",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/lan_dhcp_scope.go",
+      "line": 17,
+      "source": "if scope == nil || scope.NetworkID == defaultLAN {",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/lan_dhcp_scope.go",
+      "line": 73,
+      "source": "return scope.NetworkID == defaultLAN",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/lan_scope.go",
+      "line": 24,
+      "source": "const defaultLAN = \"lan\"",
+      "reason": "Central discovery and omitted-network compatibility contract."
+    },
+    {
+      "file": "backend/service/lan_scope.go",
+      "line": 43,
+      "source": "return defaultLAN",
+      "reason": "Central discovery and omitted-network compatibility contract."
+    },
+    {
+      "file": "backend/service/lan_scope.go",
+      "line": 187,
+      "source": "if sections[i] == defaultLAN || sections[j] == defaultLAN {",
+      "reason": "Central discovery and omitted-network compatibility contract."
+    },
+    {
+      "file": "backend/service/lan_scope.go",
+      "line": 188,
+      "source": "return sections[i] == defaultLAN",
+      "reason": "Central discovery and omitted-network compatibility contract."
+    },
+    {
+      "file": "backend/service/traffic_insights_scope.go",
+      "line": 12,
+      "source": "if module == nil || module.root != nil || selectedLAN(ctx) == defaultLAN {",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/traffic_insights_scope.go",
+      "line": 45,
+      "source": "if network != defaultLAN {",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/rate_limit_settings.go",
+      "line": 56,
+      "source": "if selectedLAN(ctx) != defaultLAN && desired.Provider != nativePolicyProviderName {",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/rate_limit_settings.go",
+      "line": 220,
+      "source": "if selectedLAN(ctx) != defaultLAN && provider != nativePolicyProviderName {",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/rate_limit_settings.go",
+      "line": 249,
+      "source": "if selectedLAN(ctx) != defaultLAN {",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/rate_limit_settings.go",
+      "line": 267,
+      "source": "if selectedLAN(ctx) == defaultLAN {",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/rate_limit_settings.go",
+      "line": 289,
+      "source": "if selectedLAN(ctx) != defaultLAN && value.Provider != nativePolicyProviderName {",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/rate_limit_settings.go",
+      "line": 302,
+      "source": "if selectedLAN(ctx) != defaultLAN {",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/lan_device_migration_store.go",
+      "line": 150,
+      "source": "if selectedLAN(ctx) == defaultLAN {",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/policy_bundle.go",
+      "line": 57,
+      "source": "if selectedLAN(ctx) != defaultLAN {",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/policy_bundle.go",
+      "line": 174,
+      "source": "source = defaultLAN",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/policy_bundle.go",
+      "line": 176,
+      "source": "if source != selectedLAN(ctx) || (bundle.SchemaVersion == 1 && source != defaultLAN) {",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/lan_speed_limit_rule_store.go",
+      "line": 72,
+      "source": "if network != \"\" && network != defaultLAN {",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/guide.go",
+      "line": 53,
+      "source": "\"uci delete network.lan.ipaddr\",",
+      "reason": "Existing first-run/default-network wizard contract; separate from scoped device management."
+    },
+    {
+      "file": "backend/service/guide.go",
+      "line": 54,
+      "source": "\"uci delete network.lan.netmask\",",
+      "reason": "Existing first-run/default-network wizard contract; separate from scoped device management."
+    },
+    {
+      "file": "backend/service/guide.go",
+      "line": 55,
+      "source": "fmt.Sprintf(\"uci set network.lan.ipaddr='%v'\", ip),",
+      "reason": "Existing first-run/default-network wizard contract; separate from scoped device management."
+    },
+    {
+      "file": "backend/service/guide.go",
+      "line": 56,
+      "source": "fmt.Sprintf(\"uci set network.lan.netmask='%v'\", netmask),",
+      "reason": "Existing first-run/default-network wizard contract; separate from scoped device management."
+    },
+    {
+      "file": "backend/service/guide.go",
+      "line": 64,
+      "source": "cmdList = append(cmdList, \"uci set network.lan.proto=static\")",
+      "reason": "Existing first-run/default-network wizard contract; separate from scoped device management."
+    },
+    {
+      "file": "backend/service/guide.go",
+      "line": 65,
+      "source": "cmdList = append(cmdList, \"uci set dhcp.lan.ignore=1\")",
+      "reason": "Existing first-run/default-network wizard contract; separate from scoped device management."
+    },
+    {
+      "file": "backend/service/guide.go",
+      "line": 163,
+      "source": "\"uci set dhcp.lan.dhcpv6=server\",",
+      "reason": "Existing first-run/default-network wizard contract; separate from scoped device management."
+    },
+    {
+      "file": "backend/service/guide.go",
+      "line": 164,
+      "source": "\"uci set dhcp.lan.ra=server\",",
+      "reason": "Existing first-run/default-network wizard contract; separate from scoped device management."
+    },
+    {
+      "file": "backend/service/guide.go",
+      "line": 165,
+      "source": "\"uci set dhcp.lan.ra_slaac=1\",",
+      "reason": "Existing first-run/default-network wizard contract; separate from scoped device management."
+    },
+    {
+      "file": "backend/service/guide.go",
+      "line": 166,
+      "source": "\"uci del dhcp.lan.ra_flags\",",
+      "reason": "Existing first-run/default-network wizard contract; separate from scoped device management."
+    },
+    {
+      "file": "backend/service/guide.go",
+      "line": 167,
+      "source": "\"uci add_list dhcp.lan.ra_flags=managed-config\",",
+      "reason": "Existing first-run/default-network wizard contract; separate from scoped device management."
+    },
+    {
+      "file": "backend/service/guide.go",
+      "line": 168,
+      "source": "\"uci add_list dhcp.lan.ra_flags=other-config\",",
+      "reason": "Existing first-run/default-network wizard contract; separate from scoped device management."
+    },
+    {
+      "file": "backend/service/guide.go",
+      "line": 171,
+      "source": "\"uci del dhcp.lan.ignore\",",
+      "reason": "Existing first-run/default-network wizard contract; separate from scoped device management."
+    },
+    {
+      "file": "backend/service/guide.go",
+      "line": 172,
+      "source": "\"uci set dhcp.lan.dhcpv4=server\",",
+      "reason": "Existing first-run/default-network wizard contract; separate from scoped device management."
+    },
+    {
+      "file": "backend/service/guide.go",
+      "line": 175,
+      "source": "cmdList = append(cmdList, \"uci set dhcp.lan.start=100\")",
+      "reason": "Existing first-run/default-network wizard contract; separate from scoped device management."
+    },
+    {
+      "file": "backend/service/guide.go",
+      "line": 176,
+      "source": "cmdList = append(cmdList, \"uci set dhcp.lan.limit=150\")",
+      "reason": "Existing first-run/default-network wizard contract; separate from scoped device management."
+    },
+    {
+      "file": "backend/service/guide.go",
+      "line": 179,
+      "source": "cmdList = append(cmdList, \"uci set dhcp.lan.leasetime=12h\")",
+      "reason": "Existing first-run/default-network wizard contract; separate from scoped device management."
+    },
+    {
+      "file": "backend/service/device_traffic_native.go",
+      "line": 23,
+      "source": "if selectedLAN(ctx) == defaultLAN && scopedRateLimitProvider(ctx) != nativePolicyProviderName {",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/device_traffic_native.go",
+      "line": 55,
+      "source": "if selectedLAN(ctx) == defaultLAN {",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/device_groups_scope.go",
+      "line": 12,
+      "source": "if module.root != nil || selectedLAN(ctx) == defaultLAN {",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/device_groups_scope.go",
+      "line": 35,
+      "source": "if network != defaultLAN {",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/device_groups_scope.go",
+      "line": 50,
+      "source": "networks := map[string]bool{defaultLAN: true}",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/device_groups_scope.go",
+      "line": 65,
+      "source": "} else if network != defaultLAN {",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/rate_limit.go",
+      "line": 150,
+      "source": "if selectedLAN(ctx) != defaultLAN && name != nativePolicyProviderName {",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/rate_limit.go",
+      "line": 263,
+      "source": "if selectedLAN(ctx) != defaultLAN {",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/task_transaction.go",
+      "line": 68,
+      "source": "if network := selectedLAN(ctx); network != defaultLAN {",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/task_transaction.go",
+      "line": 76,
+      "source": "if selectedLAN(ctx) != defaultLAN {",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/task_transaction.go",
+      "line": 99,
+      "source": "if network != defaultLAN {",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/lan_global_config_model.go",
+      "line": 26,
+      "source": "if selectedLAN(ctx) == defaultLAN {",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/lan_global_config_model.go",
+      "line": 47,
+      "source": "if selectedLAN(ctx) != defaultLAN {",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/dhns.go",
+      "line": 364,
+      "source": "interface=br-lan",
+      "reason": "Existing default-LAN DNS/DHCP helper; does not create additional-LAN dnsmasq or policy instances."
+    },
+    {
+      "file": "backend/service/dhns.go",
+      "line": 492,
+      "source": "out, err := utils.BatchOutput(context.TODO(), []string{\"uci -q get dhcp.lan.ignore\"}, 0)",
+      "reason": "Existing default-LAN DNS/DHCP helper; does not create additional-LAN dnsmasq or policy instances."
+    },
+    {
+      "file": "backend/service/dhns.go",
+      "line": 643,
+      "source": "backend.startUdhcpc(\"br-lan\")",
+      "reason": "Existing default-LAN DNS/DHCP helper; does not create additional-LAN dnsmasq or policy instances."
+    },
+    {
+      "file": "backend/service/network_audit.go",
+      "line": 109,
+      "source": "if module.networkID != \"\" || network == defaultLAN {",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/network_config_lock.go",
+      "line": 108,
+      "source": "if network == \"\" || network == defaultLAN {",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/lan_dhcp_store.go",
+      "line": 69,
+      "source": "if selectedLAN(ctx) == defaultLAN && ok && floatEnabled == \"1\" {",
+      "reason": "Legacy context-free wizard commands; scoped DHCP entrypoints use resolved section/instance helpers."
+    },
+    {
+      "file": "backend/service/lan_dhcp_store.go",
+      "line": 87,
+      "source": "network = defaultLAN",
+      "reason": "Legacy context-free wizard commands; scoped DHCP entrypoints use resolved section/instance helpers."
+    },
+    {
+      "file": "backend/service/lan_dhcp_store.go",
+      "line": 186,
+      "source": "cmdList = append(cmdList, \"uci del dhcp.lan.ignore\")",
+      "reason": "Legacy context-free wizard commands; scoped DHCP entrypoints use resolved section/instance helpers."
+    },
+    {
+      "file": "backend/service/lan_dhcp_store.go",
+      "line": 187,
+      "source": "cmdList = append(cmdList, \"uci del dhcp.lan.dhcp_option\")",
+      "reason": "Legacy context-free wizard commands; scoped DHCP entrypoints use resolved section/instance helpers."
+    },
+    {
+      "file": "backend/service/lan_dhcp_store.go",
+      "line": 191,
+      "source": "fmt.Sprintf(\"uci add_list dhcp.lan.dhcp_option='3,%s'\", input.DhcpGateway),",
+      "reason": "Legacy context-free wizard commands; scoped DHCP entrypoints use resolved section/instance helpers."
+    },
+    {
+      "file": "backend/service/lan_dhcp_store.go",
+      "line": 192,
+      "source": "fmt.Sprintf(\"uci add_list dhcp.lan.dhcp_option='6,%s'\", input.DhcpGateway),",
+      "reason": "Legacy context-free wizard commands; scoped DHCP entrypoints use resolved section/instance helpers."
+    },
+    {
+      "file": "backend/service/lan_dhcp_store.go",
+      "line": 196,
+      "source": "cmdList = append(cmdList, \"uci del dhcp.lan.dhcp_option\")",
+      "reason": "Legacy context-free wizard commands; scoped DHCP entrypoints use resolved section/instance helpers."
+    },
+    {
+      "file": "backend/service/lan_dhcp_store.go",
+      "line": 197,
+      "source": "cmdList = append(cmdList, \"uci set dhcp.lan.ignore=1\")",
+      "reason": "Legacy context-free wizard commands; scoped DHCP entrypoints use resolved section/instance helpers."
+    },
+    {
+      "file": "backend/service/guide_network_basics_write.go",
+      "line": 82,
+      "source": "return writeGuideNetworkBasicsBatchRun(ctx, []string{\"uci -q delete network.lan6 || true\"})",
+      "reason": "Existing first-run/default-network wizard contract; separate from scoped device management."
+    },
+    {
+      "file": "backend/service/native_engine_registry.go",
+      "line": 55,
+      "source": "binding.NetworkID = defaultLAN",
+      "reason": "Legacy lan/main process compatibility; actual selected interface and process arguments must match."
+    },
+    {
+      "file": "backend/service/native_engine_registry.go",
+      "line": 58,
+      "source": "binding.Interface = \"br-lan\"",
+      "reason": "Legacy lan/main process compatibility; actual selected interface and process arguments must match."
+    },
+    {
+      "file": "backend/service/native_engine_registry.go",
+      "line": 127,
+      "source": "scope, err := NewLANScopeModule().Resolve(ctx, defaultLAN)",
+      "reason": "Legacy lan/main process compatibility; actual selected interface and process arguments must match."
+    },
+    {
+      "file": "backend/service/device_policy_store.go",
+      "line": 140,
+      "source": "} else if currentIPv4 != \"\" && selectedLAN(ctx) == defaultLAN {",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/device_policy_store.go",
+      "line": 170,
+      "source": "if selectedLAN(ctx) != defaultLAN {",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/lan_global_config_usecase.go",
+      "line": 65,
+      "source": "if selectedLAN(ctx) != defaultLAN {",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/lan_speed_limit_scope.go",
+      "line": 11,
+      "source": "if selectedLAN(ctx) != defaultLAN {",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/lan_dhcp_settings.go",
+      "line": 383,
+      "source": "section = defaultLAN",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/device_inventory_scope.go",
+      "line": 16,
+      "source": "return defaultLAN",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/device_inventory_scope.go",
+      "line": 37,
+      "source": "if network == defaultLAN {",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/device_inventory_scope.go",
+      "line": 44,
+      "source": "if network == \"\" || network == defaultLAN {",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/device_inventory_scope.go",
+      "line": 51,
+      "source": "files := map[string]string{defaultLAN: path}",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/device_inventory_scope.go",
+      "line": 90,
+      "source": "if health[defaultLAN] == nil {",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/device_inventory_scope.go",
+      "line": 91,
+      "source": "health[defaultLAN] = inventoryHealth(source.Reasons)",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/device_inventory_scope.go",
+      "line": 98,
+      "source": "source.NetworkReasons = map[string][]string{defaultLAN: append([]string{}, source.Reasons...)}",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/device_inventory_scope.go",
+      "line": 106,
+      "source": "source.NetworkReasons = map[string][]string{defaultLAN: append([]string{}, source.Reasons...)}",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/device_access_scope.go",
+      "line": 14,
+      "source": "scope = &models.LANScope{NetworkID: defaultLAN}",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/device_access_scope.go",
+      "line": 22,
+      "source": "if scope.NetworkID != defaultLAN {",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/device_access_scope.go",
+      "line": 95,
+      "source": "if original.NetworkID != defaultLAN {",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/device_access_scope.go",
+      "line": 101,
+      "source": "original, err = resolver.resolve(ctx, defaultLAN, true)",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/lan_speed_limit_write_store.go",
+      "line": 97,
+      "source": "if selectedLAN(ctx) != defaultLAN {",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/lan_speed_limit_write_store.go",
+      "line": 232,
+      "source": "if (network != \"\" && network != defaultLAN) || owner != \"\" {",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/lan_speed_limit_write_store.go",
+      "line": 253,
+      "source": "if selectedLAN(ctx) != defaultLAN {",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/gateway_policy_store.go",
+      "line": 353,
+      "source": "section = defaultLAN",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/device_groups_store.go",
+      "line": 40,
+      "source": "if network == defaultLAN {",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/device_inventory_v2.go",
+      "line": 244,
+      "source": "if wifi == nil && observation.NetworkID == defaultLAN {",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/device_inventory_v2.go",
+      "line": 423,
+      "source": "addHints(defaultLAN, source.HostHints)",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    },
+    {
+      "file": "backend/service/device_inventory_v2.go",
+      "line": 637,
+      "source": "network := defaultLAN",
+      "reason": "Explicit default-LAN compatibility branch, namespace path, or legacy-provider isolation; additional networks use their scoped binding."
+    }
+  ]
+}

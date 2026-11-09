@@ -1,6 +1,8 @@
 package models
 
 type NetworkRule struct {
+	NetworkID   string `json:"networkId"`
+	Provider    string `json:"provider,omitempty"`
 	ID          string `json:"id"`
 	Kind        string `json:"kind"`
 	DeviceID    string `json:"deviceId,omitempty"`
@@ -17,9 +19,10 @@ type NetworkRule struct {
 }
 
 type NetworkRulesResult struct {
-	Rules   []*NetworkRule     `json:"rules"`
-	Version string             `json:"version"`
-	Error   *DevicePolicyError `json:"error,omitempty"`
+	Health  *DeviceInventoryHealth `json:"health,omitempty"`
+	Rules   []*NetworkRule         `json:"rules"`
+	Version string                 `json:"version"`
+	Error   *DevicePolicyError     `json:"error,omitempty"`
 }
 
 type NetworkRulesResponse struct {

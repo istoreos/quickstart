@@ -1,0 +1,127 @@
+{
+  "host": "192.168.30.7",
+  "service": "qsnp-test-dd0f8",
+  "backend": "netlink",
+  "checks": [
+    "same MAC independent policy and foreign plan rejection",
+    "owner replacement retains other owner",
+    "unchanged procd reload preserves both processes",
+    "interface, parent/child, directory and port conflicts do not change healthy BPF objects",
+    "hard crash restart reclaims own hooks and restores independent policies",
+    "single named instance stop/start preserves other process and data",
+    "interface recreation replaces only the affected runtime",
+    "production Quickstart registry/provider applies and verifies against the real additional LAN instance"
+  ],
+  "initial": [
+    {
+      "context": {
+        "networkId": "test_a",
+        "instanceId": "a",
+        "epoch": "c135389d-0cbf-4815-a8e6-df575c579645",
+        "interfaceIndex": 160
+      },
+      "interface": "qsndd0f8a",
+      "state": "healthy",
+      "pid": 7115,
+      "uptimeSeconds": 0,
+      "residentMemoryKib": 4540,
+      "dataPlane": "ready",
+      "policyInterfaceVersion": "1",
+      "maxDevicePolicies": 1024,
+      "maxHttpConnections": 32,
+      "dnsStorageDefault": false,
+      "trafficStorageDefault": false,
+      "reasons": []
+    },
+    {
+      "context": {
+        "networkId": "test_b",
+        "instanceId": "b",
+        "epoch": "1d4d7712-cd4f-475a-93f4-492a39d70122",
+        "interfaceIndex": 161
+      },
+      "interface": "qsndd0f8b",
+      "state": "healthy",
+      "pid": 7116,
+      "uptimeSeconds": 0,
+      "residentMemoryKib": 4372,
+      "dataPlane": "ready",
+      "policyInterfaceVersion": "1",
+      "maxDevicePolicies": 1024,
+      "maxHttpConnections": 32,
+      "dnsStorageDefault": false,
+      "trafficStorageDefault": false,
+      "reasons": []
+    }
+  ],
+  "bpfObjects": [
+    [
+      "map_id:373",
+      "map_id:374",
+      "map_id:375",
+      "map_id:376",
+      "map_id:377",
+      "map_id:378",
+      "map_id:379",
+      "map_id:380",
+      "prog_id:351",
+      "prog_id:352"
+    ],
+    [
+      "map_id:386",
+      "map_id:387",
+      "map_id:388",
+      "map_id:389",
+      "map_id:391",
+      "map_id:392",
+      "map_id:393",
+      "map_id:394",
+      "prog_id:350",
+      "prog_id:353"
+    ]
+  ],
+  "final": [
+    {
+      "context": {
+        "networkId": "test_a",
+        "instanceId": "a",
+        "epoch": "f0ee3f3b-c096-45f8-ba2e-8e816c450265",
+        "interfaceIndex": 164
+      },
+      "interface": "qsndd0f8a",
+      "state": "healthy",
+      "pid": 7799,
+      "uptimeSeconds": 0,
+      "residentMemoryKib": 4384,
+      "dataPlane": "ready",
+      "policyInterfaceVersion": "1",
+      "maxDevicePolicies": 1024,
+      "maxHttpConnections": 32,
+      "dnsStorageDefault": false,
+      "trafficStorageDefault": false,
+      "reasons": []
+    },
+    {
+      "context": {
+        "networkId": "test_b",
+        "instanceId": "b",
+        "epoch": "1d4d7712-cd4f-475a-93f4-492a39d70122",
+        "interfaceIndex": 161
+      },
+      "interface": "qsndd0f8b",
+      "state": "healthy",
+      "pid": 7116,
+      "uptimeSeconds": 5,
+      "residentMemoryKib": 4500,
+      "dataPlane": "ready",
+      "policyInterfaceVersion": "1",
+      "maxDevicePolicies": 1024,
+      "maxHttpConnections": 32,
+      "dnsStorageDefault": false,
+      "trafficStorageDefault": false,
+      "reasons": []
+    }
+  ],
+  "quickstartProvider": "=== RUN   TestMultiLANNativeLiveBinding\n    native_engine_registry_test.go:173: verified real registry/provider read, apply, verify and remove for test_a on qsndd0f8a\n--- PASS: TestMultiLANNativeLiveBinding (0.01s)\nPASS\n",
+  "productionConfigUnchanged": true
+}

@@ -21,6 +21,13 @@ func NewLanDhcpService(store DhcpConfigStore, lanStatus LanStatusReader) *LanDhc
 }
 
 func (svc *LanDhcpService) SetDhcpGateway(ctx context.Context, input DhcpGatewayInput) error {
+	locked, release, lockErr := lockLANWrite(ctx)
+	if lockErr != nil {
+		return lockErr
+	}
+	defer release()
+	ctx = locked
+
 	lanStatus, err := svc.lanStatus.ReadLanStatus(ctx)
 	if err != nil {
 		return err
@@ -37,6 +44,13 @@ func (svc *LanDhcpService) SetDhcpGateway(ctx context.Context, input DhcpGateway
 }
 
 func (svc *LanDhcpService) SetDhcpTags(ctx context.Context, input DhcpTagConfigInput) error {
+	locked, release, lockErr := lockLANWrite(ctx)
+	if lockErr != nil {
+		return lockErr
+	}
+	defer release()
+	ctx = locked
+
 	if input.Action != "add" && input.Action != "modify" && input.Action != "delete" {
 		return errors.New("invalid DHCP tag action")
 	}

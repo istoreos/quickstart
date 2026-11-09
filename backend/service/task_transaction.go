@@ -19,6 +19,7 @@ const (
 )
 
 type taskTransactionRecord struct {
+	NetworkID      string `json:"networkId,omitempty"`
 	Task           string `json:"task"`
 	IdempotencyKey string `json:"idempotencyKey"`
 	Fingerprint    string `json:"fingerprint"`
@@ -61,12 +62,19 @@ func newMemoryTaskTransactionJournal() *TaskTransactionJournal {
 	return &TaskTransactionJournal{limit: defaultTaskTransactionLimit, memory: &document, now: time.Now}
 }
 
-func (journal *TaskTransactionJournal) Begin(_ context.Context, task, key, fingerprint string) (taskTransactionBegin, error) {
+func (journal *TaskTransactionJournal) Begin(ctx context.Context, task, key, fingerprint string) (taskTransactionBegin, error) {
 	if key == "" {
-		return taskTransactionBegin{Transaction: &models.TaskTransaction{Task: task, Stage: "plan", Status: "in_progress"}}, nil
+		transaction := &models.TaskTransaction{Task: task, Stage: "plan", Status: "in_progress"}
+		if network := selectedLAN(ctx); network != defaultLAN {
+			transaction.NetworkID = network
+		}
+		return taskTransactionBegin{Transaction: transaction}, nil
 	}
 	if len(key) > 128 || len(fingerprint) > 16384 {
 		return taskTransactionBegin{}, errors.New("invalid idempotency record")
+	}
+	if selectedLAN(ctx) != defaultLAN {
+		fingerprint = bindLANVersion(ctx, fingerprint)
 	}
 	fingerprint = hashTaskTransactionFingerprint(fingerprint)
 	journal.mu.Lock()
@@ -80,13 +88,17 @@ func (journal *TaskTransactionJournal) Begin(_ context.Context, task, key, finge
 	if err := journal.recoverInterrupted(&document); err != nil {
 		return taskTransactionBegin{}, err
 	}
-	recordKey := task + "\x00" + key
+	network := selectedLAN(ctx)
+	recordKey := taskLANRecordKey(network, task, key)
 	if record, ok := document.Records[recordKey]; ok {
 		transaction := publicTaskTransaction(record)
 		transaction.Replayed = true
 		return taskTransactionBegin{Transaction: transaction, Replay: record.Fingerprint == fingerprint, Conflict: record.Fingerprint != fingerprint}, nil
 	}
 	record := taskTransactionRecord{Task: task, IdempotencyKey: key, Fingerprint: fingerprint, Stage: "plan", Status: "in_progress", UpdatedAt: journal.now().UTC().Format(time.RFC3339Nano)}
+	if network != defaultLAN {
+		record.NetworkID = network
+	}
 	document.Records[recordKey] = record
 	document.Order = append(document.Order, recordKey)
 	for len(document.Order) > journal.limit {
@@ -104,9 +116,12 @@ func hashTaskTransactionFingerprint(value string) string {
 	return hex.EncodeToString(sum[:])
 }
 
-func (journal *TaskTransactionJournal) Advance(_ context.Context, transaction *models.TaskTransaction, stage, status, recoveryAction string) error {
+func (journal *TaskTransactionJournal) Advance(ctx context.Context, transaction *models.TaskTransaction, stage, status, recoveryAction string) error {
 	if transaction == nil {
 		return nil
+	}
+	if inventoryLANID(transaction.NetworkID) != selectedLAN(ctx) {
+		return errors.New("transaction belongs to another LAN")
 	}
 	transaction.Stage, transaction.Status, transaction.RecoveryAction = stage, status, recoveryAction
 	if transaction.IdempotencyKey == "" {
@@ -120,7 +135,7 @@ func (journal *TaskTransactionJournal) Advance(_ context.Context, transaction *m
 	if err != nil {
 		return err
 	}
-	recordKey := transaction.Task + "\x00" + transaction.IdempotencyKey
+	recordKey := taskLANRecordKey(transaction.NetworkID, transaction.Task, transaction.IdempotencyKey)
 	record, ok := document.Records[recordKey]
 	if !ok {
 		return errors.New("transaction record missing")
@@ -206,9 +221,46 @@ func cloneTaskTransactionDocument(source taskTransactionDocument) taskTransactio
 }
 
 func publicTaskTransaction(record taskTransactionRecord) *models.TaskTransaction {
-	return &models.TaskTransaction{Task: record.Task, IdempotencyKey: record.IdempotencyKey, Stage: record.Stage, Status: record.Status, RecoveryAction: record.RecoveryAction}
+	return &models.TaskTransaction{NetworkID: record.NetworkID, Task: record.Task, IdempotencyKey: record.IdempotencyKey, Stage: record.Stage, Status: record.Status, RecoveryAction: record.RecoveryAction}
 }
 
 func rejectedTaskTransaction(task, key string) *models.TaskTransaction {
 	return &models.TaskTransaction{Task: task, IdempotencyKey: key, Stage: "validate", Status: "rejected"}
+}
+
+func failedTaskReplay(transaction *models.TaskTransaction) *models.DevicePolicyError {
+	if transaction.Status == "committed" || transaction.Status == "unchanged" {
+		return nil
+	}
+	return &models.DevicePolicyError{Code: transaction.Status, Message: "此前操作尚未成功完成，请先检查恢复状态"}
+}
+
+func networkWriteFailure(err error) *models.DevicePolicyError {
+	code := "apply_failed"
+	if errors.Is(err, errNetworkConfigRecoveryRequired) {
+		code = "recovery_required"
+	}
+	return &models.DevicePolicyError{Code: code, Message: err.Error()}
+}
+
+// A failed journal write must never be silently converted into a successful
+// product operation. Once effects may exist, require review instead of undoing
+// a successful operation merely because its final record could not be saved.
+func advanceTaskTransaction(ctx context.Context, journal *TaskTransactionJournal, transaction *models.TaskTransaction, stage, status, recovery string) *models.DevicePolicyError {
+	if err := journal.Advance(ctx, transaction, stage, status, recovery); err != nil {
+		code, message := "transaction_unavailable", "事务记录不可用，操作未继续执行"
+		if stage == "verify" && status != "unchanged" || stage == "rollback" || stage == "recover" {
+			code, message = "recovery_required", "配置可能已修改，但事务记录未能保存，请检查恢复状态"
+		}
+		if transaction != nil {
+			transaction.Stage = "recover"
+			transaction.Status = "failed"
+			if code == "recovery_required" {
+				transaction.Status = code
+			}
+			transaction.RecoveryAction = "review_transaction_journal"
+		}
+		return &models.DevicePolicyError{Code: code, Message: message}
+	}
+	return nil
 }

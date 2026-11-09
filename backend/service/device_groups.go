@@ -53,6 +53,10 @@ type DeviceGroupModule struct {
 	lastApplied map[string]string
 	lastBatch   *models.DeviceGroupBatchResult
 	startOnce   sync.Once
+	root        *DeviceGroupModule
+	network     string
+	scopes      map[string]*DeviceGroupModule
+	resolver    *LANScopeModule
 }
 
 func NewDeviceGroupModule(store deviceGroupStore, applier groupPolicyApplier) *DeviceGroupModule {
@@ -90,13 +94,23 @@ func (module *DeviceGroupModule) AttachTrafficInsights(traffic *TrafficInsightsM
 		return
 	}
 	module.mu.Lock()
-	defer module.mu.Unlock()
 	if applier, ok := module.applier.(*defaultGroupPolicyApplier); ok {
-		applier.traffic = traffic
+		module.applier = &defaultGroupPolicyApplier{policy: applier.policy, network: applier.network, traffic: traffic}
+	}
+	children := make([]*DeviceGroupModule, 0, len(module.scopes))
+	for _, child := range module.scopes {
+		children = append(children, child)
+	}
+	module.mu.Unlock()
+	for _, child := range children {
+		child.AttachTrafficInsights(traffic)
 	}
 }
 
 func (module *DeviceGroupModule) List(ctx context.Context) (*models.DeviceGroupsResponse, error) {
+	if scoped := module.forContext(ctx); scoped != module {
+		return scoped.List(ctx)
+	}
 	state, err := module.store.Read(ctx)
 	if err != nil {
 		return nil, err
@@ -108,6 +122,15 @@ func (module *DeviceGroupModule) List(ctx context.Context) (*models.DeviceGroups
 }
 
 func (module *DeviceGroupModule) Mutate(ctx context.Context, request *models.DeviceGroupMutationRequest) (*models.DeviceGroupsResponse, error) {
+	if scoped := module.forContext(ctx); scoped != module {
+		return scoped.Mutate(ctx, request)
+	}
+	locked, release, err := lockLANWrite(ctx)
+	if err != nil {
+		return nil, err
+	}
+	defer release()
+	ctx = locked
 	module.mu.Lock()
 	defer module.mu.Unlock()
 	current, err := module.store.Read(ctx)
@@ -117,8 +140,11 @@ func (module *DeviceGroupModule) Mutate(ctx context.Context, request *models.Dev
 	if validation := validateDeviceGroupMutation(request, current); validation != nil {
 		return deviceGroupsFailure(validation), nil
 	}
-	if request.ExpectedVersion != "" && request.ExpectedVersion != current.Version {
+	if request.ExpectedVersion != "" && request.ExpectedVersion != bindLANVersion(ctx, current.Version) {
 		return deviceGroupsFailure(&models.DevicePolicyError{Code: "conflict", Message: "device groups changed; reload and try again"}), nil
+	}
+	if policyErr := module.validateScopeMutation(ctx, request, current); policyErr != nil {
+		return deviceGroupsFailure(policyErr), nil
 	}
 	updated, err := module.store.Mutate(ctx, request, current.Version)
 	if err != nil {
@@ -149,7 +175,9 @@ func (module *DeviceGroupModule) response(ctx context.Context, state deviceGroup
 	}
 	sort.Strings(ordered)
 	for _, id := range ordered {
-		effective = append(effective, resolveDeviceGroupPolicy(state, id, now))
+		policy := resolveDeviceGroupPolicy(state, id, now)
+		policy.NetworkID = selectedLAN(ctx)
+		effective = append(effective, policy)
 	}
 	module.eventsMu.Lock()
 	events := append([]*models.DeviceGroupEvent(nil), module.events...)
@@ -161,7 +189,7 @@ func (module *DeviceGroupModule) response(ctx context.Context, state deviceGroup
 	return &models.DeviceGroupsResponse{Result: &models.DeviceGroupsResult{
 		GlobalPolicy: state.GlobalPolicy, Groups: state.Groups, DevicePolicies: state.DevicePolicies,
 		Effective: effective, Events: events, Timezone: now.Location().String(),
-		NextEvaluationAt: next.Format(time.RFC3339), Version: state.Version, LastBatch: lastBatch,
+		NextEvaluationAt: next.Format(time.RFC3339), Version: bindLANVersion(ctx, state.Version), LastBatch: lastBatch, NetworkID: selectedLAN(ctx),
 	}}
 }
 
@@ -481,18 +509,33 @@ func deviceGroupsFailure(err *models.DevicePolicyError) *models.DeviceGroupsResp
 }
 
 func (module *DeviceGroupModule) startScheduler() {
+	if module.root != nil {
+		module.root.startScheduler()
+		return
+	}
 	module.startOnce.Do(func() {
 		go func() {
 			ticker := time.NewTicker(time.Minute)
 			defer ticker.Stop()
 			for now := range ticker.C {
-				module.runDue(context.Background(), now)
+				module.runScheduledNetworks(now)
 			}
 		}()
 	})
 }
 
 func (module *DeviceGroupModule) runDue(ctx context.Context, now time.Time) {
+	if scoped := module.forContext(ctx); scoped != module {
+		scoped.runDue(ctx, now)
+		return
+	}
+	locked, release, err := lockLANWrite(ctx)
+	if err != nil {
+		module.recordEvent(&models.DeviceGroupEvent{At: now.Format(time.RFC3339), State: "error", Reason: err.Error()})
+		return
+	}
+	defer release()
+	ctx = locked
 	module.mu.Lock()
 	defer module.mu.Unlock()
 	state, err := module.store.Read(ctx)
@@ -542,6 +585,7 @@ func (module *DeviceGroupModule) reconcileState(ctx context.Context, state devic
 	skipped := 0
 	for _, id := range ordered {
 		effective := resolveDeviceGroupPolicy(state, id, now)
+		effective.NetworkID = selectedLAN(ctx)
 		if previous != nil && len(effective.Managed) == 0 {
 			before := resolveDeviceGroupPolicy(*previous, id, now)
 			effective.Managed = uniqueSortedStrings(append(effective.Managed, before.Managed...))
@@ -553,7 +597,7 @@ func (module *DeviceGroupModule) reconcileState(ctx context.Context, state devic
 			skipped++
 			continue
 		}
-		signature := effectiveGroupPolicySignature(effective)
+		signature := bindLANVersion(ctx, effectiveGroupPolicySignature(effective))
 		if module.lastApplied[id] == signature {
 			if !currentIDs[id] {
 				delete(module.lastApplied, id)
@@ -580,6 +624,10 @@ func (module *DeviceGroupModule) reconcileState(ctx context.Context, state devic
 			}
 			batch.Items = append(batch.Items, item)
 		}
+	}
+	batch.NetworkID = selectedLAN(ctx)
+	for _, item := range batch.Items {
+		item.NetworkID = selectedLAN(ctx)
 	}
 	batch.Skipped += skipped
 	batch.DurationMS = time.Since(started).Milliseconds()
@@ -646,6 +694,7 @@ func effectiveGroupPolicySignature(effective *models.EffectiveGroupPolicy) strin
 }
 
 func (module *DeviceGroupModule) recordEvent(event *models.DeviceGroupEvent) {
+	event.NetworkID = module.network
 	module.eventsMu.Lock()
 	defer module.eventsMu.Unlock()
 	module.events = append(module.events, event)

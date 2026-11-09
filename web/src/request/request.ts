@@ -1018,7 +1018,17 @@ export const GuidePage = {
 };
 
 // 设备管理
-export const DeviceMangement = {
+const deviceRequest = Request;
+// Each client captures its network once; pending writes never follow a later selection.
+export const createDeviceManagement = (networkId?: string) => {
+  const Request: typeof deviceRequest = (url, data) => {
+    if (networkId === 'all' && (!['/lanctrl/v2/devices/', '/lanctrl/v2/device-traffic/'].includes(url.split('?')[0]) || data.method !== 'GET')) {
+      return Promise.reject(new Error('请选择设备所属的局域网'));
+    }
+    const separator = url.includes('?') ? '&' : '?';
+    return deviceRequest(networkId ? `${url}${separator}network=${encodeURIComponent(networkId)}` : url, data);
+  };
+return {
   routerContextV2: {
     GET() { return Request<any>("/lanctrl/v2/router-context/", { method: "GET" }); },
   },
@@ -1273,6 +1283,9 @@ export const DeviceMangement = {
     },
   },
 };
+
+};
+export const DeviceMangement = createDeviceManagement();
 
 // 设备管理
 export const ModuleSettings = {

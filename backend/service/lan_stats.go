@@ -12,6 +12,9 @@ type LanHostRet struct {
 }
 
 type lanStatsSnapshot struct {
+	native    map[string]nativeTrafficCounter
+	epoch     string
+	reasons   []string
 	hosts     []*LanHostRet
 	sampledAt time.Time
 	err       error

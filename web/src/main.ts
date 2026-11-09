@@ -18,7 +18,9 @@ import EditableSelect from "/@/components/editable-select/index.vue"
 
 import installComponents from "/@/plugins/componnets"
 import { createI18n } from '/@/plugins/i18n'
+import { initializeTheme } from '/@/utils/theme'
 
+initializeTheme()
 const app = createApp(App)
 app.component("svg-menu", SvgMenu)
 app.component("svg-system", SvgSytem)

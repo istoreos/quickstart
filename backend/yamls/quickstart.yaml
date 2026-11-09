@@ -1600,6 +1600,15 @@ paths:
           schema:
             $ref: "lanctrl.yaml#/definitions/LANCtrlStaticAssignedResponse"
 
+  /cgi-bin/luci/istore/lanctrl/v2/networks/:
+    get:
+      tags: [lanctrl]
+      operationId: getLANNetworks
+      summary: List logical LAN scopes without changing network configuration
+      responses:
+        '200':
+          description: Logical LANs, resolved device and DHCP bindings
+          schema: { $ref: "lanctrl.yaml#/definitions/LANNetworksResponse" }
   /cgi-bin/luci/istore/lanctrl/v2/devices/:
     get:
       tags:

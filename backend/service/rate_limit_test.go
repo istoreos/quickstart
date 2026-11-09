@@ -120,3 +120,22 @@ func TestRateLimitModuleFailsClosedWhenRouteCannotBeRead(t *testing.T) {
 func fixedRateLimitTime() time.Time {
 	return time.Date(2026, 9, 26, 0, 0, 0, 0, time.UTC)
 }
+
+func TestMultiLANForwardingPathDoesNotClaimBypassEnforcement(t *testing.T) {
+	for _, tc := range []struct {
+		name    string
+		uplinks *DefaultInterfaces
+		want    bool
+	}{
+		{"routed", &DefaultInterfaces{ipv4: &DefaultInterface{ip: "192.0.2.2", l3Device: "wan0"}}, true},
+		{"one-arm", &DefaultInterfaces{ipv4: &DefaultInterface{ip: "192.0.2.2", l3Device: "br-office"}}, false},
+		{"asymmetric-ipv6", &DefaultInterfaces{ipv4: &DefaultInterface{ip: "192.0.2.2", l3Device: "wan0"}, ipv6: &DefaultInterface{ip: "fd71::1", l3Device: "br-office"}}, false},
+		{"no-proof", &DefaultInterfaces{}, false},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			if got := distinctForwardingPath("br-office", tc.uplinks); got != tc.want {
+				t.Fatalf("path proof=%v want=%v", got, tc.want)
+			}
+		})
+	}
+}

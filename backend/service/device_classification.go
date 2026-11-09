@@ -44,9 +44,9 @@ func (module *DeviceClassificationModule) Apply(ctx context.Context, request *mo
 		if !validDeviceCategory(request.Category) {
 			return classificationFailure(request.DeviceID, "validation_failed", "invalid device category"), nil
 		}
-		changed, err = module.inventory.classificationOverrides.Set(request.DeviceID, scope, request.Category)
+		changed, err = module.inventory.classificationOverrides.forNetwork(selectedLAN(ctx)).Set(request.DeviceID, scope, request.Category)
 	case "reset":
-		changed, err = module.inventory.classificationOverrides.Reset(request.DeviceID, scope)
+		changed, err = module.inventory.classificationOverrides.forNetwork(selectedLAN(ctx)).Reset(request.DeviceID, scope)
 	default:
 		return classificationFailure(request.DeviceID, "validation_failed", "action must be set or reset"), nil
 	}

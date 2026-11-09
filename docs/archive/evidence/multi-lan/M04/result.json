@@ -1,0 +1,30 @@
+{
+  "milestone": "M04",
+  "status": "passed",
+  "optimizations": 3,
+  "checks": {
+    "goAllPackages": "passed",
+    "raceTests": "passed",
+    "networkBoundPlanAndIdempotency": "passed",
+    "crossProcessConfigurationLock": "passed",
+    "scopeRevalidationAfterLock": "passed",
+    "journalFailureBeforeAndAfterEffects": "passed",
+    "failedTaskReplayCannotReportSuccess": "passed",
+    "sharedFileRollbackVsOtherLANSuccess": "passed",
+    "realARM64FailureRecovery": "passed",
+    "persistentNetworkConfigAndDnsmasq": "unchanged"
+  },
+  "optimizationNotes": [
+    "Propagate transaction journal failures before writes and report recovery after effects",
+    "Corrected the rollback response variable during the first optimization build",
+    "Preserve failed replay states and identify failed configuration rollback as recovery_required"
+  ],
+  "evidence": [
+    "optimization-1.log",
+    "optimization-3.log",
+    "arm64-recovery.log"
+  ],
+  "limits": [
+    "Real recovery test uses task-owned files and injected verification failure; no production network service was interrupted"
+  ]
+}

@@ -7,6 +7,7 @@
         <PageState v-if="loading" kind="loading" :title="$gettext('正在读取使用规则')" />
         <p v-else-if="error" class="feedback error" role="alert">{{ error }} <button type="button" @click="load">{{ $gettext('重试') }}</button></p>
         <template v-else>
+            <p v-if="legacyAccessReview" class="feedback" role="status">{{ $gettext('旧版断网限制仍保留，取消额度或周期重置不会自动恢复上网。确认后，请使用“预览恢复联网”恢复。') }}</p>
             <div class="effective-card">
                 <span><small>{{ $gettext('当前生效') }}</small><strong>{{ effectiveLabel }}</strong></span>
                 <span><small>{{ $gettext('规则来源') }}</small><strong>{{ sourceLabel }}</strong></span>
@@ -53,7 +54,9 @@
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue'
 import { useGettext } from '/@/plugins/i18n'
-import request from '/@/request'
+import baseRequest from '/@/request'
+import { useLANClient } from '../lanContext'
+const request = { ...baseRequest, DeviceMangement: useLANClient() }
 import PageState from './pageState.vue'
 
 const props = defineProps<{ deviceId: string }>()
@@ -101,7 +104,16 @@ const applyResponse = (result:any) => {
     draft.quotaGB = policy.quota?.limitBytes ? Math.round(policy.quota.limitBytes / 1073741824 * 10) / 10 : 10
     draft.quotaAction = policy.quota?.action || 'notify'
 }
-const load = async () => { loading.value = true; error.value = ''; previewing.value = false; try { const result = (await request.DeviceMangement.deviceGroupsV2.GET()).data.result; if (result?.error) throw new Error(result.error.message); applyResponse(result) } catch (reason:any) { error.value = reason?.message || $gettext('读取使用规则失败') } finally { loading.value = false } }
+const legacyAccessReview = ref(false)
+const refreshAccessReview = async () => {
+    try {
+        const result = (await request.DeviceMangement.trafficInsightsV2.GET(props.deviceId, 'today')).data.result
+        if (!result || result.error) return false
+        legacyAccessReview.value = Boolean(result.legacyAccessReviewRequired)
+        return true
+    } catch { return false }
+}
+const load = async () => { loading.value = true; error.value = ''; previewing.value = false; try { const result = (await request.DeviceMangement.deviceGroupsV2.GET()).data.result; if (result?.error) throw new Error(result.error.message); applyResponse(result); await refreshAccessReview() } catch (reason:any) { error.value = reason?.message || $gettext('读取使用规则失败') } finally { loading.value = false } }
 const requestPreview = () => { feedback.value = ''; if (draft.scheduleEnabled && !draft.days.length) { feedbackKind.value='error'; feedback.value=$gettext('请至少选择一天'); return } if (draft.scheduleEnabled && (!draft.start || !draft.end)) { feedbackKind.value='error'; feedback.value=$gettext('请填写完整时间'); return } if (draft.scheduleEnabled && draft.scheduleAction==='limit' && (!draft.scheduleUpload || !draft.scheduleDownload)) { feedbackKind.value='error';feedback.value=$gettext('请填写完整的时段速度上限');return } if (draft.quotaEnabled && (!Number.isFinite(draft.quotaGB) || draft.quotaGB < .1)) { feedbackKind.value='error'; feedback.value=$gettext('流量额度至少为 0.1 GB'); return } previewing.value = true }
 const buildPolicy = () => {
     const schedules = (policyBase.value.schedules || []).filter((item:any) => item?.id !== managedScheduleId.value)
@@ -110,7 +122,7 @@ const buildPolicy = () => {
     if (next.access === undefined && next.speed === undefined && !next.targetId && !next.quota && !next.schedules.length) return null
     return next
 }
-const save = async () => { saving.value=true; feedback.value=''; try { const result=(await request.DeviceMangement.deviceGroupsV2.POST({action:'set_device_policy',deviceId:props.deviceId,devicePolicy:buildPolicy(),expectedVersion:version.value})).data.result; if(result?.error)throw new Error(result.error.message); applyResponse(result); previewing.value=false; feedbackKind.value='success'; feedback.value=$gettext('使用规则已应用') } catch(reason:any) { feedbackKind.value='error'; feedback.value=reason?.message||$gettext('保存失败，原设置未改变') } finally { saving.value=false } }
+const save = async () => { saving.value=true; feedback.value=''; try { const result=(await request.DeviceMangement.deviceGroupsV2.POST({action:'set_device_policy',deviceId:props.deviceId,devicePolicy:buildPolicy(),expectedVersion:version.value})).data.result; if(result?.error)throw new Error(result.error.message); applyResponse(result); previewing.value=false; feedbackKind.value='success'; feedback.value=await refreshAccessReview()?$gettext('使用规则已应用'):$gettext('规则已应用，上网状态暂无法确认，请刷新检查') } catch(reason:any) { feedbackKind.value='error'; feedback.value=reason?.message||$gettext('保存失败，原设置未改变') } finally { saving.value=false } }
 watch(() => props.deviceId, load, { immediate:true })
 </script>
 

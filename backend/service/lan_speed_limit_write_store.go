@@ -27,8 +27,8 @@ var lanSpeedLimitWriteExec = func(ctx context.Context, commands []string) error 
 	return utils.BatchRun(ctx, commands, 0)
 }
 
-var lanSpeedLimitWriteApplyPlan = func(_ context.Context, plan SpeedLimitWritePlan) error {
-	return applySpeedLimitPlanAt(filepath.Dir(dhcpConfigPath), plan)
+var lanSpeedLimitWriteApplyPlan = func(ctx context.Context, plan SpeedLimitWritePlan) error {
+	return applyScopedSpeedLimitPlanAt(ctx, filepath.Dir(dhcpConfigPath), plan)
 }
 
 var lanSpeedLimitWriteLoadConfig = uci.LoadConfig
@@ -90,6 +90,13 @@ func (store *defaultLanSpeedLimitWriteStore) ApplyPlan(ctx context.Context, plan
 }
 
 func applySpeedLimitPlanAt(configDir string, plan SpeedLimitWritePlan) error {
+	return applyScopedSpeedLimitPlanAt(context.Background(), configDir, plan)
+}
+
+func applyScopedSpeedLimitPlanAt(ctx context.Context, configDir string, plan SpeedLimitWritePlan) error {
+	if selectedLAN(ctx) != defaultLAN {
+		return errors.New("legacy speed provider supports only the default LAN")
+	}
 	tree := uci.NewTree(configDir)
 	needEqos, needFirewall := plan.AddSpeedLimit, plan.AddBlockRule
 	for _, match := range plan.DeleteSections {
@@ -105,6 +112,31 @@ func applySpeedLimitPlanAt(configDir string, plan SpeedLimitWritePlan) error {
 		if err := tree.LoadConfig("firewall", true); err != nil {
 			return err
 		}
+	}
+	if needFirewall && selectedLANScope(ctx) != nil {
+		if _, err := bindDeviceAccessRules(ctx, tree); err != nil {
+			return err
+		}
+		for _, match := range plan.DeleteSections {
+			if match.Config == "firewall" {
+				owner, _ := tree.GetLast("firewall", match.SectionName, "quickstart_owner")
+				if owner != "" || !accessRuleInScope(tree, match.SectionName, selectedLANScope(ctx)) {
+					return errors.New("access rule belongs to another network or owner")
+				}
+			}
+		}
+		addBlock := plan.AddBlockRule
+		plan.AddBlockRule = false
+		if err := applySpeedLimitPlanToTree(tree, plan); err != nil {
+			return err
+		}
+		if err := mutateDeviceAccessPolicyTree(ctx, tree, plan.Input.MAC, !addBlock); err != nil {
+			return err
+		}
+		if err := syncImmediateAccessRules(tree, immediateAccessIncludePath(configDir)); err != nil {
+			return err
+		}
+		return tree.Commit()
 	}
 	if err := applySpeedLimitPlanToTree(tree, plan); err != nil {
 		return err
@@ -168,7 +200,9 @@ func safeSpeedPolicyComment(value string) string {
 }
 
 func (store *defaultLanSpeedLimitWriteStore) ReadRuleMatches(ctx context.Context) ([]SpeedLimitRuleMatch, []SpeedLimitRuleMatch, error) {
-	_ = ctx
+	if selectedLANScope(ctx) != nil {
+		return readScopedSpeedRuleMatches(ctx)
+	}
 	_ = lanSpeedLimitWriteLoadConfig("eqos", true)
 	_ = lanSpeedLimitWriteLoadConfig("firewall", true)
 
@@ -193,6 +227,11 @@ func (store *defaultLanSpeedLimitWriteStore) ReadRuleMatches(ctx context.Context
 
 	firewallMatches := make([]SpeedLimitRuleMatch, 0, len(firewallSecs))
 	for _, sectionName := range firewallSecs {
+		network, _ := uci.GetLast("firewall", sectionName, "quickstart_network")
+		owner, _ := uci.GetLast("firewall", sectionName, "quickstart_owner")
+		if (network != "" && network != defaultLAN) || owner != "" {
+			continue
+		}
 		name, _ := uci.GetLast("firewall", sectionName, "name")
 		mac, _ := uci.GetLast("firewall", sectionName, "src_mac")
 		target, _ := uci.GetLast("firewall", sectionName, "target")
@@ -211,6 +250,9 @@ func (store *defaultLanSpeedLimitWriteStore) ReadRuleMatches(ctx context.Context
 
 func (store *defaultLanSpeedLimitWriteStore) ApplyModuleConfig(ctx context.Context, input SpeedLimitModuleInput) error {
 	_ = store
+	if selectedLAN(ctx) != defaultLAN {
+		return errors.New("legacy speed provider supports only the default LAN")
+	}
 	enabled := 0
 	if input.Enabled {
 		enabled = 1

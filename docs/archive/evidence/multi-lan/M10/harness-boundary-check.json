@@ -1,0 +1,1 @@
+{"status":"passed","checks":["start/end boundary exclusion","clock changed during ping","stable blocked window","stable allowed window","other LAN always checked"]}

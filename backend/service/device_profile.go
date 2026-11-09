@@ -66,7 +66,9 @@ func (module *DeviceProfileModule) Apply(ctx context.Context, request *models.De
 		}
 		return attachDeviceProfileTransaction(deviceProfileSuccess(device, record, false), transaction), nil
 	}
-	_ = module.transactions.Advance(ctx, transaction, "apply", "in_progress", "retry_profile_save")
+	if txErr := advanceTaskTransaction(ctx, module.transactions, transaction, "apply", "in_progress", "retry_profile_save"); txErr != nil {
+		return attachDeviceProfileTransaction(deviceProfileFailure(txErr.Code, txErr.Message), transaction), nil
+	}
 	scope := deviceProfileScope(device)
 	var changed bool
 	switch request.Action {
@@ -74,41 +76,51 @@ func (module *DeviceProfileModule) Apply(ctx context.Context, request *models.De
 		if request.Alias == nil && request.Brand == nil && request.Category == nil && request.IconMode == nil && request.IconKey == nil {
 			return deviceProfileFailure("validation_failed", "at least one profile field is required"), nil
 		}
-		changed, err = module.inventory.classificationOverrides.PatchProfileFields(request.DeviceID, scope, deviceProfilePatch{
+		changed, err = module.inventory.classificationOverrides.forNetwork(selectedLAN(ctx)).PatchProfileFields(request.DeviceID, scope, deviceProfilePatch{
 			Alias: request.Alias, Brand: request.Brand, Category: request.Category, IconMode: request.IconMode, IconKey: request.IconKey,
 		})
 	case "reset":
-		changed, err = module.inventory.classificationOverrides.ResetProfile(request.DeviceID, scope)
+		changed, err = module.inventory.classificationOverrides.forNetwork(selectedLAN(ctx)).ResetProfile(request.DeviceID, scope)
 	case "reset_brand":
-		changed, err = module.inventory.classificationOverrides.ResetProfileField(request.DeviceID, scope, "brand")
+		changed, err = module.inventory.classificationOverrides.forNetwork(selectedLAN(ctx)).ResetProfileField(request.DeviceID, scope, "brand")
 	case "reset_category":
-		changed, err = module.inventory.classificationOverrides.ResetProfileField(request.DeviceID, scope, "category")
+		changed, err = module.inventory.classificationOverrides.forNetwork(selectedLAN(ctx)).ResetProfileField(request.DeviceID, scope, "category")
 	case "reset_icon":
-		changed, err = module.inventory.classificationOverrides.ResetProfileField(request.DeviceID, scope, "icon")
+		changed, err = module.inventory.classificationOverrides.forNetwork(selectedLAN(ctx)).ResetProfileField(request.DeviceID, scope, "icon")
 	default:
 		return deviceProfileFailure("validation_failed", "unsupported device profile action"), nil
 	}
 	if err != nil {
-		_ = module.transactions.Advance(ctx, transaction, "rollback", "rolled_back", "retry")
+		if txErr := advanceTaskTransaction(ctx, module.transactions, transaction, "rollback", "rolled_back", "retry"); txErr != nil {
+			return attachDeviceProfileTransaction(deviceProfileFailure(txErr.Code, txErr.Message), transaction), nil
+		}
 		return attachDeviceProfileTransaction(deviceProfileFailure("rolled_back", "device profile was not changed"), transaction), nil
 	}
-	_ = module.transactions.Advance(ctx, transaction, "verify", "in_progress", "retry_profile_read")
+	if txErr := advanceTaskTransaction(ctx, module.transactions, transaction, "verify", "in_progress", "retry_profile_read"); txErr != nil {
+		return attachDeviceProfileTransaction(deviceProfileFailure(txErr.Code, txErr.Message), transaction), nil
+	}
 	module.inventory.Invalidate()
 	device, err = module.findDevice(ctx, request.DeviceID)
 	if err != nil {
-		_ = module.transactions.Advance(ctx, transaction, "recover", "recovery_required", "retry_profile_read")
+		if txErr := advanceTaskTransaction(ctx, module.transactions, transaction, "recover", "recovery_required", "retry_profile_read"); txErr != nil {
+			return attachDeviceProfileTransaction(deviceProfileFailure(txErr.Code, txErr.Message), transaction), nil
+		}
 		return attachDeviceProfileTransaction(deviceProfileFailure("recovery_required", "profile saved but verification failed"), transaction), nil
 	}
 	record, err := module.profileRecord(device)
 	if err != nil {
-		_ = module.transactions.Advance(ctx, transaction, "recover", "recovery_required", "retry_profile_read")
+		if txErr := advanceTaskTransaction(ctx, module.transactions, transaction, "recover", "recovery_required", "retry_profile_read"); txErr != nil {
+			return attachDeviceProfileTransaction(deviceProfileFailure(txErr.Code, txErr.Message), transaction), nil
+		}
 		return attachDeviceProfileTransaction(deviceProfileFailure("recovery_required", "profile saved but verification failed"), transaction), nil
 	}
 	status := "committed"
 	if !changed {
 		status = "unchanged"
 	}
-	_ = module.transactions.Advance(ctx, transaction, "verify", status, "")
+	if txErr := advanceTaskTransaction(ctx, module.transactions, transaction, "verify", status, ""); txErr != nil {
+		return attachDeviceProfileTransaction(deviceProfileFailure(txErr.Code, txErr.Message), transaction), nil
+	}
 	return attachDeviceProfileTransaction(deviceProfileSuccess(device, record, changed), transaction), nil
 }
 
@@ -151,7 +163,7 @@ func (module *DeviceProfileModule) profileRecord(device *models.DeviceInventoryI
 	if module == nil || module.inventory == nil || module.inventory.classificationOverrides == nil {
 		return deviceProfileRecord{}, errors.New("device profile store is unavailable")
 	}
-	record, _, err := module.inventory.classificationOverrides.GetProfile(device.DeviceID, deviceProfileScope(device))
+	record, _, err := module.inventory.classificationOverrides.forNetwork(device.NetworkID).GetProfile(device.DeviceID, deviceProfileScope(device))
 	return record, err
 }
 

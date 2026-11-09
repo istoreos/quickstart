@@ -1,0 +1,43 @@
+{
+  "milestone": "M10",
+  "status": "failed",
+  "optimizations": 4,
+  "updatedAt": "2026-11-09T02:03:31.882906+00:00",
+  "passedChecks": [
+    "168 frontend tests and typecheck",
+    "network-owned engine directory guard",
+    "pinned old data export/new read/old read round trip",
+    "candidate engine whole-machine reboot and recovery",
+    "both-host VLAN IPv4/IPv6 real forwarding/rate/access/quota/restart tests",
+    "Go full regression and service/routes race tests",
+    "54 Rust tests and procd contract checks",
+    "production frontend build and 12 browser scenarios",
+    "256 physical quota rules: one enforcement reload and one cancellation reload",
+    "both-host legacy quota real IPv4/IPv6 packets: cancel/reset preserve; explicit unpause only; other LAN unaffected",
+    "positive renamed-uplink role and inactive-LAN inventory regression tests",
+    "both-host full production application link deletion/recreation: stale plans/version rejected; target policies restored; other instance unchanged",
+    "pinned old reader/new reader/backup restore/old reader: data and firewall config hashes restored; full binary rollback remains pending",
+    "optimization 4: 9 legacy unit scenarios and cancel/period/group reload-failure rollback",
+    "optimization 4: both-host normal/missing-runtime legacy cancel/reset/notify/group packets; explicit restore only; one reload",
+    "optimization 4: Go full regression and full race rerun passed without changing timing threshold",
+    "optimization 4: actual old/new Quickstart and NetPolicy binaries upgrade and paired backup rollback; original profile/group/native revision and exact binary/config/data hashes restored"
+  ],
+  "runningGates": [
+    "optimization-4-capacity-arm.json",
+    "optimization-4-capacity-x86.json"
+  ],
+  "remainingRequired": [
+    "final 1/2/4 LAN capacity, 30-minute warmup and actual 24-hour soak",
+    "final support matrix and source/artifact verification"
+  ],
+  "note": "Capacity sub-gate success alone must not mark M10 passed.",
+  "resolvedProductDecision": "User selected option 1: preserve legacy unowned access restrictions through quota cancellation and reset; explicit manual recovery only.",
+  "failedChecks": [],
+  "evidenceManifest": "optimization-4-candidate-manifest.json",
+  "additionalRoundAuthorized": true,
+  "resolvedChecks": [
+    "legacy quota missing-runtime cancellation cross-LAN block, reproduced on both hosts before fix, now passed with real IPv4/IPv6 packets"
+  ],
+  "stopReason": "authorized fourth round did not pass final acceptance",
+  "finalizationError": "RuntimeError({'x86': \"AssertionError(('sample or inventory health', {'activeDevices': 256, 'devices': 256, 'downloadBytes': 9580788, 'endpoint': 'device-traffic', 'maxSampleAgeSeconds': 1.6925360569999999, 'networkId': 'capacity1', 'p95Ms': 10.917, 'samples': 1, 'state': 'partial', 'uploadBytes': 39684412}))\"})"
+}

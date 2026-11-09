@@ -25,7 +25,7 @@ var (
 	}
 )
 
-func readDeviceAccessPolicyAt(configDir, mac string) (bool, error) {
+func readDeviceAccessPolicyAt(ctx context.Context, configDir, mac string) (bool, error) {
 	tree := uci.NewTree(configDir)
 	if err := tree.LoadConfig("firewall", true); err != nil {
 		return true, err
@@ -35,10 +35,30 @@ func readDeviceAccessPolicyAt(configDir, mac string) (bool, error) {
 		return true, errors.New("fetch firewall rules failed")
 	}
 	for _, section := range sections {
+		if owner := accessOwner(ctx); owner != "" {
+			actual, _ := tree.GetLast("firewall", section, "quickstart_owner")
+			if actual != owner {
+				continue
+			}
+		}
 		name, _ := tree.GetLast("firewall", section, "name")
 		sourceMAC, _ := tree.GetLast("firewall", section, "src_mac")
 		target, _ := tree.GetLast("firewall", section, "target")
-		if normalizeLanSpeedLimitedDeviceMAC(sourceMAC) == normalizeLanSpeedLimitedDeviceMAC(mac) {
+		if _, recognized := buildBlockedDeviceRule(sourceMAC, name, target); !recognized || normalizeLanSpeedLimitedDeviceMAC(sourceMAC) != normalizeLanSpeedLimitedDeviceMAC(mac) {
+			continue
+		}
+		scope := selectedLANScope(ctx)
+		if scope != nil && scope.Device != "" {
+			if accessRuleInScope(tree, section, scope) && !accessBindingCurrent(tree, section, scope) {
+				return false, &PolicyError{Code: "access_binding_pending", Message: "正在恢复原上网限制，请稍后重试"}
+			}
+			device, _ := tree.GetLast("firewall", section, "device")
+			source, _ := tree.GetLast("firewall", section, "src")
+			if device == "" && !accessRuleInScope(tree, section, scope) && (source == "" || lanContainsAlias(scope.FirewallZones, source)) {
+				return true, &PolicyError{Code: "access_binding_pending", Message: "正在恢复原上网限制，请稍后重试"}
+			}
+		}
+		if accessRuleInScope(tree, section, selectedLANScope(ctx)) && normalizeLanSpeedLimitedDeviceMAC(sourceMAC) == normalizeLanSpeedLimitedDeviceMAC(mac) {
 			if _, recognized := buildBlockedDeviceRule(sourceMAC, name, target); recognized {
 				return false, nil
 			}
@@ -47,12 +67,15 @@ func readDeviceAccessPolicyAt(configDir, mac string) (bool, error) {
 	return true, nil
 }
 
-func writeDeviceAccessPolicyAt(configDir, mac string, networkAccess bool) error {
+func writeDeviceAccessPolicyAt(ctx context.Context, configDir, mac string, networkAccess bool) error {
 	tree := uci.NewTree(configDir)
 	if err := tree.LoadConfig("firewall", true); err != nil {
 		return err
 	}
-	if err := mutateDeviceAccessPolicyTree(tree, mac, networkAccess); err != nil {
+	if _, err := bindDeviceAccessRules(ctx, tree); err != nil {
+		return err
+	}
+	if err := mutateDeviceAccessPolicyTree(ctx, tree, mac, networkAccess); err != nil {
 		return err
 	}
 	if err := syncImmediateAccessRules(tree, immediateAccessIncludePath(configDir)); err != nil {
@@ -61,16 +84,19 @@ func writeDeviceAccessPolicyAt(configDir, mac string, networkAccess bool) error 
 	return tree.Commit()
 }
 
-func writeDeviceAccessPolicyBatchAt(configDir string, changes []groupBatchRestrictionChange) error {
+func writeDeviceAccessPolicyBatchAt(ctx context.Context, configDir string, changes []groupBatchRestrictionChange) error {
 	tree := uci.NewTree(configDir)
 	if err := tree.LoadConfig("firewall", true); err != nil {
+		return err
+	}
+	if _, err := bindDeviceAccessRules(ctx, tree); err != nil {
 		return err
 	}
 	for _, change := range changes {
 		if change.request == nil || change.request.Access == nil || change.current == nil {
 			return errors.New("invalid access batch change")
 		}
-		if err := mutateDeviceAccessPolicyTree(tree, change.current.MAC, change.request.Access.NetworkAccess); err != nil {
+		if err := mutateDeviceAccessPolicyTree(context.WithValue(ctx, accessOwnerKey{}, change.accessOwner), tree, change.current.MAC, change.request.Access.NetworkAccess); err != nil {
 			return err
 		}
 	}
@@ -96,7 +122,7 @@ func syncImmediateAccessRules(tree uci.Tree, path string) error {
 	}
 
 	sections, _ := tree.GetSections("firewall", "rule")
-	macs := make([]string, 0)
+	rules := make([]string, 0)
 	seen := map[string]bool{}
 	for _, ruleSection := range sections {
 		name, _ := tree.GetLast("firewall", ruleSection, "name")
@@ -110,21 +136,32 @@ func syncImmediateAccessRules(tree uci.Tree, path string) error {
 			continue
 		}
 		normalized := strings.ToLower(hardware.String())
-		if !seen[normalized] {
-			seen[normalized] = true
-			macs = append(macs, normalized)
+		device, _ := tree.GetLast("firewall", ruleSection, "device")
+		zone, _ := tree.GetLast("firewall", ruleSection, "dest")
+		if zone == "" {
+			zone = "wan"
+		}
+		selector := ""
+		if device != "" {
+			selector = fmt.Sprintf("iifname %q ", device)
+		}
+		chain := "reject_to_" + zone
+		if !dhcpTagNamePattern.MatchString(chain) {
+			return errors.New("invalid access destination zone")
+		}
+		rule := fmt.Sprintf("%sether saddr %s jump %s comment \"QuickStart pause %s\"\n", selector, normalized, chain, strings.ToUpper(normalized))
+		if !seen[rule] {
+			seen[rule] = true
+			rules = append(rules, rule)
 		}
 	}
-	sort.Strings(macs)
-	var content strings.Builder
-	for _, mac := range macs {
-		content.WriteString(fmt.Sprintf("ether saddr %s jump reject_to_wan comment \"QuickStart pause %s\"\n", mac, strings.ToUpper(mac)))
-	}
+	sort.Strings(rules)
+	content := strings.Join(rules, "")
 	if err := os.MkdirAll(filepath.Dir(path), 0755); err != nil {
 		return err
 	}
 	temporary := path + ".tmp"
-	if err := os.WriteFile(temporary, []byte(content.String()), 0600); err != nil {
+	if err := os.WriteFile(temporary, []byte(content), 0600); err != nil {
 		return err
 	}
 	if err := os.Rename(temporary, path); err != nil {
@@ -134,20 +171,21 @@ func syncImmediateAccessRules(tree uci.Tree, path string) error {
 	return nil
 }
 
-func mutateDeviceAccessPolicyTree(tree uci.Tree, mac string, networkAccess bool) error {
+func mutateDeviceAccessPolicyTree(ctx context.Context, tree uci.Tree, mac string, networkAccess bool) error {
 	sections, _ := tree.GetSections("firewall", "rule")
 	for _, section := range sections {
 		name, _ := tree.GetLast("firewall", section, "name")
 		sourceMAC, _ := tree.GetLast("firewall", section, "src_mac")
 		target, _ := tree.GetLast("firewall", section, "target")
-		if normalizeLanSpeedLimitedDeviceMAC(sourceMAC) == normalizeLanSpeedLimitedDeviceMAC(mac) {
+		owner, _ := tree.GetLast("firewall", section, "quickstart_owner")
+		if owner == accessOwner(ctx) && accessRuleInScope(tree, section, selectedLANScope(ctx)) && normalizeLanSpeedLimitedDeviceMAC(sourceMAC) == normalizeLanSpeedLimitedDeviceMAC(mac) {
 			if _, recognized := buildBlockedDeviceRule(sourceMAC, name, target); recognized {
 				tree.DelSection("firewall", section)
 			}
 		}
 	}
 	if !networkAccess {
-		section := "quickstart_block_" + strings.ToLower(strings.ReplaceAll(normalizeLanSpeedLimitedDeviceMAC(mac), ":", ""))
+		section := scopedDHCPSectionName(selectedLANScope(ctx), "quickstart_block_"+accessOwner(ctx)+strings.ToLower(strings.ReplaceAll(normalizeLanSpeedLimitedDeviceMAC(mac), ":", "")))
 		tree.DelSection("firewall", section)
 		if err := tree.AddSection("firewall", section, "rule"); err != nil {
 			return err
@@ -156,6 +194,15 @@ func mutateDeviceAccessPolicyTree(tree uci.Tree, mac string, networkAccess bool)
 			!tree.Set("firewall", section, "dest", "wan") || !tree.Set("firewall", section, "target", "REJECT") ||
 			!tree.Set("firewall", section, "proto", "all") || !tree.Set("firewall", section, "src_mac", normalizeLanSpeedLimitedDeviceMAC(mac)) {
 			return errors.New("set access policy")
+		}
+		if !tree.Set("firewall", section, "quickstart_access_version", "1") {
+			return errors.New("set access rule version")
+		}
+		if err := bindAccessRule(tree, section, selectedLANScope(ctx)); err != nil {
+			return err
+		}
+		if accessOwner(ctx) != "" && !tree.Set("firewall", section, "quickstart_owner", accessOwner(ctx)) {
+			return errors.New("set access owner")
 		}
 	}
 	return nil

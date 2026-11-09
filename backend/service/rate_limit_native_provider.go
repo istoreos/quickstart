@@ -9,6 +9,8 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"path/filepath"
+	"strconv"
 	"strings"
 	"time"
 
@@ -45,6 +47,8 @@ type nativePolicyInput struct {
 }
 
 type nativeStoredPolicy struct {
+	Revision  uint64               `json:"revision"`
+	Source    string               `json:"source"`
 	ID        string               `json:"id"`
 	Owner     nativePolicyOwner    `json:"owner"`
 	Device    nativeDeviceIdentity `json:"device"`
@@ -89,12 +93,26 @@ type nativeEnvelope struct {
 	} `json:"error"`
 }
 
+type nativeEngineHealth struct {
+	State     string `json:"state"`
+	Interface string `json:"interface"`
+	PID       int    `json:"pid"`
+	Context   *struct {
+		NetworkID      string `json:"networkId"`
+		InstanceID     string `json:"instanceId"`
+		Epoch          string `json:"epoch"`
+		InterfaceIndex int    `json:"interfaceIndex"`
+	} `json:"context"`
+}
+
 type nativeRateLimitProvider struct {
-	baseURL string
-	client  *http.Client
-	owner   nativePolicyOwner
-	offload rateLimitRuntimeInspector
-	now     func() time.Time
+	registry *nativeEngineRegistry
+	binding  *nativeEngineBinding
+	baseURL  string
+	client   *http.Client
+	owner    nativePolicyOwner
+	offload  rateLimitRuntimeInspector
+	now      func() time.Time
 }
 
 func NewNativeRateLimitProvider(baseURL string, client *http.Client) rateLimitProvider {
@@ -114,6 +132,13 @@ func (*nativeRateLimitProvider) SupportsIPv6() bool   { return true }
 
 func (provider *nativeRateLimitProvider) Inspect(ctx context.Context, target rateLimitTarget) (rateLimitProviderObservation, error) {
 	result := rateLimitProviderObservation{Offload: "unknown"}
+	selected, err := provider.forContext(ctx)
+	if err != nil {
+		return result, err
+	}
+	if selected != provider {
+		return selected.Inspect(ctx, target)
+	}
 	if err := provider.probe(ctx); err != nil {
 		return result, err
 	}
@@ -140,12 +165,24 @@ func (provider *nativeRateLimitProvider) Inspect(ctx context.Context, target rat
 	if provider.offload != nil {
 		if state, inspectErr := provider.offload.Offload(ctx); inspectErr == nil {
 			result.Offload = state
+			if state != "compatible" {
+				result.Verified = false
+			}
+		} else {
+			result.Verified = false
 		}
 	}
 	return result, nil
 }
 
 func (provider *nativeRateLimitProvider) Apply(ctx context.Context, target rateLimitTarget, desired models.DeviceSpeedPolicy) error {
+	selected, err := provider.forContext(ctx)
+	if err != nil {
+		return err
+	}
+	if selected != provider {
+		return selected.Apply(ctx, target, desired)
+	}
 	mac := strings.ToUpper(normalizeInventoryMAC(target.MAC))
 	if mac == "" {
 		return errors.New("netpolicy_validation_failed: stable MAC is required")
@@ -224,10 +261,18 @@ func bitsPerSecondToMbit(value int64) int64 {
 }
 
 func (provider *nativeRateLimitProvider) probe(ctx context.Context) error {
+	selected, err := provider.forContext(ctx)
+	if err != nil {
+		return err
+	}
+	if selected != provider {
+		return selected.probe(ctx)
+	}
 	var capabilities struct {
-		Product          string `json:"product"`
-		InterfaceVersion string `json:"interfaceVersion"`
-		Engine           string `json:"engine"`
+		Product             string `json:"product"`
+		InterfaceVersion    string `json:"interfaceVersion"`
+		Engine              string `json:"engine"`
+		ScopeContextVersion int    `json:"scopeContextVersion"`
 	}
 	if err := provider.call(ctx, http.MethodGet, "/api/v1/system/capabilities", nil, &capabilities); err != nil {
 		return err
@@ -235,11 +280,23 @@ func (provider *nativeRateLimitProvider) probe(ctx context.Context) error {
 	if capabilities.Product != "quickstart-netpolicy" || capabilities.InterfaceVersion != nativePolicyInterface || capabilities.Engine != "quickstart-native" {
 		return errors.New("netpolicy_incompatible_interface")
 	}
-	var health struct {
-		State string `json:"state"`
-	}
+	var health nativeEngineHealth
 	if err := provider.call(ctx, http.MethodGet, "/api/v1/system/health", nil, &health); err != nil {
 		return err
+	}
+	if provider.binding != nil {
+		binding := provider.binding
+		if capabilities.ScopeContextVersion >= 1 {
+			if health.Context == nil || health.Interface != binding.Interface || health.Context.NetworkID != binding.NetworkID || health.Context.InstanceID != binding.InstanceID || health.Context.Epoch == "" || health.Context.InterfaceIndex != binding.InterfaceIndex {
+				return errors.New("netpolicy_runtime_binding_mismatch")
+			}
+		} else {
+			// Old v1 engines expose no context. Permit only the original main LAN and
+			// verify the local process's interface before retaining legacy behavior.
+			if binding.NetworkID != defaultLAN || binding.InstanceID != "main" || !legacyNativeProcessMatches(health.PID, binding.Interface, binding.Port) {
+				return errors.New("netpolicy_scope_interface_unsupported")
+			}
+		}
 	}
 	if health.State != "healthy" {
 		return fmt.Errorf("netpolicy_unhealthy: %s", health.State)
@@ -248,6 +305,13 @@ func (provider *nativeRateLimitProvider) probe(ctx context.Context) error {
 }
 
 func (provider *nativeRateLimitProvider) snapshot(ctx context.Context) (nativePolicySnapshot, error) {
+	selected, selectErr := provider.forContext(ctx)
+	if selectErr != nil {
+		return nativePolicySnapshot{}, selectErr
+	}
+	if selected != provider {
+		return selected.snapshot(ctx)
+	}
 	var snapshot nativePolicySnapshot
 	err := provider.call(ctx, http.MethodGet, "/api/v1/policies", nil, &snapshot)
 	if len(snapshot.Policies) > nativeMaximumPolicies {
@@ -262,6 +326,16 @@ func (provider *nativeRateLimitProvider) replaceOwned(
 	policies []nativePolicyInput,
 	idempotencyKey string,
 ) (nativePolicySnapshot, error) {
+	selected, selectErr := provider.forContext(ctx)
+	if selectErr != nil {
+		return nativePolicySnapshot{}, selectErr
+	}
+	if selected != provider {
+		return selected.replaceOwned(ctx, before, policies, idempotencyKey)
+	}
+	if err := provider.probe(ctx); err != nil {
+		return nativePolicySnapshot{}, err
+	}
 	mutation := nativePolicyMutation{
 		ExpectedRevision: before.Revision,
 		IdempotencyKey:   idempotencyKey,
@@ -310,6 +384,9 @@ func (provider *nativeRateLimitProvider) call(ctx context.Context, method, path 
 		return err
 	}
 	request.Header.Set("Content-Type", "application/json")
+	// Original v1 engines serve one request per TCP connection without an
+	// explicit close response header. Never reuse that half-closed socket.
+	request.Close = true
 	response, err := provider.client.Do(request)
 	if err != nil {
 		return fmt.Errorf("netpolicy_unavailable: %w", err)
@@ -350,7 +427,7 @@ func nativeProviderCapability(ctx context.Context) (installed bool, available bo
 			break
 		}
 	}
-	provider := NewNativeRateLimitProvider(defaultNativePolicyBaseURL(), nil).(*nativeRateLimitProvider)
+	provider := newScopedNativeRateLimitProvider()
 	provider.offload = nil
 	if err := provider.probe(ctx); err != nil {
 		if strings.Contains(err.Error(), "incompatible") {
@@ -362,4 +439,39 @@ func nativeProviderCapability(ctx context.Context) (installed bool, available bo
 		return false, false, "dependency_not_installed"
 	}
 	return true, true, ""
+}
+
+func legacyNativeProcessMatches(pid int, iface string, port int) bool {
+	if pid <= 0 {
+		return false
+	}
+	raw, err := os.ReadFile(fmt.Sprintf("/proc/%d/cmdline", pid))
+	if err != nil {
+		return false
+	}
+	args := strings.Split(strings.TrimRight(string(raw), "\x00"), "\x00")
+	if len(args) == 0 || filepath.Base(args[0]) != "quickstart-netpolicy" {
+		return false
+	}
+	foundInterface, foundPort := "", "8765"
+	trafficEnabled := false
+	for i, arg := range args {
+		if arg == "--enable-traffic" || arg == "--enable-traffic=true" {
+			trafficEnabled = true
+		}
+		if arg == "--iface" && i+1 < len(args) {
+			foundInterface = args[i+1]
+		}
+		if strings.HasPrefix(arg, "--iface=") {
+			foundInterface = strings.TrimPrefix(arg, "--iface=")
+		}
+		if arg == "--port" && i+1 < len(args) {
+			foundPort = args[i+1]
+		}
+		if strings.HasPrefix(arg, "--port=") {
+			foundPort = strings.TrimPrefix(arg, "--port=")
+		}
+	}
+	parsedPort, _ := strconv.Atoi(foundPort)
+	return foundInterface == iface && parsedPort == port && trafficEnabled
 }

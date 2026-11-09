@@ -18,7 +18,8 @@
  --color-icon-green:#007e34;--color-icon-cyan:#007e9e;--color-icon-slate:#526078;
  --color-card-border:#e1e6ed;--color-widget-icon:var(--home-icon-blue);
 }
-body[theme=dark] :is(.ordered-home,.network-dialog).home-semantic-colors{
+body[theme=dark] :is(.ordered-home,.network-dialog).home-semantic-colors,
+body[data-quickstart-theme=dark] :is(.ordered-home,.network-dialog).home-semantic-colors{
  --c-bg:#191d24;--c-panel:#2c2c2c;--c-soft:#343a43;--c-hover:#3b4655;
  --c-text:#e6ebf3;--c-muted:#b1bdce;--c-line:#414b59;--c-accent:#91b9ff;
  --c-good:#70e2b2;--c-warning:#ffce76;

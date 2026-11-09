@@ -1,0 +1,54 @@
+{
+  "192.168.30.7": {
+    "ownedRecordedInactiveM10Directories": [
+      "/tmp/quickstart-multi-lan/m10-04666e",
+      "/tmp/quickstart-multi-lan/m10-141515",
+      "/tmp/quickstart-multi-lan/m10-19f6a3",
+      "/tmp/quickstart-multi-lan/m10-2388bc",
+      "/tmp/quickstart-multi-lan/m10-23c1a3",
+      "/tmp/quickstart-multi-lan/m10-3ce0a9",
+      "/tmp/quickstart-multi-lan/m10-4334b2",
+      "/tmp/quickstart-multi-lan/m10-448cc9",
+      "/tmp/quickstart-multi-lan/m10-4efdc1",
+      "/tmp/quickstart-multi-lan/m10-5d3a98",
+      "/tmp/quickstart-multi-lan/m10-719ed5",
+      "/tmp/quickstart-multi-lan/m10-7e5313",
+      "/tmp/quickstart-multi-lan/m10-7f8312",
+      "/tmp/quickstart-multi-lan/m10-7faf96",
+      "/tmp/quickstart-multi-lan/m10-a804fa",
+      "/tmp/quickstart-multi-lan/m10-c5252c",
+      "/tmp/quickstart-multi-lan/m10-c7977f",
+      "/tmp/quickstart-multi-lan/m10-ca5511",
+      "/tmp/quickstart-multi-lan/m10-d0215e",
+      "/tmp/quickstart-multi-lan/m10-d3d670",
+      "/tmp/quickstart-multi-lan/m10-d814e4",
+      "/tmp/quickstart-multi-lan/m10-d9d676",
+      "/tmp/quickstart-multi-lan/m10-f336d8",
+      "/tmp/quickstart-multi-lan/m10-f3b11d"
+    ]
+  },
+  "192.168.30.93": {
+    "ownedRecordedInactiveM10Directories": [
+      "/tmp/quickstart-multi-lan/m10-04aac7",
+      "/tmp/quickstart-multi-lan/m10-09fea5",
+      "/tmp/quickstart-multi-lan/m10-1957fb",
+      "/tmp/quickstart-multi-lan/m10-1b7597",
+      "/tmp/quickstart-multi-lan/m10-1f01ec",
+      "/tmp/quickstart-multi-lan/m10-248e9b",
+      "/tmp/quickstart-multi-lan/m10-2ea1e9",
+      "/tmp/quickstart-multi-lan/m10-2f351b",
+      "/tmp/quickstart-multi-lan/m10-469564",
+      "/tmp/quickstart-multi-lan/m10-5676e9",
+      "/tmp/quickstart-multi-lan/m10-602ce5",
+      "/tmp/quickstart-multi-lan/m10-836ee7",
+      "/tmp/quickstart-multi-lan/m10-8d1561",
+      "/tmp/quickstart-multi-lan/m10-a4801c",
+      "/tmp/quickstart-multi-lan/m10-b020f9",
+      "/tmp/quickstart-multi-lan/m10-b7334e",
+      "/tmp/quickstart-multi-lan/m10-ba4c3f",
+      "/tmp/quickstart-multi-lan/m10-d46f17",
+      "/tmp/quickstart-multi-lan/m10-d673df",
+      "/tmp/quickstart-multi-lan/m10-ffb318"
+    ]
+  }
+}

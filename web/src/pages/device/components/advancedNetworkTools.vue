@@ -16,7 +16,9 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useGettext } from '/@/plugins/i18n'
-import request from '/@/request'
+import baseRequest from '/@/request'
+import { useLANClient } from '../lanContext'
+const request = { ...baseRequest, DeviceMangement: useLANClient() }
 import PageState from './pageState.vue'
 
 const props = defineProps<{ device: any }>()

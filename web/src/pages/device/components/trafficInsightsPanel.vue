@@ -5,6 +5,7 @@
         <PageState v-if="loading" kind="loading" :title="$gettext('正在读取历史用量')" />
         <p v-else-if="error" class="message error">{{ error }} <button type="button" @click="load">{{ $gettext('重试') }}</button></p>
         <template v-else>
+            <p v-if="result.legacyAccessReviewRequired" class="message" role="status">{{ $gettext('旧版断网限制仍保留，取消额度或周期重置不会自动恢复上网。确认后，请使用“预览恢复联网”恢复。') }}</p>
             <div class="totals"><span><small>{{ $gettext('上传') }}</small>{{ bytes(result.uploadBytes) }}</span><span><small>{{ $gettext('下载') }}</small>{{ bytes(result.downloadBytes) }}</span><span><small>{{ $gettext('合计') }}</small>{{ bytes((result.uploadBytes || 0) + (result.downloadBytes || 0)) }}</span></div>
             <div v-if="result.buckets?.length" class="history-chart" :aria-label="$gettext('历史流量趋势')"><i v-for="bucket in result.buckets" :key="bucket.start" :style="{ height: barHeight(bucket) + '%' }" :title="`${new Date(bucket.start).toLocaleString()} · ${bytes(bucket.uploadBytes + bucket.downloadBytes)}`"></i></div>
             <p v-else class="muted">{{ $gettext('正在积累历史数据，首次使用后会按小时形成趋势。') }}</p>
@@ -23,7 +24,9 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue'
 import { useGettext } from '/@/plugins/i18n'
-import request from '/@/request'
+import baseRequest from '/@/request'
+import { useLANClient } from '../lanContext'
+const request = { ...baseRequest, DeviceMangement: useLANClient() }
 import PageState from './pageState.vue'
 import { formatTrafficBytes } from '../deviceTelemetry'
 

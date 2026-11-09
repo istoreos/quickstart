@@ -1,0 +1,94 @@
+{
+  "host": "root@192.168.30.7",
+  "checks": [
+    "production init resolves two logical netifd networks and starts named instances",
+    "whole-machine reboot restores both independent same-MAC policies with fresh epochs"
+  ],
+  "beforeBoot": [
+    {
+      "context": {
+        "networkId": "qsbf0155a",
+        "instanceId": "boot_a",
+        "epoch": "9b535636-6fbd-45d1-a3e5-280940d4ce75",
+        "interfaceIndex": 169
+      },
+      "interface": "qsbf0155a",
+      "state": "healthy",
+      "pid": 1711,
+      "uptimeSeconds": 0,
+      "residentMemoryKib": 4380,
+      "dataPlane": "ready",
+      "policyInterfaceVersion": "1",
+      "maxDevicePolicies": 1024,
+      "maxHttpConnections": 32,
+      "dnsStorageDefault": false,
+      "trafficStorageDefault": false,
+      "reasons": []
+    },
+    {
+      "context": {
+        "networkId": "qsbf0155b",
+        "instanceId": "boot_b",
+        "epoch": "b042b877-17c0-4c00-9fda-229de10e99c5",
+        "interfaceIndex": 170
+      },
+      "interface": "qsbf0155b",
+      "state": "healthy",
+      "pid": 1712,
+      "uptimeSeconds": 0,
+      "residentMemoryKib": 4360,
+      "dataPlane": "ready",
+      "policyInterfaceVersion": "1",
+      "maxDevicePolicies": 1024,
+      "maxHttpConnections": 32,
+      "dnsStorageDefault": false,
+      "trafficStorageDefault": false,
+      "reasons": []
+    }
+  ],
+  "afterBoot": [
+    {
+      "context": {
+        "networkId": "qsbf0155a",
+        "instanceId": "boot_a",
+        "epoch": "844c0f43-5a0e-47d0-b1cf-d0e3b13701b7",
+        "interfaceIndex": 16
+      },
+      "interface": "qsbf0155a",
+      "state": "healthy",
+      "pid": 13292,
+      "uptimeSeconds": 0,
+      "residentMemoryKib": 4092,
+      "dataPlane": "ready",
+      "policyInterfaceVersion": "1",
+      "maxDevicePolicies": 1024,
+      "maxHttpConnections": 32,
+      "dnsStorageDefault": false,
+      "trafficStorageDefault": false,
+      "reasons": []
+    },
+    {
+      "context": {
+        "networkId": "qsbf0155b",
+        "instanceId": "boot_b",
+        "epoch": "5daaf0fe-56ac-4f90-ab1b-9f8d64eaa8ca",
+        "interfaceIndex": 17
+      },
+      "interface": "qsbf0155b",
+      "state": "healthy",
+      "pid": 13293,
+      "uptimeSeconds": 0,
+      "residentMemoryKib": 4172,
+      "dataPlane": "ready",
+      "policyInterfaceVersion": "1",
+      "maxDevicePolicies": 1024,
+      "maxHttpConnections": 32,
+      "dnsStorageDefault": false,
+      "trafficStorageDefault": false,
+      "reasons": []
+    }
+  ],
+  "recoveryExitCode": 0,
+  "productionConfigRestored": true,
+  "backupDirectory": "/root/.quickstart-multi-lan-boot-f0155"
+}

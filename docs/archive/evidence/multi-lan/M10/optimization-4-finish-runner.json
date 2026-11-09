@@ -1,0 +1,8 @@
+{
+  "pid": 20125,
+  "log": "/var/cache/build-cache/users/911/projects/quickstart-f0ca7c908f5f/work/multi-lan/M10-optimization-4/finish-watch.log",
+  "startedAt": "2026-11-09T02:32:34.390934+00:00",
+  "completionCondition": "both fixed-candidate production application cohorts pass >=30m warmup and >=24h soak, functional evidence, original config and source/artifact hashes match",
+  "status": "stopped_new_business_failure",
+  "stoppedAt": "2026-11-09T02:53:56.585923+00:00"
+}

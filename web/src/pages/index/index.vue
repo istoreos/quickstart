@@ -19,7 +19,7 @@ import {useHomeData} from '/@/home/useHomeData'
 import {provideLauncher} from '/@/home/launcherContext'
 import type {WidgetId} from '/@/home/layout/rowLayout'
 import {visibleIds} from '/@/home/layout/orderedLayout'
-import {getTheme} from '/@/utils/theme'
+import {getTheme,subscribeTheme} from '/@/utils/theme'
 import type {ConfigDomain,LayoutConfig} from '/@/home/configContract'
 const previewIds=ref<WidgetId[]|null>(null)
 const config=useHomeConfig(),launcher=provideLauncher(config),model=useHomeData(computed(()=>previewIds.value||visibleIds(config.layout.value.rows)))
@@ -41,9 +41,9 @@ const saveLayout=(value:LayoutConfig)=>config.save('layout',value)
 function returnReady(widgets:readonly string[]){return !config.state.layout.loading&&model.initialSettled(widgets)}
 function navigate(path:string){if(editing.value)return;if(path.startsWith('/cgi-bin/'))window.location.assign(path);else void router.push(path)}
 function openDevice(id:string){if(!editing.value)void router.push({path:'/devicemanagement',query:{device:id}})}
-let observer:MutationObserver|undefined
-onMounted(()=>{observer=new MutationObserver(()=>theme.value=getTheme());observer.observe(document.body,{attributes:true,attributeFilter:['theme']})})
-onUnmounted(()=>observer?.disconnect())
+let unsubscribeTheme=()=>{}
+onMounted(()=>{unsubscribeTheme=subscribeTheme(snapshot=>theme.value=snapshot.effective)})
+onUnmounted(()=>unsubscribeTheme())
 </script>
 <style scoped>
 .home-config-state{max-width:1640px;margin:12px auto;padding:4px 6px 4px 14px;border:1px solid var(--c-line);border-radius:8px;color:var(--c-muted);font-size:13px;display:flex;align-items:center;gap:8px}.home-config-message{flex:1;min-width:0;line-height:1.6;overflow-wrap:anywhere}.home-config-actions{display:flex;align-items:center;flex-wrap:wrap;gap:4px}.home-config-state button{min-height:44px;min-width:44px;padding:8px;background:none;border:0;border-radius:6px;color:var(--c-accent);font:inherit;cursor:pointer}.home-config-state button:focus-visible{outline:2px solid var(--c-accent);outline-offset:1px}.home-config-state .home-config-close{flex:none;color:var(--c-muted);display:grid;place-items:center}.home-config-close:hover{background:var(--c-soft)}.home-config-close svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round}@media(max-width:600px){.home-config-state{display:grid;grid-template-columns:minmax(0,1fr) 44px;gap:0 4px}.home-config-actions{grid-column:1;grid-row:2}.home-config-close{grid-column:2;grid-row:1;align-self:start}}

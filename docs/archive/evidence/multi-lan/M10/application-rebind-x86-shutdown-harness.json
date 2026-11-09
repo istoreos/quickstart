@@ -1,0 +1,122 @@
+{
+  "milestone": "M10",
+  "host": "192.168.30.7",
+  "status": "failed",
+  "startedAt": "2026-11-09T00:55:28.264059+00:00",
+  "preflightOnly": true,
+  "cases": [
+    {
+      "lanCount": 2,
+      "base": "/tmp/quickstart-multi-lan/m10-448cc9",
+      "router": "qsm10-448cc9",
+      "namespaces": [
+        "qsm10-448cc9",
+        "qsm10-448cc9-w",
+        "qsm10-448cc9-c1",
+        "qsm10-448cc9-c2"
+      ],
+      "last": {
+        "api": [
+          {
+            "activeDevices": 0,
+            "devices": 256,
+            "downloadBytes": 0,
+            "endpoint": "devices",
+            "maxSampleAgeSeconds": 0,
+            "networkId": "capacity1",
+            "p95Ms": 3.432,
+            "samples": 1,
+            "state": "ready",
+            "uploadBytes": 0
+          },
+          {
+            "activeDevices": 256,
+            "devices": 256,
+            "downloadBytes": 14744,
+            "endpoint": "device-traffic",
+            "maxSampleAgeSeconds": 1.619677579,
+            "networkId": "capacity1",
+            "p95Ms": 7.889,
+            "samples": 1,
+            "state": "ready",
+            "uploadBytes": 63736
+          },
+          {
+            "activeDevices": 0,
+            "devices": 256,
+            "downloadBytes": 0,
+            "endpoint": "devices",
+            "maxSampleAgeSeconds": 0,
+            "networkId": "capacity2",
+            "p95Ms": 2.743,
+            "samples": 1,
+            "state": "ready",
+            "uploadBytes": 0
+          },
+          {
+            "activeDevices": 256,
+            "devices": 256,
+            "downloadBytes": 23808,
+            "endpoint": "device-traffic",
+            "maxSampleAgeSeconds": 0.636978413,
+            "networkId": "capacity2",
+            "p95Ms": 11.302,
+            "samples": 1,
+            "state": "ready",
+            "uploadBytes": 112888
+          }
+        ],
+        "at": "2026-11-09T00:55:33.637607977Z",
+        "cpuIncludesChildren": true,
+        "cpuSampleMonotonicSeconds": 17639.9103509,
+        "metrics": {
+          "application": "production executable",
+          "at": "2026-11-09T00:55:33.637421471Z",
+          "writes": {
+            "capacity1": 1
+          },
+          "writesLastHour": {
+            "capacity1": 1
+          }
+        },
+        "processes": {
+          "backend.pid": {
+            "pid": 8957,
+            "rssKiB": 27868,
+            "ticks": 12,
+            "fds": 6,
+            "bpfBytes": 0,
+            "bpfMaps": 0
+          },
+          "engine-1.pid": {
+            "pid": 7637,
+            "rssKiB": 8376,
+            "ticks": 32,
+            "fds": 26,
+            "bpfBytes": 792640,
+            "bpfMaps": 9
+          },
+          "engine-2.pid": {
+            "pid": 8796,
+            "rssKiB": 8568,
+            "ticks": 30,
+            "fds": 26,
+            "bpfBytes": 792640,
+            "bpfMaps": 9
+          }
+        },
+        "wallMonotonic": 2329144.463026265,
+        "lanCount": 2,
+        "loadProbe": false
+      },
+      "cleaned": true
+    }
+  ],
+  "artifactSha256": {
+    "engine": "a04ae95641cf7371dbc77cccdb0846f44401e4e82b3de5d24f7cdf757b55c1dc",
+    "goTest": "ab9e66a3fa256750fd849b97d765d12378764c30cc3cb91c862184c4ac9b6c31"
+  },
+  "error": "RuntimeError(\"['ip', 'netns', 'exec', 'qsm10-448cc9', 'curl', '-sS', '--max-time', '10', '-H', 'X-Forwarded-Sid: 11111111111111111111111111111111', '-H', 'X-Forwarded-Token: m10-isolated', 'http://127.0.0.1:19501/api/v1/system/health']:  curl: (7) Failed to connect to 127.0.0.1 port 19501 after 0 ms: Could not connect to server\\n\")",
+  "rootConfigurationUnchanged": true,
+  "finishedAt": "2026-11-09T00:55:39.364666+00:00"
+}

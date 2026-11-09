@@ -1,0 +1,10 @@
+{
+  "sha256": {
+    "arm64Engine": "980b0b95f2aa82ecf35edaa6235d809524fd492e2976ede761d45d10daffa6a2",
+    "amd64Engine": "c4b4d0718ebbd13cff0241cbea4194c2ebf61a8e3ecb2ac2192ddf8aa34369c5",
+    "oldAmd64Engine": "d94ac39c8bd51a65cd6c2692939652d198919bc029dd78fdc5dd75bde15cf7eb",
+    "oldClientTestBinary": "9b76361d291646961f7e20dae7b23e016e6ede12b7f81e31ca40ff9c6fea4206"
+  },
+  "legacyQuickstartCommit": "66589b22f140615db97851b6c3b1eec7aad975d5",
+  "legacyEngineCommit": "54b5338ad8e03f46ba04387eb232aeb676ff68d2"
+}

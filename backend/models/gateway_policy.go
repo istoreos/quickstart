@@ -61,17 +61,18 @@ type GatewayPlanChange struct {
 }
 
 type GatewayAssignmentPlan struct {
-	Action          string               `json:"action"`
-	DeviceID        string               `json:"deviceId,omitempty"`
-	TargetID        string               `json:"targetId"`
-	CurrentTargetID string               `json:"currentTargetId,omitempty"`
-	Version         string               `json:"version"`
-	RollbackPoint   string               `json:"rollbackPoint"`
-	Changes         []*GatewayPlanChange `json:"changes"`
-	AffectedDevices []string             `json:"affectedDevices"`
-	RequiresRenewal bool                 `json:"requiresRenewal"`
-	CanApply        bool                 `json:"canApply"`
-	Error           *DevicePolicyError   `json:"error,omitempty"`
+	AffectedNetworks []string             `json:"affectedNetworks,omitempty"`
+	Action           string               `json:"action"`
+	DeviceID         string               `json:"deviceId,omitempty"`
+	TargetID         string               `json:"targetId"`
+	CurrentTargetID  string               `json:"currentTargetId,omitempty"`
+	Version          string               `json:"version"`
+	RollbackPoint    string               `json:"rollbackPoint"`
+	Changes          []*GatewayPlanChange `json:"changes"`
+	AffectedDevices  []string             `json:"affectedDevices"`
+	RequiresRenewal  bool                 `json:"requiresRenewal"`
+	CanApply         bool                 `json:"canApply"`
+	Error            *DevicePolicyError   `json:"error,omitempty"`
 }
 
 type GatewayAssignmentPlanResponse struct {
@@ -105,6 +106,7 @@ type GatewayTargetMutationRequest struct {
 }
 
 type GatewayTargetMutationPlan struct {
+	AffectedNetworks    []string                 `json:"affectedNetworks,omitempty"`
 	Action              string                   `json:"action"`
 	Target              *GatewayTarget           `json:"target,omitempty"`
 	ReplacementTargetID string                   `json:"replacementTargetId,omitempty"`

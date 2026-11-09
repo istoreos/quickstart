@@ -1,7 +1,7 @@
 <template>
   <main class="canvas-home layout-design-home ordered-home natural-home home-semantic-colors" :class="{'ordered-editing':editing,'slot-overview-active':overview}" data-ordered-home @pointerdown.capture="sizeClickPending=false" @click.capture="eatSizeClick" @click="blankClick">
     <div class="home-top" data-home-top>
-      <div class="home-top-actions"><a href="https://www.istoreos.com/" target="_blank" rel="noopener noreferrer">{{t('iStoreOS官网','iStoreOS website')}}</a><button ref="editButton" class="home-module-settings" @click="editing?cancel():begin()" :disabled="startupLoading||!canEdit||externalBusy||saving" :aria-pressed="editing" :aria-label="t('自定义首页','Customize home')" :title="t('模块设置','Module settings')" data-home-settings><ModuleIcon color="#fff"/></button></div>
+      <div class="home-top-actions"><a href="https://www.istoreos.com/" target="_blank" rel="noopener noreferrer">{{t('iStoreOS官网','iStoreOS website')}}</a><ThemeSelector/><button ref="editButton" class="home-module-settings" @click="editing?cancel():begin()" :disabled="startupLoading||!canEdit||externalBusy||saving" :aria-pressed="editing" :aria-label="t('自定义首页','Customize home')" :title="t('模块设置','Module settings')" data-home-settings><ModuleIcon color="#fff"/></button></div>
     </div>
     <slot name="status"/>
 
@@ -140,6 +140,7 @@ import {useNaturalSizing} from './useNaturalSizing'
 import {onBeforeRouteLeave} from 'vue-router'
 import StudioGlyph from './HomeGlyph.vue'
 import ModuleIcon from '../components/svg/module.vue'
+import ThemeSelector from './ThemeSelector.vue'
 import DirectEditPanel from './DirectEditPanel.vue'
 import PresentationSettings from './PresentationSettings.vue'
 import {documentOf,planDocument,applyPlan,validateDisplayRows,fingerprint,summaryAlternative,type HomeDocument,type LayoutContext,type DisplayPlan} from './layout/homeDocument'

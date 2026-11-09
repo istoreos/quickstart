@@ -85,7 +85,7 @@ import {
 } from 'echarts/renderers';
 import request from '/@/request';
 import utils from '/@/utils';
-import { isDark } from '/@/utils/theme';
+import { isDark, subscribeTheme } from '/@/utils/theme';
 import { useGettext } from '/@/plugins/i18n'
 const { $gettext } = useGettext()
 echarts.use([
@@ -190,12 +190,14 @@ const byteToSize = utils.byteToSize
 const el = ref<HTMLElement | null>()
 const containerRef = ref<HTMLElement | null>() 
 let MyChart: echarts.ECharts | null = null
+let chartTheme: 'light' | 'dark' | null = null
 let resizeObserver: ResizeObserver | null = null
 let onWindowResize: (() => void) | null = null   // 为了卸载时能移除
 
 // 基础面积图
 const NewBasic = (event: HTMLElement) => {
     const dark = isDark()
+    chartTheme = dark ? 'dark' : 'light'
     MyChart = echarts.init(event, dark ? 'dark' : "v5");
     MyChart.setOption({
         animation: false,
@@ -376,10 +378,17 @@ function updateChart(){
  MyChart.setOption({xAxis:{data:statistics.value?.map((_,i)=>i)||[]},series:[{name:$gettext("下载"),data:download.value},{name:$gettext("上传"),data:upload.value}]})
  resizeChart()
 }
+function rebuildChart(){
+ if(!MyChart||!el.value)return
+ MyChart.dispose();MyChart=null
+ NewBasic(el.value);updateChart()
+}
 watch(statistics,updateChart)
 async function tick(){if(!live)return;try{if(!document.hidden)await getData();if(live)updateChart()}finally{if(live)timer=window.setTimeout(tick,5000)}}
+let unsubscribeTheme=()=>{}
 onMounted(()=>{
  live=true
+ unsubscribeTheme=subscribeTheme(snapshot=>{if(MyChart&&chartTheme!==snapshot.effective)rebuildChart()})
  const start=async()=>{
   if(!homeOwned)await getData()
   if(!live||!el.value)return
@@ -394,6 +403,7 @@ onMounted(()=>{
 })
 onUnmounted(()=>{
  live=false;window.clearTimeout(timer)
+ unsubscribeTheme()
  MyChart?.dispose();MyChart=null
  if(onWindowResize)window.removeEventListener("resize",onWindowResize)
  resizeObserver?.disconnect()

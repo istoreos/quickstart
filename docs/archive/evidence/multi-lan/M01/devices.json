@@ -1,0 +1,535 @@
+{
+  "collectedAt": "2026-11-08T14:31:46.143776+00:00",
+  "hosts": [
+    {
+      "host": "root@192.168.30.93",
+      "role": "test",
+      "board": {
+        "kernel": "6.6.144",
+        "hostname": "iStoreOS",
+        "system": "ARMv8 Processor rev 0",
+        "model": "EasePi R1",
+        "board_name": "easepi,r1",
+        "rootfs_type": "squashfs",
+        "release": {
+          "distribution": "iStoreOS",
+          "version": "24.10.8",
+          "revision": "2026073111",
+          "target": "rockchip/armv8",
+          "description": "iStoreOS 24.10.8 2026073111",
+          "builddate": "1785303629"
+        }
+      },
+      "interfaces": [
+        {
+          "interface": "lan",
+          "device": "br-lan",
+          "l3_device": "br-lan",
+          "proto": "static",
+          "up": true,
+          "ipv4-address": [
+            {
+              "address": "192.168.100.1",
+              "mask": 24
+            }
+          ],
+          "ipv6-address": [],
+          "ipv6-prefix-assignment": [
+            {
+              "address": "fdac:cf1:fa0f::",
+              "mask": 60,
+              "local-address": {
+                "address": "fdac:cf1:fa0f::1",
+                "mask": 60
+              }
+            }
+          ]
+        },
+        {
+          "interface": "lan1",
+          "device": "eth3",
+          "l3_device": "eth3",
+          "proto": "static",
+          "up": true,
+          "ipv4-address": [],
+          "ipv6-address": [],
+          "ipv6-prefix-assignment": []
+        },
+        {
+          "interface": "lan2",
+          "device": "eth2",
+          "l3_device": "eth2",
+          "proto": "static",
+          "up": true,
+          "ipv4-address": [],
+          "ipv6-address": [],
+          "ipv6-prefix-assignment": []
+        },
+        {
+          "interface": "loopback",
+          "device": "lo",
+          "l3_device": "lo",
+          "proto": "static",
+          "up": true,
+          "ipv4-address": [
+            {
+              "address": "127.0.0.1",
+              "mask": 8
+            }
+          ],
+          "ipv6-address": [],
+          "ipv6-prefix-assignment": []
+        },
+        {
+          "interface": "wan",
+          "device": "eth0",
+          "l3_device": "eth0",
+          "proto": "static",
+          "up": true,
+          "ipv4-address": [
+            {
+              "address": "192.168.30.93",
+              "mask": 24
+            }
+          ],
+          "ipv6-address": [],
+          "ipv6-prefix-assignment": []
+        },
+        {
+          "interface": "wan6",
+          "device": "eth0",
+          "l3_device": "eth0",
+          "proto": "dhcpv6",
+          "up": true,
+          "ipv4-address": [],
+          "ipv6-address": [],
+          "ipv6-prefix-assignment": []
+        }
+      ],
+      "resources": "MemTotal:        4022024 kB\nMemAvailable:    2888456 kB\nVmRSS:\t   26688 kB\nThreads:\t10\n",
+      "endpoints": {
+        "router-context": {
+          "available": true,
+          "success": 0,
+          "fields": [
+            "dhcpAuthority",
+            "evidence",
+            "externalDhcpServers",
+            "lan",
+            "localAddress",
+            "localDhcpConfigured",
+            "localDhcpHealthy",
+            "routeEditability",
+            "topologyPosition",
+            "upstreamGateways"
+          ],
+          "counts": {
+            "upstreamGateways": 0,
+            "externalDhcpServers": 0,
+            "evidence": 2
+          },
+          "lan": "lan",
+          "dhcpAuthority": "local",
+          "topologyPosition": "lan_gateway_candidate"
+        },
+        "devices": {
+          "available": true,
+          "success": 0,
+          "fields": [
+            "devices",
+            "health"
+          ],
+          "counts": {
+            "devices": 1
+          },
+          "health": {
+            "state": "partial",
+            "reasons": [
+              "arp_unavailable"
+            ]
+          }
+        },
+        "gateway-targets": {
+          "available": true,
+          "success": 0,
+          "fields": [
+            "health",
+            "targets",
+            "version"
+          ],
+          "counts": {
+            "targets": 2
+          },
+          "health": "ready"
+        },
+        "lan-dhcp-settings": {
+          "available": true,
+          "success": 0,
+          "fields": [
+            "affectedDevices",
+            "canApply",
+            "changed",
+            "conflicts",
+            "editable",
+            "reloadServices",
+            "settings",
+            "version"
+          ],
+          "counts": {
+            "conflicts": 0,
+            "reloadServices": 0
+          },
+          "editable": true
+        },
+        "network-rules": {
+          "available": true,
+          "success": 0,
+          "fields": [
+            "rules",
+            "version"
+          ],
+          "counts": {
+            "rules": 0
+          }
+        },
+        "device-groups": {
+          "available": true,
+          "success": 0,
+          "fields": [
+            "devicePolicies",
+            "effective",
+            "events",
+            "globalPolicy",
+            "groups",
+            "nextEvaluationAt",
+            "timezone",
+            "version"
+          ],
+          "counts": {
+            "groups": 0,
+            "effective": 0
+          }
+        },
+        "device-traffic": {
+          "available": true,
+          "success": 0,
+          "fields": [
+            "health",
+            "items"
+          ],
+          "counts": {
+            "items": 1
+          },
+          "health": {
+            "state": "ready"
+          }
+        },
+        "floating-gateway": {
+          "available": true,
+          "success": 0,
+          "fields": [
+            "changed",
+            "config",
+            "status"
+          ],
+          "counts": {}
+        }
+      },
+      "networkConfigAndDnsmasqUnchanged": true
+    },
+    {
+      "host": "root@192.168.30.7",
+      "role": "test",
+      "board": {
+        "kernel": "6.6.86",
+        "hostname": "iStoreOS",
+        "system": "Intel(R) N100",
+        "model": "QEMU Standard PC (Q35 + ICH9, 2009)",
+        "board_name": "qemu-standard-pc-q35-ich9-2009",
+        "rootfs_type": "squashfs",
+        "release": {
+          "distribution": "iStoreOS",
+          "version": "24.10.1",
+          "revision": "2025011019",
+          "target": "x86/64",
+          "description": "iStoreOS 24.10.1 2025011019",
+          "builddate": "1749783175"
+        }
+      },
+      "interfaces": [
+        {
+          "interface": "lan",
+          "device": "br-lan",
+          "l3_device": "br-lan",
+          "proto": "static",
+          "up": true,
+          "ipv4-address": [
+            {
+              "address": "192.168.100.1",
+              "mask": 24
+            }
+          ],
+          "ipv6-address": [],
+          "ipv6-prefix-assignment": []
+        },
+        {
+          "interface": "loopback",
+          "device": "lo",
+          "l3_device": "lo",
+          "proto": "static",
+          "up": true,
+          "ipv4-address": [
+            {
+              "address": "127.0.0.1",
+              "mask": 8
+            }
+          ],
+          "ipv6-address": [],
+          "ipv6-prefix-assignment": []
+        },
+        {
+          "interface": "wan",
+          "device": "eth0",
+          "l3_device": "eth0",
+          "proto": "static",
+          "up": true,
+          "ipv4-address": [
+            {
+              "address": "192.168.30.7",
+              "mask": 24
+            }
+          ],
+          "ipv6-address": [],
+          "ipv6-prefix-assignment": []
+        },
+        {
+          "interface": "wan6",
+          "device": "eth0",
+          "l3_device": "eth0",
+          "proto": "dhcpv6",
+          "up": true,
+          "ipv4-address": [],
+          "ipv6-address": [],
+          "ipv6-prefix-assignment": []
+        }
+      ],
+      "resources": "MemTotal:        4004076 kB\nMemAvailable:    2101828 kB\nVmRSS:\t   15988 kB\nThreads:\t10\n",
+      "endpoints": {
+        "router-context": {
+          "available": true,
+          "success": 0,
+          "fields": [
+            "dhcpAuthority",
+            "evidence",
+            "externalDhcpServers",
+            "lan",
+            "localAddress",
+            "localDhcpConfigured",
+            "localDhcpHealthy",
+            "routeEditability",
+            "topologyPosition",
+            "upstreamGateways"
+          ],
+          "counts": {
+            "upstreamGateways": 0,
+            "externalDhcpServers": 0,
+            "evidence": 2
+          },
+          "lan": "lan",
+          "dhcpAuthority": "local",
+          "topologyPosition": "lan_gateway_candidate"
+        },
+        "devices": {
+          "available": true,
+          "success": 0,
+          "fields": [
+            "devices",
+            "health"
+          ],
+          "counts": {
+            "devices": 4
+          },
+          "health": {
+            "state": "ready"
+          }
+        },
+        "gateway-targets": {
+          "available": true,
+          "success": 0,
+          "fields": [
+            "health",
+            "targets",
+            "version"
+          ],
+          "counts": {
+            "targets": 2
+          },
+          "health": "ready"
+        },
+        "lan-dhcp-settings": {
+          "available": true,
+          "success": 0,
+          "fields": [
+            "affectedDevices",
+            "canApply",
+            "changed",
+            "conflicts",
+            "editable",
+            "reloadServices",
+            "settings",
+            "version"
+          ],
+          "counts": {
+            "conflicts": 0,
+            "reloadServices": 0
+          },
+          "editable": true
+        },
+        "network-rules": {
+          "available": true,
+          "success": 0,
+          "fields": [
+            "rules",
+            "version"
+          ],
+          "counts": {
+            "rules": 0
+          }
+        },
+        "device-groups": {
+          "available": true,
+          "success": 0,
+          "fields": [
+            "devicePolicies",
+            "effective",
+            "events",
+            "globalPolicy",
+            "groups",
+            "nextEvaluationAt",
+            "timezone",
+            "version"
+          ],
+          "counts": {
+            "groups": 0,
+            "effective": 0
+          }
+        },
+        "device-traffic": {
+          "available": true,
+          "success": 0,
+          "fields": [
+            "health",
+            "items"
+          ],
+          "counts": {
+            "items": 4
+          },
+          "health": {
+            "state": "warming_up"
+          }
+        },
+        "floating-gateway": {
+          "available": true,
+          "success": 0,
+          "fields": [
+            "changed",
+            "config",
+            "status"
+          ],
+          "counts": {}
+        }
+      },
+      "networkConfigAndDnsmasqUnchanged": true
+    },
+    {
+      "host": "root@192.168.30.1",
+      "role": "read_only",
+      "board": {
+        "kernel": "6.6.93",
+        "hostname": "Maintenance",
+        "system": "Intel(R) Celeron(R) J4125 CPU @ 2.00GHz",
+        "model": "Default string Default string",
+        "board_name": "default-string-default-string",
+        "rootfs_type": "squashfs",
+        "release": {
+          "distribution": "iStoreOS",
+          "version": "24.10.2",
+          "revision": "2025090517",
+          "target": "x86/64",
+          "description": "iStoreOS 24.10.2 2025090517",
+          "builddate": "1757056709"
+        }
+      },
+      "interfaces": [
+        {
+          "interface": "lan",
+          "device": "br-lan",
+          "l3_device": "br-lan",
+          "proto": "static",
+          "up": true,
+          "ipv4-address": [
+            {
+              "address": "192.168.30.1",
+              "mask": 24
+            }
+          ],
+          "ipv6-address": [],
+          "ipv6-prefix-assignment": []
+        },
+        {
+          "interface": "loopback",
+          "device": "lo",
+          "l3_device": "lo",
+          "proto": "static",
+          "up": true,
+          "ipv4-address": [
+            {
+              "address": "127.0.0.1",
+              "mask": 8
+            }
+          ],
+          "ipv6-address": [],
+          "ipv6-prefix-assignment": []
+        },
+        {
+          "interface": "wan",
+          "device": "eth0",
+          "l3_device": "eth0",
+          "proto": "static",
+          "up": true,
+          "ipv4-address": [
+            {
+              "address": "192.168.9.32",
+              "mask": 24
+            }
+          ],
+          "ipv6-address": [],
+          "ipv6-prefix-assignment": []
+        },
+        {
+          "interface": "wan6",
+          "device": "eth0",
+          "l3_device": "eth0",
+          "proto": "dhcpv6",
+          "up": true,
+          "ipv4-address": [],
+          "ipv6-address": [
+            {
+              "address": "fdac:b153:8eb3::972",
+              "mask": 128,
+              "preferred": 42050,
+              "valid": 42050
+            },
+            {
+              "address": "fdac:b153:8eb3:0:2e2:69ff:fe59:653d",
+              "mask": 64
+            }
+          ],
+          "ipv6-prefix-assignment": []
+        }
+      ],
+      "resources": "MemTotal:       16223468 kB\nMemAvailable:   15728300 kB\nVmRSS:\t   23324 kB\nThreads:\t9\n",
+      "networkConfigAndDnsmasqUnchanged": true
+    }
+  ]
+}

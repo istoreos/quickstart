@@ -1,0 +1,38 @@
+{
+  "milestone": "M01",
+  "status": "passed",
+  "optimizations": 1,
+  "checks": {
+    "goAllPackages": "passed",
+    "webTests": {
+      "passed": 147,
+      "failed": 0
+    },
+    "webTypecheck": "passed",
+    "netpolicyTests": {
+      "passed": 43,
+      "failed": 0
+    },
+    "testHostReadEndpoints": "8/8 on both authorized test hosts",
+    "criticalGateway": "read_only; no config or dnsmasq PID drift",
+    "routeInventory": 66,
+    "contract": "docs/contracts/multi-lan.json"
+  },
+  "baselineNotes": [
+    ".93 has LAN1/LAN2 without addresses; do not treat address absence as a missing network",
+    ".7 requires a valid root session and matching forwarded token; fixed baseline collector",
+    "No active NetPolicy instance was observed; actual packet enforcement baseline awaits isolated engine setup in M06/M07"
+  ],
+  "optimizationNotes": [
+    "Added the required forwarded token to the temporary root-session baseline request; sessions destroyed after collection"
+  ],
+  "evidence": [
+    "devices.json",
+    "versions.json",
+    "api-inventory.json",
+    "go.log",
+    "web.log",
+    "netpolicy.log"
+  ],
+  "scope": "Compatibility and test baseline only; no multi-LAN feature claimed"
+}

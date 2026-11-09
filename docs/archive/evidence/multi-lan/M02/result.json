@@ -1,0 +1,19 @@
+{
+  "milestone": "M02",
+  "status": "passed",
+  "optimizations": 0,
+  "checks": {
+    "goAllPackages": "passed",
+    "scopeRaceTests": "passed",
+    "logicalNetworks": "lan/lan1/lan2 on real ARM64; port and VLAN/alias fixtures passed",
+    "requestBoundary": "legacy default, missing target, conflicting query/body, total writes and unadapted paths tested",
+    "networkSideEffects": "none; configuration hashes and dnsmasq PID unchanged"
+  },
+  "evidence": [
+    "device-discovery.json",
+    "go.log"
+  ],
+  "stagedRestrictions": [
+    "Additional-LAN business paths remain blocked until their scoped implementations pass subsequent milestones"
+  ]
+}

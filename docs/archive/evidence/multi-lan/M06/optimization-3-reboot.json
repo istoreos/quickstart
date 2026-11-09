@@ -1,0 +1,7 @@
+{
+  "host": "root@192.168.30.7",
+  "checks": [],
+  "recoveryExitCode": 0,
+  "productionConfigRestored": true,
+  "backupDirectory": "/root/.quickstart-multi-lan-boot-03fe0"
+}

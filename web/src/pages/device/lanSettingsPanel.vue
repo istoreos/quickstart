@@ -135,7 +135,9 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, reactive, ref, watch } from 'vue'
 import { useGettext } from '/@/plugins/i18n'
-import request from '/@/request'
+import baseRequest from '/@/request'
+import { useLANClient } from './lanContext'
+const request = { ...baseRequest, DeviceMangement: useLANClient() }
 import PageState from './components/pageState.vue'
 import FloatingGatewayWizard from './components/floatingGatewayWizard.vue'
 import NetworkRulesHub from './networkRulesHub.vue'

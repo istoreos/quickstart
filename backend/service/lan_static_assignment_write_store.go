@@ -5,6 +5,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"net/netip"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -47,12 +48,48 @@ func NewDefaultStaticAssignmentTagValidator(lanStatus LanStatusReader, dhcpStore
 }
 
 func (store *defaultStaticAssignmentWriteStore) ApplyStaticAssignment(ctx context.Context, input StaticAssignmentWriteInput) error {
-	_ = store
-	if err := lanStaticAssignmentWriteLoadConfig("dhcp", true); err != nil {
-		return fmt.Errorf("load DHCP configuration: %w", err)
+	input.Scope = selectedLANScope(ctx)
+	if err := verifyScopedDHCPHostSupport(input.Scope); err != nil {
+		return err
 	}
-	sections, _ := lanStaticAssignmentWriteGetSections("dhcp", "host")
-	hosts := buildStaticAssignmentHostRecords(sections)
+	var hosts []staticassignment.HostRecord
+	if input.Scope != nil {
+		tree := uci.NewTree(filepath.Dir(dhcpConfigPath))
+		if err := tree.LoadConfig("dhcp", true); err != nil {
+			return err
+		}
+		if input.BindIP {
+			if err := tree.LoadConfig("network", true); err != nil {
+				return err
+			}
+			address, prefix, err := scopedIPv4(ctx, tree)
+			if err != nil {
+				return err
+			}
+			dhcp, err := NewDefaultDhcpConfigStore().LoadLanState(ctx)
+			if err != nil {
+				return err
+			}
+			if conflict := validateScopedReservation(input, gatewayPolicySnapshot{Scope: input.Scope, LAN: LanStatusSnapshot{LanAddr: address}, Prefixes: []netip.Prefix{prefix}, DHCP: dhcp}); conflict != nil {
+				return errors.New(conflict.Message)
+			}
+		}
+		sections, _ := tree.GetSections("dhcp", "host")
+		for _, section := range sections {
+			if !dhcpHostInScope(tree, section, input.Scope) {
+				continue
+			}
+			mac, _ := tree.GetLast("dhcp", section, "mac")
+			ip, _ := tree.GetLast("dhcp", section, "ip")
+			hosts = append(hosts, staticassignment.HostRecord{SectionName: section, MAC: mac, IP: ip})
+		}
+	} else {
+		if err := lanStaticAssignmentWriteLoadConfig("dhcp", true); err != nil {
+			return err
+		}
+		sections, _ := lanStaticAssignmentWriteGetSections("dhcp", "host")
+		hosts = buildStaticAssignmentHostRecords(sections)
+	}
 	if staticassignment.HasDuplicateIPConflict(staticAssignmentPlanInput(input), hosts) {
 		return errors.New("ip is already in use")
 	}
@@ -74,7 +111,7 @@ func (store *defaultStaticAssignmentWriteStore) ApplyStaticAssignment(ctx contex
 
 func rollbackStaticAssignment(ctx context.Context, snapshot dhcpConfigSnapshot, applyErr error) error {
 	if err := lanStaticAssignmentWriteRestore(ctx, snapshot); err != nil {
-		return fmt.Errorf("%v; rollback failed: %w", applyErr, err)
+		return &networkRecoveryError{fmt.Errorf("%v; rollback failed: %w", applyErr, err)}
 	}
 	return applyErr
 }
@@ -124,6 +161,9 @@ func preflightStaticAssignment(ctx context.Context, input StaticAssignmentWriteI
 		return nil
 	}
 	parts := []string{input.AssignedMAC}
+	if input.Scope != nil {
+		parts = append(parts, "tag:"+input.Scope.Device)
+	}
 	if input.TagName != "" {
 		parts = append(parts, "set:"+input.TagName)
 	}
@@ -151,7 +191,7 @@ func mutateStaticAssignmentConfigAt(configDir string, input StaticAssignmentWrit
 		return err
 	}
 	for _, host := range hosts {
-		if normalizeInventoryMAC(host.MAC) == normalizeInventoryMAC(input.AssignedMAC) {
+		if dhcpHostInScope(tree, host.SectionName, input.Scope) && normalizeInventoryMAC(host.MAC) == normalizeInventoryMAC(input.AssignedMAC) {
 			tree.DelSection("dhcp", host.SectionName)
 		}
 	}
@@ -161,13 +201,16 @@ func mutateStaticAssignmentConfigAt(configDir string, input StaticAssignmentWrit
 				return err
 			}
 		}
-		sectionName := "quickstart_" + strings.ToLower(strings.ReplaceAll(input.AssignedMAC, ":", ""))
+		sectionName := scopedDHCPSectionName(input.Scope, "quickstart_"+strings.ToLower(strings.ReplaceAll(input.AssignedMAC, ":", "")))
 		tree.DelSection("dhcp", sectionName)
 		if err := tree.AddSection("dhcp", sectionName, "host"); err != nil {
 			return err
 		}
+		if err := bindDHCPHost(tree, sectionName, input.Scope); err != nil {
+			return err
+		}
 		options := map[string]string{
-			"enabled":   "1",
+			"enable":    "1",
 			"mac":       input.AssignedMAC,
 			"tag":       input.TagName,
 			"tag_title": input.TagTitle,
@@ -176,18 +219,32 @@ func mutateStaticAssignmentConfigAt(configDir string, input StaticAssignmentWrit
 		if input.BindIP {
 			options["ip"] = input.AssignedIP
 		}
-		for _, name := range []string{"enabled", "mac", "tag", "tag_title", "name", "ip"} {
+		for _, name := range []string{"enable", "mac", "tag", "tag_title", "name", "ip"} {
 			value := options[name]
 			if value != "" && !tree.Set("dhcp", sectionName, name, value) {
 				return fmt.Errorf("set DHCP host option %s", name)
 			}
 		}
 	}
+	if err := compileScopedDHCPHosts(tree); err != nil {
+		return err
+	}
 	return tree.Commit()
 }
 
 func reloadAndVerifyDnsmasq(ctx context.Context) error {
-	command := exec.CommandContext(ctx, "/etc/init.d/dnsmasq", "reload")
+	args := []string{"reload"}
+	if scope := selectedLANScope(ctx); scope != nil && len(scope.DHCPBindings) == 1 {
+		instance := scope.DHCPBindings[0].RuntimeInstance
+		if instance == "" {
+			instance = scope.DHCPBindings[0].Instance
+		}
+		if instance == "" || strings.HasPrefix(instance, "@") {
+			return errors.New("DHCP runtime instance is unavailable")
+		}
+		args = append(args, instance)
+	}
+	command := exec.CommandContext(ctx, "/etc/init.d/dnsmasq", args...)
 	if output, err := command.CombinedOutput(); err != nil {
 		return fmt.Errorf("%s: %w", strings.TrimSpace(string(output)), err)
 	}
@@ -196,6 +253,9 @@ func reloadAndVerifyDnsmasq(ctx context.Context) error {
 	for attempt := 0; attempt < 4; attempt++ {
 		check := exec.CommandContext(ctx, "/etc/init.d/dnsmasq", "running")
 		lastOutput, lastErr = check.CombinedOutput()
+		if lastErr == nil && selectedLANScope(ctx) != nil && !routerContextDnsmasqHealthy(ctx) {
+			lastErr = errors.New("selected DHCP instance is not running")
+		}
 		if lastErr == nil {
 			return nil
 		}

@@ -1,6 +1,9 @@
 package service
 
-import "github.com/istoreos/quickstart/backend/models"
+import (
+	"context"
+	"github.com/istoreos/quickstart/backend/models"
+)
 
 // AdvancedNetworkModule is a read-oriented facade. Active probing and policy
 // bundle mutation live in dedicated modules so their lifecycles stay isolated.
@@ -18,7 +21,7 @@ func NewAdvancedNetworkModule(inventory *DeviceInventoryModule, groups *DeviceGr
 	}
 }
 
-func (module *AdvancedNetworkModule) Status(deviceID string) (*models.AdvancedNetworkResponse, error) {
+func (module *AdvancedNetworkModule) Status(ctx context.Context, deviceID string) (*models.AdvancedNetworkResponse, error) {
 	_, bandix := trafficInsightsCapabilities()
 	insightCapability := &models.AdvancedCapability{State: models.CapabilityNotInstalled, Reason: bandix.Reason, Detail: "Optional Bandix adapter; not shown in the default device columns."}
 	if bandix.State != models.CapabilityNotInstalled {
@@ -33,7 +36,7 @@ func (module *AdvancedNetworkModule) Status(deviceID string) (*models.AdvancedNe
 		"multi_wan":              {State: models.CapabilityUnsupported, Reason: "multi_wan_adapter_not_installed", Detail: "Multi-WAN policy routing is independent from DHCP gateway assignment."},
 		"identification_updates": {State: models.CapabilityAvailable, Reason: "built_in_rules_only", Detail: "Built-in source is rollback-safe; remote rule updates require a signed source contract."},
 	}
-	response, err := module.audit.List(deviceID, 20)
+	response, err := module.audit.forContext(ctx).List(deviceID, 20)
 	if err != nil {
 		return nil, err
 	}

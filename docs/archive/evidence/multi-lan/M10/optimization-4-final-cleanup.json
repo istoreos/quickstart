@@ -1,0 +1,28 @@
+{
+  "192.168.30.93": {
+    "durableStateArchive": "docs/archive/evidence/multi-lan/M10/optimization-4-stopped-state-arm.tar.gz",
+    "sha256": "b56aef443ec4eb1e20d4238122a42eef98db8308d04b21a3d17e3bbcadd390f0",
+    "files": 212,
+    "removedOwnedDirectories": [
+      "/tmp/quickstart-multi-lan/m10-4d1667",
+      "/tmp/quickstart-multi-lan/m10-870615",
+      "/tmp/quickstart-multi-lan/m10-0f1514",
+      "/tmp/quickstart-multi-lan/m07-f3037199"
+    ],
+    "rootConfigurationUnchanged": true,
+    "freeSpaceAfter": "Filesystem           1K-blocks      Used Available Use% Mounted on\ntmpfs                  2011012    632716   1378296  31% /tmp\n"
+  },
+  "192.168.30.7": {
+    "durableStateArchive": "docs/archive/evidence/multi-lan/M10/optimization-4-stopped-state-x86.tar.gz",
+    "sha256": "68d245251fe25614d10824c303e72d2f6106bdcd161aa45a3aeb5f9101c9de37",
+    "files": 218,
+    "removedOwnedDirectories": [
+      "/tmp/quickstart-multi-lan/m10-7ca868",
+      "/tmp/quickstart-multi-lan/m10-0ff008",
+      "/tmp/quickstart-multi-lan/m10-2b1738",
+      "/tmp/quickstart-multi-lan/m07-b2ea1862"
+    ],
+    "rootConfigurationUnchanged": true,
+    "freeSpaceAfter": "Filesystem           1K-blocks      Used Available Use% Mounted on\ntmpfs                  2002036    339552   1662484  17% /tmp\n"
+  }
+}

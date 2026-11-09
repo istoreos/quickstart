@@ -30,19 +30,20 @@ type TrafficInsightsCapability struct {
 }
 
 type TrafficInsightsResult struct {
-	DeviceID       string                     `json:"deviceId"`
-	Range          string                     `json:"range"`
-	Buckets        []*TrafficInsightBucket    `json:"buckets"`
-	UploadBytes    int64                      `json:"uploadBytes"`
-	DownloadBytes  int64                      `json:"downloadBytes"`
-	Quota          *TrafficQuotaStatus        `json:"quota"`
-	Local          *TrafficInsightsCapability `json:"local"`
-	Bandix         *TrafficInsightsCapability `json:"bandix"`
-	Timezone       string                     `json:"timezone"`
-	StorageBytes   int64                      `json:"storageBytes"`
-	StorageBudget  int64                      `json:"storageBudget"`
-	WriteIntervalS int64                      `json:"writeIntervalSeconds"`
-	Error          *DevicePolicyError         `json:"error,omitempty"`
+	LegacyAccessReviewRequired bool                       `json:"legacyAccessReviewRequired,omitempty"`
+	DeviceID                   string                     `json:"deviceId"`
+	Range                      string                     `json:"range"`
+	Buckets                    []*TrafficInsightBucket    `json:"buckets"`
+	UploadBytes                int64                      `json:"uploadBytes"`
+	DownloadBytes              int64                      `json:"downloadBytes"`
+	Quota                      *TrafficQuotaStatus        `json:"quota"`
+	Local                      *TrafficInsightsCapability `json:"local"`
+	Bandix                     *TrafficInsightsCapability `json:"bandix"`
+	Timezone                   string                     `json:"timezone"`
+	StorageBytes               int64                      `json:"storageBytes"`
+	StorageBudget              int64                      `json:"storageBudget"`
+	WriteIntervalS             int64                      `json:"writeIntervalSeconds"`
+	Error                      *DevicePolicyError         `json:"error,omitempty"`
 }
 
 type TrafficInsightsResponse struct {

@@ -1,0 +1,12 @@
+{
+  "host": "root@192.168.30.7",
+  "base": "/tmp/quickstart-multi-lan/m10-f3b11d",
+  "status": "failed",
+  "checks": [],
+  "namespaceIsolation": true,
+  "rpcMetadata": "synthetic netifd/rpcd only",
+  "legacyQuickstartCommit": "66589b22f140615db97851b6c3b1eec7aad975d5",
+  "legacyEngineCommit": "54b5338ad8e03f46ba04387eb232aeb676ff68d2",
+  "error": "RuntimeError('2026/11/09 01:54:09 manuf index loaded entries=55134 source_bytes=2016281 heap_delta=33919064 duration=56.737928ms\\n2026/11/09 01:54:09 manuf index loaded entries=55134 source_bytes=2016281 heap_delta=5526712 duration=47.769419ms\\n--- FAIL: TestMultiLANFullApplication (60.22s)\\n    multi_lan_application_live_test.go:153: production application not ready <nil> {\"result\":{\"networks\":null,\"devices\":[]}}\\nFAIL\\n')",
+  "rootConfigurationUnchanged": true
+}

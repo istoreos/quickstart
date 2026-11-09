@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "defaultNetwork": "lan",
+  "networkQueryParameter": "network",
+  "aggregateNetwork": "all",
+  "targetFields": ["networkId", "deviceId"],
+  "compatibility": {
+    "omittedNetwork": "legacy_lan_only",
+    "explicitUnknownNetwork": "reject_without_writes",
+    "missingLegacyLAN": "reject_legacy_write_without_guessing",
+    "aggregateWrite": "reject",
+    "oldBackendFallback": "only_explicit_endpoint_unsupported",
+    "defaultLANStorage": "preserve_existing_paths",
+    "additionalLANStorage": "separate_network_namespace",
+    "singleLANExtraSteps": 0
+  },
+  "support": {
+    "independentRoutedLANs": "full_scoped_management",
+    "vlanLANs": "supported_when_non_overlapping_attachment_verified",
+    "sameBridgeAliases": "one_link_no_duplicate_engine",
+    "overlappingVRFOrNetns": "not_in_first_release_ambiguous_targets_read_only",
+    "externalDHCP": "observe_devices_no_local_dhcp_or_route_write",
+    "unknownMembership": "observe_no_network_policy_write",
+    "legacyEqosBandix": "preserve_default_lan_no_unverified_additional_lan_enforcement",
+    "singleInstanceFloatip": "preserve_existing_lan_only_until_network_isolation_verified"
+  },
+  "acceptanceBudgets": {
+    "deviceClass": "authorized_4GiB_ARM64_and_x86_64_test_machines",
+    "networkCounts": [1, 2, 4],
+    "devicesPerNetwork": 256,
+    "quickstartRssMaxMiB": 128,
+    "engineRssMaxMiBPerInstance": 64,
+    "bpfMemoryMaxMiBPerInstance": 32,
+    "combinedIdleCpuPercentOfOneCoreMax": 25,
+    "warmReadP95MaxMs": 1500,
+    "singleLANWarmReadRegressionFractionMax": 0.2,
+    "singleLANWarmReadRegressionAllowanceMs": 50,
+    "minimumLatencySamples": 100,
+    "sampleAgeMaxSeconds": 30,
+    "historyWritesPerHourPerNetworkMax": 60,
+    "warmupMinutes": 30,
+    "steadyRssGrowthMaxMiB": 32,
+    "rateLimitWindowSeconds": 30,
+    "rateLimitWarmupSeconds": 5,
+    "rateLimitToleranceFraction": 0.25,
+    "unlimitedThroughputMultipleOfRequestedLimitMin": 3,
+    "soakHoursMin": 24,
+    "crossNetworkWrongWritesMax": 0,
+    "crossNetworkWrongBlocksMax": 0,
+    "crossNetworkCounterLeaksMax": 0
+  }
+}

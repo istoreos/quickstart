@@ -111,6 +111,9 @@ func inventoryObservesFloatingPeer(devices []*models.DeviceInventoryItem, virtua
 }
 
 func (store *systemFloatingGatewayStore) Apply(ctx context.Context, config *models.FloatingGatewayConfig) error {
+	if err := requireDefaultFloatingLAN(ctx); err != nil {
+		return err
+	}
 	snapshot, err := floatingGatewaySnapshotConfig()
 	if err != nil {
 		return fmt.Errorf("snapshot floating gateway configuration: %w", err)
@@ -217,7 +220,7 @@ func restoreFloatingGatewayConfig(ctx context.Context, snapshot floatingGatewayC
 
 func rollbackFloatingGateway(ctx context.Context, snapshot floatingGatewayConfigSnapshot, applyErr error) error {
 	if err := floatingGatewayRestoreConfig(ctx, snapshot); err != nil {
-		return fmt.Errorf("%v; rollback failed: %w", applyErr, err)
+		return &networkRecoveryError{fmt.Errorf("%v; rollback failed: %w", applyErr, err)}
 	}
 	return applyErr
 }

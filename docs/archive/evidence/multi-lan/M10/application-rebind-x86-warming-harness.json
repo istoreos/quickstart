@@ -1,0 +1,37 @@
+{
+  "milestone": "M10",
+  "host": "192.168.30.7",
+  "status": "failed",
+  "startedAt": "2026-11-09T00:56:38.410454+00:00",
+  "preflightOnly": true,
+  "cases": [
+    {
+      "lanCount": 2,
+      "base": "/tmp/quickstart-multi-lan/m10-4efdc1",
+      "router": "qsm10-4efdc1",
+      "namespaces": [
+        "qsm10-4efdc1",
+        "qsm10-4efdc1-w",
+        "qsm10-4efdc1-c1",
+        "qsm10-4efdc1-c2"
+      ],
+      "hotplug": {
+        "passed": true,
+        "oldInterfaceIndex": 11,
+        "newInterfaceIndex": 17,
+        "otherInstanceUnchanged": true,
+        "oldPlanRejected": true,
+        "oldGroupVersionRejected": true,
+        "policiesRestored": true
+      },
+      "cleaned": true
+    }
+  ],
+  "artifactSha256": {
+    "engine": "a04ae95641cf7371dbc77cccdb0846f44401e4e82b3de5d24f7cdf757b55c1dc",
+    "goTest": "ab9e66a3fa256750fd849b97d765d12378764c30cc3cb91c862184c4ac9b6c31"
+  },
+  "error": "AssertionError(('device packet counters', {'activeDevices': 0, 'devices': 256, 'downloadBytes': 0, 'endpoint': 'device-traffic', 'maxSampleAgeSeconds': 0.42623794, 'networkId': 'capacity1', 'p95Ms': 9.577, 'samples': 1, 'state': 'ready', 'uploadBytes': 0}))",
+  "rootConfigurationUnchanged": true,
+  "finishedAt": "2026-11-09T00:56:49.596383+00:00"
+}

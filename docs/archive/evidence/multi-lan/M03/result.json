@@ -1,0 +1,26 @@
+{
+  "milestone": "M03",
+  "status": "passed",
+  "optimizations": 2,
+  "checks": {
+    "goRegression": "passed",
+    "scopeAndProfileRaceTests": "passed",
+    "sameMACProfilesAndHistoryAcrossRestart": "passed",
+    "IPv6DUIDAndLinkLocalZones": "passed",
+    "ambiguousLeaseOwnershipAndOldManualOrphan": "passed",
+    "perNetworkProfileCorruptionHealth": "passed",
+    "realARM64SystemInventory": "passed",
+    "realIsolatedDualBridgeARPNDPSameMAC": "passed",
+    "persistentNetworkConfigAndDnsmasq": "unchanged",
+    "temporaryKernelLinks": "cleaned"
+  },
+  "optimizationNotes": [
+    "Invalidated in-flight inventory refreshes can no longer republish old cache state",
+    "Adjusted real-device test to preserve OpenWrt host hints that include the bridge itself; still strictly checks controlled neighbor and all address ownership"
+  ],
+  "evidence": [
+    "arm64-kernel.log",
+    "go.log"
+  ],
+  "scope": "Inventory and metadata only; network policy paths await later milestones"
+}

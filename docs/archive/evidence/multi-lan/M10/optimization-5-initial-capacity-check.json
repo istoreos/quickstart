@@ -1,0 +1,78 @@
+{
+  "checkedAt": "2026-11-09T04:47:36.765926+00:00",
+  "status": "initial_admission_passed_final_soak_pending",
+  "hosts": {
+    "arm": {
+      "status": "warming_up",
+      "warmupElapsedSeconds": 67.5853975629434,
+      "allLanCountsAdmitted": true,
+      "devicesPerLAN": 256,
+      "cases": [
+        {
+          "lanCount": 1,
+          "lastCombinedCpuPercent": 2.360761317449666,
+          "rssKiB": {
+            "backend.pid": 31772,
+            "engine-1.pid": 23820
+          }
+        },
+        {
+          "lanCount": 2,
+          "lastCombinedCpuPercent": 5.360042148333561,
+          "rssKiB": {
+            "backend.pid": 34060,
+            "engine-1.pid": 11960,
+            "engine-2.pid": 11468
+          }
+        },
+        {
+          "lanCount": 4,
+          "lastCombinedCpuPercent": 11.437423494238631,
+          "rssKiB": {
+            "backend.pid": 36084,
+            "engine-1.pid": 11252,
+            "engine-2.pid": 11084,
+            "engine-3.pid": 11004,
+            "engine-4.pid": 11048
+          }
+        }
+      ]
+    },
+    "x86": {
+      "status": "warming_up",
+      "warmupElapsedSeconds": 64.4134822501801,
+      "allLanCountsAdmitted": true,
+      "devicesPerLAN": 256,
+      "cases": [
+        {
+          "lanCount": 1,
+          "lastCombinedCpuPercent": 0.3428206951098549,
+          "rssKiB": {
+            "backend.pid": 27768,
+            "engine-1.pid": 12020
+          }
+        },
+        {
+          "lanCount": 2,
+          "lastCombinedCpuPercent": 0.6643092465588016,
+          "rssKiB": {
+            "backend.pid": 29824,
+            "engine-1.pid": 11648,
+            "engine-2.pid": 11852
+          }
+        },
+        {
+          "lanCount": 4,
+          "lastCombinedCpuPercent": 1.24438584112749,
+          "rssKiB": {
+            "backend.pid": 33148,
+            "engine-1.pid": 11616,
+            "engine-2.pid": 11548,
+            "engine-3.pid": 11260,
+            "engine-4.pid": 11824
+          }
+        }
+      ]
+    }
+  }
+}

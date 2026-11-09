@@ -1,4 +1,5 @@
 // Install the isolated transport before importing components that request data.
+import './fastnetModel'
 import { installFixtures } from './fixtures'
 installFixtures()
 window.vue_base = '/'

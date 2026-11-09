@@ -1,0 +1,8 @@
+{
+  "pid": 25905,
+  "startedAt": "2026-11-09T04:45:53.809386+00:00",
+  "log": "/var/cache/build-cache/users/911/projects/quickstart-f0ca7c908f5f/work/multi-lan/M10-optimization-5/finish.log",
+  "partialReadRetryChecked": true,
+  "candidateIdentityChecked": true,
+  "requiredSoakHours": 24
+}

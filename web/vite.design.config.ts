@@ -34,7 +34,7 @@ export default defineConfig({
   resolve: { alias: [{ find: '/@', replacement: path.resolve(__dirname, 'src') }] },
   plugins: [actionBridge,vue(), {
     name: 'quickstart-design-entry',
-    transformIndexHtml: {enforce:'pre',transform(html) { return html.replace('/src/main.ts','/src/design/main.ts') }},
+    transformIndexHtml: {order:'pre',handler(html) { return html.replace('/src/main.ts','/src/design/main.ts') }},
     configureServer:controlMiddleware,
     configurePreviewServer:controlMiddleware,
   }],

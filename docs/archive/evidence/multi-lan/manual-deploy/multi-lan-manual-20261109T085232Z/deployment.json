@@ -1,0 +1,42 @@
+{
+  "status": "deployed_for_manual_testing",
+  "host": "root@192.168.30.93",
+  "release": "multi-lan-manual-20261109T085232Z",
+  "work": "/var/cache/build-cache/users/911/projects/quickstart-f0ca7c908f5f/work/multi-lan-manual-20261109T085232Z",
+  "milestoneStatus": "M10 failed; manual test candidate only",
+  "backup": "/root/quickstart-backups/multi-lan-manual-20261109T085232Z",
+  "stage": "/tmp/quickstart-manual/multi-lan-manual-20261109T085232Z",
+  "artifactSha256": {
+    "quickstart": "a6cbb775d0ee1c4c9469631668bb176992bfe8c31ccdb3c6af5c8a20ad580eb5",
+    "netpolicy": "bd8820f8276d4f96b4a3c7344be091d35f6e88c3f3dd89c40aba8dee3fe43bd1",
+    "webZip": "e4cfeb804d65ab3c5d96e59640f69ac67f013e24cbd2ba50e878493e645ad0c7"
+  },
+  "assetSha256": {
+    "index.js": "2efdda77501060fe7c7c64a36b88cffcbf543ff75b39a8b857900be48ef30f60",
+    "i18n/en.json": "d00ac0784b640284369692bdb6f9f837e0c0664d23a813097e2d2f7bbd1f7c5e",
+    "style.css": "2bcb46a41add92095fb3229b4c087f5908b096c2ecf7a9b93c6a9e4b662c111a",
+    "vendor.js": "a8aacd35063e93bcac90e1b1a730a29f209eeb96a7b2a51f3bedff06b91e984e"
+  },
+  "startedAt": "2026-11-09T08:56:37.183398+00:00",
+  "networkBefore": "adde02c8504f35e503236612cfc4efd1db8c10d64a94d14d4780d63285055fe4  /etc/config/network\n645ef481477d427720b14ac3151bbb98a95e50ab0c1f61cf5fb28f9474f14030  /etc/config/dhcp\n0e6e820650b05481c25ec247a487b9ceae825cdc3d0f8cd9c3edae693fb0cf69  /etc/config/firewall\n",
+  "netpolicyConfigurationBefore": "f8c95a3cc09401b066d4e696d039fa79be5bb1878c1abec8fadfdd1ecd3e59ab  /etc/config/quickstart-netpolicy\n",
+  "backupSha256": "90561210e2115c374380412126b2be9ba925d7dba3fddbc1127d556a3662dc23",
+  "networkAfter": "adde02c8504f35e503236612cfc4efd1db8c10d64a94d14d4780d63285055fe4  /etc/config/network\n645ef481477d427720b14ac3151bbb98a95e50ab0c1f61cf5fb28f9474f14030  /etc/config/dhcp\n0e6e820650b05481c25ec247a487b9ceae825cdc3d0f8cd9c3edae693fb0cf69  /etc/config/firewall\n",
+  "netpolicyConfigurationAfter": "f8c95a3cc09401b066d4e696d039fa79be5bb1878c1abec8fadfdd1ecd3e59ab  /etc/config/quickstart-netpolicy\n",
+  "networkConfigurationUnchanged": true,
+  "netpolicyEnabled": false,
+  "installedAt": "2026-11-09T08:56:48.904701+00:00",
+  "service": "{\n\t\"quickstart\": {\n\t\t\"instances\": {\n\t\t\t\"instance1\": {\n\t\t\t\t\"running\": true,\n\t\t\t\t\"pid\": 24439,\n\t\t\t\t\"command\": [\n\t\t\t\t\t\"/usr/sbin/quickstart\",\n\t\t\t\t\t\"serve\",\n\t\t\t\t\t\"--unix\",\n\t\t\t\t\t\"/var/run/quickstart/local.sock\"\n\t\t\t\t],\n\t\t\t\t\"term_timeout\": 5,\n\t\t\t\t\"respawn\": {\n\t\t\t\t\t\"threshold\": 3600,\n\t\t\t\t\t\"timeout\": 5,\n\t\t\t\t\t\"retry\": 5\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n}\n",
+  "version": "0.17.1-rc20261028 66589b22f140615db97851b6c3b1eec7aad975d5-dirty .20261028.081951\n",
+  "verifiedAt": "2026-11-09T08:59:53.212436+00:00",
+  "url": "http://192.168.30.93/cgi-bin/luci/admin/quickstart/devicemanagement?network=all",
+  "authenticatedAPIs": "passed",
+  "actualLuCIProductionBrowser": "passed",
+  "knownLimits": [
+    "M10 scheduled IPv4 blocking acceptance failed; no release qualification claimed",
+    "lan1 and lan2 have no configured addresses or DHCP bindings and are read-only",
+    "NetPolicy retains the original disabled configuration"
+  ],
+  "disk": "Filesystem                Size      Used Available Use% Mounted on\noverlayfs:/overlay        1.9G      1.8G     83.8M  96% /\n",
+  "runtime": "{\n\t\"quickstart\": {\n\t\t\"instances\": {\n\t\t\t\"instance1\": {\n\t\t\t\t\"running\": true,\n\t\t\t\t\"pid\": 24439,\n\t\t\t\t\"command\": [\n\t\t\t\t\t\"/usr/sbin/quickstart\",\n\t\t\t\t\t\"serve\",\n\t\t\t\t\t\"--unix\",\n\t\t\t\t\t\"/var/run/quickstart/local.sock\"\n\t\t\t\t],\n\t\t\t\t\"term_timeout\": 5,\n\t\t\t\t\"respawn\": {\n\t\t\t\t\t\"threshold\": 3600,\n\t\t\t\t\t\"timeout\": 5,\n\t\t\t\t\t\"retry\": 5\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n}\n"
+}

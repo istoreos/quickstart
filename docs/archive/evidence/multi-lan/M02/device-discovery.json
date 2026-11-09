@@ -1,0 +1,60 @@
+{
+  "host": "root@192.168.30.93",
+  "networkConfigAndDnsmasqUnchanged": true,
+  "networks": [
+    {
+      "networkId": "lan",
+      "displayName": "lan",
+      "device": "br-lan",
+      "aliases": [],
+      "state": "up",
+      "ipv4Prefixes": [
+        "192.168.100.0/24"
+      ],
+      "ipv6Prefixes": [
+        "fdac:cf1:fa0f::/60"
+      ],
+      "firewallZones": [
+        "lan"
+      ],
+      "dhcpBindings": [
+        {
+          "section": "lan",
+          "instance": "@dnsmasq[0]",
+          "leaseFile": "/tmp/dhcp.leases"
+        }
+      ],
+      "version": "093aaa26a20c1910c7d8f4c1b6476b4dfec341d36cee6e6e31549e1e1ae49665"
+    },
+    {
+      "networkId": "lan1",
+      "displayName": "lan1",
+      "device": "eth3",
+      "aliases": [],
+      "state": "up",
+      "ipv4Prefixes": [],
+      "ipv6Prefixes": [],
+      "firewallZones": [
+        "lan"
+      ],
+      "dhcpBindings": [],
+      "version": "05decb374277ceb819dbc45377d0ce4effe7fe52ee506e933e73951206ccc112",
+      "readOnlyReason": "network_address_unavailable"
+    },
+    {
+      "networkId": "lan2",
+      "displayName": "lan2",
+      "device": "eth2",
+      "aliases": [],
+      "state": "up",
+      "ipv4Prefixes": [],
+      "ipv6Prefixes": [],
+      "firewallZones": [
+        "lan"
+      ],
+      "dhcpBindings": [],
+      "version": "5931a09ad066943b92da2205196896107201ede8b6697c15540095fa47ed6fff",
+      "readOnlyReason": "network_address_unavailable"
+    }
+  ]
+}

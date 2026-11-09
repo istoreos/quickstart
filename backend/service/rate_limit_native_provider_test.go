@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 
@@ -14,11 +16,14 @@ import (
 func nativeTestServer(t *testing.T, interfaceVersion string, conflict bool, calls *[]string) *httptest.Server {
 	t.Helper()
 	snapshot := nativePolicySnapshot{SchemaVersion: 1, Revision: 4, Policies: []nativeStoredPolicy{{
-		ID: "one", Owner: nativePolicyOwner{Product: "quickstart", Instance: "local-router"},
+		ID: "one", Revision: 4, Source: "quickstart", Owner: nativePolicyOwner{Product: "quickstart", Instance: "local-router"},
 		Device:    nativeDeviceIdentity{Kind: "mac", Value: "AA:BB:CC:DD:EE:20"},
 		RateLimit: &nativeRateLimit{Enabled: true, UploadBitsPerSecond: 5_000_000, DownloadBitsPerSecond: 30_000_000}, State: "effective",
 	}}}
 	return httptest.NewServer(http.HandlerFunc(func(response http.ResponseWriter, request *http.Request) {
+		if !request.Close {
+			t.Error("native control connection must not be reused with original single-request engines")
+		}
 		*calls = append(*calls, request.Method+" "+request.URL.Path)
 		response.Header().Set("Content-Type", "application/json")
 		write := func(value any) {
@@ -47,6 +52,13 @@ func nativeTestServer(t *testing.T, interfaceVersion string, conflict bool, call
 			snapshot.Revision = 5
 			write(snapshot)
 		case "/api/v1/policies/verify":
+			var verified nativePolicySnapshot
+			if err := json.NewDecoder(request.Body).Decode(&verified); err != nil {
+				t.Error(err)
+			}
+			if len(verified.Policies) != 1 || verified.Policies[0].Revision != 4 || verified.Policies[0].Source != "quickstart" {
+				t.Errorf("server record metadata lost in verify: %+v", verified)
+			}
 			write(snapshot)
 		default:
 			t.Fatalf("unexpected path: %s", request.URL.Path)
@@ -106,5 +118,31 @@ func TestNativeProviderFailsClosedWhenOffline(t *testing.T) {
 	err := provider.Apply(context.Background(), rateLimitTarget{MAC: "AA:BB:CC:DD:EE:20"}, models.DeviceSpeedPolicy{Enabled: true, UploadSpeed: 10, DownloadSpeed: 100})
 	if err == nil || !strings.Contains(err.Error(), "netpolicy_unavailable") {
 		t.Fatalf("expected unavailable, got %v", err)
+	}
+}
+
+func TestMultiLANNativeOffloadRiskCannotClaimVerifiedSampling(t *testing.T) {
+	for _, option := range []string{"flow_offloading", "flow_offloading_hw", "missing"} {
+		t.Run(option, func(t *testing.T) {
+			dir := t.TempDir()
+			if option != "missing" {
+				if err := os.WriteFile(filepath.Join(dir, "firewall"), []byte("config defaults 'main'\n option "+option+" '1'\n"), 0600); err != nil {
+					t.Fatal(err)
+				}
+			}
+			calls := []string{}
+			server := nativeTestServer(t, "1", false, &calls)
+			defer server.Close()
+			provider := NewNativeRateLimitProvider(server.URL, server.Client()).(*nativeRateLimitProvider)
+			provider.offload = &systemRateLimitRuntimeInspector{configDir: dir}
+			observation, err := provider.Inspect(context.Background(), rateLimitTarget{MAC: "aa:bb:cc:dd:ee:20"})
+			if err != nil || !observation.Configured || observation.Verified {
+				t.Fatalf("offload state falsely verified: %+v %v", observation, err)
+			}
+			sample := (scopedDeviceTrafficSampler{native: provider}).Sample(inventoryLANContext("office"))
+			if sample.err == nil || len(sample.reasons) != 1 || sample.reasons[0] != "traffic_offload_unverified" {
+				t.Fatalf("unsafe accounting was reported ready: %+v", sample)
+			}
+		})
 	}
 }

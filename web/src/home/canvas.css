@@ -8,7 +8,7 @@
   min-height:100vh;padding:0 40px 85px;color:var(--c-text);background:var(--c-bg);
   font:14px/1.5 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
 }
-:global(body[theme=dark] .canvas-home){
+:global(body[theme=dark] .canvas-home),:global(body[data-quickstart-theme=dark] .canvas-home){
   --c-bg:#15171e;--c-panel:#2c2c2c;--c-soft:#343740;--c-hover:#3c4050;
   --c-text:#edf0f7;--c-muted:#b2b9ca;--c-line:#454952;--c-accent:#a2adff;
   --c-good:#7bd9b8;--c-warning:#efbd72;--c-shadow:0 8px 28px #0000000d;

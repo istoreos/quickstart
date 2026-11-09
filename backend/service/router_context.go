@@ -150,6 +150,24 @@ func uniqueSortedNonEmpty(values []string) []string {
 type defaultRouterContextProbe struct{}
 
 var routerContextDnsmasqHealthy = func(ctx context.Context) bool {
+	if scope := selectedLANScope(ctx); scope != nil {
+		if len(scope.DHCPBindings) != 1 || scope.DHCPBindings[0].Instance == "" {
+			return false
+		}
+		var services map[string]struct {
+			Instances map[string]struct {
+				Running bool `json:"running"`
+			} `json:"instances"`
+		}
+		if err := UbusCallWithObject(ctx, `service list {"name":"dnsmasq"}`, &services); err != nil {
+			return false
+		}
+		instance := scope.DHCPBindings[0].RuntimeInstance
+		if instance == "" {
+			instance = scope.DHCPBindings[0].Instance
+		}
+		return services["dnsmasq"].Instances[instance].Running
+	}
 	return exec.CommandContext(ctx, "/etc/init.d/dnsmasq", "running").Run() == nil
 }
 
@@ -188,7 +206,7 @@ func routerContextLocalDHCPConfigured(tree uci.Tree, lan string) bool {
 	sections, _ := tree.GetSections("dhcp", "dhcp")
 	for _, section := range sections {
 		boundLAN, _ := tree.GetLast("dhcp", section, "interface")
-		if section != lan && boundLAN != lan {
+		if boundLAN != lan && !(boundLAN == "" && section == lan) {
 			continue
 		}
 		ignore, _ := tree.GetLast("dhcp", section, "ignore")

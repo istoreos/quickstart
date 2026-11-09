@@ -1,0 +1,127 @@
+{
+  "host": "192.168.30.7",
+  "base": "/tmp/quickstart-multi-lan/m07-f4689dd1",
+  "namespaces": [
+    "qsm7-638ba9fe-r",
+    "qsm7-3eeb47c7-a",
+    "qsm7-52292640-b",
+    "qsm7-19c14a83-w"
+  ],
+  "measurements": [],
+  "passed": true,
+  "attachment": "bridge",
+  "businessOnly": false,
+  "artifactSha256": {
+    "netpolicy": "a04ae95641cf7371dbc77cccdb0846f44401e4e82b3de5d24f7cdf757b55c1dc",
+    "goTest": "efdcca08813abcb4320c3aabd12f8d6c56c22bae3240325926b5d86781a4988e"
+  },
+  "health": [
+    {
+      "context": {
+        "networkId": "test_a",
+        "instanceId": "a",
+        "epoch": "5cfb409a-6e06-4c24-8726-e29ca8829010",
+        "interfaceIndex": 9
+      },
+      "interface": "lana",
+      "state": "healthy",
+      "pid": 26720,
+      "uptimeSeconds": 0,
+      "residentMemoryKib": 4384,
+      "dataPlane": "ready",
+      "policyInterfaceVersion": "1",
+      "maxDevicePolicies": 1024,
+      "maxHttpConnections": 32,
+      "dnsStorageDefault": false,
+      "trafficStorageDefault": false,
+      "reasons": []
+    },
+    {
+      "context": {
+        "networkId": "test_b",
+        "instanceId": "b",
+        "epoch": "98861433-94d5-410c-907d-bd5071deba8f",
+        "interfaceIndex": 12
+      },
+      "interface": "lanb",
+      "state": "healthy",
+      "pid": 26722,
+      "uptimeSeconds": 0,
+      "residentMemoryKib": 4616,
+      "dataPlane": "ready",
+      "policyInterfaceVersion": "1",
+      "maxDevicePolicies": 1024,
+      "maxHttpConnections": 32,
+      "dnsStorageDefault": false,
+      "trafficStorageDefault": false,
+      "reasons": []
+    }
+  ],
+  "legacyPhases": [
+    {
+      "phase": "legacy-cancel",
+      "reloads": 1,
+      "reviewRequired": true
+    },
+    {
+      "phase": "legacy-verify",
+      "reloads": 0,
+      "reviewRequired": true
+    },
+    {
+      "phase": "legacy-recover",
+      "reloads": 1,
+      "reviewRequired": false
+    },
+    {
+      "phase": "legacy-reset",
+      "reloads": 1,
+      "reviewRequired": true
+    },
+    {
+      "phase": "legacy-verify",
+      "reloads": 0,
+      "reviewRequired": true
+    },
+    {
+      "phase": "legacy-recover",
+      "reloads": 1,
+      "reviewRequired": false
+    },
+    {
+      "phase": "legacy-notify",
+      "reloads": 1,
+      "reviewRequired": true
+    },
+    {
+      "phase": "legacy-verify",
+      "reloads": 0,
+      "reviewRequired": true
+    },
+    {
+      "phase": "legacy-recover",
+      "reloads": 1,
+      "reviewRequired": false
+    },
+    {
+      "phase": "legacy-group-cancel",
+      "reloads": 1,
+      "reviewRequired": true
+    },
+    {
+      "phase": "legacy-verify",
+      "reloads": 0,
+      "reviewRequired": true
+    },
+    {
+      "phase": "legacy-recover",
+      "reloads": 1,
+      "reviewRequired": false
+    }
+  ],
+  "legacyQuotaReview": "preserved across cancellation/reset; explicit restore only; other LAN open",
+  "logs": "[INFO  quickstart_netpolicy::system] quickstart-netpolicy v0.2.0-test20260928 started\n[INFO  quickstart_netpolicy::system] Host: iStoreOS (uid=0, gid=0)\n[INFO  quickstart_netpolicy::system] OS: linux\n[INFO  quickstart_netpolicy::system] Kernel: Linux 6.6.86\n[INFO  quickstart_netpolicy::system] Arch: x86_64\n[INFO  quickstart_netpolicy::system] CPU: Intel(R) N100 (4 cores)\n[INFO  quickstart_netpolicy::system] Memory: 3910 MiB\n[INFO  quickstart_netpolicy::system] Load: 1.25 0.81 0.69\n[INFO  quickstart_netpolicy::system] Working directory: /root\n[INFO  quickstart_netpolicy::system] Listening port: 19471\n[INFO  quickstart_netpolicy::system] Data directory: /tmp/quickstart-multi-lan/m07-f4689dd1/a\n[INFO  quickstart_netpolicy::system] Log level: info\n[INFO  quickstart_netpolicy::system] Retention seconds: 600\n[INFO  quickstart_netpolicy::system] Interface: lana (IP: 192.0.2.1, Mask: 255.255.255.0)\n[INFO  quickstart_netpolicy::system] Enabled monitoring modules (1):\n[INFO  quickstart_netpolicy::system]   \u2022 Traffic monitoring (retention: 600s)\n[INFO  quickstart_netpolicy::system] OpenWrt identifiers (/etc/os-release):\n[INFO  quickstart_netpolicy::system] OPENWRT_BOARD=\"x86/64\"\n[INFO  quickstart_netpolicy::system] OPENWRT_ARCH=\"x86_64\"\n[INFO  quickstart_netpolicy::system] OPENWRT_TAINTS=\"busybox\"\n[INFO  quickstart_netpolicy::system] OPENWRT_DEVICE_MANUFACTURER=\"OpenWrt\"\n[INFO  quickstart_netpolicy::system] OPENWRT_DEVICE_MANUFACTURER_URL=\"https://openwrt.org/\"\n[INFO  quickstart_netpolicy::system] OPENWRT_DEVICE_PRODUCT=\"Generic\"\n[INFO  quickstart_netpolicy::system] OPENWRT_DEVICE_REVISION=\"v0\"\n[INFO  quickstart_netpolicy::system] OPENWRT_RELEASE=\"iStoreOS 24.10.1 2025011019\"\n[INFO  quickstart_netpolicy::system] OPENWRT_BUILD_DATE=\"1749783175\"\n[WARN  quickstart_netpolicy::system] Data directory does not exist and will be created during runtime: /tmp/quickstart-multi-lan/m07-f4689dd1/a\n[INFO  quickstart_netpolicy::command] Loading shared eBPF programs (ingress and egress)...\n[INFO  quickstart_netpolicy::ebpf::shared] Loading shared eBPF programs for interface lana with TC order default (requested backend: auto, resolved backend: tcx)\n[INFO  quickstart_netpolicy::ebpf::shared] Shared ingress program successfully attached to lana\n[INFO  quickstart_netpolicy::ebpf::shared] Shared egress program successfully attached to lana\n[INFO  quickstart_netpolicy::ebpf::shared] Shared eBPF programs loaded and attached. DNS and traffic modules share the same ingress and egress hooks.\n[INFO  quickstart_netpolicy::ebpf::shared] TC backend options: tcx_anchor_ingress_id=none,tcx_anchor_egress_id=none\n[INFO  quickstart_netpolicy::command] Configuring subnet info maps for traffic module...\n[INFO  quickstart_netpolicy::command] Configured IPv6 subnet 0: fd71::/64 [Type: ULA, Network: LAN]\n[INFO  quickstart_netpolicy::command] Configured IPv6 subnet 1: fd72::/64 [Type: ULA, Network: LAN]\n[INFO  quickstart_netpolicy::command] Configured IPv6 subnet 2: fe80::/64 [Type: Link-Local, Network: LAN]\n[INFO  quickstart_netpolicy::command] Configuring module enable flags...\n[INFO  quickstart_netpolicy::command] Traffic module enabled: true\n[INFO  quickstart_netpolicy::command] DNS module enabled: false\n[INFO  quickstart_netpolicy::command] Initializing traffic module...\n[INFO  quickstart_netpolicy::web] HTTP server listening on 127.0.0.1:19471\n[INFO  quickstart_netpolicy::system] quickstart-netpolicy v0.2.0-test20260928 started\n[INFO  quickstart_netpolicy::system] Host: iStoreOS (uid=0, gid=0)\n[INFO  quickstart_netpolicy::system] OS: linux\n[INFO  quickstart_netpolicy::system] Kernel: Linux 6.6.86\n[INFO  quickstart_netpolicy::system] Arch: x86_64\n[INFO  quickstart_netpolicy::system] CPU: Intel(R) N100 (4 cores)\n[INFO  quickstart_netpolicy::system] Memory: 3910 MiB\n[INFO  quickstart_netpolicy::system] Load: 1.25 0.81 0.69\n[INFO  quickstart_netpolicy::system] Working directory: /root\n[INFO  quickstart_netpolicy::system] Listening port: 19472\n[INFO  quickstart_netpolicy::system] Data directory: /tmp/quickstart-multi-lan/m07-f4689dd1/b\n[INFO  quickstart_netpolicy::system] Log level: info\n[INFO  quickstart_netpolicy::system] Retention seconds: 600\n[INFO  quickstart_netpolicy::system] Interface: lanb (IP: 198.51.100.1, Mask: 255.255.255.0)\n[INFO  quickstart_netpolicy::system] Enabled monitoring modules (1):\n[INFO  quickstart_netpolicy::system]   \u2022 Traffic monitoring (retention: 600s)\n[INFO  quickstart_netpolicy::system] OpenWrt identifiers (/etc/os-release):\n[INFO  quickstart_netpolicy::system] OPENWRT_BOARD=\"x86/64\"\n[INFO  quickstart_netpolicy::system] OPENWRT_ARCH=\"x86_64\"\n[INFO  quickstart_netpolicy::system] OPENWRT_TAINTS=\"busybox\"\n[INFO  quickstart_netpolicy::system] OPENWRT_DEVICE_MANUFACTURER=\"OpenWrt\"\n[INFO  quickstart_netpolicy::system] OPENWRT_DEVICE_MANUFACTURER_URL=\"https://openwrt.org/\"\n[INFO  quickstart_netpolicy::system] OPENWRT_DEVICE_PRODUCT=\"Generic\"\n[INFO  quickstart_netpolicy::system] OPENWRT_DEVICE_REVISION=\"v0\"\n[INFO  quickstart_netpolicy::system] OPENWRT_RELEASE=\"iStoreOS 24.10.1 2025011019\"\n[INFO  quickstart_netpolicy::system] OPENWRT_BUILD_DATE=\"1749783175\"\n[WARN  quickstart_netpolicy::system] Data directory does not exist and will be created during runtime: /tmp/quickstart-multi-lan/m07-f4689dd1/b\n[INFO  quickstart_netpolicy::command] Loading shared eBPF programs (ingress and egress)...\n[INFO  quickstart_netpolicy::ebpf::shared] Loading shared eBPF programs for interface lanb with TC order default (requested backend: auto, resolved backend: tcx)\n[INFO  quickstart_netpolicy::ebpf::shared] Shared ingress program successfully attached to lanb\n[INFO  quickstart_netpolicy::ebpf::shared] Shared egress program successfully attached to lanb\n[INFO  quickstart_netpolicy::ebpf::shared] Shared eBPF programs loaded and attached. DNS and traffic modules share the same ingress and egress hooks.\n[INFO  quickstart_netpolicy::ebpf::shared] TC backend options: tcx_anchor_ingress_id=none,tcx_anchor_egress_id=none\n[INFO  quickstart_netpolicy::command] Configuring subnet info maps for traffic module...\n[INFO  quickstart_netpolicy::command] Configured IPv6 subnet 0: fd71::/64 [Type: ULA, Network: LAN]\n[INFO  quickstart_netpolicy::command] Configured IPv6 subnet 1: fd72::/64 [Type: ULA, Network: LAN]\n[INFO  quickstart_netpolicy::command] Configured IPv6 subnet 2: fe80::/64 [Type: Link-Local, Network: LAN]\n[INFO  quickstart_netpolicy::command] Configuring module enable flags...\n[INFO  quickstart_netpolicy::command] Traffic module enabled: true\n[INFO  quickstart_netpolicy::command] DNS module enabled: false\n[INFO  quickstart_netpolicy::command] Initializing traffic module...\n[INFO  quickstart_netpolicy::web] HTTP server listening on 127.0.0.1:19472\n",
+  "productionConfigBefore": "92891e2f5cdcb6b2760550396b54aa1607efdc6ab273eb369a7d3a6aeedd006e  /etc/config/network\nc48d343a828753c33ee9c5b4fa3f7cf021ba278a87d4030efc536762410d8c77  /etc/config/dhcp\n91ddb146f8f131942650c28bc613a951141f636b93445ab7217dd10253abf9c8  /etc/config/firewall\n",
+  "productionConfigAfter": "92891e2f5cdcb6b2760550396b54aa1607efdc6ab273eb369a7d3a6aeedd006e  /etc/config/network\nc48d343a828753c33ee9c5b4fa3f7cf021ba278a87d4030efc536762410d8c77  /etc/config/dhcp\n91ddb146f8f131942650c28bc613a951141f636b93445ab7217dd10253abf9c8  /etc/config/firewall\n",
+  "productionConfigUnchanged": true
+}

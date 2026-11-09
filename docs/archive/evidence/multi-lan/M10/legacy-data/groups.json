@@ -1,0 +1,1 @@
+{"schemaVersion":1,"groups":[{"id":"family","name":"已有分组","priority":0,"members":["mac:02:00:00:00:00:55"],"policy":{"speed":{"enabled":true,"uploadSpeed":3,"downloadSpeed":6},"schedules":[{"id":"night","enabled":true,"days":[0,1,2,3,4,5,6],"startMinute":1380,"endMinute":60,"action":"block"}]}}],"devicePolicies":{}}

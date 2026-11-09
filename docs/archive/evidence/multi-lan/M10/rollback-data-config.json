@@ -1,0 +1,19 @@
+{
+  "status": "passed_data_and_config_only",
+  "pinnedOldCommit": "66589b22f140615db97851b6c3b1eec7aad975d5",
+  "backupSha256": "bcdafa593abcd6e0d66b64b52c79a0d51992891898efacba5525c4448087251e",
+  "restoredFiles": {
+    "traffic.json": "20b833ed65583290b56949d20e0b06fd6f843314f53762f38af62169380acd37",
+    "seed-time": "b0cb89fab5c75393296542b05d8568c345556bdaf7bd805f6e55a21acaa5549e",
+    "inventory.json.classifications": "82e73bd26dfa7a0173e98a2764daf52a5659152b90f0e0f8dba18e5eca69de68",
+    "groups.json": "bdd08d0559ae6fdc6823bd9bf0fa86b800a71c96a63031a077298ca7460ac445",
+    "inventory.json": "108fc59185d457d79061d607782fd94deb7961a62e4dbbcbd73c6167819672dd",
+    "config/firewall": "9a5de377f5b6ce131d8c86feb73042a7c1dcbc783bf7d10ba3f7454fde0a5cb5",
+    "config/quickstart-access.nft": "9e854d8a78afe53e8482bdde324fc0202683c9904c32173bc0e14cf829cdf859"
+  },
+  "seedLog": "=== RUN   TestMultiLANLegacyWriteUpgradeFixture\n--- PASS: TestMultiLANLegacyWriteUpgradeFixture (0.00s)\n=== RUN   TestMultiLANLegacyFirewallRollback\n--- PASS: TestMultiLANLegacyFirewallRollback (0.00s)\nPASS\n",
+  "newReaderLog": "=== RUN   TestMultiLANReadsPinnedOldDataWithoutCopyingToAdditionalLAN\n--- PASS: TestMultiLANReadsPinnedOldDataWithoutCopyingToAdditionalLAN (0.00s)\nPASS\n",
+  "oldReaderLog": "=== RUN   TestMultiLANLegacyReadUpgradedDefaultData\n--- PASS: TestMultiLANLegacyReadUpgradedDefaultData (0.00s)\n=== RUN   TestMultiLANLegacyFirewallRollback\n--- PASS: TestMultiLANLegacyFirewallRollback (0.00s)\nPASS\n",
+  "binaryRollbackStillRequired": true,
+  "note": "Old backend is unsafe to run against live multi-LAN shared UCI; restore binary, pre-upgrade configuration, and all data together before enabling writes. Reused additive fixture was archived and regenerated once before this drill."
+}

@@ -2,10 +2,13 @@ package service
 
 import (
 	"context"
+	"crypto/sha256"
+	"encoding/hex"
 	"errors"
 	"log"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"regexp"
 	"strings"
 	"sync"
@@ -55,6 +58,14 @@ func (module *CapabilityActionModule) Apply(ctx context.Context, request *models
 		return capabilityActionResponse(nil, false, false, nil, &models.DevicePolicyError{Code: "component_busy", Message: "another component action is in progress; check status before retrying"}), nil
 	}
 	defer module.mu.Unlock()
+	if request != nil && request.Action == "enable" {
+		locked, release, err := lockLANWrite(ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer release()
+		ctx = locked
+	}
 	plan, err := module.plan(ctx, request)
 	if err != nil {
 		return nil, err
@@ -65,7 +76,7 @@ func (module *CapabilityActionModule) Apply(ctx context.Context, request *models
 	if !plan.CanApply || plan.Current == nil {
 		return capabilityActionResponse(plan, false, false, plan.Current, plan.Error), nil
 	}
-	if request.ExpectedState != "" && models.CapabilityState(request.ExpectedState) != plan.Current.State {
+	if (request.ExpectedVersion != "" && request.ExpectedVersion != plan.Version) || (request.ExpectedState != "" && models.CapabilityState(request.ExpectedState) != plan.Current.State) {
 		return capabilityActionResponse(plan, false, false, plan.Current, &models.DevicePolicyError{Code: "conflict", Message: "capability state changed; review the action again"}), nil
 	}
 	// Closing a panel or losing HTTP must not kill a package manager halfway
@@ -158,7 +169,33 @@ func (module *CapabilityActionModule) plan(ctx context.Context, request *models.
 		return plan, nil
 	}
 	plan.Current = current
+	plan.NetworkID = selectedLAN(ctx)
+	plan.OperationScope = "network"
+	plan.AffectedNetworks = []string{selectedLAN(ctx)}
+	if request.Action == "install" {
+		plan.OperationScope = "component"
+		if resolver, _ := ctx.Value(lanScopeResolverKey{}).(*LANScopeModule); resolver != nil {
+			if scopes, err := resolver.List(ctx); err == nil {
+				plan.AffectedNetworks = nil
+				for _, scope := range scopes {
+					plan.AffectedNetworks = append(plan.AffectedNetworks, scope.NetworkID)
+				}
+			}
+		}
+	}
+	version := plan.CapabilityKey + "\x00" + plan.Action + "\x00" + string(current.State)
+	if system, ok := module.store.(*systemCapabilityActionStore); ok {
+		version += "\x00" + hashOptionalMigrationFile(filepath.Join(system.nativeConfigDir(), "quickstart-netpolicy"))
+	}
+	sum := sha256.Sum256([]byte(version))
+	plan.Version = bindLANVersion(ctx, hex.EncodeToString(sum[:]))
 	if request.Action == "enable" {
+		if system, ok := module.store.(*systemCapabilityActionStore); ok {
+			plan.AffectedNetworks = system.enabledNetworks(selectedLAN(ctx))
+			if len(plan.AffectedNetworks) > 1 {
+				plan.OperationScope = "shared_service"
+			}
+		}
 		if current.State != "disabled" {
 			plan.Error = &models.DevicePolicyError{Code: "conflict", Message: "capability is no longer waiting to be enabled"}
 		} else {
@@ -202,7 +239,10 @@ func capabilityActionResponse(plan *models.CapabilityActionPlan, changed, cancel
 type capabilityCommandRunner func(context.Context, string, ...string) ([]byte, error)
 
 type systemCapabilityActionStore struct {
-	run capabilityCommandRunner
+	configDir   string
+	servicePath string
+	stat        func(string) (os.FileInfo, error)
+	run         capabilityCommandRunner
 }
 
 func newSystemCapabilityActionStore() *systemCapabilityActionStore {
@@ -219,7 +259,13 @@ func (store *systemCapabilityActionStore) runCommand(ctx context.Context, name s
 }
 
 func (store *systemCapabilityActionStore) Read(ctx context.Context, key string) (*models.Capability, error) {
+	if selectedLAN(ctx) != defaultLAN && key != "device_speed_limit" {
+		return &models.Capability{State: "unsupported", Reason: "provider_scope_unsupported"}, nil
+	}
 	if key == "device_speed_limit" {
+		if selectedLANScope(ctx) != nil {
+			return store.scopedNativeCapability(ctx)
+		}
 		return nativeComponentCapability(ctx, nativeProviderCapability, store.runCommand)
 	}
 	var installed, enabled bool
@@ -272,6 +318,13 @@ func (store *systemCapabilityActionStore) Install(ctx context.Context, target st
 }
 
 func (store *systemCapabilityActionStore) Enable(ctx context.Context, capabilityKey string) error {
+	if selectedLANScope(ctx) != nil {
+		return store.enableNativeScope(ctx, capabilityKey)
+	}
+	return store.enableLegacyNative(ctx, capabilityKey)
+}
+
+func (store *systemCapabilityActionStore) enableLegacyNative(ctx context.Context, capabilityKey string) error {
 	if capabilityKey != "device_speed_limit" {
 		return errors.New("this capability cannot be enabled from device management")
 	}

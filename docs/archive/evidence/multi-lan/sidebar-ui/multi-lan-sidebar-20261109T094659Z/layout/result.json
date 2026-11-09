@@ -1,0 +1,45 @@
+{
+  "status": "passed",
+  "results": [
+    {
+      "name": "desktop",
+      "width": 1440,
+      "passed": true
+    },
+    {
+      "name": "wide",
+      "width": 1920,
+      "passed": true
+    },
+    {
+      "name": "dark",
+      "width": 1440,
+      "passed": true
+    },
+    {
+      "name": "english",
+      "width": 1440,
+      "passed": true
+    },
+    {
+      "name": "mobile",
+      "width": 390,
+      "passed": true
+    },
+    {
+      "name": "mobile-english",
+      "width": 320,
+      "passed": true
+    },
+    {
+      "name": "empty",
+      "width": 1440,
+      "passed": true
+    },
+    {
+      "name": "single",
+      "width": 1440,
+      "passed": true
+    }
+  ]
+}

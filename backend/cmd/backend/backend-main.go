@@ -39,6 +39,9 @@ func startMain(laddr, unixAddr string) error {
 		return err
 	}
 	defer lis.Close()
+	policyContext, stopPolicies := context.WithCancel(context.Background())
+	defer stopPolicies()
+	serviceBackend.StartLANPolicyReconciliation(policyContext)
 
 	if unixAddr != "" {
 		go func() {
