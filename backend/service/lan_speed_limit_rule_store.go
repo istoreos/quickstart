@@ -52,7 +52,9 @@ func buildSpeedLimitRule(ip, upload, download, comment string) *models.LANCtrlSp
 }
 
 func (store *defaultLanSpeedLimitRuleStore) ReadRuleLists(ctx context.Context) ([]*models.LANCtrlSpeedLimitItem, []*models.LANCtrlSpeedLimitItem, error) {
-	_ = ctx
+	if selectedLANScope(ctx) != nil {
+		return readScopedSpeedRuleLists(ctx)
+	}
 	preloadLanSpeedLimitRuleConfigs()
 
 	eqosSecs, ok := uci.GetSections("eqos", "device")
@@ -66,6 +68,10 @@ func (store *defaultLanSpeedLimitRuleStore) ReadRuleLists(ctx context.Context) (
 
 	blocks := make([]*models.LANCtrlSpeedLimitItem, 0, len(firewallSecs))
 	for _, sectionName := range firewallSecs {
+		network, _ := uci.GetLast("firewall", sectionName, "quickstart_network")
+		if network != "" && network != defaultLAN {
+			continue
+		}
 		mac, _ := uci.GetLast("firewall", sectionName, "src_mac")
 		name, _ := uci.GetLast("firewall", sectionName, "name")
 		target, _ := uci.GetLast("firewall", sectionName, "target")

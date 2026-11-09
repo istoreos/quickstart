@@ -12,7 +12,8 @@
  --home-icon-blue-bg:#edf2fa;--home-icon-teal-bg:#edf6f3;--home-icon-violet-bg:#f2eff8;
  --home-motion:140ms;
 }
-body[theme=dark] .ordered-home.natural-home{
+body[theme=dark] .ordered-home.natural-home,
+body[data-quickstart-theme=dark] .ordered-home.natural-home{
  --c-bg:#191d24;--c-panel:#2c2c2c;--c-soft:#343a43;--c-hover:#3b4655;
  --c-text:#e6ebf3;--c-muted:#b1bdce;--c-line:#364252;--c-accent:#a8c6ff;
  --c-good:#91d6b8;--c-warning:#e8c184;

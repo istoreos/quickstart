@@ -1,11 +1,5 @@
 <template>
-    <section class="device-center" aria-labelledby="device-center-title">
-        <div class="device-center__header">
-            <div>
-                <h2 id="device-center-title">{{ $gettext('设备') }}</h2>
-                <p>{{ $gettext('查看当前在线和本次开机发现过的局域网设备') }}</p>
-            </div>
-        </div>
+    <section class="device-center" :aria-label="$gettext('设备')">
         <div class="device-toolbar">
             <nav class="device-filters" :aria-label="$gettext('设备筛选')">
                 <button v-for="item in filters" :key="item.value" type="button"
@@ -23,7 +17,7 @@
                     <option value="name">{{ $gettext('按名称') }}</option>
                 </select>
                 <button class="icon-button" type="button" :disabled="loading" @click="load" :aria-label="$gettext('刷新')">↻</button>
-                <button class="add-device" type="button" @click="adding = !adding">{{ adding ? $gettext('取消添加') : $gettext('添加设备') }}</button>
+                <button v-if="!aggregate" class="add-device" type="button" @click="adding = !adding">{{ adding ? $gettext('取消添加') : $gettext('添加设备') }}</button>
             </div>
         <details class="filter-panel">
             <summary>{{ $gettext('更多筛选') }}<small v-if="activeAdvancedFilterCount">{{ activeAdvancedFilterCount }}</small></summary>
@@ -48,7 +42,8 @@
             :description="$gettext('设备清单仍可使用，缺失的信息会在数据源恢复后自动补齐。')" />
         <PageState v-if="!loading && !loadError && visibleDevices.length === 0" kind="empty"
             :title="query ? $gettext('没有匹配的设备') : $gettext('当前筛选下没有设备')"
-            :description="query ? $gettext('请尝试名称、IP、MAC 或厂商的其他关键词。') : $gettext('可以切换到“全部”查看本次开机发现过的设备。')" />
+            :description="query ? $gettext('请尝试名称、IP、MAC 或厂商的其他关键词。') : $gettext('可以切换到“全部”查看本次开机发现过的设备。')"
+            :action-label="filter === 'online' && counts.all > 0 && !query && !activeAdvancedFilterCount ? $gettext('查看全部设备') : ''" @action="filter = 'all'" />
 
         <div v-if="!loading && !loadError && visibleDevices.length" class="device-table-wrap">
             <table class="device-table">
@@ -64,7 +59,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="device in visibleDevices" :key="device.deviceId" :data-device-id="device.deviceId" tabindex="0" @click="openDetails(device)" @keydown.enter.prevent="openDetails(device)" @keydown.space.prevent="openDetails(device)">
+                    <tr v-for="device in visibleDevices" :key="rowKey(device)" :data-device-id="rowKey(device)" tabindex="0" @click="openDetails(device)" @keydown.enter.prevent="openDetails(device)" @keydown.space.prevent="openDetails(device)">
                         <td>
                             <div class="device-identity">
                                 <DeviceSceneIcon :scene="device.scene" :icon-key="device.iconKey" :label="sceneLabel(device.scene)" />
@@ -74,7 +69,7 @@
                                             <mark v-if="part.matched">{{ part.text }}</mark><template v-else>{{ part.text }}</template>
                                         </template>
                                     </strong>
-                                    <span class="identity-meta" :title="device.brand || categoryMeta(device)"><b v-if="identityPresentation(device).showBrandInMeta">{{ device.brand }}</b><template v-if="identityPresentation(device).showBrandInMeta"> · </template>{{ categoryMeta(device) }}</span>
+                                    <small v-if="aggregate" class="network-label">{{ networkLabel(device) }}</small><span class="identity-meta" :title="device.brand || categoryMeta(device)"><b v-if="identityPresentation(device).showBrandInMeta">{{ device.brand }}</b><template v-if="identityPresentation(device).showBrandInMeta"> · </template>{{ categoryMeta(device) }}</span>
                                 </div>
                             </div>
                         </td>
@@ -95,11 +90,11 @@
                 </tbody>
             </table>
 
-            <article v-for="device in visibleDevices" :key="`card-${device.deviceId}`" :data-device-id="device.deviceId" class="device-card" tabindex="0" @click="openDetails(device)" @keydown.enter.prevent="openDetails(device)" @keydown.space.prevent="openDetails(device)">
+            <article v-for="device in visibleDevices" :key="`card-${rowKey(device)}`" :data-device-id="rowKey(device)" class="device-card" tabindex="0" @click="openDetails(device)" @keydown.enter.prevent="openDetails(device)" @keydown.space.prevent="openDetails(device)">
                 <div class="device-card__top">
                     <div class="device-identity">
                         <DeviceSceneIcon :scene="device.scene" :icon-key="device.iconKey" :label="sceneLabel(device.scene)" />
-                        <div><strong :title="displayName(device)">{{ displayName(device) }}</strong><span class="identity-meta"><b v-if="identityPresentation(device).showBrandInMeta">{{ device.brand }}</b><template v-if="identityPresentation(device).showBrandInMeta"> · </template>{{ categoryMeta(device) }}</span></div>
+                        <div><strong :title="displayName(device)">{{ displayName(device) }}</strong><small v-if="aggregate" class="network-label">{{ networkLabel(device) }}</small><span class="identity-meta"><b v-if="identityPresentation(device).showBrandInMeta">{{ device.brand }}</b><template v-if="identityPresentation(device).showBrandInMeta"> · </template>{{ categoryMeta(device) }}</span></div>
                     </div>
                     <span class="status-pill" :class="presenceClass(device)">{{ presenceLabel(device) }}</span>
                 </div>
@@ -113,6 +108,7 @@
         </div>
 
         <div v-if="selected" class="drawer-backdrop" @click.self="closeDetails">
+            <LANScopeProvider v-if="!aggregate || lan.networks.some(network => network.networkId === selected?.networkId)" :key="rowKey(selected)" :network-id="selected.networkId || lan.networkId" :networks="lan.networks" :legacy="lan.legacy">
             <aside ref="drawer" class="device-drawer" role="dialog" aria-modal="true" tabindex="-1" :aria-label="$gettext('设备详情')" @keydown.esc="closeDetails">
                 <div class="drawer-header">
                     <div class="device-identity">
@@ -121,6 +117,7 @@
                     </div>
                     <button type="button" class="drawer-close" @click="closeDetails" :aria-label="$gettext('关闭')">×</button>
                 </div>
+                <p v-if="aggregate" class="network-label">{{ $gettext('所在局域网') }} · {{ networkLabel(selected) }}</p>
                 <div class="drawer-summary" role="status">
                     <span><small>{{ $gettext('状态') }}</small>{{ presenceLabel(selected) }}</span>
                     <span><small>{{ $gettext('主要地址') }}</small><b class="mono">{{ selected.primaryAddress || '—' }}</b></span>
@@ -137,10 +134,10 @@
                         <div><dt>{{ $gettext('本次开机') }}</dt><dd>↑ {{ trafficTotal(selected, 'up') }} · ↓ {{ trafficTotal(selected, 'down') }}</dd></div>
                         <div><dt>{{ $gettext('连接数') }}</dt><dd>{{ selected.telemetry?.state === 'warming_up' || !selected.telemetry ? $gettext('采集中') : selected.telemetry.connectionCount }}</dd></div>
                     </dl>
-                    <div v-if="trafficHistory[selected.deviceId]?.length" class="traffic-chart" :aria-label="$gettext('近期流量趋势')">
-                        <span v-for="(point, index) in trafficHistory[selected.deviceId]" :key="index" class="traffic-chart__bar">
-                            <i class="upload" :style="{ height: `${chartHeight(selected.deviceId, point.up)}%` }"></i>
-                            <i class="download" :style="{ height: `${chartHeight(selected.deviceId, point.down)}%` }"></i>
+                    <div v-if="trafficHistory[rowKey(selected)]?.length" class="traffic-chart" :aria-label="$gettext('近期流量趋势')">
+                        <span v-for="(point, index) in trafficHistory[rowKey(selected)]" :key="index" class="traffic-chart__bar">
+                            <i class="upload" :style="{ height: `${chartHeight(rowKey(selected), point.up)}%` }"></i>
+                            <i class="download" :style="{ height: `${chartHeight(rowKey(selected), point.down)}%` }"></i>
                         </span>
                     </div>
                     <small class="chart-legend"><span>↑ {{ $gettext('上传') }}</span><span>↓ {{ $gettext('下载') }}</span></small>
@@ -191,16 +188,26 @@
                     <DeviceUsagePolicyEditor :key="`usage-policy-${selected.deviceId}`" :device-id="selected.deviceId" />
                 </div>
             </aside>
+            </LANScopeProvider>
+            <aside v-else ref="drawer" class="device-drawer" role="dialog" aria-modal="true" tabindex="-1" :aria-label="$gettext('设备详情')" @keydown.esc="closeDetails"><h3>{{ displayName(selected) }}</h3><p>{{ $gettext('归属尚未确认，暂时无法修改此设备') }}</p><p class="mono">{{ selected.mac }}</p><p v-for="address in [...selected.addresses.current, ...selected.addresses.historical]" :key="address.address" class="mono">{{ address.address }}</p><button type="button" @click="closeDetails">{{ $gettext('关闭') }}</button></aside>
         </div>
     </section>
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue'
+import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useGettext } from '/@/plugins/i18n'
-import request from '/@/request'
-import {useRoute} from 'vue-router'
-const route=useRoute()
+import baseRequest from '/@/request'
+import { useLANClient, useLANContext, deviceScopeKey } from './lanContext'
+import LANScopeProvider from './lanScope.vue'
+import { createDeviceManagement } from '/@/request/request'
+const lan = useLANContext()
+const aggregate = lan.networkId === 'all'
+const rowKey = deviceScopeKey
+const networkLabel = (device: { networkId?: string }) => lan.networks.find(item => item.networkId === device.networkId)?.displayName || $gettext('待确认归属')
+const request = { ...baseRequest, DeviceMangement: useLANClient() }
+import {useRoute, useRouter} from 'vue-router'
+const route=useRoute(), router=useRouter()
 import LoadError from './components/loadError.vue'
 import PageState from './components/pageState.vue'
 import DeviceProfileEditor from './components/deviceProfileEditor.vue'
@@ -244,7 +251,7 @@ const loading = ref(true)
 const adding = ref(false), addingDevice = ref(false), addError = ref('')
 const manual = ref({ alias: '', mac: '' })
 const loadError = ref('')
-const filter = ref<DeviceFilter>('online')
+const filter = ref<DeviceFilter>(route.query.filter === 'all' ? 'all' : 'online')
 const sort = ref<DeviceSort>('recent')
 const query = ref('')
 const criteria = ref<Required<DeviceListCriteria>>({ connection: 'all', brand: '', policy: 'all' })
@@ -257,6 +264,7 @@ const telemetryHealth = ref<DeviceTelemetryState>('warming_up')
 const trafficHistory = ref<Record<string, Array<{ up: number; down: number }>>>({})
 let telemetryTimer: number | undefined
 let telemetryFailures = 0
+let disposed = false
 let previousFocus: HTMLElement | null = null
 let previousDeviceID = ''
 
@@ -264,7 +272,7 @@ const counts = computed(() => deviceCounts(devices.value))
 const visibleDevices = computed(() => selectDeviceListItems(devices.value, filter.value, query.value, sort.value, criteria.value))
 const availableBrands = computed(() => [...new Set(devices.value.map(device => device.brand).filter(Boolean))].sort((left, right) => left.localeCompare(right)))
 const activeAdvancedFilterCount = computed(() => Number(criteria.value.connection !== 'all') + Number(Boolean(criteria.value.brand)) + Number(criteria.value.policy !== 'all'))
-const selectedVisible = computed(() => !selected.value || visibleDevices.value.some(device => device.deviceId === selected.value?.deviceId))
+const selectedVisible = computed(() => !selected.value || visibleDevices.value.some(device => rowKey(device) === rowKey(selected.value!)))
 const filters = computed(() => [
     { value: 'online' as DeviceFilter, label: $gettext('在线') },
     { value: 'all' as DeviceFilter, label: $gettext('全部') },
@@ -283,17 +291,23 @@ const load = async () => {
     try {
         const [inventoryResponse, networkRulesResponse] = await Promise.all([
             request.DeviceMangement.deviceInventoryV2.GET(),
-            request.DeviceMangement.networkRulesV2.GET().catch(() => null),
+            aggregate ? Promise.resolve(null) : request.DeviceMangement.networkRulesV2.GET().catch(() => null),
         ])
         const inventoryData = inventoryResponse.data
         if (!inventoryData?.result) throw inventoryData?.error || $gettext('设备清单不可用')
         const inventoryDevices: InventoryDevice[] = inventoryData.result.devices || []
         const networkRules: DeviceNetworkRule[] | undefined = networkRulesResponse?.data?.result?.rules
-        devices.value = buildDeviceListItems(inventoryDevices, [], undefined, networkRules)
+        if (aggregate) {
+            const byNetwork = await Promise.all(lan.networks.map(async network => {
+                const response = await createDeviceManagement(network.networkId).networkRulesV2.GET().catch(() => null)
+                return buildDeviceListItems(inventoryDevices.filter(device => device.networkId === network.networkId), [], undefined, response?.data?.result?.rules)
+            }))
+            devices.value = [...byNetwork.flat(), ...buildDeviceListItems(inventoryDevices.filter(device => !lan.networks.some(network => network.networkId === device.networkId)))]
+        } else devices.value = buildDeviceListItems(inventoryDevices, [], undefined, networkRules)
         applyTelemetry(telemetryItems.value)
         health.value = inventoryData.result.health || { state: 'ready', reasons: [] }
         if (selected.value) {
-            selected.value = devices.value.find(device => device.deviceId === selected.value?.deviceId) || null
+            selected.value = devices.value.find(device => rowKey(device) === rowKey(selected.value!)) || null
         }
     } catch (error) {
         loadError.value = requestErrorMessage(error, `${$gettext('读取结果失败')}，${$gettext('请刷新界面')}`)
@@ -340,9 +354,10 @@ const chartHeight = (deviceId: string, value: number) => {
 const highlight = (value: string) => splitHighlight(value, query.value)
 const clearAdvancedFilters = () => { criteria.value = { connection: 'all', brand: '', policy: 'all' } }
 const clearAllFilters = () => { filter.value = 'all'; query.value = ''; clearAdvancedFilters() }
-const openDetails = async (device: DeviceListItem) => { previousFocus = document.activeElement as HTMLElement | null; previousDeviceID = device.deviceId; selected.value = device; detailTab.value = 'overview'; await nextTick(); drawer.value?.focus() }
+const openDetails = async (device: DeviceListItem) => { previousFocus = document.activeElement as HTMLElement | null; previousDeviceID = rowKey(device); selected.value = device; detailTab.value = 'overview'; if(route.query.device !== device.deviceId || route.query.deviceNetwork !== device.networkId) void router.replace({query:{...route.query,device:device.deviceId,deviceNetwork:device.networkId}}); await nextTick(); drawer.value?.focus() }
 const closeDetails = async () => {
     selected.value = null
+    if(route.query.device) void router.replace({query:{...route.query,device:undefined,deviceNetwork:undefined}})
     await nextTick()
     const fallback = Array.from(document.querySelectorAll<HTMLElement>('[data-device-id]')).find(element => element.dataset.deviceId === previousDeviceID && element.offsetParent !== null)
     ;(previousFocus?.isConnected ? previousFocus : fallback)?.focus()
@@ -356,8 +371,8 @@ const handlePolicySaved = (labels: string[]) => {
 }
 const handleProfileSaved = (value: { alias: string; classification: DeviceClassification; iconKey: DeviceIconKey }) => {
     if (!selected.value) return
-    const deviceId = selected.value.deviceId
-    devices.value = devices.value.map(device => device.deviceId === deviceId ? {
+    const deviceId = rowKey(selected.value)
+    devices.value = devices.value.map(device => rowKey(device) === deviceId ? {
         ...device,
         displayName: value.alias || device.hostname || '',
         classification: value.classification,
@@ -365,7 +380,7 @@ const handleProfileSaved = (value: { alias: string; classification: DeviceClassi
         brand: value.classification.brand,
         iconKey: value.iconKey,
     } : device)
-    selected.value = devices.value.find(device => device.deviceId === deviceId) || null
+    selected.value = devices.value.find(device => rowKey(device) === deviceId) || null
 }
 const copyAddress = async (value: string) => {
     try {
@@ -398,21 +413,21 @@ const formatLastSeen = (value: string) => {
 }
 
 const applyTelemetry = (items: Map<string, DeviceTelemetryItem>) => {
-    for (const device of devices.value) device.telemetry = items.get(device.deviceId)
-    if (selected.value) selected.value = devices.value.find(device => device.deviceId === selected.value?.deviceId) || null
+    for (const device of devices.value) device.telemetry = items.get(rowKey(device))
+    if (selected.value) selected.value = devices.value.find(device => rowKey(device) === rowKey(selected.value!)) || null
 }
 const recordTrafficHistory = (items: DeviceTelemetryItem[]) => {
     const next = { ...trafficHistory.value }
     for (const item of items) {
         if (item.state !== 'ready') continue
-        next[item.deviceId] = [...(next[item.deviceId] || []), { up: item.uploadSpeed, down: item.downloadSpeed }].slice(-20)
+        next[rowKey(item)] = [...(next[rowKey(item)] || []), { up: item.uploadSpeed, down: item.downloadSpeed }].slice(-20)
     }
     trafficHistory.value = next
 }
 const scheduleTelemetry = (delay: number) => {
     if (telemetryTimer !== undefined) window.clearTimeout(telemetryTimer)
     telemetryTimer = undefined
-    if (!document.hidden) telemetryTimer = window.setTimeout(loadTelemetry, delay)
+    if (!disposed && !document.hidden) telemetryTimer = window.setTimeout(loadTelemetry, delay)
 }
 const loadTelemetry = async () => {
     if (document.hidden) return
@@ -420,7 +435,7 @@ const loadTelemetry = async () => {
         const response = await request.DeviceMangement.deviceTrafficV2.GET()
         if (!response.data?.result) throw response.data?.error || new Error('telemetry unavailable')
         const items: DeviceTelemetryItem[] = response.data.result.items || []
-        telemetryItems.value = telemetryByDevice(items)
+        telemetryItems.value = telemetryByDevice(items, rowKey)
         telemetryHealth.value = response.data.result.health?.state || 'ready'
         telemetryFailures = 0
         applyTelemetry(telemetryItems.value)
@@ -441,14 +456,17 @@ const handleVisibility = () => {
     loadTelemetry()
 }
 
+watch(()=>route.query.device, value=>{if(!value)selected.value=null})
 onMounted(async () => {
     await load()
+    if (disposed) return
     const requested=typeof route.query.device==='string'?route.query.device:''
-    if(requested){const target=devices.value.find(device=>device.deviceId===requested);if(target){filter.value='all';await openDetails(target)}}
+    if(requested){const matches=devices.value.filter(device=>device.deviceId===requested&&(!route.query.deviceNetwork||device.networkId===route.query.deviceNetwork));const target=matches.length===1?matches[0]:undefined;if(target){filter.value='all';await openDetails(target)}}
     document.addEventListener('visibilitychange', handleVisibility)
     loadTelemetry()
 })
 onUnmounted(() => {
+    disposed = true
     document.removeEventListener('visibilitychange', handleVisibility)
     if (telemetryTimer !== undefined) window.clearTimeout(telemetryTimer)
 })
@@ -456,9 +474,6 @@ onUnmounted(() => {
 
 <style lang="scss" scoped>
 .device-center { color: var(--device-text); container-type: inline-size; }
-.device-center__header { margin-bottom: 14px; }
-.device-center__header h2 { margin: 0; padding: 0; color: inherit; background: none !important; border: 0; box-shadow: none; font-size: 16px; text-align: left; }
-.device-center__header p { margin: 5px 0 0; color: var(--device-muted); font-size: 12px; }
 .device-toolbar { display: grid; grid-template-columns: auto auto minmax(0,1fr); gap: 8px 12px; align-items: start; margin-bottom: 14px; }
 .device-center__tools { grid-column: 3; grid-row: 1; display: flex; justify-content: flex-end; align-items: center; gap: 8px; min-width: 0; }
 .device-search { flex: 1; max-width: 320px; min-width: 120px; }
@@ -477,9 +492,12 @@ select { padding: 0 28px 0 10px; }
 .device-center :deep(.page-state) { color: var(--device-text); background: var(--device-soft); border-color: var(--device-line); }
 .device-center :deep(.page-state__icon),.device-center :deep(.page-state button) { color: var(--device-accent); }
 .device-center :deep(.page-state button) { min-height: 44px; border-color: var(--device-line); }
+.device-center :deep(.page-state--empty) { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; min-height: 280px; padding: 36px 20px; text-align: center; background: transparent; border: 0; }
+.device-center :deep(.page-state--empty .page-state__body) { flex: none; max-width: 38ch; }
+.device-center :deep(.page-state--empty .page-state__icon) { width: 48px; height: 48px; font-size: 26px; background: var(--device-soft); border: 0; }
 .device-table-wrap { width: 100%; overflow: hidden; }
 .device-table { width: 100%; table-layout: fixed; border-collapse: collapse; }
-.identity-column { width: clamp(190px,25vw,320px); }.address-column { width: clamp(145px,17vw,230px); }.status-column { width: 105px; }.connection-column { width: 85px; }.traffic-column { width: 125px; }
+.identity-column { width: clamp(180px,24cqw,280px); }.address-column { width: clamp(145px,19cqw,220px); }.status-column { width: 90px; }.connection-column { width: 76px; }.traffic-column { width: 104px; }
 .device-table th { padding: 11px 10px; text-align: left; white-space: nowrap; font-size: 12px; font-weight: 500; color: var(--device-muted); background: var(--device-soft); border-bottom: 1px solid var(--device-line); }
 .device-table td { padding: 13px 10px; border-bottom: 1px solid var(--device-line); vertical-align: middle; overflow-wrap: anywhere; }
 .device-table tbody tr:nth-child(n) { background: var(--device-panel); cursor: pointer; transition: background .15s ease; }
@@ -537,7 +555,6 @@ code { padding: 7px 9px; overflow-wrap: anywhere; background: rgba(127, 127, 127
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 
 @media (max-width: 980px) {
-    .device-center__header { flex-direction: column; }
     .device-center__tools { width: 100%; }
     .device-search { flex: 1; }
     .device-search input { width: 100%; }
@@ -546,10 +563,10 @@ code { padding: 7px 9px; overflow-wrap: anywhere; background: rgba(127, 127, 127
     .connection-column { display: none; }
 }
 
-@container (max-width: 980px) {
-    .device-toolbar { grid-template-columns: 1fr auto; }.device-center__tools { grid-column:1/-1; grid-row:1; width:100%; }.device-filters{grid-column:1;grid-row:2}.filter-panel{grid-column:2;grid-row:2}
+@container (max-width: 760px) {
+    .device-toolbar { grid-template-columns: minmax(0,1fr) auto; }.device-center__tools { grid-column:1/-1; grid-row:1; width:100%; }.device-filters{grid-column:1;grid-row:2}.filter-panel{grid-column:2;grid-row:2}
 }
-@container (max-width: 980px) {
+@container (max-width: 760px) {
     .device-center__tools { flex-wrap: wrap; }
     .device-search { flex-basis: 100%; max-width: none; }
     .device-center__tools select { flex: 1; min-width: 0; width: 0; }
@@ -563,6 +580,12 @@ code { padding: 7px 9px; overflow-wrap: anywhere; background: rgba(127, 127, 127
     .identity-meta { max-width: min(220px, 58vw); }
     .filter-panel__controls label { flex: 1 1 135px; min-width: 0; }
 }
+@container (max-width: 320px) {
+    .device-toolbar { grid-template-columns: minmax(0,1fr); }
+    .device-filters { grid-column: 1; grid-row: 2; flex-wrap: wrap; }
+    .filter-panel { grid-column: 1; grid-row: 3; }
+    .device-search input { min-width: 0; }
+}
 @media (max-width: 360px) {
     .device-toolbar { grid-template-columns: minmax(0,1fr); }
     .device-filters { justify-content: space-between; }
@@ -570,7 +593,6 @@ code { padding: 7px 9px; overflow-wrap: anywhere; background: rgba(127, 127, 127
 }
 
 @media (max-width: 420px) {
-    .device-center__header p { max-width: 30ch; }
     .device-toolbar { gap:8px 4px; }.device-filters button { padding:7px 6px; }
     .device-filters button { flex: none; }
     .device-card__facts > span:first-child,.device-card__facts > span:last-child { grid-column:1/-1; }

@@ -224,3 +224,17 @@ func TestRefreshLANPrefixesKeepsLastKnownPrefixesOnEmptyRead(t *testing.T) {
 		t.Fatalf("expected last known LAN prefix to survive an empty read, got %#v", stats.lanPrefixes)
 	}
 }
+
+func TestMultiLANLegacyAccountingExcludesInternalFlows(t *testing.T) {
+	stats := &LanStats{hosts: map[string]*LanStatHost{}, lanPrefixes: []netip.Prefix{mustPrefix(t, "192.0.2.0/24"), mustPrefix(t, "198.51.100.0/24"), mustPrefix(t, "fd71::/64"), mustPrefix(t, "fd72::/64")}}
+	for _, pair := range [][2]string{{"192.0.2.55", "198.51.100.55"}, {"fd71::55", "fd72::55"}} {
+		stats.recordFlow(mustAddr(t, pair[0]), mustAddr(t, pair[1]), 100, 200)
+	}
+	if len(stats.hosts) != 0 {
+		t.Fatal("internal LAN flows billed as WAN")
+	}
+	stats.recordFlow(mustAddr(t, "192.0.2.55"), mustAddr(t, "203.0.113.2"), 100, 200)
+	if len(stats.hosts) != 1 {
+		t.Fatal("WAN flow not counted")
+	}
+}

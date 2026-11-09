@@ -1,0 +1,16 @@
+{
+  "192.168.30.93": {
+    "status": "stopped_and_cleaned",
+    "stateFile": "docs/archive/evidence/multi-lan/M10/optimization-4-capacity-arm.json",
+    "originalNetworkConfigurationUnchanged": true,
+    "rootStatus": "28806\n7209 7120\nFilesystem           1K-blocks      Used Available Use% Mounted on\ntmpfs                  2011012   1000204   1010808  50% /tmp\nadde02c8504f35e503236612cfc4efd1db8c10d64a94d14d4780d63285055fe4  /etc/config/network\n645ef481477d427720b14ac3151bbb98a95e50ab0c1f61cf5fb28f9474f14030  /etc/config/dhcp\n0e6e820650b05481c25ec247a487b9ceae825cdc3d0f8cd9c3edae693fb0cf69  /etc/config/firewall\n",
+    "at": "2026-11-09T02:57:05.439196+00:00"
+  },
+  "192.168.30.7": {
+    "status": "stopped_and_cleaned",
+    "stateFile": "docs/archive/evidence/multi-lan/M10/optimization-4-capacity-x86.json",
+    "originalNetworkConfigurationUnchanged": true,
+    "rootStatus": "13224\n13661 13660\nFilesystem           1K-blocks      Used Available Use% Mounted on\ntmpfs                  2002036    751212   1250824  38% /tmp\n92891e2f5cdcb6b2760550396b54aa1607efdc6ab273eb369a7d3a6aeedd006e  /etc/config/network\nc48d343a828753c33ee9c5b4fa3f7cf021ba278a87d4030efc536762410d8c77  /etc/config/dhcp\n91ddb146f8f131942650c28bc613a951141f636b93445ab7217dd10253abf9c8  /etc/config/firewall\n",
+    "at": "2026-11-09T02:57:05.594556+00:00"
+  }
+}

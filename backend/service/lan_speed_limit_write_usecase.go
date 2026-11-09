@@ -26,6 +26,13 @@ func NewLanSpeedLimitWriteService(store LanSpeedLimitWriteStore, apply LanSpeedL
 }
 
 func (svc *LanSpeedLimitWriteService) UpsertSpeedLimitRule(ctx context.Context, input SpeedLimitWriteInput) error {
+	locked, release, lockErr := lockLANWrite(ctx)
+	if lockErr != nil {
+		return lockErr
+	}
+	defer release()
+	ctx = locked
+
 	if input.Action == "" {
 		return errors.New("action is required")
 	}
@@ -50,6 +57,13 @@ func (svc *LanSpeedLimitWriteService) UpsertSpeedLimitRule(ctx context.Context, 
 }
 
 func (svc *LanSpeedLimitWriteService) SetSpeedLimitModule(ctx context.Context, input SpeedLimitModuleInput) error {
+	locked, release, lockErr := lockLANWrite(ctx)
+	if lockErr != nil {
+		return lockErr
+	}
+	defer release()
+	ctx = locked
+
 	if input.DownloadSpeed == 0 {
 		input.DownloadSpeed = 2000
 	}

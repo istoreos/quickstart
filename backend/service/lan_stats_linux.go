@@ -5,6 +5,7 @@ package service
 import (
 	"bufio"
 	"context"
+	"errors"
 	"net/netip"
 	"os"
 	"strconv"
@@ -19,7 +20,7 @@ import (
 const (
 	testIP                  = "192.168.9.3"
 	lanStatTimeTick         = 3 * time.Second
-	lanPrefixRefreshEvery   = time.Minute
+	lanPrefixRefreshEvery   = 30 * time.Second
 	defaultLanStatHostTTL   = 10 * time.Minute
 	defaultLanStatHostLimit = 2048
 )
@@ -34,6 +35,7 @@ type LanStats struct {
 	fetchHostStatsCh      chan *fetchHostStatsReq
 	lanPrefixes           []netip.Prefix
 	lanPrefixReader       func() ([]netip.Prefix, error)
+	prefixReadErr         error
 	lastPrefixRead        time.Time
 	maxHosts              int
 	hostIdleTTL           time.Duration
@@ -186,6 +188,9 @@ func (lstat *LanStats) fetchItems() error {
 		lstat.diagnosticSampleNanos.Store(time.Since(started).Nanoseconds())
 	}()
 	lstat.refreshLANPrefixes()
+	if lstat.prefixReadErr != nil {
+		return lstat.prefixReadErr
+	}
 	for _, host := range lstat.hosts {
 		host.connectionCount = 0
 	}
@@ -300,10 +305,14 @@ func walkProcConntrackFlows(path string, visit func(lanTrafficFlow)) error {
 }
 
 func (lstat *LanStats) recordFlow(srcIP, dstIP netip.Addr, upstream, downstream int64) {
-	if lstat.isLanIP(srcIP) {
+	sourceLocal, destinationLocal := lstat.isLanIP(srcIP), lstat.isLanIP(dstIP)
+	if sourceLocal == destinationLocal {
+		return
+	}
+	if sourceLocal {
 		lstat.addSpeeds(srcIP.String(), upstream, downstream)
 	}
-	if lstat.isLanIP(dstIP) {
+	if destinationLocal {
 		lstat.addSpeeds(dstIP.String(), downstream, upstream)
 	}
 }
@@ -501,11 +510,13 @@ func (lstat *LanStats) refreshLANPrefixes() {
 	}
 	lstat.lastPrefixRead = now
 	prefixes, err := lstat.lanPrefixReader()
+	lstat.prefixReadErr = err
 	if err != nil {
 		l.Debugln("read LAN prefixes failed, err=", err)
 		return
 	}
 	if len(prefixes) == 0 {
+		lstat.prefixReadErr = errors.New("LAN traffic prefixes unavailable")
 		l.Debugln("read LAN prefixes returned no usable network")
 		return
 	}
@@ -515,11 +526,25 @@ func (lstat *LanStats) refreshLANPrefixes() {
 func readSystemLANPrefixes() ([]netip.Prefix, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
-	status, err := ubusGetLanStatus(ctx)
+	scopes, err := NewLANScopeModule().List(ctx)
 	if err != nil {
 		return nil, err
 	}
-	return lanPrefixesFromStatus(status), nil
+	var prefixes []netip.Prefix
+	seen := map[netip.Prefix]bool{}
+	for _, scope := range scopes {
+		if scope.State != "up" {
+			continue
+		}
+		for _, cidr := range append(append([]string{}, scope.IPv4Prefixes...), scope.IPv6Prefixes...) {
+			prefix, err := netip.ParsePrefix(cidr)
+			if err == nil && prefix.Bits() > 0 && !seen[prefix.Masked()] {
+				seen[prefix.Masked()] = true
+				prefixes = append(prefixes, prefix.Masked())
+			}
+		}
+	}
+	return prefixes, nil
 }
 
 func lanPrefixesFromStatus(status *ubusLanStatus) []netip.Prefix {

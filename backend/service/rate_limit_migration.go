@@ -64,6 +64,13 @@ func (module *RateLimitMigrationModule) Plan(ctx context.Context) (*models.RateL
 }
 
 func (module *RateLimitMigrationModule) Apply(ctx context.Context, request *models.RateLimitMigrationRequest) (*models.RateLimitMigrationResponse, error) {
+	locked, release, lockErr := lockLANWrite(ctx)
+	if lockErr != nil {
+		return nil, lockErr
+	}
+	defer release()
+	ctx = locked
+
 	module.mu.Lock()
 	defer module.mu.Unlock()
 	if request == nil || request.Plan == nil || request.ExpectedVersion == "" {
@@ -127,6 +134,13 @@ func (module *RateLimitMigrationModule) Apply(ctx context.Context, request *mode
 }
 
 func (module *RateLimitMigrationModule) Rollback(ctx context.Context, request *models.RateLimitMigrationRollbackRequest) (*models.RateLimitMigrationResponse, error) {
+	locked, release, lockErr := lockLANWrite(ctx)
+	if lockErr != nil {
+		return nil, lockErr
+	}
+	defer release()
+	ctx = locked
+
 	module.mu.Lock()
 	defer module.mu.Unlock()
 	receipt, err := readRateLimitMigrationReceipt(module.receiptPath)

@@ -1,0 +1,5 @@
+{
+  "ownedNamespace": "qs-v6-0845c585",
+  "output": "9: lana: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UNKNOWN group default qlen 1000\n    inet6 fd71::1/64 scope global nodad \n       valid_lft forever preferred_lft forever\n    inet6 fe80::1896:28ff:fe12:1392/64 scope link tentative proto kernel_ll \n       valid_lft forever preferred_lft forever\n9: lana_new: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UNKNOWN group default qlen 1000\n    inet6 fe80::1896:28ff:fe12:1392/64 scope link tentative proto kernel_ll \n       valid_lft forever preferred_lft forever\n",
+  "stderr": ""
+}

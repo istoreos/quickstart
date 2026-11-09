@@ -703,3 +703,39 @@ func requireLanControlEnvelopeCode(t *testing.T, resp map[string]any, want int64
 		t.Fatalf("expected success code %d, got %v in %#v", want, got, resp)
 	}
 }
+
+func (backend *fakeLanControlBackend) PrepareLANRequest(ctx context.Context, _ *http.Request) (context.Context, error) {
+	return ctx, nil
+}
+func (backend *fakeLanControlBackend) GetLANNetworks(ctx context.Context) (*models.LANNetworksResponse, error) {
+	backend.record("networks")
+	return &models.LANNetworksResponse{Result: &models.LANNetworksResult{Networks: []*models.LANScope{{NetworkID: "lan1"}}, ScopeVersion: 1}}, backend.err
+}
+
+type rejectedLANBackend struct{ *fakeLanControlBackend }
+
+func (backend rejectedLANBackend) PrepareLANRequest(context.Context, *http.Request) (context.Context, error) {
+	return nil, errors.New("network target rejected")
+}
+
+func TestLANNetworkRouteAndScopeBoundary(t *testing.T) {
+	backend := &fakeLanControlBackend{}
+	router := httprouter.New()
+	RegisterRoutes(router, backend)
+	request := httptest.NewRequest(http.MethodGet, "/cgi-bin/luci/istore/lanctrl/v2/networks/", nil)
+	request.Header.Set("X-Forwarded-Sid", "test")
+	response := httptest.NewRecorder()
+	router.ServeHTTP(response, request)
+	if !strings.Contains(response.Body.String(), `"networkId":"lan1"`) || len(backend.calls) != 1 {
+		t.Fatalf("network route: %s calls=%v", response.Body.String(), backend.calls)
+	}
+	denied := httprouter.New()
+	RegisterRoutes(denied, rejectedLANBackend{backend})
+	request = httptest.NewRequest(http.MethodPost, "/cgi-bin/luci/istore/lanctrl/v2/device-policy/", strings.NewReader(`{}`))
+	request.Header.Set("X-Forwarded-Sid", "test")
+	response = httptest.NewRecorder()
+	denied.ServeHTTP(response, request)
+	if len(backend.calls) != 1 || !strings.Contains(response.Body.String(), "network target rejected") {
+		t.Fatalf("business handler ran after scope rejection: %s calls=%v", response.Body.String(), backend.calls)
+	}
+}

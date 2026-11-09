@@ -27,7 +27,7 @@ func (backend *ServiceBackend) PostLanDHCPSettingsApplyV2(ctx context.Context, r
 	}
 	response, err := backend.lanDHCPSettingsModule().Apply(ctx, &input)
 	if err == nil && response != nil && response.Result != nil && response.Result.Error == nil && response.Result.Changed {
-		backend.auditModule().Record("", "lan_dhcp", "policy_changed", "success", "settings")
+		backend.auditModule().forContext(ctx).Record("", "lan_dhcp", "policy_changed", "success", "settings")
 	}
 	return response, err
 }

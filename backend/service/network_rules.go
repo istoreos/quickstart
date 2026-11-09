@@ -16,6 +16,7 @@ import (
 const networkRulesBulkLimit = 128
 
 type networkRulesSnapshot struct {
+	Health  *models.DeviceInventoryHealth
 	Rules   []*models.NetworkRule
 	Version string
 }
@@ -44,7 +45,7 @@ func (module *NetworkRulesModule) List(ctx context.Context) (*models.NetworkRule
 	if err != nil {
 		return nil, err
 	}
-	return &models.NetworkRulesResponse{Result: &models.NetworkRulesResult{Rules: snapshot.Rules, Version: snapshot.Version}}, nil
+	return &models.NetworkRulesResponse{Result: &models.NetworkRulesResult{Rules: snapshot.Rules, Version: bindLANVersion(ctx, snapshot.Version), Health: snapshot.Health}}, nil
 }
 
 func (module *NetworkRulesModule) Plan(ctx context.Context, request *models.NetworkRulesBulkRequest) (*models.NetworkRulesBulkResponse, error) {
@@ -56,6 +57,13 @@ func (module *NetworkRulesModule) Plan(ctx context.Context, request *models.Netw
 }
 
 func (module *NetworkRulesModule) Apply(ctx context.Context, request *models.NetworkRulesBulkRequest) (*models.NetworkRulesBulkResponse, error) {
+	locked, release, lockErr := lockLANWrite(ctx)
+	if lockErr != nil {
+		return nil, lockErr
+	}
+	defer release()
+	ctx = locked
+
 	module.mu.Lock()
 	defer module.mu.Unlock()
 	selected, plan, err := module.plan(ctx, request)
@@ -72,7 +80,11 @@ func (module *NetworkRulesModule) Apply(ctx context.Context, request *models.Net
 		return &models.NetworkRulesBulkResponse{Result: result}, nil
 	}
 	if err := module.store.Apply(ctx, selected); err != nil {
-		result.Error = &models.DevicePolicyError{Code: "apply_failed", Message: err.Error()}
+		code := "apply_failed"
+		if errors.Is(err, errNetworkConfigRecoveryRequired) {
+			code = "recovery_required"
+		}
+		result.Error = &models.DevicePolicyError{Code: code, Message: err.Error()}
 		return &models.NetworkRulesBulkResponse{Result: result}, nil
 	}
 	result.Changed = len(selected) > 0
@@ -84,7 +96,7 @@ func (module *NetworkRulesModule) plan(ctx context.Context, request *models.Netw
 	if err != nil {
 		return nil, nil, err
 	}
-	plan := &models.NetworkRulesBulkPlan{Action: "delete", RuleIDs: []string{}, Version: snapshot.Version, RollbackScope: []string{}}
+	plan := &models.NetworkRulesBulkPlan{Action: "delete", RuleIDs: []string{}, Version: bindLANVersion(ctx, snapshot.Version), RollbackScope: []string{}}
 	if request == nil || request.Action != "delete" {
 		plan.Error = &models.DevicePolicyError{Code: "validation_failed", Message: "only delete is supported"}
 		return nil, plan, nil
@@ -105,6 +117,10 @@ func (module *NetworkRulesModule) plan(ctx context.Context, request *models.Netw
 		rule := byID[id]
 		if rule == nil {
 			plan.Error = &models.DevicePolicyError{Code: "conflict", Message: "a selected rule no longer exists"}
+			return nil, plan, nil
+		}
+		if rule.Source == "traffic_quota" {
+			plan.Error = &models.DevicePolicyError{Code: "managed_by_quota", Message: "请通过设备配额设置移除此限制"}
 			return nil, plan, nil
 		}
 		selected = append(selected, rule)

@@ -7274,3 +7274,35 @@ msgstr "Manage limit components"
 #: src/pages/device/components/devicePolicyPanel.vue
 msgid "组件观察未更新，输入内容仍保留，请稍后重试。"
 msgstr "Component status was not updated. Your inputs are retained; retry later."
+
+#: src/pages/device/index.vue
+msgid "网络范围"
+msgstr "Networks"
+
+#: src/pages/device/index.vue
+msgid "选择局域网"
+msgstr "Choose a LAN"
+
+#: src/pages/device/index.vue
+msgid "设备总览"
+msgstr "Device overview"
+
+#: src/pages/device/index.vue
+msgid "网络配置请前往系统网络设置"
+msgstr "Manage networks in system network settings"
+
+#: src/pages/device/index.vue
+msgid "此网络的设备、分组与设置"
+msgstr "Devices, groups and settings for this network"
+
+#: src/pages/device/index.vue
+msgid "查看各个局域网中的设备"
+msgstr "Browse devices across your local networks"
+
+#: src/pages/device/index.vue
+msgid "暂时只读"
+msgstr "Read only"
+
+#: src/pages/device/deviceCenterList.vue
+msgid "查看全部设备"
+msgstr "View all devices"

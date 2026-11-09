@@ -18,7 +18,8 @@
   --device-warning:#ffce76; --device-warning-soft:#514024;
  }
 }
-body[theme="dark"] .device-management,body[theme="dark"] .device-feature-surface {
+body[theme="dark"] .device-management,body[theme="dark"] .device-feature-surface,
+body[data-quickstart-theme="dark"] .device-management,body[data-quickstart-theme="dark"] .device-feature-surface {
  --device-panel:#2c2c2c; --device-soft:#343a43; --device-hover:#3b4655;
  --device-text:#e6ebf3; --device-muted:#b1bdce; --device-line:#414b59;
  --device-accent:#91b9ff; --device-accent-soft:#2c3e59;

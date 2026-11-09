@@ -396,7 +396,7 @@ func TestCollectedGroupBatchCommitsEachConfigDomainOnce(t *testing.T) {
 		groupBatchWriteAccess, groupBatchWriteSpeed, groupBatchWriteNetwork = oldAccess, oldSpeed, oldNetwork
 	})
 	accessCalls, speedCalls, networkCalls := 0, 0, 0
-	groupBatchWriteAccess = func(_ string, changes []groupBatchRestrictionChange) error {
+	groupBatchWriteAccess = func(_ context.Context, _ string, changes []groupBatchRestrictionChange) error {
 		accessCalls++
 		if len(changes) != 256 {
 			t.Fatalf("access changes=%d", len(changes))

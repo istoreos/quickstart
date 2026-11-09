@@ -116,6 +116,10 @@ func (module *DeviceNetworkPolicyModule) Plan(ctx context.Context, request *mode
 		result.Error = &models.DevicePolicyError{Code: "validation_failed", Message: normalizeErr.Error()}
 		return &models.DeviceNetworkPolicyPlanResponse{Result: result}, nil
 	}
+	if conflict := validateScopedReservation(input, routePlan.State); conflict != nil {
+		result.Error = conflict
+		return &models.DeviceNetworkPolicyPlanResponse{Result: result}, nil
+	}
 	if conflict := networkPolicyStaticIPConflict(current.MAC, input, module.devicePolicy, ctx); conflict != nil {
 		result.Error = conflict
 		return &models.DeviceNetworkPolicyPlanResponse{Result: result}, nil
@@ -135,6 +139,13 @@ func (module *DeviceNetworkPolicyModule) Plan(ctx context.Context, request *mode
 }
 
 func (module *DeviceNetworkPolicyModule) Apply(ctx context.Context, request *models.DeviceNetworkPolicyApplyRequest) (*models.DeviceNetworkPolicyResponse, error) {
+	locked, release, lockErr := lockLANWrite(ctx)
+	if lockErr != nil {
+		return nil, lockErr
+	}
+	defer release()
+	ctx = locked
+
 	module.mu.Lock()
 	defer module.mu.Unlock()
 	if request == nil || request.DeviceID == "" || request.Static == nil || request.TargetID == "" {
@@ -183,6 +194,9 @@ func (module *DeviceNetworkPolicyModule) Apply(ctx context.Context, request *mod
 	if err != nil {
 		return attachDeviceNetworkTransaction(deviceNetworkPolicyFailure(&models.DevicePolicyError{Code: "validation_failed", Message: err.Error()}), rejectedTaskTransaction("network", request.IdempotencyKey)), nil
 	}
+	if conflict := validateScopedReservation(input, routePlan.State); conflict != nil {
+		return deviceNetworkPolicyFailure(conflict), nil
+	}
 	if conflict := networkPolicyStaticIPConflict(current.MAC, input, module.devicePolicy, ctx); conflict != nil {
 		return attachDeviceNetworkTransaction(deviceNetworkPolicyFailure(conflict), rejectedTaskTransaction("network", request.IdempotencyKey)), nil
 	}
@@ -208,15 +222,21 @@ func (module *DeviceNetworkPolicyModule) Apply(ctx context.Context, request *mod
 	staticChanged := !deviceStaticPolicyEqual(current.Static, request.Static)
 	routeChanged := len(routePlan.Public.Changes) > 0
 	if !staticChanged && !routeChanged {
-		_ = module.transactions.Advance(ctx, transaction, "verify", "unchanged", "")
+		if txErr := advanceTaskTransaction(ctx, module.transactions, transaction, "verify", "unchanged", ""); txErr != nil {
+			return attachDeviceNetworkTransaction(deviceNetworkPolicyFailure(txErr), transaction), nil
+		}
 		response, getErr := module.Get(ctx, request.DeviceID)
 		return attachDeviceNetworkTransaction(response, transaction), getErr
 	}
 	if module.writer == nil {
-		_ = module.transactions.Advance(ctx, transaction, "validate", "failed", "retry")
+		if txErr := advanceTaskTransaction(ctx, module.transactions, transaction, "validate", "failed", "retry"); txErr != nil {
+			return attachDeviceNetworkTransaction(deviceNetworkPolicyFailure(txErr), transaction), nil
+		}
 		return attachDeviceNetworkTransaction(deviceNetworkPolicyFailure(&models.DevicePolicyError{Code: "apply_failed", Message: "network policy writer is unavailable"}), transaction), nil
 	}
-	_ = module.transactions.Advance(ctx, transaction, "apply", "in_progress", "restore_task_snapshot")
+	if txErr := advanceTaskTransaction(ctx, module.transactions, transaction, "apply", "in_progress", "restore_task_snapshot"); txErr != nil {
+		return attachDeviceNetworkTransaction(deviceNetworkPolicyFailure(txErr), transaction), nil
+	}
 	if err := module.writer.Apply(ctx, input, routePlan); err != nil {
 		_ = module.effects.RecordFailure(ctx, request.DeviceID, request.TargetID, previousTarget, routePlan.State.Version, request.Static, "server_apply_failed")
 		status, stage, recovery := "rolled_back", "rollback", "retry"
@@ -227,7 +247,9 @@ func (module *DeviceNetworkPolicyModule) Apply(ctx context.Context, request *mod
 				recovery = "restore_task_snapshot"
 			}
 		}
-		_ = module.transactions.Advance(ctx, transaction, stage, status, recovery)
+		if txErr := advanceTaskTransaction(ctx, module.transactions, transaction, stage, status, recovery); txErr != nil {
+			return attachDeviceNetworkTransaction(deviceNetworkPolicyFailure(txErr), transaction), nil
+		}
 		response, getErr := module.Get(ctx, request.DeviceID)
 		if getErr != nil {
 			return nil, getErr
@@ -235,23 +257,29 @@ func (module *DeviceNetworkPolicyModule) Apply(ctx context.Context, request *mod
 		response.Result.Error = &models.DevicePolicyError{Code: status, Message: err.Error()}
 		return attachDeviceNetworkTransaction(response, transaction), nil
 	}
-	_ = module.transactions.Advance(ctx, transaction, "verify", "in_progress", "rebuild_observation_record")
+	if txErr := advanceTaskTransaction(ctx, module.transactions, transaction, "verify", "in_progress", "rebuild_observation_record"); txErr != nil {
+		return attachDeviceNetworkTransaction(deviceNetworkPolicyFailure(txErr), transaction), nil
+	}
 	response, err := module.Get(ctx, request.DeviceID)
 	if response != nil && response.Result != nil && response.Result.Policy != nil {
 		if recordErr := module.effects.RecordApplied(ctx, request.DeviceID, request.TargetID, response.Result.Policy.Version, request.Static); recordErr != nil {
-			_ = module.transactions.Advance(ctx, transaction, "recover", "recovery_required", "rebuild_observation_record")
+			if txErr := advanceTaskTransaction(ctx, module.transactions, transaction, "recover", "recovery_required", "rebuild_observation_record"); txErr != nil {
+				return attachDeviceNetworkTransaction(deviceNetworkPolicyFailure(txErr), transaction), nil
+			}
 			response.Result.Error = &models.DevicePolicyError{Code: "effect_record_failed", Message: "configuration was applied but its observation state could not be saved"}
 			return attachDeviceNetworkTransaction(response, transaction), nil
 		}
 		response, err = module.Get(ctx, request.DeviceID)
 		response.Result.Changed = true
 	}
-	_ = module.transactions.Advance(ctx, transaction, "verify", "committed", "")
+	if txErr := advanceTaskTransaction(ctx, module.transactions, transaction, "verify", "committed", ""); txErr != nil {
+		return attachDeviceNetworkTransaction(deviceNetworkPolicyFailure(txErr), transaction), nil
+	}
 	return attachDeviceNetworkTransaction(response, transaction), err
 }
 
 func (module *DeviceNetworkPolicyModule) currentTarget(ctx context.Context, mac string) (gatewayPolicySnapshot, string, error) {
-	state, err := module.gateway.store.ReadState(ctx)
+	state, err := module.gateway.readState(ctx)
 	if err != nil {
 		return gatewayPolicySnapshot{}, "", err
 	}
@@ -309,7 +337,7 @@ func networkPolicyStaticIPConflict(mac string, input StaticAssignmentWriteInput,
 	}
 	rules, err := policy.ListRules(ctx)
 	if err != nil || rules == nil || rules.Result == nil {
-		return nil
+		return &models.DevicePolicyError{Code: "configuration_unavailable", Message: "address reservations could not be checked; retry before applying"}
 	}
 	for _, rule := range rules.Result.Static {
 		if rule == nil || !rule.BindIP || strings.TrimSpace(rule.AssignedIP) != input.AssignedIP {

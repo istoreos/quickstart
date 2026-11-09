@@ -57,6 +57,13 @@ func (module *LanDeviceMigrationModule) Plan(ctx context.Context) (*models.LanDe
 }
 
 func (module *LanDeviceMigrationModule) Apply(ctx context.Context, request *models.LanDeviceMigrationRequest) (*models.LanDeviceMigrationResponse, error) {
+	locked, release, lockErr := lockLANWrite(ctx)
+	if lockErr != nil {
+		return nil, lockErr
+	}
+	defer release()
+	ctx = locked
+
 	module.mu.Lock()
 	defer module.mu.Unlock()
 	if module == nil || module.store == nil {
@@ -116,14 +123,14 @@ func (module *LanDeviceMigrationModule) plan(ctx context.Context) (lanDeviceMigr
 	}
 	items := cloneMigrationItems(snapshot.Items)
 	sort.Slice(items, func(i, j int) bool { return items[i].ID < items[j].ID })
-	version := versionLanDeviceMigration(items, snapshot.SourceVersions)
+	version := bindLANVersion(ctx, versionLanDeviceMigration(items, snapshot.SourceVersions))
 	plan := &models.LanDeviceMigrationPlan{
 		ModelVersion:   lanDeviceModelVersion,
 		Mode:           "adopt_in_place",
 		Version:        version,
 		AlreadyApplied: snapshot.AppliedVersion == version,
 		Items:          items,
-		SnapshotPaths:  []string{"/etc/config/dhcp", "/etc/config/eqos", "/etc/config/firewall", "/etc/config/floatip", "/etc/quickstart/device-profiles.json"},
+		SnapshotPaths:  lanMigrationPaths(ctx),
 	}
 	seenTargets := map[string]string{}
 	for _, item := range items {

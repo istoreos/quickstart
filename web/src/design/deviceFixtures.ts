@@ -21,7 +21,7 @@ export function deviceFixture(key:string,method:string,url:URL,body:any):{status
    if(key==='/lanctrl/v2/device-policy/')return ok({policy:policy(id)})
    if(key==='/lanctrl/v2/device-network-policy/')return ok({policy:network(id)})
    if(key==='/lanctrl/v2/device-profile/')return ok(profile(id))
-   if(key==='/lanctrl/v2/traffic-insights/')return ok({uploadBytes:1000000,downloadBytes:10000000,buckets:[],bandix:{state:'not_installed'}})
+   if(key==='/lanctrl/v2/traffic-insights/')return ok({uploadBytes:1000000,downloadBytes:10000000,buckets:[],bandix:{state:'not_installed'},legacyAccessReviewRequired:new URLSearchParams(location.search).get('legacy-quota')==='1'&&url.searchParams.get('network')==='lan1'})
    if(key==='/lanctrl/v2/device-groups/')return ok(groups)
    if(key==='/lanctrl/v2/advanced-network/')return ok({capabilities:{internet_access:{state:'available'},device_speed_limit:{state:speedCapability()},floating_gateway:{state:'disabled'},traffic_insights:{state:'available'}},events:[],webhook:{enabled:false,configured:false}})
    if(key==='/lanctrl/v2/gateway-targets/')return ok({targets,version:'demo-routes-1'})

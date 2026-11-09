@@ -40,6 +40,7 @@ type DeviceGroup struct {
 }
 
 type EffectiveGroupPolicy struct {
+	NetworkID      string            `json:"networkId,omitempty"`
 	DeviceID       string            `json:"deviceId"`
 	NetworkAccess  bool              `json:"networkAccess"`
 	Speed          *GroupSpeedPolicy `json:"speed"`
@@ -53,20 +54,23 @@ type EffectiveGroupPolicy struct {
 }
 
 type DeviceGroupEvent struct {
-	At       string `json:"at"`
-	DeviceID string `json:"deviceId,omitempty"`
-	State    string `json:"state"`
-	Reason   string `json:"reason,omitempty"`
+	NetworkID string `json:"networkId,omitempty"`
+	At        string `json:"at"`
+	DeviceID  string `json:"deviceId,omitempty"`
+	State     string `json:"state"`
+	Reason    string `json:"reason,omitempty"`
 }
 
 type DeviceGroupBatchItem struct {
-	DeviceID string   `json:"deviceId"`
-	Status   string   `json:"status"`
-	Reason   string   `json:"reason,omitempty"`
-	Sources  []string `json:"sources"`
+	NetworkID string   `json:"networkId,omitempty"`
+	DeviceID  string   `json:"deviceId"`
+	Status    string   `json:"status"`
+	Reason    string   `json:"reason,omitempty"`
+	Sources   []string `json:"sources"`
 }
 
 type DeviceGroupBatchResult struct {
+	NetworkID   string                  `json:"networkId,omitempty"`
 	Status      string                  `json:"status"`
 	Planned     int                     `json:"planned"`
 	Applied     int                     `json:"applied"`
@@ -79,6 +83,7 @@ type DeviceGroupBatchResult struct {
 }
 
 type DeviceGroupsResult struct {
+	NetworkID        string                  `json:"networkId,omitempty"`
 	GlobalPolicy     *GroupPolicy            `json:"globalPolicy"`
 	Groups           []*DeviceGroup          `json:"groups"`
 	DevicePolicies   map[string]*GroupPolicy `json:"devicePolicies"`

@@ -51,10 +51,10 @@ func (store *systemLanDeviceMigrationStore) Read(ctx context.Context) (lanDevice
 			Disposition: disposition, Summary: rule.Summary, Reason: reason,
 		})
 	}
-	for _, source := range []string{"/etc/config/dhcp", "/etc/config/eqos", "/etc/config/firewall", "/etc/config/floatip", defaultDeviceProfilePath} {
+	for _, source := range lanMigrationPaths(ctx) {
 		snapshot.SourceVersions[source] = hashOptionalMigrationFile(source)
 	}
-	receipt, exists, err := readMigrationReceipt(store.receiptPath)
+	receipt, exists, err := readMigrationReceipt(lanStatePath(store.receiptPath, selectedLAN(ctx)))
 	if err != nil {
 		return snapshot, err
 	}
@@ -64,30 +64,30 @@ func (store *systemLanDeviceMigrationStore) Read(ctx context.Context) (lanDevice
 	return snapshot, nil
 }
 
-func (store *systemLanDeviceMigrationStore) SnapshotReceipt(context.Context) ([]byte, bool, error) {
-	data, err := os.ReadFile(store.receiptPath)
+func (store *systemLanDeviceMigrationStore) SnapshotReceipt(ctx context.Context) ([]byte, bool, error) {
+	data, err := os.ReadFile(lanStatePath(store.receiptPath, selectedLAN(ctx)))
 	if errors.Is(err, os.ErrNotExist) {
 		return nil, false, nil
 	}
 	return data, err == nil, err
 }
 
-func (store *systemLanDeviceMigrationStore) Commit(_ context.Context, receipt lanDeviceMigrationReceipt) error {
+func (store *systemLanDeviceMigrationStore) Commit(ctx context.Context, receipt lanDeviceMigrationReceipt) error {
 	data, err := json.Marshal(receipt)
 	if err != nil {
 		return err
 	}
-	return persistMigrationReceipt(store.receiptPath, data)
+	return persistMigrationReceipt(lanStatePath(store.receiptPath, selectedLAN(ctx)), data)
 }
 
-func (store *systemLanDeviceMigrationStore) RestoreReceipt(_ context.Context, data []byte, existed bool) error {
+func (store *systemLanDeviceMigrationStore) RestoreReceipt(ctx context.Context, data []byte, existed bool) error {
 	if !existed {
-		if err := os.Remove(store.receiptPath); err != nil && !errors.Is(err, os.ErrNotExist) {
+		if err := os.Remove(lanStatePath(store.receiptPath, selectedLAN(ctx))); err != nil && !errors.Is(err, os.ErrNotExist) {
 			return err
 		}
 		return nil
 	}
-	return persistMigrationReceipt(store.receiptPath, data)
+	return persistMigrationReceipt(lanStatePath(store.receiptPath, selectedLAN(ctx)), data)
 }
 
 func readMigrationReceipt(path string) (lanDeviceMigrationReceipt, bool, error) {
@@ -143,4 +143,12 @@ func persistMigrationReceipt(path string, data []byte) error {
 		return err
 	}
 	return os.Rename(temporaryPath, path)
+}
+
+func lanMigrationPaths(ctx context.Context) []string {
+	paths := []string{"/etc/config/dhcp", "/etc/config/firewall", lanStatePath(defaultDeviceProfilePath, selectedLAN(ctx))}
+	if selectedLAN(ctx) == defaultLAN {
+		paths = append(paths, "/etc/config/eqos", "/etc/config/floatip")
+	}
+	return paths
 }

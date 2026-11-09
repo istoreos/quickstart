@@ -32,6 +32,16 @@ func NewDefaultLanFloatGatewayWriteService() *LanFloatGatewayWriteService {
 }
 
 func (svc *LanFloatGatewayWriteService) SetFloatGateway(ctx context.Context, input FloatGatewayWriteInput) error {
+	if err := requireDefaultFloatingLAN(ctx); err != nil {
+		return err
+	}
+	locked, release, lockErr := lockLANWrite(ctx)
+	if lockErr != nil {
+		return lockErr
+	}
+	defer release()
+	ctx = locked
+
 	if err := validateLegacyFloatGatewayInput(input); err != nil {
 		return err
 	}

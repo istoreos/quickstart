@@ -1,6 +1,9 @@
 package service
 
+import "github.com/istoreos/quickstart/backend/models"
+
 type StaticAssignmentWriteInput struct {
+	Scope              *models.LANScope
 	Action             string
 	AssignedMAC        string
 	AssignedIP         string

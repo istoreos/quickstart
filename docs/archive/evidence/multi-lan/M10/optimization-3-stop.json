@@ -1,0 +1,44 @@
+[
+  {
+    "host": "192.168.30.93",
+    "pid": 18431,
+    "removedNamespaces": [
+      "qsm10-1957fb",
+      "qsm10-1957fb-w",
+      "qsm10-1957fb-c1",
+      "qsm10-8d1561",
+      "qsm10-8d1561-w",
+      "qsm10-8d1561-c1",
+      "qsm10-8d1561-c2",
+      "qsm10-2f351b",
+      "qsm10-2f351b-w",
+      "qsm10-2f351b-c1",
+      "qsm10-2f351b-c2",
+      "qsm10-2f351b-c3",
+      "qsm10-2f351b-c4"
+    ],
+    "rootConfigurationUnchangedDuringCleanup": true,
+    "configurationFingerprint": "adde02c8504f35e503236612cfc4efd1db8c10d64a94d14d4780d63285055fe4  /etc/config/network\n645ef481477d427720b14ac3151bbb98a95e50ab0c1f61cf5fb28f9474f14030  /etc/config/dhcp\n0e6e820650b05481c25ec247a487b9ceae825cdc3d0f8cd9c3edae693fb0cf69  /etc/config/firewall\n"
+  },
+  {
+    "host": "192.168.30.7",
+    "pid": 18432,
+    "removedNamespaces": [
+      "qsm10-7e5313",
+      "qsm10-7e5313-w",
+      "qsm10-7e5313-c1",
+      "qsm10-04666e",
+      "qsm10-04666e-w",
+      "qsm10-04666e-c1",
+      "qsm10-04666e-c2",
+      "qsm10-7faf96",
+      "qsm10-7faf96-w",
+      "qsm10-7faf96-c1",
+      "qsm10-7faf96-c2",
+      "qsm10-7faf96-c3",
+      "qsm10-7faf96-c4"
+    ],
+    "rootConfigurationUnchangedDuringCleanup": true,
+    "configurationFingerprint": "92891e2f5cdcb6b2760550396b54aa1607efdc6ab273eb369a7d3a6aeedd006e  /etc/config/network\nc48d343a828753c33ee9c5b4fa3f7cf021ba278a87d4030efc536762410d8c77  /etc/config/dhcp\n91ddb146f8f131942650c28bc613a951141f636b93445ab7217dd10253abf9c8  /etc/config/firewall\n"
+  }
+]

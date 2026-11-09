@@ -1,0 +1,12 @@
+{
+  "host": "root@192.168.30.7",
+  "base": "/tmp/quickstart-multi-lan/m10-d9d676",
+  "status": "failed",
+  "checks": [],
+  "namespaceIsolation": true,
+  "rpcMetadata": "synthetic netifd/rpcd only",
+  "legacyQuickstartCommit": "66589b22f140615db97851b6c3b1eec7aad975d5",
+  "legacyEngineCommit": "54b5338ad8e03f46ba04387eb232aeb676ff68d2",
+  "error": "AssertionError({'result': {'globalPolicy': None, 'groups': [], 'devicePolicies': {}, 'effective': [], 'events': [], 'timezone': '', 'nextEvaluationAt': '', 'version': '', 'error': {'code': 'route_unavailable', 'message': '无法确认当前网络的上网路线'}}})",
+  "rootConfigurationUnchanged": true
+}

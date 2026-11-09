@@ -13,6 +13,7 @@ import (
 	"strings"
 
 	"github.com/digineo/go-uci"
+	"github.com/istoreos/quickstart/backend/models"
 )
 
 type defaultGatewayPolicyStore struct {
@@ -68,32 +69,52 @@ func (store *defaultGatewayPolicyStore) ReadState(ctx context.Context) (gatewayP
 	if err != nil {
 		return gatewayPolicySnapshot{}, err
 	}
-	if err := uci.LoadConfig("dhcp", true); err != nil {
+	tree := uci.NewTree(filepath.Dir(dhcpConfigPath))
+	if err := tree.LoadConfig("dhcp", true); err != nil {
 		return gatewayPolicySnapshot{}, err
 	}
-	sections, _ := uci.GetSections("dhcp", "host")
+	if selectedLANScope(ctx) != nil {
+		authority, probeErr := NewDefaultRouterContextModule().Get(ctx, selectedLAN(ctx))
+		if probeErr != nil || authority == nil || authority.Result == nil || authority.Result.DHCPAuthority != "local" {
+			dhcp.DhcpIgnore = true
+		}
+	}
+	sections, _ := tree.GetSections("dhcp", "host")
 	hosts := make([]gatewayPolicyHost, 0, len(sections))
 	for _, section := range sections {
-		mac, _ := uci.GetLast("dhcp", section, "mac")
-		tag, _ := uci.GetLast("dhcp", section, "tag")
+		if !dhcpHostInScope(tree, section, selectedLANScope(ctx)) {
+			continue
+		}
+		mac, _ := tree.GetLast("dhcp", section, "mac")
+		tag, _ := tree.GetLast("dhcp", section, "tag")
 		hosts = append(hosts, gatewayPolicyHost{SectionName: section, MAC: mac, TagName: tag})
 	}
 	data, err := os.ReadFile(dhcpConfigPath)
 	if err != nil {
 		return gatewayPolicySnapshot{}, err
 	}
-	prefixes, prefixErr := readSystemLANPrefixes()
-	if prefixErr != nil {
-		prefixes = nil
+	binding, err := scopedDHCPBinding(ctx, tree)
+	if err != nil {
+		return gatewayPolicySnapshot{}, err
+	}
+	var prefixes []netip.Prefix
+	if scope := selectedLANScope(ctx); scope != nil {
+		prefixes = scopeLANPrefixes(scope)
+	} else {
+		prefixes, _ = readSystemLANPrefixes()
 	}
 	sum := sha256.Sum256(data)
 	return gatewayPolicySnapshot{
+		Scope: selectedLANScope(ctx), DHCPSection: binding.Section, SharedNetworks: sharedDHCPNetworks(tree, binding),
 		LAN: lan, DHCP: dhcp, Hosts: hosts, Prefixes: prefixes,
 		UnreachableGateways: gatewayPolicyFailedNeighbors(ctx), Version: hex.EncodeToString(sum[:]),
 	}, nil
 }
 
 func (store *defaultGatewayPolicyStore) Apply(ctx context.Context, plan gatewayPolicyExecutionPlan) error {
+	if err := verifyScopedDHCPHostSupport(selectedLANScope(ctx)); err != nil {
+		return err
+	}
 	if plan.Public == nil || plan.Target == nil || len(plan.Public.Changes) == 0 {
 		return nil
 	}
@@ -140,7 +161,7 @@ func (store *defaultGatewayPolicyStore) ApplyTargetMutation(ctx context.Context,
 	var groupSnapshot []byte
 	var groupExisted bool
 	if store.groups != nil && plan.Public.Action == "delete" {
-		groupSnapshot, groupExisted, err = store.groups.snapshotRaw()
+		groupSnapshot, groupExisted, err = store.groups.forContext(ctx).snapshotRaw()
 		if err != nil {
 			return rollbackGatewayPolicy(ctx, snapshot, fmt.Errorf("snapshot gateway references: %w", err))
 		}
@@ -148,14 +169,14 @@ func (store *defaultGatewayPolicyStore) ApplyTargetMutation(ctx context.Context,
 		if plan.Replacement != nil && plan.Replacement.Public != nil {
 			replacementID = plan.Replacement.Public.ID
 		}
-		if err := store.groups.ReplaceGatewayTarget(plan.Target.Public.ID, replacementID, plan.GroupVersion); err != nil {
-			_ = store.groups.restoreRaw(groupSnapshot, groupExisted)
+		if err := store.groups.forContext(ctx).ReplaceGatewayTarget(plan.Target.Public.ID, replacementID, plan.GroupVersion); err != nil {
+			_ = store.groups.forContext(ctx).restoreRaw(groupSnapshot, groupExisted)
 			return rollbackGatewayPolicy(ctx, snapshot, fmt.Errorf("replace gateway references: %w", err))
 		}
 	}
 	if err := gatewayPolicyReload(ctx); err != nil {
 		if store.groups != nil && plan.Public.Action == "delete" {
-			_ = store.groups.restoreRaw(groupSnapshot, groupExisted)
+			_ = store.groups.forContext(ctx).restoreRaw(groupSnapshot, groupExisted)
 		}
 		return rollbackGatewayPolicy(ctx, snapshot, fmt.Errorf("reload dnsmasq: %w", err))
 	}
@@ -164,7 +185,7 @@ func (store *defaultGatewayPolicyStore) ApplyTargetMutation(ctx context.Context,
 
 func rollbackGatewayPolicy(ctx context.Context, snapshot dhcpConfigSnapshot, applyErr error) error {
 	if err := gatewayPolicyRestore(ctx, snapshot); err != nil {
-		return fmt.Errorf("%v; rollback failed: %w", applyErr, err)
+		return &networkRecoveryError{fmt.Errorf("%v; rollback failed: %w", applyErr, err)}
 	}
 	return applyErr
 }
@@ -213,6 +234,9 @@ func mutateGatewayPolicyConfigAt(configDir string, plan gatewayPolicyExecutionPl
 			return errors.New("built-in gateway target cannot be deleted")
 		}
 		tree.DelSection("dhcp", plan.Target.TagName)
+		if err := compileScopedDHCPHosts(tree); err != nil {
+			return err
+		}
 		return tree.Commit()
 	}
 	if plan.Public.Action != "assign" {
@@ -223,6 +247,9 @@ func mutateGatewayPolicyConfigAt(configDir string, plan gatewayPolicyExecutionPl
 			if err := tree.AddSection("dhcp", plan.Target.TagName, "tag"); err != nil {
 				return err
 			}
+		}
+		if plan.State.Scope != nil && !tree.Set("dhcp", plan.Target.TagName, "quickstart_network", plan.State.Scope.NetworkID) {
+			return errors.New("set gateway target network")
 		}
 		if plan.Target.TagTitle != "" && !tree.Set("dhcp", plan.Target.TagName, "tag_title", plan.Target.TagTitle) {
 			return errors.New("set gateway target title")
@@ -238,13 +265,13 @@ func mutateGatewayPolicyConfigAt(configDir string, plan gatewayPolicyExecutionPl
 	sections, _ := tree.GetSections("dhcp", "host")
 	for _, section := range sections {
 		mac, _ := tree.GetLast("dhcp", section, "mac")
-		if normalizeInventoryMAC(mac) == normalizeInventoryMAC(plan.MAC) {
+		if dhcpHostInScope(tree, section, plan.State.Scope) && normalizeInventoryMAC(mac) == normalizeInventoryMAC(plan.MAC) {
 			hostSection = section
 			break
 		}
 	}
 	if hostSection == "" {
-		hostSection = "quickstart_" + strings.ToLower(strings.ReplaceAll(plan.MAC, ":", ""))
+		hostSection = scopedDHCPSectionName(plan.State.Scope, "quickstart_"+strings.ToLower(strings.ReplaceAll(plan.MAC, ":", "")))
 		tree.DelSection("dhcp", hostSection)
 		if err := tree.AddSection("dhcp", hostSection, "host"); err != nil {
 			return err
@@ -252,6 +279,9 @@ func mutateGatewayPolicyConfigAt(configDir string, plan gatewayPolicyExecutionPl
 		if !tree.Set("dhcp", hostSection, "mac", strings.ToUpper(plan.MAC)) {
 			return errors.New("set gateway assignment MAC")
 		}
+	}
+	if err := bindDHCPHost(tree, hostSection, plan.State.Scope); err != nil {
+		return err
 	}
 	if plan.Target.TagName == "" {
 		tree.Del("dhcp", hostSection, "tag")
@@ -264,6 +294,9 @@ func mutateGatewayPolicyConfigAt(configDir string, plan gatewayPolicyExecutionPl
 			return errors.New("set gateway assignment title")
 		}
 	}
+	if err := compileScopedDHCPHosts(tree); err != nil {
+		return err
+	}
 	return tree.Commit()
 }
 
@@ -274,20 +307,26 @@ func mutateGatewayTargetConfigAt(configDir string, plan gatewayTargetMutationExe
 	}
 	switch plan.Public.Action {
 	case "create", "update":
-		if err := materializeGatewayTargetTree(tree, plan.Target); err != nil {
+		if err := materializeGatewayTargetTree(tree, plan.Target, plan.State.Scope); err != nil {
 			return err
+		}
+		if plan.State.Scope != nil && !tree.Set("dhcp", plan.Target.TagName, "quickstart_network", plan.State.Scope.NetworkID) {
+			return errors.New("set gateway target network")
 		}
 	case "delete":
 		if plan.Target.TagName == "" {
 			return errors.New("built-in gateway target cannot be deleted")
 		}
 		if plan.Replacement != nil && plan.Replacement.TagName != "" {
-			if err := materializeGatewayTargetTree(tree, plan.Replacement); err != nil {
+			if err := materializeGatewayTargetTree(tree, plan.Replacement, plan.State.Scope); err != nil {
 				return err
 			}
 		}
 		sections, _ := tree.GetSections("dhcp", "host")
 		for _, section := range sections {
+			if !dhcpHostInScope(tree, section, plan.State.Scope) {
+				continue
+			}
 			tag, _ := tree.GetLast("dhcp", section, "tag")
 			if tag != plan.Target.TagName {
 				continue
@@ -309,19 +348,25 @@ func mutateGatewayTargetConfigAt(configDir string, plan gatewayTargetMutationExe
 			if plan.Replacement != nil && plan.Replacement.Public != nil && plan.Replacement.Public.Gateway != "" {
 				gateway = plan.Replacement.Public.Gateway
 			}
-			tree.Del("dhcp", "lan", "dhcp_option")
-			if gateway != "" && gateway != plan.State.LAN.LanAddr && !tree.SetType("dhcp", "lan", "dhcp_option", uci.TypeList, gatewayAndDNSOptions(gateway)...) {
-				return errors.New("set replacement LAN default route")
+			section := plan.State.DHCPSection
+			if section == "" {
+				section = defaultLAN
+			}
+			if err := setDHCPGatewayOptions(tree, section, gateway, plan.State.LAN.LanAddr); err != nil {
+				return err
 			}
 		}
 		tree.DelSection("dhcp", plan.Target.TagName)
 	default:
 		return errors.New("unsupported gateway target mutation")
 	}
+	if err := compileScopedDHCPHosts(tree); err != nil {
+		return err
+	}
 	return tree.Commit()
 }
 
-func materializeGatewayTargetTree(tree uci.Tree, target *gatewayTargetDescriptor) error {
+func materializeGatewayTargetTree(tree uci.Tree, target *gatewayTargetDescriptor, scopes ...*models.LANScope) error {
 	if target == nil || target.TagName == "" {
 		return nil
 	}
@@ -329,6 +374,9 @@ func materializeGatewayTargetTree(tree uci.Tree, target *gatewayTargetDescriptor
 		if err := tree.AddSection("dhcp", target.TagName, "tag"); err != nil {
 			return err
 		}
+	}
+	if len(scopes) > 0 && scopes[0] != nil && !tree.Set("dhcp", target.TagName, "quickstart_network", scopes[0].NetworkID) {
+		return errors.New("set gateway target network")
 	}
 	if !tree.Set("dhcp", target.TagName, "tag_title", target.TagTitle) ||
 		!tree.Set("dhcp", target.TagName, "AutoCreated", "1") ||

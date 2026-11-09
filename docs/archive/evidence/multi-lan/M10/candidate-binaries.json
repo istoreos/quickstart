@@ -1,0 +1,20 @@
+[
+  {
+    "host": "192.168.30.93",
+    "architecture": "arm64",
+    "path": "/tmp/quickstart-multi-lan/m10-candidate-a0e72f803801/quickstart",
+    "sha256": "a0e72f8038013548222be3520f32e83ca4f5f6770990252d50607d2379006eb6",
+    "versionOutput": "0.17.1-rc20261028 multi-lan-c0b76286e953 2026-11-08T20:18:36Z",
+    "rootConfigurationUnchanged": true,
+    "scope": "staged executable and real version command; service business integration is separately recorded"
+  },
+  {
+    "host": "192.168.30.7",
+    "architecture": "amd64",
+    "path": "/tmp/quickstart-multi-lan/m10-candidate-684c7233616c/quickstart",
+    "sha256": "684c7233616c584c727ae2b0a2b15824883ad01c8104c5cabbb93812e3998a09",
+    "versionOutput": "0.17.1-rc20261028 multi-lan-c0b76286e953 2026-11-08T20:18:36Z",
+    "rootConfigurationUnchanged": true,
+    "scope": "staged executable and real version command; service business integration is separately recorded"
+  }
+]

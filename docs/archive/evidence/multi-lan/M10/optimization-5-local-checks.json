@@ -1,0 +1,23 @@
+{
+  "status": "passed",
+  "checkedAt": "2026-11-09T04:41:46.337914+00:00",
+  "checks": [
+    {
+      "command": "go test ./...",
+      "result": "passed; service 6.456s",
+      "log": "optimization-5-go-test.log"
+    },
+    {
+      "command": "go test -race ./service",
+      "result": "passed; 36.016s",
+      "log": "optimization-5-go-race.log"
+    },
+    {
+      "command": "git diff --check",
+      "result": "passed"
+    }
+  ],
+  "cacheEntry": "/var/cache/build-cache/run.sh",
+  "candidateBuilt": "linux/amd64 and linux/arm64; CGO_ENABLED=0",
+  "probeSyntax": "all multi-lan Python probes parsed; NetPolicy git diff --check passed"
+}

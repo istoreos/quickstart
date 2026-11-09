@@ -54,6 +54,7 @@
 
 :root {
     @include light-variable;
+    color-scheme: light;
 }
 
 // 光亮模式
@@ -67,6 +68,7 @@
 @media (prefers-color-scheme: dark) {
     :root {
         @include dark-variable;
+        color-scheme: dark;
     }
 
     #app {
@@ -92,12 +94,18 @@
 
 
 // 跟随系统
-body[theme="normal"] {}
-
-body[theme="dark"] {
-    @include dark-variable;
+body[theme="normal"] {
+    color-scheme: light dark;
 }
 
-body[theme="light"] {
+body[theme="dark"],
+body[data-quickstart-theme="dark"] {
+    @include dark-variable;
+    color-scheme: dark;
+}
+
+body[theme="light"],
+body[data-quickstart-theme="light"] {
     @include light-variable;
+    color-scheme: light;
 }

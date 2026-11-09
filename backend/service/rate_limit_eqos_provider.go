@@ -78,7 +78,7 @@ func (provider *eqosRateLimitProvider) Apply(ctx context.Context, target rateLim
 	return deviceRestrictionApply(ctx, []string{"eqos"})
 }
 
-type systemRateLimitRuntimeInspector struct{}
+type systemRateLimitRuntimeInspector struct{ configDir string }
 
 var rateLimitCommandOutput = func(ctx context.Context, name string, args ...string) ([]byte, error) {
 	return exec.CommandContext(ctx, name, args...).CombinedOutput()
@@ -96,8 +96,12 @@ func (*systemRateLimitRuntimeInspector) Loaded(ctx context.Context, _ string) (b
 	return strings.Contains(text, "htb") || strings.Contains(text, "ingress"), nil
 }
 
-func (*systemRateLimitRuntimeInspector) Offload(_ context.Context) (string, error) {
-	tree := uci.NewTree(filepath.Dir(dhcpConfigPath))
+func (inspector *systemRateLimitRuntimeInspector) Offload(_ context.Context) (string, error) {
+	dir := inspector.configDir
+	if dir == "" {
+		dir = filepath.Dir(dhcpConfigPath)
+	}
+	tree := uci.NewTree(dir)
 	if err := tree.LoadConfig("firewall", true); err != nil {
 		return "unknown", err
 	}

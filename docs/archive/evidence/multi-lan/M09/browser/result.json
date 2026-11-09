@@ -1,0 +1,50 @@
+{
+  "status": "passed",
+  "results": [
+    {
+      "name": "single LAN hides selector and retains three tabs",
+      "passed": true
+    },
+    {
+      "name": "custom single LAN works without lan or br-lan",
+      "passed": true
+    },
+    {
+      "name": "same MAC rows have independent keys, scoped drawers and row writes",
+      "passed": true
+    },
+    {
+      "name": "network change discards drawer and draft, refresh preserves selection",
+      "passed": true
+    },
+    {
+      "name": "slow old responses cannot overwrite the newly selected network",
+      "passed": true
+    },
+    {
+      "name": "aggregate network settings require an explicit LAN",
+      "passed": true
+    },
+    {
+      "name": "invalid URL never redirects writes to a different LAN",
+      "passed": true
+    },
+    {
+      "name": "401,403 and service errors do not fall back to default LAN",
+      "passed": true
+    },
+    {
+      "name": "unsupported network endpoint preserves old single LAN API",
+      "passed": true
+    },
+    {
+      "name": "390px light and dark layouts remain usable with keyboard",
+      "passed": true
+    },
+    {
+      "name": "production bundle integrates real Go scope boundary and persistent profile service",
+      "passed": true
+    }
+  ],
+  "errors": []
+}

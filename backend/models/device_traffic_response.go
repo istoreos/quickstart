@@ -2,6 +2,8 @@ package models
 
 // swagger:model deviceTrafficItem
 type DeviceTrafficItem struct {
+	NetworkID       string `json:"networkId"`
+	CounterEpoch    string `json:"counterEpoch,omitempty"`
 	DeviceID        string `json:"deviceId"`
 	UploadSpeed     int64  `json:"uploadSpeed"`
 	DownloadSpeed   int64  `json:"downloadSpeed"`
@@ -14,8 +16,9 @@ type DeviceTrafficItem struct {
 
 // swagger:model deviceTrafficResult
 type DeviceTrafficResult struct {
-	Items  []*DeviceTrafficItem   `json:"items"`
-	Health *DeviceInventoryHealth `json:"health"`
+	NetworkHealth map[string]*DeviceInventoryHealth `json:"networkHealth,omitempty"`
+	Items         []*DeviceTrafficItem              `json:"items"`
+	Health        *DeviceInventoryHealth            `json:"health"`
 }
 
 // swagger:model deviceTrafficResponse

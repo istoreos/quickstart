@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"path/filepath"
 	"strings"
 
 	"github.com/digineo/go-uci"
@@ -97,10 +98,20 @@ func buildStaticAssignmentItem(
 }
 
 func (reader *defaultStaticAssignmentListReader) ReadStaticAssignments(ctx context.Context, tagList []*models.LANCtrlDhcpTagInfo) ([]*models.LANStaticAssigned, error) {
-	_ = ctx
-	lanStaticDeviceListLoadConfig("dhcp", true)
+	getLast := lanStaticDeviceListGetLast
+	getSections := lanStaticDeviceListGetSections
+	var tree uci.Tree
+	if selectedLANScope(ctx) != nil {
+		tree = uci.NewTree(filepath.Dir(dhcpConfigPath))
+		if err := tree.LoadConfig("dhcp", true); err != nil {
+			return nil, err
+		}
+		getLast, getSections = tree.GetLast, tree.GetSections
+	} else {
+		lanStaticDeviceListLoadConfig("dhcp", true)
+	}
 
-	hostSections, ok := lanStaticDeviceListGetSections("dhcp", "host")
+	hostSections, ok := getSections("dhcp", "host")
 	if !ok {
 		return []*models.LANStaticAssigned{}, nil
 	}
@@ -108,11 +119,14 @@ func (reader *defaultStaticAssignmentListReader) ReadStaticAssignments(ctx conte
 	tagMap := buildStaticAssignmentTagMap(tagList)
 	items := make([]*models.LANStaticAssigned, 0, len(hostSections))
 	for _, sectionName := range hostSections {
-		mac, macOk := lanStaticDeviceListGetLast("dhcp", sectionName, "mac")
-		ip, ipOk := lanStaticDeviceListGetLast("dhcp", sectionName, "ip")
-		tag, tagOk := lanStaticDeviceListGetLast("dhcp", sectionName, "tag")
-		tagTitle, tagTitleOk := lanStaticDeviceListGetLast("dhcp", sectionName, "tag_title")
-		name, _ := lanStaticDeviceListGetLast("dhcp", sectionName, "name")
+		if tree != nil && !dhcpHostInScope(tree, sectionName, selectedLANScope(ctx)) {
+			continue
+		}
+		mac, macOk := getLast("dhcp", sectionName, "mac")
+		ip, ipOk := getLast("dhcp", sectionName, "ip")
+		tag, tagOk := getLast("dhcp", sectionName, "tag")
+		tagTitle, tagTitleOk := getLast("dhcp", sectionName, "tag_title")
+		name, _ := getLast("dhcp", sectionName, "name")
 
 		item, ok := buildStaticAssignmentItem(mac, ip, ipOk, name, tag, tagOk, tagTitle, tagTitleOk, tagMap)
 		if !ok || !macOk {

@@ -1,0 +1,102 @@
+{
+  "status": "passed",
+  "apis": {
+    "networks": {
+      "networkIds": [
+        "lan",
+        "lan1",
+        "lan2"
+      ],
+      "networks": [
+        {
+          "networkId": "lan",
+          "displayName": "lan",
+          "device": "br-lan",
+          "aliases": [],
+          "state": "up",
+          "ipv4Prefixes": [
+            "192.168.100.0/24"
+          ],
+          "ipv6Prefixes": [
+            "fdac:cf1:fa0f::/60"
+          ],
+          "firewallZones": [
+            "lan"
+          ],
+          "dhcpBindings": [
+            {
+              "runtimeInstance": "cfg01411c",
+              "section": "lan",
+              "instance": "@dnsmasq[0]",
+              "leaseFile": "/tmp/dhcp.leases"
+            }
+          ],
+          "version": "c8229cf412dcd23dbe06125a60d25fc0c925ff578dc1b80ab3f05bf520ca7255"
+        },
+        {
+          "networkId": "lan1",
+          "displayName": "lan1",
+          "device": "eth3",
+          "aliases": [],
+          "state": "up",
+          "ipv4Prefixes": [],
+          "ipv6Prefixes": [],
+          "firewallZones": [
+            "lan"
+          ],
+          "dhcpBindings": [],
+          "version": "05decb374277ceb819dbc45377d0ce4effe7fe52ee506e933e73951206ccc112",
+          "readOnlyReason": "network_address_unavailable"
+        },
+        {
+          "networkId": "lan2",
+          "displayName": "lan2",
+          "device": "eth2",
+          "aliases": [],
+          "state": "up",
+          "ipv4Prefixes": [],
+          "ipv6Prefixes": [],
+          "firewallZones": [
+            "lan"
+          ],
+          "dhcpBindings": [],
+          "version": "5931a09ad066943b92da2205196896107201ede8b6697c15540095fa47ed6fff",
+          "readOnlyReason": "network_address_unavailable"
+        }
+      ]
+    },
+    "devices:all": {
+      "deviceCount": 1,
+      "health": {
+        "state": "ready"
+      },
+      "allItemsInSelectedNetwork": true
+    },
+    "devices:lan": {
+      "deviceCount": 1,
+      "health": {
+        "state": "ready"
+      },
+      "allItemsInSelectedNetwork": true
+    },
+    "devices:lan1": {
+      "deviceCount": 0,
+      "health": {
+        "state": "ready"
+      },
+      "allItemsInSelectedNetwork": true
+    },
+    "devices:lan2": {
+      "deviceCount": 0,
+      "health": {
+        "state": "ready"
+      },
+      "allItemsInSelectedNetwork": true
+    },
+    "router-context": {
+      "responded": true
+    }
+  },
+  "checkedAt": "2026-11-09T10:20:23.758003+00:00",
+  "temporarySessionDestroyed": true
+}

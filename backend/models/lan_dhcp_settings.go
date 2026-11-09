@@ -14,6 +14,7 @@ type LanDHCPConflict struct {
 }
 
 type LanDHCPSettingsResult struct {
+	AffectedNetworks []string           `json:"affectedNetworks,omitempty"`
 	Settings         *LanDHCPSettings   `json:"settings,omitempty"`
 	Version          string             `json:"version"`
 	Editable         bool               `json:"editable"`

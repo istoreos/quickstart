@@ -1,7 +1,6 @@
 package service
 
 import (
-	"bufio"
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
@@ -27,6 +26,8 @@ var errLanDHCPRecoveryRequired = errors.New("DHCP settings recovery required")
 var lanDHCPLeaseTimePattern = regexp.MustCompile(`^[1-9][0-9]*[mh]$`)
 
 type lanDHCPSettingsSnapshot struct {
+	DHCPSection        string
+	SharedNetworks     []string
 	Settings           *models.LanDHCPSettings
 	Prefix             netip.Prefix
 	RouterAddress      string
@@ -67,13 +68,13 @@ func NewDefaultLanDHCPSettingsModule(gateway *GatewayPolicyModule, routerContext
 }
 
 func (module *LanDHCPSettingsModule) Get(ctx context.Context) (*models.LanDHCPSettingsResponse, error) {
-	state, err := module.store.Read(ctx)
+	state, err := module.readState(ctx)
 	if err != nil {
 		return nil, err
 	}
 	editable := lanDHCPSettingsEditable(state)
 	result := &models.LanDHCPSettingsResult{
-		Settings: state.Settings, Version: state.Version, Editable: editable, AffectedDevices: state.AffectedDevices,
+		Settings: state.Settings, Version: state.Version, Editable: editable, AffectedNetworks: state.SharedNetworks, AffectedDevices: state.AffectedDevices,
 		Conflicts: []*models.LanDHCPConflict{}, ReloadServices: []string{},
 	}
 	if !editable {
@@ -91,6 +92,13 @@ func (module *LanDHCPSettingsModule) Plan(ctx context.Context, request *models.L
 }
 
 func (module *LanDHCPSettingsModule) Apply(ctx context.Context, request *models.LanDHCPSettingsApplyRequest) (*models.LanDHCPSettingsResponse, error) {
+	locked, release, lockErr := lockLANWrite(ctx)
+	if lockErr != nil {
+		return nil, lockErr
+	}
+	defer release()
+	ctx = locked
+
 	module.mu.Lock()
 	defer module.mu.Unlock()
 	plan, err := module.plan(ctx, request)
@@ -118,34 +126,50 @@ func (module *LanDHCPSettingsModule) Apply(ctx context.Context, request *models.
 	}
 	if begin.Replay {
 		plan.Public.Changed = false
+		plan.Public.Error = failedTaskReplay(begin.Transaction)
+		if plan.Public.Error != nil {
+			plan.Public.CanApply = false
+		}
 		return &models.LanDHCPSettingsResponse{Result: plan.Public}, nil
 	}
 	if lanDHCPSettingsEqual(plan.State.Settings, plan.Desired) {
-		_ = module.transactions.Advance(ctx, begin.Transaction, "verify", "unchanged", "")
+		if txErr := advanceTaskTransaction(ctx, module.transactions, begin.Transaction, "verify", "unchanged", ""); txErr != nil {
+			plan.Public.Error = txErr
+			return &models.LanDHCPSettingsResponse{Result: plan.Public}, nil
+		}
 		return &models.LanDHCPSettingsResponse{Result: plan.Public}, nil
 	}
-	_ = module.transactions.Advance(ctx, begin.Transaction, "apply", "in_progress", "restore_task_snapshot")
+	if txErr := advanceTaskTransaction(ctx, module.transactions, begin.Transaction, "apply", "in_progress", "restore_task_snapshot"); txErr != nil {
+		plan.Public.Error = txErr
+		return &models.LanDHCPSettingsResponse{Result: plan.Public}, nil
+	}
 	if err := module.store.Apply(ctx, plan); err != nil {
 		status, recovery := "rolled_back", "retry"
 		if errors.Is(err, errLanDHCPRecoveryRequired) {
 			status, recovery = "recovery_required", "restore_task_snapshot"
 		}
-		_ = module.transactions.Advance(ctx, begin.Transaction, "rollback", status, recovery)
+		if txErr := advanceTaskTransaction(ctx, module.transactions, begin.Transaction, "rollback", status, recovery); txErr != nil {
+			plan.Public.Error = txErr
+			return &models.LanDHCPSettingsResponse{Result: plan.Public}, nil
+		}
 		plan.Public.Error = &models.DevicePolicyError{Code: status, Message: err.Error()}
 		return &models.LanDHCPSettingsResponse{Result: plan.Public}, nil
 	}
 	plan.Public.Changed = true
-	_ = module.transactions.Advance(ctx, begin.Transaction, "verify", "committed", "")
+	if txErr := advanceTaskTransaction(ctx, module.transactions, begin.Transaction, "verify", "committed", ""); txErr != nil {
+		plan.Public.Error = txErr
+		return &models.LanDHCPSettingsResponse{Result: plan.Public}, nil
+	}
 	return &models.LanDHCPSettingsResponse{Result: plan.Public}, nil
 }
 
 func (module *LanDHCPSettingsModule) plan(ctx context.Context, request *models.LanDHCPSettingsApplyRequest) (lanDHCPSettingsExecutionPlan, error) {
-	state, err := module.store.Read(ctx)
+	state, err := module.readState(ctx)
 	if err != nil {
 		return lanDHCPSettingsExecutionPlan{}, err
 	}
 	result := &models.LanDHCPSettingsResult{
-		Settings: state.Settings, Version: state.Version, Editable: lanDHCPSettingsEditable(state),
+		Settings: state.Settings, Version: state.Version, Editable: lanDHCPSettingsEditable(state), AffectedNetworks: state.SharedNetworks,
 		AffectedDevices: state.AffectedDevices, Conflicts: []*models.LanDHCPConflict{}, ReloadServices: []string{"dnsmasq"},
 	}
 	plan := lanDHCPSettingsExecutionPlan{Public: result, State: state}
@@ -245,25 +269,28 @@ func (store *defaultLanDHCPSettingsStore) Read(ctx context.Context) (lanDHCPSett
 	if err := tree.LoadConfig("network", true); err != nil {
 		return lanDHCPSettingsSnapshot{}, err
 	}
-	lanAddress, _ := tree.GetLast("network", "lan", "ipaddr")
-	netmask, _ := tree.GetLast("network", "lan", "netmask")
-	prefix, err := prefixFromAddressAndMask(lanAddress, netmask)
+	binding, err := scopedDHCPBinding(ctx, tree)
 	if err != nil {
 		return lanDHCPSettingsSnapshot{}, err
 	}
-	startRaw, _ := tree.GetLast("dhcp", "lan", "start")
-	limitRaw, _ := tree.GetLast("dhcp", "lan", "limit")
+	section := binding.Section
+	lanAddress, prefix, err := scopedIPv4(ctx, tree)
+	if err != nil {
+		return lanDHCPSettingsSnapshot{}, err
+	}
+	startRaw, _ := tree.GetLast("dhcp", section, "start")
+	limitRaw, _ := tree.GetLast("dhcp", section, "limit")
 	poolStart, poolEnd := poolFromOffsets(prefix, startRaw, limitRaw)
-	leaseTime, _ := tree.GetLast("dhcp", "lan", "leasetime")
+	leaseTime, _ := tree.GetLast("dhcp", section, "leasetime")
 	if leaseTime == "" {
 		leaseTime = "12h"
 	}
-	ignore, _ := tree.GetLast("dhcp", "lan", "ignore")
-	dhcpv4, _ := tree.GetLast("dhcp", "lan", "dhcpv4")
-	authority := "local"
+	ignore, _ := tree.GetLast("dhcp", section, "ignore")
+	dhcpv4, _ := tree.GetLast("dhcp", section, "dhcpv4")
+	authority := "unknown"
 	topologyPosition := ""
 	if store.routerContext != nil {
-		if response, contextErr := store.routerContext.Get(ctx, "lan"); contextErr == nil && response != nil && response.Result != nil {
+		if response, contextErr := store.routerContext.Get(ctx, selectedLAN(ctx)); contextErr == nil && response != nil && response.Result != nil {
 			authority = response.Result.DHCPAuthority
 			topologyPosition = response.Result.TopologyPosition
 		}
@@ -272,7 +299,7 @@ func (store *defaultLanDHCPSettingsStore) Read(ctx context.Context) (lanDHCPSett
 	defaultTarget := "self"
 	var dhcpState *LanDhcpState
 	if store.gateway != nil {
-		if gatewayState, gatewayErr := store.gateway.store.ReadState(ctx); gatewayErr == nil {
+		if gatewayState, gatewayErr := store.gateway.readState(ctx); gatewayErr == nil {
 			dhcpState = gatewayState.DHCP
 			index := buildGatewayTargetIndex(gatewayState)
 			for id, target := range index.targets {
@@ -307,6 +334,9 @@ func (store *defaultLanDHCPSettingsStore) Read(ctx context.Context) (lanDHCPSett
 	}
 	sections, _ := tree.GetSections("dhcp", "host")
 	for _, section := range sections {
+		if !dhcpHostInScope(tree, section, selectedLANScope(ctx)) {
+			continue
+		}
 		if address, ok := tree.GetLast("dhcp", section, "ip"); ok && net.ParseIP(address) != nil {
 			protected[address] = "address_reservation"
 		}
@@ -317,8 +347,9 @@ func (store *defaultLanDHCPSettingsStore) Read(ctx context.Context) (lanDHCPSett
 	}
 	sum := sha256.Sum256(raw)
 	return lanDHCPSettingsSnapshot{
+		DHCPSection: section, SharedNetworks: sharedDHCPNetworks(tree, binding),
 		Settings: &models.LanDHCPSettings{Enabled: dhcpIPv4ServingEnabled(ignore, dhcpv4), PoolStart: poolStart, PoolEnd: poolEnd, LeaseTime: leaseTime, DefaultTargetID: defaultTarget},
-		Prefix:   prefix, RouterAddress: lanAddress, Authority: authority, TopologyPosition: topologyPosition, Version: hex.EncodeToString(sum[:]), AffectedDevices: countDHCPLeases("/tmp/dhcp.leases"), ProtectedAddresses: protected, Targets: targets,
+		Prefix:   prefix, RouterAddress: lanAddress, Authority: authority, TopologyPosition: topologyPosition, Version: hex.EncodeToString(sum[:]), AffectedDevices: scopedDHCPLeaseCount(binding.LeaseFile, prefix), ProtectedAddresses: protected, Targets: targets,
 	}, nil
 }
 
@@ -347,26 +378,29 @@ func mutateLanDHCPSettingsAt(configDir string, plan lanDHCPSettingsExecutionPlan
 	if plan.Desired == nil {
 		return errors.New("DHCP settings are required")
 	}
+	section := plan.State.DHCPSection
+	if section == "" {
+		section = defaultLAN
+	}
 	tree := uci.NewTree(configDir)
 	if err := tree.LoadConfig("dhcp", true); err != nil {
 		return err
 	}
 	start := ipv4Ordinal(netip.MustParseAddr(plan.Desired.PoolStart)) - ipv4Ordinal(plan.State.Prefix.Masked().Addr())
 	end := ipv4Ordinal(netip.MustParseAddr(plan.Desired.PoolEnd)) - ipv4Ordinal(plan.State.Prefix.Masked().Addr())
-	if !tree.Set("dhcp", "lan", "start", strconv.FormatUint(uint64(start), 10)) ||
-		!tree.Set("dhcp", "lan", "limit", strconv.FormatUint(uint64(end-start+1), 10)) ||
-		!tree.Set("dhcp", "lan", "leasetime", plan.Desired.LeaseTime) {
+	if !tree.Set("dhcp", section, "start", strconv.FormatUint(uint64(start), 10)) ||
+		!tree.Set("dhcp", section, "limit", strconv.FormatUint(uint64(end-start+1), 10)) ||
+		!tree.Set("dhcp", section, "leasetime", plan.Desired.LeaseTime) {
 		return errors.New("set DHCP address pool")
 	}
 	if plan.Desired.Enabled {
-		tree.Del("dhcp", "lan", "ignore")
-		tree.Del("dhcp", "lan", "dhcpv4")
-	} else if !tree.Set("dhcp", "lan", "ignore", "1") {
+		tree.Del("dhcp", section, "ignore")
+		tree.Del("dhcp", section, "dhcpv4")
+	} else if !tree.Set("dhcp", section, "ignore", "1") {
 		return errors.New("disable DHCP")
 	}
-	tree.Del("dhcp", "lan", "dhcp_option")
-	if plan.DefaultGateway != "" && plan.DefaultGateway != plan.State.RouterAddress && !tree.SetType("dhcp", "lan", "dhcp_option", uci.TypeList, gatewayAndDNSOptions(plan.DefaultGateway)...) {
-		return errors.New("set default Internet Path")
+	if err := setDHCPGatewayOptions(tree, section, plan.DefaultGateway, plan.State.RouterAddress); err != nil {
+		return err
 	}
 	return tree.Commit()
 }
@@ -406,19 +440,10 @@ func ordinalIPv4(value uint32) netip.Addr {
 	return netip.AddrFrom4([4]byte{byte(value >> 24), byte(value >> 16), byte(value >> 8), byte(value)})
 }
 
-func countDHCPLeases(path string) int64 {
-	file, err := os.Open(path)
-	if err != nil {
-		return 0
+func (module *LanDHCPSettingsModule) readState(ctx context.Context) (lanDHCPSettingsSnapshot, error) {
+	state, err := module.store.Read(ctx)
+	if err == nil {
+		state.Version = bindLANVersion(ctx, state.Version)
 	}
-	defer file.Close()
-	seen := map[string]bool{}
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		fields := strings.Fields(scanner.Text())
-		if len(fields) >= 3 {
-			seen[strings.ToLower(fields[1])] = true
-		}
-	}
-	return int64(len(seen))
+	return state, err
 }

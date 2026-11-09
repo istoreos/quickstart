@@ -4,10 +4,12 @@ package models
 // only. Device identifiers, addresses, names and traffic contents must never be
 // exposed by this endpoint.
 type DeviceRuntimeDiagnostics struct {
-	Inventory *DeviceInventoryRuntimeDiagnostics `json:"inventory"`
-	Traffic   *DeviceTrafficRuntimeDiagnostics   `json:"traffic"`
-	Sampler   *DeviceSamplerRuntimeDiagnostics   `json:"sampler"`
-	OUI       *DeviceOUIRuntimeDiagnostics       `json:"oui"`
+	ResourceScope string                             `json:"resourceScope"`
+	SamplerScope  string                             `json:"samplerScope"`
+	Inventory     *DeviceInventoryRuntimeDiagnostics `json:"inventory"`
+	Traffic       *DeviceTrafficRuntimeDiagnostics   `json:"traffic"`
+	Sampler       *DeviceSamplerRuntimeDiagnostics   `json:"sampler"`
+	OUI           *DeviceOUIRuntimeDiagnostics       `json:"oui"`
 }
 
 type DeviceInventoryRuntimeDiagnostics struct {

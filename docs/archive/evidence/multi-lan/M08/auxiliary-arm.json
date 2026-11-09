@@ -1,0 +1,31 @@
+{
+  "host": "192.168.30.93",
+  "base": "/tmp/quickstart-multi-lan/m08-307770fd",
+  "namespaces": [
+    "qsm8-b0a28cbcr",
+    "qsm8-9a8c9caea",
+    "qsm8-33263807b",
+    "qsm8-c0a4876dw"
+  ],
+  "passed": true,
+  "checks": [
+    "management_ipv4_ipv6_linklocal_correct_source_and_foreign_target_rejected",
+    "selected_network_connection_committed_and_other_engine_pid_unchanged",
+    "background_schedule_blocks_only_selected_lan_after_page_left",
+    "background_schedule_restores_without_browser_or_cross_lan_side_effect"
+  ],
+  "artifactSha256": {
+    "netpolicy": "3e466d25b40a984b17e781f0627d56d0e3089b6efea750fba41de3e2f2ac5c05",
+    "goTest": "c28530cd557faee9c96b0054c8cf58cd1fb7688f3aeb8e8eaa3e2ad88ed84dab"
+  },
+  "managementSourcesVerified": true,
+  "schedule": {
+    "endMinute": 1153,
+    "startMinute": 1152,
+    "startedAt": "2026-11-08T19:11:02.444379236Z"
+  },
+  "logs": "=== RUN   TestMultiLANLiveAuxiliaryHTTPServer\n2026/11/08 19:10:58 manuf index loaded entries=55134 source_bytes=2016281 heap_delta=6272480 duration=268.974424ms\n=== RUN   TestMultiLANLiveAuxiliaryHTTPServer\n2026/11/08 19:10:58 manuf index loaded entries=55134 source_bytes=2016281 heap_delta=5373496 duration=225.542505ms\n=== RUN   TestMultiLANLiveAuxiliaryScheduler\n2026/11/08 19:11:02 manuf index loaded entries=55134 source_bytes=2016281 heap_delta=4978576 duration=207.355569ms\n",
+  "productionConfigBefore": "adde02c8504f35e503236612cfc4efd1db8c10d64a94d14d4780d63285055fe4  /etc/config/network\n645ef481477d427720b14ac3151bbb98a95e50ab0c1f61cf5fb28f9474f14030  /etc/config/dhcp\n0e6e820650b05481c25ec247a487b9ceae825cdc3d0f8cd9c3edae693fb0cf69  /etc/config/firewall\n",
+  "productionConfigAfter": "adde02c8504f35e503236612cfc4efd1db8c10d64a94d14d4780d63285055fe4  /etc/config/network\n645ef481477d427720b14ac3151bbb98a95e50ab0c1f61cf5fb28f9474f14030  /etc/config/dhcp\n0e6e820650b05481c25ec247a487b9ceae825cdc3d0f8cd9c3edae693fb0cf69  /etc/config/firewall\n",
+  "productionConfigUnchanged": true
+}

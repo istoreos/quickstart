@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net"
+	"path/filepath"
 	"sort"
 	"strconv"
 	"strings"
@@ -43,13 +44,19 @@ func NewDefaultLanStatusReader() LanStatusReader {
 }
 
 func (store *defaultDhcpConfigStore) LoadLanState(ctx context.Context) (*LanDhcpState, error) {
-	_ = ctx
-	uci.LoadConfig("dhcp", true)
-	uci.LoadConfig("floatip", true)
+	tree := uci.NewTree(filepath.Dir(dhcpConfigPath))
+	if err := tree.LoadConfig("dhcp", true); err != nil {
+		return nil, err
+	}
+	binding, err := scopedDHCPBinding(ctx, tree)
+	if err != nil {
+		return nil, err
+	}
+	tree.LoadConfig("floatip", true)
 
-	lanDhcpOptions, _ := uci.Get("dhcp", "lan", "dhcp_option")
-	ignoreValue, _ := uci.GetLast("dhcp", "lan", "ignore")
-	dhcpv4Mode, _ := uci.GetLast("dhcp", "lan", "dhcpv4")
+	lanDhcpOptions, _ := tree.Get("dhcp", binding.Section, "dhcp_option")
+	ignoreValue, _ := tree.GetLast("dhcp", binding.Section, "ignore")
+	dhcpv4Mode, _ := tree.GetLast("dhcp", binding.Section, "dhcpv4")
 	dhcpIgnore := !dhcpIPv4ServingEnabled(ignoreValue, dhcpv4Mode)
 
 	state := &LanDhcpState{
@@ -58,31 +65,38 @@ func (store *defaultDhcpConfigStore) LoadLanState(ctx context.Context) (*LanDhcp
 		Tags:        make([]DhcpTagRecord, 0),
 	}
 
-	floatEnabled, ok := uci.GetLast("floatip", "main", "enabled")
-	if ok && floatEnabled == "1" {
+	floatEnabled, ok := tree.GetLast("floatip", "main", "enabled")
+	if selectedLAN(ctx) == defaultLAN && ok && floatEnabled == "1" {
 		floatIP := &FloatIPSnapshot{Enabled: true}
-		if setIP, ok := uci.GetLast("floatip", "main", "set_ip"); ok {
+		if setIP, ok := tree.GetLast("floatip", "main", "set_ip"); ok {
 			floatIP.SetIP = strings.Split(setIP, "/")[0]
 		}
-		if checkIP, ok := uci.GetLast("floatip", "main", "check_ip"); ok {
+		if checkIP, ok := tree.GetLast("floatip", "main", "check_ip"); ok {
 			floatIP.CheckIP = checkIP
 		}
 		state.FloatIP = floatIP
 	}
 
-	tagSecs, ok := uci.GetSections("dhcp", "tag")
+	tagSecs, ok := tree.GetSections("dhcp", "tag")
 	if !ok {
 		return state, nil
 	}
 	for _, name := range tagSecs {
+		network, _ := tree.GetLast("dhcp", name, "quickstart_network")
+		if network == "" {
+			network = defaultLAN
+		}
+		if network != selectedLAN(ctx) {
+			continue
+		}
 		tag := DhcpTagRecord{TagName: name}
-		tag.TagTitle, _ = uci.GetLast("dhcp", name, "tag_title")
-		tag.TargetID, _ = uci.GetLast("dhcp", name, "quickstart_target_id")
-		tag.TargetKind, _ = uci.GetLast("dhcp", name, "quickstart_target_kind")
-		listValues, _ := uci.Get("dhcp", name, "dhcp_option")
+		tag.TagTitle, _ = tree.GetLast("dhcp", name, "tag_title")
+		tag.TargetID, _ = tree.GetLast("dhcp", name, "quickstart_target_id")
+		tag.TargetKind, _ = tree.GetLast("dhcp", name, "quickstart_target_kind")
+		listValues, _ := tree.Get("dhcp", name, "dhcp_option")
 		sort.Strings(listValues)
 		tag.DhcpOption = listValues
-		autoCreated, ok := uci.GetLast("dhcp", name, "AutoCreated")
+		autoCreated, ok := tree.GetLast("dhcp", name, "AutoCreated")
 		if ok {
 			tag.AutoCreated, _ = strconv.ParseBool(autoCreated)
 		}

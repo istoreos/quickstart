@@ -31,7 +31,9 @@ func NewDefaultSpeedLimitReader() SpeedLimitReader {
 }
 
 func (reader *defaultFloatIPReader) ReadFloatIPStatus(ctx context.Context) (FloatIPStatus, error) {
-	_ = ctx
+	if err := requireDefaultFloatingLAN(ctx); err != nil {
+		return FloatIPStatus{}, err
+	}
 	uci.LoadConfig("floatip", true)
 
 	role, _ := uci.GetLast("floatip", "main", "role")
@@ -50,7 +52,9 @@ func (reader *defaultFloatIPReader) ReadFloatIPStatus(ctx context.Context) (Floa
 }
 
 func (reader *defaultSpeedLimitReader) ReadSpeedLimitStatus(ctx context.Context) (SpeedLimitStatus, error) {
-	_ = ctx
+	if selectedLAN(ctx) != defaultLAN {
+		return SpeedLimitStatus{}, nil
+	}
 	uci.LoadConfig("eqos", true)
 
 	enabled, _ := uci.GetLast("eqos", "@eqos[0]", "enabled")

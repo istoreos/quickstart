@@ -21,6 +21,7 @@
       <h4>{{plan.action==='install'?t('安装组件','Install component'):t('启用组件','Enable component')}}</h4>
       <dl><div><dt>{{t('组件','Component')}}</dt><dd>{{item.package}}</dd></div><div v-if="plan.action==='install'"><dt>{{t('最低可用空间','Minimum free space')}}</dt><dd>{{Math.ceil((plan.requiredFreeBytes||0)/1048576)}} MB</dd></div></dl>
       <p>{{plan.action==='install'?t('安装会更新软件源，包脚本可能启动组件服务。当前执行方式和未提交设置会保留。','Installation updates package sources; package scripts may start the component. The selected mode and unsaved settings are retained.'):t('将启动组件并设置开机启用，可能恢复该组件已有规则。当前限速方式的切换仍需另行确认。','Starts the component and enables it at boot; existing component rules may resume. Switching the selected limit mode needs a separate confirmation.')}}</p>
+      <p v-if="plan.operationScope === 'system' || (plan.affectedNetworks?.length || 0) > 1">{{t('此操作影响局域网：','Affected LANs: ')}}{{plan.affectedNetworks?.join(', ') || t('全部局域网','All LANs')}}</p>
       <div class="feature-confirm-actions"><button type="button" :disabled="Boolean(busy)" @click="plan=undefined">{{t('取消','Cancel')}}</button><button class="primary" type="button" :disabled="Boolean(busy)" @click="apply" data-confirm-component>{{busy?t('正在处理…','Working…'):plan.action==='install'?t('确认安装','Confirm installation'):t('确认启用','Confirm enabling')}}</button></div>
      </section>
     </article>
@@ -35,11 +36,13 @@
 import {nextTick,onBeforeUnmount,ref,watch} from 'vue'
 import HomeGlyph from '/@/home/HomeGlyph.vue'
 import '../deviceVisualTokens.css'
+import { useLANContext } from '../lanContext'
 import {componentDefinitions,componentAction,createComponentClient,ComponentError,type ComponentId,type FeatureComponent,type ComponentCatalog,type ComponentPlan} from '../featureComponents'
 const props=withDefaults(defineProps<{open:boolean;focusId?:ComponentId;allowConfigure?:boolean}>(),{allowConfigure:true})
 const emit=defineEmits<{(event:'close'):void;(event:'updated'):void;(event:'busy',value:boolean):void;(event:'configure',id:ComponentId):void}>()
 const t=(zh:string,en:string)=>window.vue_lang==='en'?en:zh
-const client=createComponentClient(),catalog=ref<ComponentCatalog>(),reading=ref(false),error=ref(''),notice=ref(''),busy=ref(''),plan=ref<ComponentPlan>()
+const lan=useLANContext()
+const client=createComponentClient(fetch,lan.legacy?undefined:lan.networkId),catalog=ref<ComponentCatalog>(),reading=ref(false),error=ref(''),notice=ref(''),busy=ref(''),plan=ref<ComponentPlan>()
 const overlay=ref<HTMLElement>(),panel=ref<HTMLElement>()
 let disposed=false,generation=0,planGeneration=0,locked=false,readController:AbortController|undefined,planController:AbortController|undefined,previousFocus:HTMLElement|null=null,previousOverflow='',inertNodes:{node:HTMLElement;value:boolean}[]=[]
 const definition=(id:ComponentId)=>componentDefinitions.find(item=>item.id===id)!

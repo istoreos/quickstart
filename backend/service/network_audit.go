@@ -71,6 +71,8 @@ func (sender *httpWebhookSender) Send(ctx context.Context, target string, event 
 }
 
 type NetworkAuditModule struct {
+	networkID  string
+	scopes     map[string]*NetworkAuditModule
 	mu         sync.Mutex
 	path       string
 	document   networkAuditDocument
@@ -100,6 +102,24 @@ func NewNetworkAuditModule(path string, sender webhookSender) *NetworkAuditModul
 
 func NewDefaultNetworkAuditModule() *NetworkAuditModule {
 	return NewNetworkAuditModule(defaultNetworkAuditPath, nil)
+}
+
+func (module *NetworkAuditModule) forContext(ctx context.Context) *NetworkAuditModule {
+	network := selectedLAN(ctx)
+	if module.networkID != "" || network == defaultLAN {
+		return module
+	}
+	module.mu.Lock()
+	defer module.mu.Unlock()
+	if module.scopes == nil {
+		module.scopes = map[string]*NetworkAuditModule{}
+	}
+	if module.scopes[network] == nil {
+		child := NewNetworkAuditModule(lanStatePath(module.path, network), module.sender)
+		child.networkID, child.now, child.persist, child.retryDelay = network, module.now, module.persist, module.retryDelay
+		module.scopes[network] = child
+	}
+	return module.scopes[network]
 }
 
 func (module *NetworkAuditModule) Record(deviceID, resource, action, state, reason string) {
@@ -220,6 +240,9 @@ func (module *NetworkAuditModule) List(deviceID string, limit int) (*models.Adva
 		event := module.document.Events[index]
 		if deviceID == "" || event.DeviceID == deviceID {
 			copyValue := *event
+			if copyValue.NetworkID == "" {
+				copyValue.NetworkID = inventoryLANID(module.networkID)
+			}
 			result = append(result, &copyValue)
 		}
 	}
@@ -394,7 +417,11 @@ func (module *NetworkAuditModule) appendEventLocked(deviceID, resource, action, 
 	if resource == "dns" {
 		reason = ""
 	}
-	event := &models.NetworkAuditEvent{ID: fmtAuditID(module.document.Sequence), At: module.now().UTC().Format(time.RFC3339Nano), DeviceID: deviceID, Resource: resource, Action: action, State: state, Reason: sanitizeAuditReason(reason)}
+	id := fmtAuditID(module.document.Sequence)
+	if module.networkID != "" {
+		id = module.networkID + "_" + id
+	}
+	event := &models.NetworkAuditEvent{NetworkID: inventoryLANID(module.networkID), ID: id, At: module.now().UTC().Format(time.RFC3339Nano), DeviceID: deviceID, Resource: resource, Action: action, State: state, Reason: sanitizeAuditReason(reason)}
 	module.document.Events = append(module.document.Events, event)
 	if len(module.document.Events) > networkAuditLimit {
 		module.document.Events = module.document.Events[len(module.document.Events)-networkAuditLimit:]
@@ -471,4 +498,24 @@ func minInt(left, right int) int {
 		return left
 	}
 	return right
+}
+
+// Aggregate browsing never merges identical device IDs from different links.
+func (module *NetworkAuditModule) observeScopedInventory(ctx context.Context, response *models.DeviceInventoryResponse) {
+	if response == nil || response.Result == nil {
+		return
+	}
+	if selectedLAN(ctx) != "all" {
+		module.forContext(ctx).ObserveInventory(response)
+		return
+	}
+	grouped := map[string][]*models.DeviceInventoryItem{}
+	for _, device := range response.Result.Devices {
+		if device != nil && device.NetworkID != "" {
+			grouped[device.NetworkID] = append(grouped[device.NetworkID], device)
+		}
+	}
+	for network, devices := range grouped {
+		module.forContext(withLANScope(ctx, &models.LANScope{NetworkID: network})).ObserveInventory(&models.DeviceInventoryResponse{Result: &models.DeviceInventoryResult{Devices: devices}})
+	}
 }

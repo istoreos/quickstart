@@ -1,0 +1,767 @@
+{
+  "milestone": "M10",
+  "host": "192.168.30.7",
+  "status": "failed",
+  "startedAt": "2026-11-08T20:02:30.488369+00:00",
+  "preflightOnly": false,
+  "cases": [
+    {
+      "lanCount": 1,
+      "base": "/tmp/quickstart-multi-lan/m10-ca5511",
+      "router": "qsm10-ca5511",
+      "namespaces": [
+        "qsm10-ca5511",
+        "qsm10-ca5511-w",
+        "qsm10-ca5511-c1"
+      ],
+      "last": {
+        "api": [
+          {
+            "activeDevices": 0,
+            "devices": 256,
+            "downloadBytes": 0,
+            "endpoint": "devices",
+            "maxSampleAgeSeconds": 0,
+            "networkId": "capacity1",
+            "p95Ms": 2.236,
+            "samples": 1,
+            "state": "ready",
+            "uploadBytes": 0
+          },
+          {
+            "activeDevices": 256,
+            "devices": 256,
+            "downloadBytes": 140228,
+            "endpoint": "device-traffic",
+            "maxSampleAgeSeconds": 1.126461574,
+            "networkId": "capacity1",
+            "p95Ms": 7.938,
+            "samples": 1,
+            "state": "ready",
+            "uploadBytes": 34033300
+          }
+        ],
+        "at": "2026-11-08T20:20:24.126926971Z",
+        "metrics": {
+          "at": "2026-11-08T20:20:24.126751757Z",
+          "writes": {
+            "/tmp/quickstart-multi-lan/m10-ca5511/networks/capacity1/traffic.json": 6
+          },
+          "writesLastHour": {
+            "/tmp/quickstart-multi-lan/m10-ca5511/networks/capacity1/traffic.json": 6
+          }
+        },
+        "processes": {
+          "backend.pid": {
+            "pid": 23460,
+            "rssKiB": 28396,
+            "ticks": 134,
+            "fds": 6,
+            "bpfBytes": 0,
+            "bpfMaps": 0
+          },
+          "engine-1.pid": {
+            "pid": 23382,
+            "rssKiB": 39532,
+            "ticks": 214,
+            "fds": 26,
+            "bpfBytes": 792640,
+            "bpfMaps": 9
+          }
+        },
+        "wallMonotonic": 2312634.979464904,
+        "lanCount": 1,
+        "combinedCpuPercent": 0.4844137386938882
+      },
+      "lastPacketGuard": [
+        {
+          "networkId": "capacity1",
+          "family": 4,
+          "expectedAllowed": true,
+          "actualAllowed": true
+        },
+        {
+          "networkId": "capacity1",
+          "family": 6,
+          "expectedAllowed": true,
+          "actualAllowed": true
+        }
+      ],
+      "first": {
+        "api": [
+          {
+            "activeDevices": 0,
+            "devices": 256,
+            "downloadBytes": 0,
+            "endpoint": "devices",
+            "maxSampleAgeSeconds": 0,
+            "networkId": "capacity1",
+            "p95Ms": 1.499,
+            "samples": 1,
+            "state": "ready",
+            "uploadBytes": 0
+          },
+          {
+            "activeDevices": 256,
+            "devices": 256,
+            "downloadBytes": 19456,
+            "endpoint": "device-traffic",
+            "maxSampleAgeSeconds": 1.534595836,
+            "networkId": "capacity1",
+            "p95Ms": 8.841,
+            "samples": 1,
+            "state": "ready",
+            "uploadBytes": 95480
+          }
+        ],
+        "at": "2026-11-08T20:02:35.534814986Z",
+        "metrics": {
+          "at": "2026-11-08T20:02:35.534727459Z",
+          "writes": {
+            "/tmp/quickstart-multi-lan/m10-ca5511/networks/capacity1/traffic.json": 3
+          },
+          "writesLastHour": {
+            "/tmp/quickstart-multi-lan/m10-ca5511/networks/capacity1/traffic.json": 3
+          }
+        },
+        "processes": {
+          "backend.pid": {
+            "pid": 23460,
+            "rssKiB": 24832,
+            "ticks": 7,
+            "fds": 6,
+            "bpfBytes": 0,
+            "bpfMaps": 0
+          },
+          "engine-1.pid": {
+            "pid": 23382,
+            "rssKiB": 8524,
+            "ticks": 30,
+            "fds": 26,
+            "bpfBytes": 792640,
+            "bpfMaps": 9
+          }
+        },
+        "wallMonotonic": 2311566.94188286,
+        "lanCount": 1
+      },
+      "cleaned": true
+    },
+    {
+      "lanCount": 2,
+      "base": "/tmp/quickstart-multi-lan/m10-4334b2",
+      "router": "qsm10-4334b2",
+      "namespaces": [
+        "qsm10-4334b2",
+        "qsm10-4334b2-w",
+        "qsm10-4334b2-c1",
+        "qsm10-4334b2-c2"
+      ],
+      "last": {
+        "api": [
+          {
+            "activeDevices": 0,
+            "devices": 256,
+            "downloadBytes": 0,
+            "endpoint": "devices",
+            "maxSampleAgeSeconds": 0,
+            "networkId": "capacity1",
+            "p95Ms": 1.617,
+            "samples": 1,
+            "state": "ready",
+            "uploadBytes": 0
+          },
+          {
+            "activeDevices": 256,
+            "devices": 256,
+            "downloadBytes": 8146828,
+            "endpoint": "device-traffic",
+            "maxSampleAgeSeconds": 1.4928655769999999,
+            "networkId": "capacity1",
+            "p95Ms": 8.14,
+            "samples": 1,
+            "state": "ready",
+            "uploadBytes": 33842836
+          },
+          {
+            "activeDevices": 0,
+            "devices": 256,
+            "downloadBytes": 0,
+            "endpoint": "devices",
+            "maxSampleAgeSeconds": 0,
+            "networkId": "capacity2",
+            "p95Ms": 0.986,
+            "samples": 1,
+            "state": "ready",
+            "uploadBytes": 0
+          },
+          {
+            "activeDevices": 256,
+            "devices": 256,
+            "downloadBytes": 13264748,
+            "endpoint": "device-traffic",
+            "maxSampleAgeSeconds": 0.503201731,
+            "networkId": "capacity2",
+            "p95Ms": 6.197,
+            "samples": 1,
+            "state": "ready",
+            "uploadBytes": 59871948
+          }
+        ],
+        "at": "2026-11-08T20:20:24.503440719Z",
+        "metrics": {
+          "at": "2026-11-08T20:20:24.503337039Z",
+          "writes": {
+            "/tmp/quickstart-multi-lan/m10-4334b2/networks/capacity1/traffic.json": 6,
+            "/tmp/quickstart-multi-lan/m10-4334b2/networks/capacity2/traffic.json": 6
+          },
+          "writesLastHour": {
+            "/tmp/quickstart-multi-lan/m10-4334b2/networks/capacity1/traffic.json": 6,
+            "/tmp/quickstart-multi-lan/m10-4334b2/networks/capacity2/traffic.json": 6
+          }
+        },
+        "processes": {
+          "backend.pid": {
+            "pid": 26062,
+            "rssKiB": 29608,
+            "ticks": 230,
+            "fds": 6,
+            "bpfBytes": 0,
+            "bpfMaps": 0
+          },
+          "engine-1.pid": {
+            "pid": 24895,
+            "rssKiB": 39400,
+            "ticks": 215,
+            "fds": 26,
+            "bpfBytes": 792640,
+            "bpfMaps": 9
+          },
+          "engine-2.pid": {
+            "pid": 26021,
+            "rssKiB": 39440,
+            "ticks": 468,
+            "fds": 26,
+            "bpfBytes": 792640,
+            "bpfMaps": 9
+          }
+        },
+        "wallMonotonic": 2312635.354908947,
+        "lanCount": 2,
+        "combinedCpuPercent": 1.0022414697935513
+      },
+      "lastPacketGuard": [
+        {
+          "networkId": "capacity1",
+          "family": 4,
+          "expectedAllowed": true,
+          "actualAllowed": true
+        },
+        {
+          "networkId": "capacity1",
+          "family": 6,
+          "expectedAllowed": true,
+          "actualAllowed": true
+        },
+        {
+          "networkId": "capacity2",
+          "family": 4,
+          "expectedAllowed": true,
+          "actualAllowed": true
+        },
+        {
+          "networkId": "capacity2",
+          "family": 6,
+          "expectedAllowed": true,
+          "actualAllowed": true
+        }
+      ],
+      "first": {
+        "api": [
+          {
+            "activeDevices": 0,
+            "devices": 256,
+            "downloadBytes": 0,
+            "endpoint": "devices",
+            "maxSampleAgeSeconds": 0,
+            "networkId": "capacity1",
+            "p95Ms": 1.521,
+            "samples": 1,
+            "state": "ready",
+            "uploadBytes": 0
+          },
+          {
+            "activeDevices": 256,
+            "devices": 256,
+            "downloadBytes": 45752,
+            "endpoint": "device-traffic",
+            "maxSampleAgeSeconds": 1.2576974220000001,
+            "networkId": "capacity1",
+            "p95Ms": 11.429,
+            "samples": 1,
+            "state": "ready",
+            "uploadBytes": 190768
+          },
+          {
+            "activeDevices": 0,
+            "devices": 256,
+            "downloadBytes": 0,
+            "endpoint": "devices",
+            "maxSampleAgeSeconds": 0,
+            "networkId": "capacity2",
+            "p95Ms": 0.949,
+            "samples": 1,
+            "state": "ready",
+            "uploadBytes": 0
+          },
+          {
+            "activeDevices": 256,
+            "devices": 256,
+            "downloadBytes": 37696,
+            "endpoint": "device-traffic",
+            "maxSampleAgeSeconds": 0.270579026,
+            "networkId": "capacity2",
+            "p95Ms": 8.81,
+            "samples": 1,
+            "state": "ready",
+            "uploadBytes": 169016
+          }
+        ],
+        "at": "2026-11-08T20:02:44.270835159Z",
+        "metrics": {
+          "at": "2026-11-08T20:02:44.270718954Z",
+          "writes": {
+            "/tmp/quickstart-multi-lan/m10-4334b2/networks/capacity1/traffic.json": 3,
+            "/tmp/quickstart-multi-lan/m10-4334b2/networks/capacity2/traffic.json": 3
+          },
+          "writesLastHour": {
+            "/tmp/quickstart-multi-lan/m10-4334b2/networks/capacity1/traffic.json": 3,
+            "/tmp/quickstart-multi-lan/m10-4334b2/networks/capacity2/traffic.json": 3
+          }
+        },
+        "processes": {
+          "backend.pid": {
+            "pid": 26062,
+            "rssKiB": 27264,
+            "ticks": 10,
+            "fds": 6,
+            "bpfBytes": 0,
+            "bpfMaps": 0
+          },
+          "engine-1.pid": {
+            "pid": 24895,
+            "rssKiB": 8480,
+            "ticks": 29,
+            "fds": 26,
+            "bpfBytes": 792640,
+            "bpfMaps": 9
+          },
+          "engine-2.pid": {
+            "pid": 26021,
+            "rssKiB": 8444,
+            "ticks": 283,
+            "fds": 26,
+            "bpfBytes": 792640,
+            "bpfMaps": 9
+          }
+        },
+        "wallMonotonic": 2311575.638608014,
+        "lanCount": 2
+      },
+      "cleaned": true
+    },
+    {
+      "lanCount": 4,
+      "base": "/tmp/quickstart-multi-lan/m10-3ce0a9",
+      "router": "qsm10-3ce0a9",
+      "namespaces": [
+        "qsm10-3ce0a9",
+        "qsm10-3ce0a9-w",
+        "qsm10-3ce0a9-c1",
+        "qsm10-3ce0a9-c2",
+        "qsm10-3ce0a9-c3",
+        "qsm10-3ce0a9-c4"
+      ],
+      "last": {
+        "api": [
+          {
+            "activeDevices": 0,
+            "devices": 256,
+            "downloadBytes": 0,
+            "endpoint": "devices",
+            "maxSampleAgeSeconds": 0,
+            "networkId": "capacity1",
+            "p95Ms": 2.05,
+            "samples": 1,
+            "state": "ready",
+            "uploadBytes": 0
+          },
+          {
+            "activeDevices": 256,
+            "devices": 256,
+            "downloadBytes": 8066420,
+            "endpoint": "device-traffic",
+            "maxSampleAgeSeconds": 1.066344286,
+            "networkId": "capacity1",
+            "p95Ms": 7.065,
+            "samples": 1,
+            "state": "ready",
+            "uploadBytes": 33588756
+          },
+          {
+            "activeDevices": 0,
+            "devices": 256,
+            "downloadBytes": 0,
+            "endpoint": "devices",
+            "maxSampleAgeSeconds": 0,
+            "networkId": "capacity2",
+            "p95Ms": 1.37,
+            "samples": 1,
+            "state": "ready",
+            "uploadBytes": 0
+          },
+          {
+            "activeDevices": 256,
+            "devices": 256,
+            "downloadBytes": 13378084,
+            "endpoint": "device-traffic",
+            "maxSampleAgeSeconds": 1.077475511,
+            "networkId": "capacity2",
+            "p95Ms": 6.232,
+            "samples": 1,
+            "state": "ready",
+            "uploadBytes": 59534148
+          },
+          {
+            "activeDevices": 0,
+            "devices": 256,
+            "downloadBytes": 0,
+            "endpoint": "devices",
+            "maxSampleAgeSeconds": 0,
+            "networkId": "capacity3",
+            "p95Ms": 1.215,
+            "samples": 1,
+            "state": "ready",
+            "uploadBytes": 0
+          },
+          {
+            "activeDevices": 256,
+            "devices": 256,
+            "downloadBytes": 18351124,
+            "endpoint": "device-traffic",
+            "maxSampleAgeSeconds": 1.088718315,
+            "networkId": "capacity3",
+            "p95Ms": 6.877,
+            "samples": 1,
+            "state": "ready",
+            "uploadBytes": 85430084
+          },
+          {
+            "activeDevices": 0,
+            "devices": 256,
+            "downloadBytes": 0,
+            "endpoint": "devices",
+            "maxSampleAgeSeconds": 0,
+            "networkId": "capacity4",
+            "p95Ms": 1.055,
+            "samples": 1,
+            "state": "ready",
+            "uploadBytes": 0
+          },
+          {
+            "activeDevices": 256,
+            "devices": 256,
+            "downloadBytes": 20527436,
+            "endpoint": "device-traffic",
+            "maxSampleAgeSeconds": 1.098461206,
+            "networkId": "capacity4",
+            "p95Ms": 6.244,
+            "samples": 1,
+            "state": "ready",
+            "uploadBytes": 111382340
+          }
+        ],
+        "at": "2026-11-08T20:20:25.098668704Z",
+        "metrics": {
+          "at": "2026-11-08T20:20:25.098565344Z",
+          "writes": {
+            "/tmp/quickstart-multi-lan/m10-3ce0a9/networks/capacity1/traffic.json": 6,
+            "/tmp/quickstart-multi-lan/m10-3ce0a9/networks/capacity2/traffic.json": 6,
+            "/tmp/quickstart-multi-lan/m10-3ce0a9/networks/capacity3/traffic.json": 6,
+            "/tmp/quickstart-multi-lan/m10-3ce0a9/networks/capacity4/traffic.json": 6
+          },
+          "writesLastHour": {
+            "/tmp/quickstart-multi-lan/m10-3ce0a9/networks/capacity1/traffic.json": 6,
+            "/tmp/quickstart-multi-lan/m10-3ce0a9/networks/capacity2/traffic.json": 6,
+            "/tmp/quickstart-multi-lan/m10-3ce0a9/networks/capacity3/traffic.json": 6,
+            "/tmp/quickstart-multi-lan/m10-3ce0a9/networks/capacity4/traffic.json": 6
+          }
+        },
+        "processes": {
+          "backend.pid": {
+            "pid": 31035,
+            "rssKiB": 33284,
+            "ticks": 422,
+            "fds": 6,
+            "bpfBytes": 0,
+            "bpfMaps": 0
+          },
+          "engine-1.pid": {
+            "pid": 27502,
+            "rssKiB": 39480,
+            "ticks": 218,
+            "fds": 26,
+            "bpfBytes": 792640,
+            "bpfMaps": 9
+          },
+          "engine-2.pid": {
+            "pid": 28716,
+            "rssKiB": 39440,
+            "ticks": 214,
+            "fds": 26,
+            "bpfBytes": 792640,
+            "bpfMaps": 9
+          },
+          "engine-3.pid": {
+            "pid": 29842,
+            "rssKiB": 39316,
+            "ticks": 214,
+            "fds": 26,
+            "bpfBytes": 792640,
+            "bpfMaps": 9
+          },
+          "engine-4.pid": {
+            "pid": 30994,
+            "rssKiB": 39360,
+            "ticks": 213,
+            "fds": 26,
+            "bpfBytes": 792640,
+            "bpfMaps": 9
+          }
+        },
+        "wallMonotonic": 2312635.951746047,
+        "lanCount": 4,
+        "combinedCpuPercent": 1.842599766079482
+      },
+      "lastPacketGuard": [
+        {
+          "networkId": "capacity1",
+          "family": 4,
+          "expectedAllowed": true,
+          "actualAllowed": true
+        },
+        {
+          "networkId": "capacity1",
+          "family": 6,
+          "expectedAllowed": true,
+          "actualAllowed": true
+        },
+        {
+          "networkId": "capacity2",
+          "family": 4,
+          "expectedAllowed": true,
+          "actualAllowed": true
+        },
+        {
+          "networkId": "capacity2",
+          "family": 6,
+          "expectedAllowed": true,
+          "actualAllowed": true
+        },
+        {
+          "networkId": "capacity3",
+          "family": 4,
+          "expectedAllowed": true,
+          "actualAllowed": true
+        },
+        {
+          "networkId": "capacity3",
+          "family": 6,
+          "expectedAllowed": true,
+          "actualAllowed": true
+        },
+        {
+          "networkId": "capacity4",
+          "family": 4,
+          "expectedAllowed": true,
+          "actualAllowed": true
+        },
+        {
+          "networkId": "capacity4",
+          "family": 6,
+          "expectedAllowed": true,
+          "actualAllowed": true
+        }
+      ],
+      "first": {
+        "api": [
+          {
+            "activeDevices": 0,
+            "devices": 256,
+            "downloadBytes": 0,
+            "endpoint": "devices",
+            "maxSampleAgeSeconds": 0,
+            "networkId": "capacity1",
+            "p95Ms": 1.837,
+            "samples": 1,
+            "state": "ready",
+            "uploadBytes": 0
+          },
+          {
+            "activeDevices": 256,
+            "devices": 256,
+            "downloadBytes": 36784,
+            "endpoint": "device-traffic",
+            "maxSampleAgeSeconds": 1.087163913,
+            "networkId": "capacity1",
+            "p95Ms": 8.847,
+            "samples": 1,
+            "state": "ready",
+            "uploadBytes": 158968
+          },
+          {
+            "activeDevices": 0,
+            "devices": 256,
+            "downloadBytes": 0,
+            "endpoint": "devices",
+            "maxSampleAgeSeconds": 0,
+            "networkId": "capacity2",
+            "p95Ms": 1.326,
+            "samples": 1,
+            "state": "ready",
+            "uploadBytes": 0
+          },
+          {
+            "activeDevices": 256,
+            "devices": 256,
+            "downloadBytes": 54064,
+            "endpoint": "device-traffic",
+            "maxSampleAgeSeconds": 1.101100691,
+            "networkId": "capacity2",
+            "p95Ms": 8.96,
+            "samples": 1,
+            "state": "ready",
+            "uploadBytes": 225528
+          },
+          {
+            "activeDevices": 0,
+            "devices": 256,
+            "downloadBytes": 0,
+            "endpoint": "devices",
+            "maxSampleAgeSeconds": 0,
+            "networkId": "capacity3",
+            "p95Ms": 1.246,
+            "samples": 1,
+            "state": "ready",
+            "uploadBytes": 0
+          },
+          {
+            "activeDevices": 256,
+            "devices": 256,
+            "downloadBytes": 50568,
+            "endpoint": "device-traffic",
+            "maxSampleAgeSeconds": 1.115368025,
+            "networkId": "capacity3",
+            "p95Ms": 9.617,
+            "samples": 1,
+            "state": "ready",
+            "uploadBytes": 242936
+          },
+          {
+            "activeDevices": 0,
+            "devices": 256,
+            "downloadBytes": 0,
+            "endpoint": "devices",
+            "maxSampleAgeSeconds": 0,
+            "networkId": "capacity4",
+            "p95Ms": 0.889,
+            "samples": 1,
+            "state": "ready",
+            "uploadBytes": 0
+          },
+          {
+            "activeDevices": 256,
+            "devices": 256,
+            "downloadBytes": 65560,
+            "endpoint": "device-traffic",
+            "maxSampleAgeSeconds": 1.126857264,
+            "networkId": "capacity4",
+            "p95Ms": 8.261,
+            "samples": 1,
+            "state": "ready",
+            "uploadBytes": 316664
+          }
+        ],
+        "at": "2026-11-08T20:02:52.127058473Z",
+        "metrics": {
+          "at": "2026-11-08T20:02:52.126960649Z",
+          "writes": {
+            "/tmp/quickstart-multi-lan/m10-3ce0a9/networks/capacity1/traffic.json": 3,
+            "/tmp/quickstart-multi-lan/m10-3ce0a9/networks/capacity2/traffic.json": 3,
+            "/tmp/quickstart-multi-lan/m10-3ce0a9/networks/capacity3/traffic.json": 3,
+            "/tmp/quickstart-multi-lan/m10-3ce0a9/networks/capacity4/traffic.json": 3
+          },
+          "writesLastHour": {
+            "/tmp/quickstart-multi-lan/m10-3ce0a9/networks/capacity1/traffic.json": 3,
+            "/tmp/quickstart-multi-lan/m10-3ce0a9/networks/capacity2/traffic.json": 3,
+            "/tmp/quickstart-multi-lan/m10-3ce0a9/networks/capacity3/traffic.json": 3,
+            "/tmp/quickstart-multi-lan/m10-3ce0a9/networks/capacity4/traffic.json": 3
+          }
+        },
+        "processes": {
+          "backend.pid": {
+            "pid": 31035,
+            "rssKiB": 28452,
+            "ticks": 14,
+            "fds": 6,
+            "bpfBytes": 0,
+            "bpfMaps": 0
+          },
+          "engine-1.pid": {
+            "pid": 27502,
+            "rssKiB": 8540,
+            "ticks": 31,
+            "fds": 26,
+            "bpfBytes": 792640,
+            "bpfMaps": 9
+          },
+          "engine-2.pid": {
+            "pid": 28716,
+            "rssKiB": 8636,
+            "ticks": 30,
+            "fds": 26,
+            "bpfBytes": 792640,
+            "bpfMaps": 9
+          },
+          "engine-3.pid": {
+            "pid": 29842,
+            "rssKiB": 8260,
+            "ticks": 30,
+            "fds": 26,
+            "bpfBytes": 792640,
+            "bpfMaps": 9
+          },
+          "engine-4.pid": {
+            "pid": 30994,
+            "rssKiB": 8652,
+            "ticks": 28,
+            "fds": 26,
+            "bpfBytes": 792640,
+            "bpfMaps": 9
+          }
+        },
+        "wallMonotonic": 2311583.46658395,
+        "lanCount": 4
+      },
+      "cleaned": true
+    }
+  ],
+  "artifactSha256": {
+    "engine": "82735642ade02a6133780fee2dbc5a4a9014c25cf30bed841f2873f691d6da65",
+    "goTest": "8da03889bf305512fc236ef2917fa60db4f8a8bfbadb5b91098eb7bf66b42213"
+  },
+  "warmupElapsedSeconds": 1052.6100957491435,
+  "error": "KeyboardInterrupt()",
+  "rootConfigurationUnchanged": true,
+  "finishedAt": "2026-11-08T20:21:16.380406+00:00"
+}

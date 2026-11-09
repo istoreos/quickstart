@@ -11,74 +11,88 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/istoreos/quickstart/backend/models"
 )
 
-type systemDeviceInventorySource struct{}
+type systemDeviceInventorySource struct{ scopes *LANScopeModule }
 
-func (systemDeviceInventorySource) Read(ctx context.Context) deviceInventorySourceSnapshot {
-	snapshot := deviceInventorySourceSnapshot{
-		HostHints: map[string]HostHintSnapshot{},
-		WifiMACs:  map[string]struct{}{},
+func (reader systemDeviceInventorySource) Read(ctx context.Context) deviceInventorySourceSnapshot {
+	snapshot := deviceInventorySourceSnapshot{HostHints: map[string]HostHintSnapshot{}, WifiMACs: map[string]struct{}{},
+		NetworkDevices: map[string]string{}, NetworkReasons: map[string][]string{}, NetworkHints: map[string]map[string]HostHintSnapshot{}, NetworkWifi: map[string]map[string]struct{}{}}
+	scopes := reader.scopes
+	if scopes == nil {
+		scopes = NewLANScopeModule()
 	}
-
-	devices, err := NewDefaultDeviceInventoryReader().ReadInventory(ctx)
+	networks, err := scopes.List(ctx)
 	if err != nil {
-		snapshot.Reasons = append(snapshot.Reasons, "arp_unavailable")
-	} else {
-		for _, device := range devices {
-			if device != nil {
-				snapshot.ARP = append(snapshot.ARP, deviceInventoryObservation{MAC: device.Mac, IPv4: device.IP, Online: true})
-			}
-		}
+		snapshot.Reasons = []string{"network_scope_unavailable"}
+		return snapshot
 	}
-
-	leases, err := readDeviceInventoryDHCPv4("/tmp/dhcp.leases", time.Now())
-	if err != nil && !errors.Is(err, os.ErrNotExist) {
-		snapshot.Reasons = append(snapshot.Reasons, "dhcpv4_unavailable")
-	} else {
-		snapshot.DHCPv4 = leases
-	}
-
-	ndp, err := readDeviceInventoryNDP(ctx, "br-lan")
-	if err != nil {
-		snapshot.Reasons = append(snapshot.Reasons, "ndp_unavailable")
-	} else {
-		snapshot.NDP = ndp
-	}
-
-	dhcpv6, err := readDeviceInventoryDHCPv6("/tmp/hosts/odhcpd", time.Now(), "br-lan")
-	if err != nil && !errors.Is(err, os.ErrNotExist) {
-		snapshot.Reasons = append(snapshot.Reasons, "dhcpv6_unavailable")
-	} else {
-		snapshot.DHCPv6 = dhcpv6
-	}
-
+	arp, arpErr := os.ReadFile("/proc/net/arp")
 	rawHints := ubusHostHintMap{}
-	if err := UbusCallWithObject(ctx, "luci-rpc getHostHints", &rawHints); err != nil {
-		snapshot.Reasons = append(snapshot.Reasons, "host_hints_unavailable")
-	} else {
-		prefixes, prefixErr := readSystemLANPrefixes()
-		if prefixErr != nil {
-			snapshot.Reasons = append(snapshot.Reasons, "lan_prefixes_unavailable")
+	hintsErr := UbusCallWithObject(ctx, "luci-rpc getHostHints", &rawHints)
+	wifi := readLANWifiAssociations(ctx)
+	leaseFiles := map[string]bool{}
+	for _, network := range networks {
+		id := network.NetworkID
+		snapshot.NetworkDevices[id] = network.Device
+		snapshot.NetworkReasons[id] = []string{}
+		reason := func(value string) { snapshot.NetworkReasons[id] = append(snapshot.NetworkReasons[id], value) }
+		if arpErr != nil {
+			reason("arp_unavailable")
 		} else {
-			snapshot.HostHints = buildLANHostHints(rawHints, prefixes, inventoryMACSet(ndp))
+			snapshot.ARP = append(snapshot.ARP, parseLANInventoryARP(strings.NewReader(string(arp)), network)...)
 		}
-	}
-
-	driver := wifiSelect()
-	if driver != nil {
-		wifiMACs, err := driver.AssocMacList(ctx)
+		ndp, err := readDeviceInventoryNDP(ctx, network.Device)
 		if err != nil {
-			snapshot.Reasons = append(snapshot.Reasons, "wifi_assoc_unavailable")
+			reason("ndp_unavailable")
 		} else {
-			for mac := range wifiMACs {
-				if normalized := normalizeInventoryMAC(mac); normalized != "" {
-					snapshot.WifiMACs[normalized] = struct{}{}
-				}
+			for i := range ndp {
+				ndp[i].NetworkID = id
 			}
+			snapshot.NDP = append(snapshot.NDP, ndp...)
+		}
+		dhcpv6, err := readDeviceInventoryDHCPv6("/tmp/hosts/odhcpd", time.Now(), network.Device)
+		if err != nil && !errors.Is(err, os.ErrNotExist) {
+			reason("dhcpv6_unavailable")
+		} else {
+			for i := range dhcpv6 {
+				dhcpv6[i].NetworkID = id
+			}
+			snapshot.DHCPv6 = append(snapshot.DHCPv6, dhcpv6...)
+		}
+		if hintsErr != nil {
+			reason("host_hints_unavailable")
+		} else {
+			snapshot.NetworkHints[id] = buildLANHostHints(rawHints, scopeLANPrefixes(network), inventoryMACSet(ndp))
+		}
+		snapshot.NetworkWifi[id] = wifi[id]
+		for _, binding := range network.DHCPBindings {
+			leaseFiles[binding.LeaseFile] = true
 		}
 	}
-
+	if len(leaseFiles) == 0 {
+		leaseFiles["/tmp/dhcp.leases"] = true
+	}
+	for file := range leaseFiles {
+		leases, err := readDeviceInventoryDHCPv4(file, time.Now())
+		if err != nil && !errors.Is(err, os.ErrNotExist) {
+			for _, network := range networks {
+				snapshot.NetworkReasons[network.NetworkID] = append(snapshot.NetworkReasons[network.NetworkID], "dhcpv4_unavailable")
+			}
+			continue
+		}
+		for _, lease := range leases {
+			lease.NetworkID = leaseLANOwner(lease.IPv4, file, networks)
+			snapshot.DHCPv4 = append(snapshot.DHCPv4, lease)
+		}
+	}
+	scopeInventoryHints(&snapshot, networks)
+	demoteInactiveLANObservations(&snapshot, networks)
+	for _, reasons := range snapshot.NetworkReasons {
+		snapshot.Reasons = append(snapshot.Reasons, reasons...)
+	}
 	return snapshot
 }
 
@@ -284,4 +298,22 @@ func addressInPrefixes(address netip.Addr, prefixes []netip.Prefix) bool {
 		}
 	}
 	return false
+}
+
+// Cached neighbor/lease entries survive a link going down. They remain useful
+// history, but cannot be evidence that a device is currently online.
+func demoteInactiveLANObservations(snapshot *deviceInventorySourceSnapshot, networks []*models.LANScope) {
+	for _, network := range networks {
+		if network.State == "up" {
+			continue
+		}
+		snapshot.NetworkReasons[network.NetworkID] = append(snapshot.NetworkReasons[network.NetworkID], "network_down")
+		for _, observations := range [][]deviceInventoryObservation{snapshot.ARP, snapshot.NDP, snapshot.DHCPv4, snapshot.DHCPv6} {
+			for index := range observations {
+				if inventoryLANID(observations[index].NetworkID) == network.NetworkID {
+					observations[index].Online = false
+				}
+			}
+		}
+	}
 }

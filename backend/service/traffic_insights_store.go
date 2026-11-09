@@ -16,8 +16,9 @@ const (
 )
 
 type trafficCounterBaseline struct {
-	UploadBytes   int64 `json:"uploadBytes"`
-	DownloadBytes int64 `json:"downloadBytes"`
+	Epoch         string `json:"epoch,omitempty"`
+	UploadBytes   int64  `json:"uploadBytes"`
+	DownloadBytes int64  `json:"downloadBytes"`
 }
 
 type trafficQuotaRuntime struct {

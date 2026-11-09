@@ -18,7 +18,9 @@ import (
 )
 
 type ServiceBackend struct {
-	mu sync.Mutex
+	mu                 sync.Mutex
+	lanScopes          *LANScopeModule
+	accessBindingsOnce sync.Once
 
 	st                   *WanStats
 	lstats               *LanStats
@@ -179,7 +181,12 @@ func NewServiceBackend() *ServiceBackend {
 		backend.deviceGroups = NewDefaultDeviceGroupModule(backend.devicePolicy, backend.deviceNetworkPolicy, backend.trafficInsights)
 	}
 	backend.networkAudit = NewDefaultNetworkAuditModule()
-	backend.trafficInsights.audit = backend.networkAudit
+	backend.trafficInsights.AttachAudit(backend.networkAudit)
+	if backend.lanScopes == nil {
+		backend.lanScopes = NewLANScopeModule()
+	}
+	backend.deviceGroups.AttachLANScopes(backend.lanScopes)
+	backend.trafficInsights.AttachLANScopes(backend.lanScopes)
 	backend.trafficInsights.AttachCollector(backend.deviceTraffic.Snapshot)
 	backend.advancedNetwork = NewAdvancedNetworkModule(inventory, backend.deviceGroups, backend.trafficInsights, backend.networkAudit)
 	backend.setupDhns()

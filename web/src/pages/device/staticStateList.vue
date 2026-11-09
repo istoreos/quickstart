@@ -82,7 +82,9 @@
 </template>
 <script setup lang="ts">
 import { ref, computed, reactive } from 'vue'
-import request from '/@/request';
+import baseRequest from '/@/request'
+import { useLANClient } from './lanContext'
+const request = { ...baseRequest, DeviceMangement: useLANClient() };
 import CustomTable from "./components/CustomTable.vue";
 import SearchVue from "./components/search.vue";
 import SwitchVue from "./components/switch.vue";

@@ -55,7 +55,17 @@ func (module *CapabilityActionModule) Components(ctx context.Context, selected s
 		if op.state == "pending" && (op.action == "install" && (status.State == "disabled" || status.State == "available" || status.State == "error" && status.Reason == "engine_unavailable") || op.action == "enable" && status.State == "available") {
 			op = module.operation(definition.key, &componentOperation{})
 		}
-		result.Components = append(result.Components, &models.FeatureComponent{ID: definition.id, CapabilityKey: definition.key, Package: definition.pkg, Provider: definition.provider, Selected: definition.provider != "" && definition.provider == selected, Status: status, Operation: op.state})
+		var installed *bool
+		if system, ok := module.store.(*systemCapabilityActionStore); ok {
+			if value, err := system.componentInstalled(definition.key); err == nil {
+				installed = &value
+			}
+		}
+		networkID := ""
+		if selectedLANScope(ctx) != nil {
+			networkID = selectedLAN(ctx)
+		}
+		result.Components = append(result.Components, &models.FeatureComponent{NetworkID: networkID, Installed: installed, ID: definition.id, CapabilityKey: definition.key, Package: definition.pkg, Provider: definition.provider, Selected: definition.provider != "" && definition.provider == selected, Status: status, Operation: op.state})
 	}
 	return &models.FeatureComponentsResponse{Result: result}
 }

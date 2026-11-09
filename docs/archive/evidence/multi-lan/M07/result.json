@@ -1,0 +1,40 @@
+{
+  "milestone": "M07",
+  "status": "passed",
+  "optimizations": 3,
+  "completedAt": "2026-11-08T18:19:21.799573+00:00",
+  "checks": {
+    "goFull": "passed",
+    "goScopedRace": "passed",
+    "rustUnitTests": 50,
+    "limitedRealPacketWindows": 32,
+    "limitedReceivedFractionMin": 0.9601762639325114,
+    "limitedReceivedFractionMax": 0.9760435995245821,
+    "fixedWindowSeconds": 30,
+    "fixedWarmupSeconds": 5,
+    "sameMACDualLANIPv4IPv6": "passed_on_both_architectures",
+    "ethernetAndRoutedBridge": "passed",
+    "sharedZoneExactIngressBlocks": "passed",
+    "internalTrafficWANExclusion": "passed",
+    "exhaustedQuotaEngineRestart": "passed",
+    "manualPausePreservedOnQuotaCancel": "passed",
+    "realNextPeriodPacketRestoration": "passed_using_test_clock_only",
+    "warmupFirstBurstAndUnavailableSampling": "passed",
+    "freshBackgroundScopesAndSavedQuotaResume": "passed",
+    "offloadAndUnprovenForwardingPath": "explicitly_unverified_or_unavailable",
+    "defaultPathsAndLegacyProviders": "regression_passed"
+  },
+  "deviceEvidence": [
+    "packets-arm.json",
+    "packets-x86.json",
+    "bridge-packets-arm.json",
+    "bridge-packets-x86.json",
+    "final-business-arm.json",
+    "final-business-x86.json"
+  ],
+  "scopeLimits": [
+    "Positive packet verification covers routed Ethernet and routed bridge LANs with distinct uplinks. One-arm/asymmetric or unknown forwarding paths are not declared verified.",
+    "Native offload risk/unknown prevents verified reporting and usable quota sampling; the tests do not claim hardware-offload throughput support.",
+    "Capacity/write budgets, upgrade/rollback variants and the 24-hour soak remain M10 acceptance gates."
+  ]
+}

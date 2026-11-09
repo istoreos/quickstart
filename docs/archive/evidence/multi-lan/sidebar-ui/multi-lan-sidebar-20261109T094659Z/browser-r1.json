@@ -1,0 +1,12 @@
+{
+  "status": "failed",
+  "url": "http://192.168.30.93/cgi-bin/luci/admin/quickstart/devicemanagement?network=all",
+  "error": "Error: Mobile horizontal overflow",
+  "errors": [],
+  "reads": [
+    {
+      "url": "http://192.168.30.93/cgi-bin/luci/istore/lanctrl/v2/networks/",
+      "status": 200
+    }
+  ]
+}

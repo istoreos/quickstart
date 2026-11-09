@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"errors"
+	"fmt"
 	"strings"
 	"time"
 
@@ -12,8 +13,9 @@ import (
 type groupBatchContextKey struct{}
 
 type groupBatchRestrictionChange struct {
-	request *models.DevicePolicyApplyRequest
-	current *models.DevicePolicy
+	accessOwner string
+	request     *models.DevicePolicyApplyRequest
+	current     *models.DevicePolicy
 }
 
 type groupBatchNetworkChange struct {
@@ -22,9 +24,25 @@ type groupBatchNetworkChange struct {
 }
 
 type groupBatchAccumulator struct {
-	restrictions []groupBatchRestrictionChange
-	network      []groupBatchNetworkChange
-	quotas       []*models.TrafficQuotaRequest
+	accessBindingsPending bool
+	restrictions          []groupBatchRestrictionChange
+	network               []groupBatchNetworkChange
+	quotas                []*models.TrafficQuotaRequest
+}
+
+func (batch *groupBatchAccumulator) needsAccessCommit() bool {
+	if batch == nil {
+		return false
+	}
+	if batch.accessBindingsPending {
+		return true
+	}
+	for _, change := range batch.restrictions {
+		if change.request != nil && change.request.Kind == "access" {
+			return true
+		}
+	}
+	return false
 }
 
 func groupBatchAccumulatorFrom(ctx context.Context) *groupBatchAccumulator {
@@ -61,6 +79,12 @@ type defaultGroupPolicyApplier struct {
 }
 
 func (applier *defaultGroupPolicyApplier) ApplyBatch(ctx context.Context, policies []*models.EffectiveGroupPolicy, now time.Time) *models.DeviceGroupBatchResult {
+	locked, release, err := lockLANWrite(ctx)
+	if err != nil {
+		return failedGroupBatch(policies, now, "configuration_lock_unavailable")
+	}
+	defer release()
+	ctx = locked
 	result := &models.DeviceGroupBatchResult{
 		Status: "unchanged", Planned: len(policies), Reloads: map[string]int{}, Items: make([]*models.DeviceGroupBatchItem, 0, len(policies)), EvaluatedAt: now.Format(time.RFC3339),
 	}
@@ -103,7 +127,7 @@ func (applier *defaultGroupPolicyApplier) ApplyBatch(ctx context.Context, polici
 	backups := map[string]devicePolicyBackup{}
 	if applier.policy != nil {
 		for _, pair := range []struct{ service, kind string }{{"firewall", "access"}, {"eqos", "speed"}} {
-			if !need[pair.service] {
+			if !need[pair.service] && !(pair.service == "firewall" && need["traffic"]) {
 				continue
 			}
 			backup, err := applier.policy.store.Backup(ctx, pair.kind)
@@ -162,6 +186,9 @@ func (applier *defaultGroupPolicyApplier) ApplyBatch(ctx context.Context, polici
 			return failedGroupBatch(policies, now, "quota_batch_failed: "+quotaErr.Error())
 		}
 	}
+	if accumulator.needsAccessCommit() {
+		need["firewall"] = true
+	}
 	commit, reloadErr := applyCollectedGroupBatch(ctx, accumulator, rateLimit)
 	configs := make([]string, 0, 2)
 	if reloadErr == nil && need["firewall"] {
@@ -184,7 +211,7 @@ func (applier *defaultGroupPolicyApplier) ApplyBatch(ctx context.Context, polici
 		if commit != nil && commit.rollback != nil && commit.rollback(ctx) != nil {
 			recoveryFailed = true
 		}
-		if quotaSnapshot != nil && applier.traffic.RestoreQuotaBatch(*quotaSnapshot) != nil {
+		if quotaSnapshot != nil && applier.traffic.RestoreQuotaBatch(ctx, *quotaSnapshot) != nil {
 			recoveryFailed = true
 		}
 		for service, backup := range backups {
@@ -229,8 +256,8 @@ func applyCollectedGroupBatch(ctx context.Context, accumulator *groupBatchAccumu
 		}
 	}
 	configDir := deviceRestrictionConfigDir()
-	if len(access) > 0 {
-		if err := groupBatchWriteAccess(configDir, access); err != nil {
+	if len(access) > 0 || accumulator.accessBindingsPending {
+		if err := groupBatchWriteAccess(ctx, configDir, access); err != nil {
 			return nil, err
 		}
 	}
@@ -271,6 +298,9 @@ func groupRateLimitModule(policy *DevicePolicyModule) *RateLimitModule {
 }
 
 func applyProviderGroupSpeedBatch(ctx context.Context, module *RateLimitModule, changes []groupBatchRestrictionChange) (func(context.Context) error, error) {
+	if native, ok := module.provider(ctx).(*nativeRateLimitProvider); ok {
+		return applyNativeSpeedBatch(ctx, module, native, changes)
+	}
 	type appliedChange struct {
 		target   rateLimitTarget
 		previous models.DeviceSpeedPolicy
@@ -302,7 +332,9 @@ func applyProviderGroupSpeedBatch(ctx context.Context, module *RateLimitModule, 
 			previous = *change.current.Speed
 		}
 		if err := module.Apply(ctx, target, *change.request.Speed); err != nil {
-			_ = rollback(ctx)
+			if restoreErr := rollback(ctx); restoreErr != nil {
+				return rollback, &networkRecoveryError{fmt.Errorf("%v; rollback failed: %w", err, restoreErr)}
+			}
 			return rollback, err
 		}
 		applied = append(applied, appliedChange{target: target, previous: previous})
@@ -397,6 +429,21 @@ func (applier *defaultGroupPolicyApplier) Apply(ctx context.Context, effective *
 		managed[kind] = true
 	}
 	failures := make([]string, 0, 3)
+	if managed["access"] && applier.policy != nil {
+		if _, system := applier.policy.store.(*systemDevicePolicyStore); system {
+			held, err := legacyAccessReviewForDevice(ctx, effective.DeviceID)
+			if err != nil {
+				return err
+			}
+			if held {
+				managed["access"] = false
+				if batch := groupBatchAccumulatorFrom(ctx); batch != nil {
+					batch.accessBindingsPending = true
+				}
+			}
+		}
+	}
+
 	if managed["access"] {
 		if applier.policy == nil {
 			failures = append(failures, "access policy service unavailable")
