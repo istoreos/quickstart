@@ -5,6 +5,9 @@ SCRIPT_DIR="$(CDPATH= cd -- "$(dirname "$0")" && pwd)"
 test_root="$(mktemp -d)"
 trap 'rm -r -- "$test_root"' EXIT HUP INT TERM
 
+grep -Fq 'command -v uclient-fetch' "$SCRIPT_DIR/install-candidate-remote.sh"
+grep -Fq -- "--header='X-Forwarded-Sid: deploy-smoke'" "$SCRIPT_DIR/install-candidate-remote.sh"
+
 prepare_fixture() {
     fixture="$1"
     mkdir -p "$fixture/root/usr/sbin" "$fixture/root/www/luci-static/quickstart/i18n" \

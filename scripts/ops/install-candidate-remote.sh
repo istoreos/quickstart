@@ -42,6 +42,20 @@ template_next="${remote_template}.quickstart-next"
 rollback_active=0
 install_complete=0
 
+health_probe() {
+    probe_url="$1"
+    if command -v curl >/dev/null 2>&1; then
+        curl -fsS --max-time 3 -H 'X-Forwarded-Sid: deploy-smoke' "$probe_url" >/dev/null 2>&1
+    elif command -v uclient-fetch >/dev/null 2>&1; then
+        uclient-fetch --quiet --timeout=3 --header='X-Forwarded-Sid: deploy-smoke' -O /dev/null "$probe_url" >/dev/null 2>&1
+    elif command -v wget >/dev/null 2>&1; then
+        wget -q -T 3 -O /dev/null --header='X-Forwarded-Sid: deploy-smoke' "$probe_url" >/dev/null 2>&1
+    else
+        echo 'no supported HTTP client for candidate health check' >&2
+        return 127
+    fi
+}
+
 restore_release() {
     rollback_status="$?"
     trap - EXIT HUP INT TERM
@@ -157,7 +171,7 @@ health_ok=0
 attempt=1
 while [ "$attempt" -le "$health_attempts" ]; do
     if "$remote_service" status >/dev/null 2>&1; then
-        if [ "$health_url" = "-" ] || curl -fsS --max-time 3 -H 'X-Forwarded-Sid: deploy-smoke' "$health_url" >/dev/null 2>&1; then
+        if [ "$health_url" = "-" ] || health_probe "$health_url"; then
             health_ok=1
             break
         fi
