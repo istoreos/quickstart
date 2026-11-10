@@ -16,10 +16,11 @@ const { build, preview } = require(path.join(root, 'web/node_modules/vite'));
   // preview-only: every WAN request goes to the parent's simulated card API.
   const fullOut=path.join(process.env.BUILD_CACHE_WORK_DIR,'vue-preview/apps/fastnet/webui');
   execFileSync('/var/cache/build-cache/run.sh',['--','npm','run','build','--','--outDir',fullOut],{cwd:path.join(fastnet,'cmd/fastnet/webui-src'),stdio:'pipe'});
+  const version=fs.readFileSync(path.join(fastnet,'cmd/fastnet/version.go'),'utf8').match(/const VERSION = "([^"]+)"/)[1];
   const html=path.join(fullOut,'index.html');
   fs.writeFileSync(html,fs.readFileSync(html,'utf8').replace('<head>',`<head><script>
   const originalFetch=window.fetch.bind(window);
-  window.fetch=(input,options)=>{const url=new URL(input,location.href),match=url.pathname.match(/\\/api\\/card\\/(.*)/);if(match)return parent.fetch('/cgi-bin/luci/admin/services/fastnet/card/'+match[1]+url.search,options);return Promise.resolve(new Response(JSON.stringify(url.pathname.includes('test-usage')?{used:0,limit:5,remaining:5}:{}),{headers:{'Content-Type':'application/json'}}))};
+  window.fetch=(input,options)=>{const url=new URL(input,location.href),match=url.pathname.match(/\\/api\\/card\\/(.*)/);if(match)return parent.fetch('/cgi-bin/luci/admin/services/fastnet/card/'+match[1]+url.search,options);return Promise.resolve(new Response(JSON.stringify(url.pathname.includes('/api/version')?{version:${JSON.stringify(version)}}:url.pathname.includes('test-usage')?{used:0,limit:5,remaining:5}:{}),{headers:{'Content-Type':'application/json'}}))};
   </script>`));
   const server=await preview({configFile});
   console.log('Quickstart Vue design: http://0.0.0.0:5180/');

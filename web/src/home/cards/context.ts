@@ -2,7 +2,7 @@ import {reactive,readonly,shallowRef,type Component} from 'vue'
 import {getTheme,getThemePreference,subscribeTheme,type ThemeSnapshot} from '../../utils/theme'
 import type {CardForm} from './contract'
 export class CardRequestError extends Error{constructor(public status:number,message='card_request_failed'){super(message)}}
-export function createCardContext(apiBase:string,locale:string,form:CardForm){
+export function createCardContext(apiBase:string,locale:string,form:CardForm,components:Record<string,Component>={}){
  const theme=reactive<ThemeSnapshot>({preference:getThemePreference(),effective:getTheme()}),display=reactive({form}),details=shallowRef<{component:Component;props:Record<string,unknown>;wide?:boolean;onClose?:()=>void}|null>(null)
  const unsubscribe=subscribeTheme(snapshot=>Object.assign(theme,snapshot)),requests=new Set<AbortController>()
  let disposed=false
@@ -31,5 +31,5 @@ export function createCardContext(apiBase:string,locale:string,form:CardForm){
   }finally{clearTimeout(timer);requests.delete(controller);options.signal?.removeEventListener('abort',stop)}
  }
  function closeDetails(){const closing=details.value;details.value=null;closing?.onClose?.()}
- return {context:{theme:readonly(theme),get form(){return display.form},apiBase,locale,request,openDetails(component:Component,props:Record<string,unknown>={},options:{wide?:boolean;onClose?:()=>void}={}){if(!disposed)details.value={component,props,...options}}},details,closeDetails,setForm(form:CardForm){display.form=form},dispose(){disposed=true;unsubscribe();for(const r of requests)r.abort();requests.clear();details.value=null}}
+ return {context:{theme:readonly(theme),get form(){return display.form},apiBase,locale,request,components,openDetails(component:Component,props:Record<string,unknown>={},options:{wide?:boolean;onClose?:()=>void}={}){if(!disposed)details.value={component,props,...options}}},details,closeDetails,setForm(form:CardForm){display.form=form},dispose(){disposed=true;unsubscribe();for(const r of requests)r.abort();requests.clear();details.value=null}}
 }

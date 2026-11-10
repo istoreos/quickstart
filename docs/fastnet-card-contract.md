@@ -59,3 +59,10 @@ layout v4 保持 v3 的 rows/widgetPreferences 结构，新增符合 `plugin.<id
 FastNet 卡片入口仍是内容哈希 ESM，允许从同一插件目录按需导入哈希弹窗 chunk；构建 provenance 列出全部 JS 资源。入口共享宿主 Vue；完整 FastNet 的 Vue 只在显式打开 iframe 后出现，关闭即移除 iframe。iframe 消息仅有 ready、close、focus 和有效主题，不传 token 或测速数据；结果通过原持久任务接口读取。
 
 `GET /cgi-bin/luci/admin/services/fastnet/embed?theme=light|dark` 为认证 root 的导航入口，使用现有 `/apps/fastnet/` 同源网关。插件自身声明 `backend.proxyMode=app-base`、`pathMode=strip-public-base`；FastNet 的首页重定向及前端 API 尊重公共前缀。无网关时不降级到混合内容的外部 HTTP iframe。子窗口中的外网工作区复用原卡片模型与 `/api/card/*` 接口，不调用旧 SSE 测速后再尝试拼接摘要。
+
+
+## 可选的宿主标准操作控件
+
+`context.components.PrimaryAction` 和 `Menu` 是可选的宿主 Vue 控件，使用同一共享 Vue SDK。PrimaryAction 接收 icon、默认文字 slot 和 click；Menu 接收 label、`{id,label,disabled?}[]` items，并发出 select(id)。它们直接复用首页已有的控件、边框、分隔线、焦点与键盘行为，不读取插件业务状态。旧宿主没有此字段时，插件使用原生回退。组件注册不进入安装目录元数据，测速与数据仍由 FastNet 负责。
+
+FastNet 完整前端按晴岚公共闭包独立构建；完整工作台不会进入 Quickstart 首屏。`GET /api/version` 显示实际核心版本。经应用代理运行的页面使用认证的 LuCI `GET /admin/services/fastnet/browser-origin` 判断真实浏览器来源；该接口只返回布尔能力，不信任浏览器转发头、不触发测速。LAN 的公开路径由原门面适配，原测量逻辑、计时、流与公式不变。

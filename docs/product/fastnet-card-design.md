@@ -63,3 +63,14 @@ OUTPUT_DIR=/tmp/fastnet-card-review NODE_PATH=/tmp/quickstart-playwright/node_mo
 卡片主体 gzip 8,042 字节，弹窗胶水另一个按需 chunk 1,859 字节；宿主首屏相对原基线增量 20,425 字节，分别满足原 8 KiB / 20 KiB 门槛。完整 FastNet 前端不进入首页初始资源。`scripts/ui-design.sh` 预览使用正式完整前端，仅将 iframe API 接到父页面的模拟服务，不转发到路由器。
 
 当前验证与测试机部署以 [方形卡片/iframe 验收记录](../archive/evidence/fastnet-card/20261110-square-iframe/report.json) 为准；历史 FN01–FN12 及旧弹窗记录保留用于追溯，不表示对当前候选重新执行了全套验收。
+
+
+## 晴岚完整前端与统一卡片操作区（2026-11-10）
+
+FastNet 卡片右上角现在直接复用 Quickstart 原有主操作和更多菜单，使用相同的高度、边框、分隔线、颜色与字体，去掉外跳箭头；保留旧宿主的原生回退。无需在宿主内复制 FastNet 的业务界面。
+
+完整 FastNet 前端使用 LinkEase 晴岚 V1.0：同步上游 manifest 的完整50文件闭包并逐项验hash，Vue只使用原始公共CSS和令牌，不引入React运行时。独立页面支持浅色/深色/跟随系统，iframe由首页决定有效主题；主题只改外观，表单、LAN参数和任务不重挂。顶部通过只读API显示实际核心v0.8.2。
+
+自有10个页面、导航、结果、表单、弹窗、日志与失败反馈均迁移；外部NAT/IPv6服务文档保持原内容。LAN库仅增加传输注入：计时、六次Ping、并发、流、服务端上传计时和速率公式保持原样。代理模式由FastNet自身LuCI来源接口读取真实uHTTPd客户端，不把网关loopback当作浏览器，也不改网关或iStore。
+
+[本轮验证记录](../archive/evidence/fastnet-card/20261110-qinglan/verification.md)包含最终84组全页/状态检查、卡片回归、实际LAN流与压测停止、HTTP/HTTPS和范围核对；源码已先提交此前全部工作，再单独提交此次改造。测试机仍为 `192.168.30.7:10000`，并保留回滚副本。

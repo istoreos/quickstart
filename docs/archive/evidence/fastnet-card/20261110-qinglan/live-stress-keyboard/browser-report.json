@@ -1,0 +1,68 @@
+{
+  "status": "passed",
+  "checks": [
+    "retained production homepage uses native primary action and menu without external arrow",
+    "actual core version is shown and trusted gateway preserves nonlocal browser LAN capability",
+    "host theme preserves iframe form identity; Escape closes LAN settings before the host window",
+    "real stress mode stops, reports stopped and retains truthful completion semantics"
+  ],
+  "errors": [],
+  "LAN": [
+    {
+      "path": "/apps/fastnet/ping",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/ping",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/ping",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/ping",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/ping",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/ping",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    }
+  ]
+}

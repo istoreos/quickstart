@@ -1,0 +1,308 @@
+{
+  "status": "passed",
+  "checks": [
+    "real saved homepage uses redesigned card; full frontend absent before click",
+    "authenticated same-origin full FastNet iframe loads without submitting a test",
+    "live OS theme updates iframe colours in place",
+    "mobile full frontend fits iframe and closing removes it"
+  ],
+  "errors": [],
+  "requests": [
+    {
+      "path": "/cgi-bin/luci/admin/quickstart",
+      "method": "GET"
+    },
+    {
+      "path": "/luci-static/istorenas/css/cascade.css",
+      "method": "GET"
+    },
+    {
+      "path": "/luci-static/resources/easepi/easeicon.css",
+      "method": "GET"
+    },
+    {
+      "path": "/luci-static/istorenas/js/polyfill.min.js",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/translations/zh-cn",
+      "method": "GET"
+    },
+    {
+      "path": "/luci-static/resources/cbi.js",
+      "method": "GET"
+    },
+    {
+      "path": "/luci-static/istorenas/js/jquery.min.js",
+      "method": "GET"
+    },
+    {
+      "path": "/luci-static/resources/luci.js",
+      "method": "GET"
+    },
+    {
+      "path": "/luci-static/quickstart/index.js",
+      "method": "GET"
+    },
+    {
+      "path": "/luci-static/quickstart/style.css",
+      "method": "GET"
+    },
+    {
+      "path": "/luci-static/resources/ui.js",
+      "method": "GET"
+    },
+    {
+      "path": "/luci-static/resources/rpc.js",
+      "method": "GET"
+    },
+    {
+      "path": "/luci-static/resources/form.js",
+      "method": "GET"
+    },
+    {
+      "path": "/ubus/",
+      "method": "POST"
+    },
+    {
+      "path": "/luci-static/quickstart/card-runtime-v1.js",
+      "method": "GET"
+    },
+    {
+      "path": "/luci-static/quickstart/app.js",
+      "method": "GET"
+    },
+    {
+      "path": "/luci-static/quickstart/vendor.js",
+      "method": "GET"
+    },
+    {
+      "path": "/luci-static/resources/validation.js",
+      "method": "GET"
+    },
+    {
+      "path": "/luci-static/resources/uci.js",
+      "method": "GET"
+    },
+    {
+      "path": "/luci-static/resources/fs.js",
+      "method": "GET"
+    },
+    {
+      "path": "/luci-static/resources/menu-argon.js",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/menu",
+      "method": "GET"
+    },
+    {
+      "path": "/ubus/",
+      "method": "POST"
+    },
+    {
+      "path": "/luci-static/istorenas/fonts/TypoGraphica.woff",
+      "method": "GET"
+    },
+    {
+      "path": "/luci-static/resources/easepi/iconfont.woff2",
+      "method": "GET"
+    },
+    {
+      "path": "/luci-static/istorenas/fonts/argon.ttf",
+      "method": "GET"
+    },
+    {
+      "path": "/ubus/",
+      "method": "POST"
+    },
+    {
+      "path": "/luci-static/quickstart/i18n/zh-cn.json",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/layout/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/launcher/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/store/installed",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/nas/sandbox/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/u/network/status/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/network/port/list/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/u/network/statistics/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/lanctrl/v2/networks/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/nas/disk/status/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/raid/list/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/u/nas/service/status/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/guide/docker/status/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/guide/download-service/status/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/u/guide/ddns/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/system/status/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/u/system/version/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/cards/",
+      "method": "GET"
+    },
+    {
+      "path": "/ubus/",
+      "method": "POST"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/lanctrl/v2/devices/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/lanctrl/v2/router-context/",
+      "method": "GET"
+    },
+    {
+      "path": "/luci-static/fastnet/quickstart/card.673f7cc9.js",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "method": "GET"
+    },
+    {
+      "path": "/luci-static/quickstart/device-icons/computer.webp",
+      "method": "GET"
+    },
+    {
+      "path": "/luci-static/fastnet/quickstart/chunk.5e62b45e.js",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/embed",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/linkease_auth/auth",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/webui/",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/webui/assets/index-kAy33SKe.js",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/webui/assets/index-BJJk_GxW.css",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/api/version",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/api/card/summary",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/browser-origin",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/system/check-update/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/embed",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/linkease_auth/auth",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/webui/",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/webui/assets/index-kAy33SKe.js",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/webui/assets/index-BJJk_GxW.css",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/api/version",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/api/card/summary",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/browser-origin",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "method": "GET"
+    }
+  ]
+}

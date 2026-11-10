@@ -1,0 +1,197 @@
+{
+  "status": "failed",
+  "checks": [
+    {
+      "id": "page-light-1440-quick",
+      "size": {
+        "width": 1440,
+        "scroll": 1440,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-1440-multi",
+      "size": {
+        "width": 1440,
+        "scroll": 1440,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-1440-nat",
+      "size": {
+        "width": 1440,
+        "scroll": 1440,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-1440-ipv6",
+      "size": {
+        "width": 1440,
+        "scroll": 1440,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-1440-homebox",
+      "size": {
+        "width": 1440,
+        "scroll": 1440,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-1440-speedtest",
+      "size": {
+        "width": 1440,
+        "scroll": 1440,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-1440-browser-lan",
+      "size": {
+        "width": 1440,
+        "scroll": 1440,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-1440-browser-ipv6",
+      "size": {
+        "width": 1440,
+        "scroll": 1440,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-1440-browser-nat",
+      "size": {
+        "width": 1440,
+        "scroll": 1440,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-1440-external-tools",
+      "size": {
+        "width": 1440,
+        "scroll": 1440,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-1024-quick",
+      "size": {
+        "width": 1024,
+        "scroll": 1024,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-1024-multi",
+      "size": {
+        "width": 1024,
+        "scroll": 1024,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-1024-nat",
+      "size": {
+        "width": 1024,
+        "scroll": 1024,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-1024-ipv6",
+      "size": {
+        "width": 1024,
+        "scroll": 1024,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-1024-homebox",
+      "size": {
+        "width": 1024,
+        "scroll": 1024,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-1024-speedtest",
+      "size": {
+        "width": 1024,
+        "scroll": 1024,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-1024-browser-lan",
+      "size": {
+        "width": 1024,
+        "scroll": 1024,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-1024-browser-ipv6",
+      "size": {
+        "width": 1024,
+        "scroll": 1024,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-1024-browser-nat",
+      "size": {
+        "width": 1024,
+        "scroll": 1024,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-1024-external-tools",
+      "size": {
+        "width": 1024,
+        "scroll": 1024,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-390-quick",
+      "size": {
+        "width": 390,
+        "scroll": 390,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    }
+  ],
+  "errors": [],
+  "layer": "production frontend; native local Go version and LAN endpoints; WAN streams and third-party pages are explicit fixtures",
+  "failure": "AssertionError [ERR_ASSERTION]: {\"id\":\"multi\",\"width\":390,\"controls\":[{\"h\":38,\"min\":\"36px\",\"disabled\":false,\"width\":390,\"coarse\":false},{\"h\":38,\"min\":\"36px\",\"disabled\":false,\"width\":390,\"coarse\":false}]}\n    at /projects/workspace-linkease-ubuntu/linkease-github/fastnet/cmd/fastnet/webui-src/scripts/check-qinglan-ui.cjs:9:785"
+}

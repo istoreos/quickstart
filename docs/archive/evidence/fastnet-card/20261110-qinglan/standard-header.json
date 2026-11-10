@@ -1,0 +1,24 @@
+{
+  "status": "passed",
+  "styles": {
+    "actual": {
+      "height": 30,
+      "border": "rgb(220, 226, 234)",
+      "bg": "rgb(255, 255, 255)",
+      "font": "14px"
+    },
+    "reference": {
+      "height": 30,
+      "border": "rgb(220, 226, 234)",
+      "bg": "rgb(255, 255, 255)",
+      "font": "14px"
+    }
+  },
+  "checks": [
+    "native shared primary action and menu",
+    "same group height, border, surface and font as connection card",
+    "no external-window arrow",
+    "native menu details restores focus",
+    "full FastNet menu opens versioned iframe without running a test"
+  ]
+}

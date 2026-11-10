@@ -1,0 +1,22 @@
+{
+  "status": "passed",
+  "checks": [
+    {
+      "id": "theme-switch-keeps-draft-and-node-no-business-requests"
+    },
+    {
+      "id": "LAN-settings-live-theme-keeps-parameters-Escape-restores-focus"
+    },
+    {
+      "id": "WAN-and-IPv6-failures-remain-truthful-and-use-Qinglan-warning"
+    },
+    {
+      "id": "appearance-works-with-unavailable-storage"
+    },
+    {
+      "id": "LAN-stress-stop-aborts-and-does-not-claim-success"
+    }
+  ],
+  "errors": [],
+  "layer": "production frontend; native local Go version and LAN endpoints; WAN streams and third-party pages are explicit fixtures"
+}

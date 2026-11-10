@@ -9,12 +9,14 @@
 import {externalWidget} from './catalog'
 import {computed,markRaw,onErrorCaptured,onMounted,onUnmounted,ref,shallowRef,watch,type Component} from 'vue'
 import NetworkWidgetDialog from '../NetworkWidgetDialog.vue'
+import WidgetPrimaryAction from '../WidgetPrimaryAction.vue'
+import WidgetMenu from '../WidgetMenu.vue'
 import {createCardContext} from './context'
 import {loadCard} from './loader'
 import type {CardForm,CardManifest} from './contract'
 const props=defineProps<{manifest:CardManifest;form:CardForm;rediscover?:()=>Promise<CardManifest|undefined>}>()
 const title=computed(()=>window.vue_lang==='en'?externalWidget(props.manifest.id as `plugin.${string}`).en:props.manifest.title)
-const root=ref<HTMLElement|null>(null),component=shallowRef<Component|null>(null),state=ref('waiting'),owner=createCardContext(props.manifest.apiBase,window.vue_lang||'zh-cn',props.form)
+const root=ref<HTMLElement|null>(null),component=shallowRef<Component|null>(null),state=ref('waiting'),owner=createCardContext(props.manifest.apiBase,window.vue_lang||'zh-cn',props.form,{PrimaryAction:markRaw(WidgetPrimaryAction),Menu:markRaw(WidgetMenu)})
 watch(()=>props.form,form=>owner.setForm(form))
 let alive=true,sequence=0,rediscovered=false,observer:IntersectionObserver|undefined
 async function mount(manifest=props.manifest){

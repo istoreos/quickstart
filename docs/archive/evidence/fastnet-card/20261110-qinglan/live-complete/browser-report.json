@@ -1,0 +1,357 @@
+{
+  "status": "passed",
+  "checks": [
+    "retained production homepage uses native primary action and menu without external arrow",
+    "actual core version is shown and trusted gateway preserves nonlocal browser LAN capability",
+    "host theme preserves iframe form identity; Escape closes LAN settings before the host window",
+    "one real six-ping/download/upload measurement succeeds through /apps/fastnet with live theme changes",
+    "real stress mode stops, reports stopped and retains truthful completion semantics"
+  ],
+  "errors": [],
+  "LAN": [
+    {
+      "path": "/apps/fastnet/ping",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/ping",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/ping",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/ping",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/ping",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/ping",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/ping",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/ping",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/ping",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/ping",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/ping",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/ping",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    }
+  ],
+  "singleLANTrace": [
+    {
+      "path": "/apps/fastnet/ping",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/ping",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/ping",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/ping",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/ping",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/ping",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    }
+  ],
+  "LANresult": "链路延迟\n12.2 ms\n12.24 ms\n内网下载\n925.9 Mbps\n925.9 Mbps\n内网上传\n2.74 Gbps\n2.74 Gbps",
+  "stopMethod": "mouse"
+}
