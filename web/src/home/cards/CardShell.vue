@@ -2,7 +2,7 @@
  <section ref="root" class="qs-card-shell" :aria-busy="state==='loading'" :data-card-state="state">
   <component v-if="component" :is="component" :context="owner.context"/>
   <div v-else class="qs-card-placeholder" :role="state==='error'?'status':undefined"><h2>{{title}}</h2><p>{{state==='error'?'卡片暂时无法加载':'正在准备卡片…'}}</p><button v-if="state==='error'" @click="retry">重试</button></div>
-  <NetworkWidgetDialog v-if="owner.details.value" :title="title" :wide="owner.details.value.wide" @close="owner.closeDetails()"><component :is="owner.details.value.component" v-bind="owner.details.value.props" @close="owner.closeDetails()"/></NetworkWidgetDialog>
+  <NetworkWidgetDialog v-if="owner.details.value" :title="title" :wide="owner.details.value.wide" :header-action="owner.details.value.headerAction" @close="owner.closeDetails()"><component :is="owner.details.value.component" v-bind="owner.details.value.props" @close="owner.closeDetails()"/></NetworkWidgetDialog>
  </section>
 </template>
 <script setup lang="ts">

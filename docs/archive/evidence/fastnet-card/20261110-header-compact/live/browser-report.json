@@ -1,0 +1,30 @@
+{
+  "status": "passed",
+  "checks": [
+    "new-window action opens a separate page",
+    "single compact title row at 1440/390/320px in light and dark themes",
+    "iframe focus boundaries, Escape and opener focus restoration",
+    "ordinary result details retain their existing header"
+  ],
+  "errors": [],
+  "layouts": [
+    {
+      "width": 1440,
+      "headerHeight": 61,
+      "iframeOffset": 62,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "headerHeight": 61,
+      "iframeOffset": 62,
+      "overflow": false
+    },
+    {
+      "width": 320,
+      "headerHeight": 61,
+      "iframeOffset": 62,
+      "overflow": false
+    }
+  ]
+}

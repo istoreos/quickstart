@@ -14,8 +14,8 @@ test('FN03 card scope has live readonly theme/form and aborts only its own pendi
   assert.equal(owner.context.form,'standard');owner.setForm('summary');assert.equal(owner.context.form,'summary')
   assert.equal(owner.context.theme.__v_isReadonly,true)
   let closes=0
-  owner.context.openDetails({render(){}},{message:'wide iframe'},{wide:true,onClose(){closes++}})
-  assert.equal(owner.details.value.wide,true);owner.closeDetails();owner.closeDetails();assert.equal(closes,1)
+  owner.context.openDetails({render(){}},{message:'wide iframe'},{wide:true,headerAction:{href:'/cgi-bin/luci/admin/services/fastnet/open',label:'新窗口打开'},onClose(){closes++}})
+  assert.equal(owner.details.value.wide,true);assert.equal(owner.details.value.headerAction.label,'新窗口打开');owner.closeDetails();owner.closeDetails();assert.equal(closes,1)
   window.token='fixture CSRF=+/'
   globalThis.fetch=async(url,options)=>{
    assert.equal(new URL(url,'http://router.invalid').searchParams.get('token'),window.token)

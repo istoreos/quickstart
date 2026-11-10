@@ -54,7 +54,7 @@ layout v4 保持 v3 的 rows/widgetPreferences 结构，新增符合 `plugin.<id
 
 ## 可选的宽详情弹窗与 FastNet 嵌入
 
-`context.openDetails(component, props, options?)` 可选第三个参数 `{wide?:boolean, onClose?:()=>void}`。省略时保留原 560px 详情弹窗；wide 使用受视口限制的宽弹窗。关闭回调最多一次，宿主卸载时只清理，不触发已卸载业务。详情组件可发出 `close` 事件。iframe 为键盘焦点节点，子窗口通过已校验的同源消息处理 Escape 与 Tab 边界。
+`context.openDetails(component, props, options?)` 可选第三个参数 `{wide?:boolean, headerAction?:{href:string,label:string}, onClose?:()=>void}`。省略时保留原 560px 详情弹窗；wide 使用受视口限制的宽弹窗和单行标题，不显示 QUICKSTART 副标题。可选 headerAction 将同源“新窗口打开”链接放在标题栏关闭按钮之前；业务组件不再重复渲染工具栏。关闭回调最多一次，宿主卸载时只清理，不触发已卸载业务。详情组件可发出 `close` 事件。iframe 为键盘焦点节点，子窗口通过已校验的同源消息处理 Escape 与 Tab 边界。
 
 FastNet 卡片入口仍是内容哈希 ESM，允许从同一插件目录按需导入哈希弹窗 chunk；构建 provenance 列出全部 JS 资源。入口共享宿主 Vue；完整 FastNet 的 Vue 只在显式打开 iframe 后出现，关闭即移除 iframe。iframe 消息仅有 ready、close、focus 和有效主题，不传 token 或测速数据；结果通过原持久任务接口读取。
 

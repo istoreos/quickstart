@@ -56,7 +56,7 @@ OUTPUT_DIR=/tmp/fastnet-card-review NODE_PATH=/tmp/quickstart-playwright/node_mo
 
 点击「测速」「查看进度」或菜单中的「完整 FastNet」打开首页内的宽弹窗。完整页面及其 Vue 只在点击后加载，关闭后移除 iframe。打开不自动测速；子窗口现在默认进入与独立页面相同的快速体验，所有测速入口使用同一核心归档，点击开始才提交一次操作。关闭不会停止已提交任务，首页恢复观察同一个任务并更新结果；停止测速可在子窗口或首页进行。原 FastNet 其他页面仍可从完整页面菜单访问。
 
-宿主通过向后兼容的 `openDetails(component, props, {wide, onClose})` 提供宽弹层和关闭通知。打开 iframe 时首页暂停查询，避免双轮询；关闭后立即读一次摘要。框内 Escape 返回首页并恢复焦点，Tab 边界与外层弹窗衔接。主题仅由 Quickstart 决定，向 iframe 发送有效 light/dark 消息；消息校验同源及发送窗口，页面原地更新，不重载或重复测速。浅色嵌入页沿用 FastNet 现有浅色布局，深色沿用其深色布局，完整页面独立打开的行为保持原样。
+宿主通过向后兼容的 `openDetails(component, props, {wide, headerAction, onClose})` 提供宽弹层、标题栏操作和关闭通知。FastNet 弹层头部只有一行“外网测速”，右侧依次是“新窗口打开”和关闭按钮；移除 QUICKSTART 副标题及 FASTNET · WAN / LAN / NAT / IPv6 工具栏。打开 iframe 时首页暂停查询，避免双轮询；关闭后立即读一次摘要。框内 Escape 返回首页并恢复焦点，Tab 边界与外层弹窗衔接。主题仅由 Quickstart 决定，向 iframe 发送有效 light/dark 消息；消息校验同源及发送窗口，页面原地更新，不重载或重复测速。浅色嵌入页沿用 FastNet 现有浅色布局，深色沿用其深色布局，完整页面独立打开的行为保持原样。
 
 新增的认证 LuCI `/admin/services/fastnet/embed` 只接受 root 的 GET，并选择同源 `/apps/fastnet/` 入口。FastNet 自己的插件声明使用现有 app-base 代理能力，核心首页跳转与前端 API 使用相对/带前缀路径，支持 HTTPS 同源访问。没有网关时显示加载失败、重试和新窗口打开，不隐式跳转 HTTP 端口。没有修改 iStore、LinkEase 桌面、应用网关源代码，也不写网络设置。加载握手超过 15 秒移除 iframe；失败可明确重试。
 
