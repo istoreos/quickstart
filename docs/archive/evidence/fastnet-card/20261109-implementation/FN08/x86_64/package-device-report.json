@@ -1,0 +1,51 @@
+{
+  "milestone": "FN08",
+  "status": "passed",
+  "device": "x86_64",
+  "checks": [
+    "real opkg install/upgrade resolves minimum core/LuCI dependencies; registration appears after its asset",
+    "uhttpd serves exact hashed ESM directly with JavaScript MIME; actual headers and wire bytes captured",
+    "missing asset fails registration atomically; a repaired asset can be registered explicitly",
+    "real LuCI uninstall removes only its registration/assets and preserves the standalone core/other card",
+    "real broken-package postinst fails without registering an unavailable card; exact candidate repairs it",
+    "real reinstall restores the same hashed card; no Quickstart layout files are owned by these packages"
+  ],
+  "static": {
+    "status": 200,
+    "headers": {
+      "Connection": "close",
+      "ETag": "\"3e38-4530-0\"",
+      "Last-Modified": "Thu, 01 Jan 1970 00:00:00 GMT",
+      "Date": "Mon, 09 Nov 2026 15:18:35 GMT",
+      "Content-Type": "text/javascript",
+      "Content-Length": "17712"
+    },
+    "wireBytes": 17712,
+    "sha256": "4e616d951f18b86f4d0f962e4a17ac9f719bf4f501d6ccfa4266d390392159b6",
+    "conditionalStatus": 304,
+    "contentEncoding": "identity"
+  },
+  "restored": true,
+  "packages": [
+    {
+      "name": "fastnet",
+      "version": "0.8.2-1",
+      "sha256": "a6a89757fecad40ab965578eeb288642eebf9c69256ddd97a342a7750eac4479"
+    },
+    {
+      "name": "luci-app-fastnet",
+      "version": "0.8.2-r1",
+      "sha256": "2fb3da5b3edac9c8e88c7ec06fcce4a2986417164823f8bbdbbebdf5eb26aacc"
+    },
+    {
+      "name": "luci-i18n-fastnet-zh-cn",
+      "version": "git-26.313.00000-082",
+      "sha256": "7dd666aec0d71c1e1b6d35d7af682e65cd0ad3b8c5869ccdf7ca683ef5cf0d9d"
+    },
+    {
+      "name": "app-meta-fastnet",
+      "version": "0.8.2-10",
+      "sha256": "e2bec6e8d917048041dfd68bc609c5ae18c91590bc6d1f4390725da182025c90"
+    }
+  ]
+}

@@ -1,0 +1,146 @@
+{
+  "TH01": {
+    "status": "passed",
+    "evidence": [
+      "FN11/formal-themes-final-pass/checks-browser-report.json",
+      "FN11/preview/browser-report.json",
+      "FN12/x86_64-reboot-r2/live-browser-report.json",
+      "FN12/x86_64-reboot-r2/reboot-browser-report.json",
+      "FN12/aarch64-reboot-r3/live-browser-report.json",
+      "FN12/aarch64-reboot-r3/reboot-browser-report.json"
+    ],
+    "layer": "formal installed LuCI page: full deterministic state matrix; both architectures additionally real tasks and real reboots, with browser mobile/media emulation"
+  },
+  "TH02": {
+    "status": "passed",
+    "evidence": [
+      "FN11/formal-themes-final-pass/checks-browser-report.json",
+      "FN11/preview/browser-report.json",
+      "FN12/x86_64-reboot-r2/live-browser-report.json",
+      "FN12/x86_64-reboot-r2/reboot-browser-report.json",
+      "FN12/aarch64-reboot-r3/live-browser-report.json",
+      "FN12/aarch64-reboot-r3/reboot-browser-report.json"
+    ],
+    "layer": "formal installed LuCI page: full deterministic state matrix; both architectures additionally real tasks and real reboots, with browser mobile/media emulation"
+  },
+  "TH03": {
+    "status": "passed",
+    "evidence": [
+      "FN11/formal-themes-final-pass/checks-browser-report.json",
+      "FN11/preview/browser-report.json",
+      "FN12/x86_64-reboot-r2/live-browser-report.json",
+      "FN12/x86_64-reboot-r2/reboot-browser-report.json",
+      "FN12/aarch64-reboot-r3/live-browser-report.json",
+      "FN12/aarch64-reboot-r3/reboot-browser-report.json"
+    ],
+    "layer": "formal installed LuCI page: full deterministic state matrix; both architectures additionally real tasks and real reboots, with browser mobile/media emulation"
+  },
+  "TH04": {
+    "status": "passed",
+    "evidence": [
+      "FN11/formal-themes-final-pass/checks-browser-report.json",
+      "FN11/preview/browser-report.json",
+      "FN12/x86_64-reboot-r2/live-browser-report.json",
+      "FN12/x86_64-reboot-r2/reboot-browser-report.json",
+      "FN12/aarch64-reboot-r3/live-browser-report.json",
+      "FN12/aarch64-reboot-r3/reboot-browser-report.json"
+    ],
+    "layer": "formal installed LuCI page: full deterministic state matrix; both architectures additionally real tasks and real reboots, with browser mobile/media emulation"
+  },
+  "TH05": {
+    "status": "passed",
+    "evidence": [
+      "FN11/formal-themes-final-pass/checks-browser-report.json",
+      "FN11/preview/browser-report.json",
+      "FN12/x86_64-reboot-r2/live-browser-report.json",
+      "FN12/x86_64-reboot-r2/reboot-browser-report.json",
+      "FN12/aarch64-reboot-r3/live-browser-report.json",
+      "FN12/aarch64-reboot-r3/reboot-browser-report.json"
+    ],
+    "layer": "formal installed LuCI page: full deterministic state matrix; both architectures additionally real tasks and real reboots, with browser mobile/media emulation"
+  },
+  "TH06": {
+    "status": "passed",
+    "evidence": [
+      "FN11/formal-themes-final-pass/checks-browser-report.json",
+      "FN11/preview/browser-report.json",
+      "FN12/x86_64-reboot-r2/live-browser-report.json",
+      "FN12/x86_64-reboot-r2/reboot-browser-report.json",
+      "FN12/aarch64-reboot-r3/live-browser-report.json",
+      "FN12/aarch64-reboot-r3/reboot-browser-report.json"
+    ],
+    "layer": "formal installed LuCI page: full deterministic state matrix; both architectures additionally real tasks and real reboots, with browser mobile/media emulation"
+  },
+  "TH07": {
+    "status": "passed",
+    "evidence": [
+      "FN11/formal-themes-final-pass/checks-browser-report.json",
+      "FN11/preview/browser-report.json",
+      "FN12/x86_64-reboot-r2/live-browser-report.json",
+      "FN12/x86_64-reboot-r2/reboot-browser-report.json",
+      "FN12/aarch64-reboot-r3/live-browser-report.json",
+      "FN12/aarch64-reboot-r3/reboot-browser-report.json"
+    ],
+    "layer": "formal installed LuCI page: full deterministic state matrix; both architectures additionally real tasks and real reboots, with browser mobile/media emulation"
+  },
+  "TH08": {
+    "status": "passed",
+    "evidence": [
+      "FN11/formal-themes-final-pass/checks-browser-report.json",
+      "FN11/preview/browser-report.json",
+      "FN12/x86_64-reboot-r2/live-browser-report.json",
+      "FN12/x86_64-reboot-r2/reboot-browser-report.json",
+      "FN12/aarch64-reboot-r3/live-browser-report.json",
+      "FN12/aarch64-reboot-r3/reboot-browser-report.json"
+    ],
+    "layer": "formal installed LuCI page: full deterministic state matrix; both architectures additionally real tasks and real reboots, with browser mobile/media emulation"
+  },
+  "TH09": {
+    "status": "passed",
+    "evidence": [
+      "FN11/formal-themes-final-pass/checks-browser-report.json",
+      "FN11/preview/browser-report.json",
+      "FN12/x86_64-reboot-r2/live-browser-report.json",
+      "FN12/x86_64-reboot-r2/reboot-browser-report.json",
+      "FN12/aarch64-reboot-r3/live-browser-report.json",
+      "FN12/aarch64-reboot-r3/reboot-browser-report.json"
+    ],
+    "layer": "formal installed LuCI page: full deterministic state matrix; both architectures additionally real tasks and real reboots, with browser mobile/media emulation"
+  },
+  "TH10": {
+    "status": "passed",
+    "evidence": [
+      "FN11/formal-themes-final-pass/checks-browser-report.json",
+      "FN11/preview/browser-report.json",
+      "FN12/x86_64-reboot-r2/live-browser-report.json",
+      "FN12/x86_64-reboot-r2/reboot-browser-report.json",
+      "FN12/aarch64-reboot-r3/live-browser-report.json",
+      "FN12/aarch64-reboot-r3/reboot-browser-report.json"
+    ],
+    "layer": "formal installed LuCI page: full deterministic state matrix; both architectures additionally real tasks and real reboots, with browser mobile/media emulation"
+  },
+  "TH11": {
+    "status": "passed",
+    "evidence": [
+      "FN11/formal-themes-final-pass/checks-browser-report.json",
+      "FN11/preview/browser-report.json",
+      "FN12/x86_64-reboot-r2/live-browser-report.json",
+      "FN12/x86_64-reboot-r2/reboot-browser-report.json",
+      "FN12/aarch64-reboot-r3/live-browser-report.json",
+      "FN12/aarch64-reboot-r3/reboot-browser-report.json"
+    ],
+    "layer": "formal installed LuCI page: full deterministic state matrix; both architectures additionally real tasks and real reboots, with browser mobile/media emulation"
+  },
+  "TH12": {
+    "status": "passed",
+    "evidence": [
+      "FN11/formal-themes-final-pass/checks-browser-report.json",
+      "FN11/preview/browser-report.json",
+      "FN12/x86_64-reboot-r2/live-browser-report.json",
+      "FN12/x86_64-reboot-r2/reboot-browser-report.json",
+      "FN12/aarch64-reboot-r3/live-browser-report.json",
+      "FN12/aarch64-reboot-r3/reboot-browser-report.json"
+    ],
+    "layer": "formal installed LuCI page: full deterministic state matrix; both architectures additionally real tasks and real reboots, with browser mobile/media emulation"
+  }
+}

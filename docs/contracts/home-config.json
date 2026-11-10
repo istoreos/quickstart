@@ -1,54 +1,579 @@
 {
   "layout": {
-    "schemaVersion": 3,
+    "schemaVersion": 4,
     "rows": [
-      {"id":"network","template":"left-big","height":320,"heightMode":"chart","columns":[{"weight":60,"split":50,"cards":["traffic"]},{"weight":40,"split":50,"cards":["connection","networkInterface"]}]},
-      {"id":"devices","template":"pair","height":340,"heightMode":"content","columns":[{"weight":50,"split":50,"cards":["devices"]},{"weight":50,"split":50,"cards":["applications"]}]},
-      {"id":"storage","template":"pair","height":330,"heightMode":"content","columns":[{"weight":50,"split":50,"cards":["storage"]},{"weight":50,"split":50,"cards":["sharing"]}]},
-      {"id":"services","template":"triple","height":280,"heightMode":"content","columns":[{"weight":34,"split":50,"cards":["docker"]},{"weight":33,"split":50,"cards":["downloads"]},{"weight":33,"split":50,"cards":["remote"]}]},
-      {"id":"system","template":"single","height":280,"heightMode":"content","columns":[{"weight":100,"split":50,"cards":["system"]}]}
+      {
+        "id": "network",
+        "template": "left-big",
+        "height": 320,
+        "heightMode": "chart",
+        "columns": [
+          {
+            "weight": 60,
+            "split": 50,
+            "cards": [
+              "traffic"
+            ]
+          },
+          {
+            "weight": 40,
+            "split": 50,
+            "cards": [
+              "connection",
+              "networkInterface"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "devices",
+        "template": "pair",
+        "height": 340,
+        "heightMode": "content",
+        "columns": [
+          {
+            "weight": 50,
+            "split": 50,
+            "cards": [
+              "devices"
+            ]
+          },
+          {
+            "weight": 50,
+            "split": 50,
+            "cards": [
+              "applications"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "storage",
+        "template": "pair",
+        "height": 330,
+        "heightMode": "content",
+        "columns": [
+          {
+            "weight": 50,
+            "split": 50,
+            "cards": [
+              "storage"
+            ]
+          },
+          {
+            "weight": 50,
+            "split": 50,
+            "cards": [
+              "sharing"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "services",
+        "template": "triple",
+        "height": 280,
+        "heightMode": "content",
+        "columns": [
+          {
+            "weight": 34,
+            "split": 50,
+            "cards": [
+              "docker"
+            ]
+          },
+          {
+            "weight": 33,
+            "split": 50,
+            "cards": [
+              "downloads"
+            ]
+          },
+          {
+            "weight": 33,
+            "split": 50,
+            "cards": [
+              "remote"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "system",
+        "template": "single",
+        "height": 280,
+        "heightMode": "content",
+        "columns": [
+          {
+            "weight": 100,
+            "split": 50,
+            "cards": [
+              "system"
+            ]
+          }
+        ]
+      }
     ],
     "widgetPreferences": {
-      "traffic":{"mode":"auto","iconRows":0,"ruleVersion":2},
-      "connection":{"mode":"auto","iconRows":0,"ruleVersion":2},
-      "networkInterface":{"mode":"auto","iconRows":0,"ruleVersion":2},
-      "devices":{"mode":"auto","iconRows":0,"ruleVersion":2},
-      "applications":{"mode":"auto","iconRows":0,"ruleVersion":2},
-      "storage":{"mode":"auto","iconRows":0,"ruleVersion":2},
-      "sharing":{"mode":"auto","iconRows":0,"ruleVersion":2},
-      "docker":{"mode":"auto","iconRows":0,"ruleVersion":2},
-      "downloads":{"mode":"auto","iconRows":0,"ruleVersion":2},
-      "remote":{"mode":"auto","iconRows":0,"ruleVersion":2},
-      "system":{"mode":"auto","iconRows":0,"ruleVersion":2}
+      "traffic": {
+        "mode": "auto",
+        "iconRows": 0,
+        "ruleVersion": 2
+      },
+      "connection": {
+        "mode": "auto",
+        "iconRows": 0,
+        "ruleVersion": 2
+      },
+      "networkInterface": {
+        "mode": "auto",
+        "iconRows": 0,
+        "ruleVersion": 2
+      },
+      "devices": {
+        "mode": "auto",
+        "iconRows": 0,
+        "ruleVersion": 2
+      },
+      "applications": {
+        "mode": "auto",
+        "iconRows": 0,
+        "ruleVersion": 2
+      },
+      "storage": {
+        "mode": "auto",
+        "iconRows": 0,
+        "ruleVersion": 2
+      },
+      "sharing": {
+        "mode": "auto",
+        "iconRows": 0,
+        "ruleVersion": 2
+      },
+      "docker": {
+        "mode": "auto",
+        "iconRows": 0,
+        "ruleVersion": 2
+      },
+      "downloads": {
+        "mode": "auto",
+        "iconRows": 0,
+        "ruleVersion": 2
+      },
+      "remote": {
+        "mode": "auto",
+        "iconRows": 0,
+        "ruleVersion": 2
+      },
+      "system": {
+        "mode": "auto",
+        "iconRows": 0,
+        "ruleVersion": 2
+      }
     }
   },
-  "launcher":{"schemaVersion":1,"favorites":["tool-lan","tool-terminal","tool-firmware","tool-dns","tool-source","tool-sandbox","tool-logs","tool-maintenance"],"links":[{"id":"user-link:nas","name":"家中 NAS","url":"https://nas.example/path?token=not-a-real-secret","glyph":"folder"}]},
-  "cases":[
-    {"name":"default layout","domain":"layout","valid":true,"changes":[]},
-    {"name":"valid empty homepage","domain":"layout","valid":true,"changes":[{"path":["rows"],"value":[]}]},
-    {"name":"space intent","domain":"layout","valid":true,"changes":[{"path":["rows",0,"minHeight"],"value":720},{"path":["rows",0,"columns",1,"upperShare"],"value":65.1234}]},
-    {"name":"future layout","domain":"layout","valid":false,"changes":[{"path":["schemaVersion"],"value":4}]},
-    {"name":"unknown widget","domain":"layout","valid":false,"changes":[{"path":["rows",0,"columns",0,"cards",0],"value":"javascript"}]},
-    {"name":"duplicate widget","domain":"layout","valid":false,"changes":[{"path":["rows",1,"columns",0,"cards",0],"value":"traffic"}]},
-    {"name":"duplicate row","domain":"layout","valid":false,"changes":[{"path":["rows",1,"id"],"value":"network"}]},
-    {"name":"unknown field","domain":"layout","valid":false,"changes":[{"path":["measuredHeight"],"value":900}]},
-    {"name":"local revision is not server config","domain":"layout","valid":false,"changes":[{"path":["revision"],"value":1}]},
-    {"name":"invalid weight total","domain":"layout","valid":false,"changes":[{"path":["rows",0,"columns",0,"weight"],"value":50}]},
-    {"name":"oversize intent","domain":"layout","valid":false,"changes":[{"path":["rows",0,"minHeight"],"value":1601}]},
-    {"name":"unsupported stacked form","domain":"layout","valid":false,"changes":[{"path":["widgetPreferences","networkInterface","mode"],"value":"standard"}]},
-    {"name":"invalid business preference","domain":"layout","valid":false,"changes":[{"path":["widgetPreferences","traffic","iconRows"],"value":1}]},
-    {"name":"valid launcher","domain":"launcher","valid":true,"changes":[]},
-    {"name":"valid empty pins and links","domain":"launcher","valid":true,"changes":[{"path":["favorites"],"value":[]},{"path":["links"],"value":[]}]},
-    {"name":"pin user link","domain":"launcher","valid":true,"changes":[{"path":["favorites",0],"value":"user-link:nas"}]},
-    {"name":"orphaned user link","domain":"launcher","valid":false,"changes":[{"path":["favorites",0],"value":"user-link:missing"}]},
-    {"name":"duplicate pin","domain":"launcher","valid":false,"changes":[{"path":["favorites",1],"value":"tool-lan"}]},
-    {"name":"executable URL","domain":"launcher","valid":false,"changes":[{"path":["links",0,"url"],"value":"javascript:alert(1)"}]},
-    {"name":"URL credentials","domain":"launcher","valid":false,"changes":[{"path":["links",0,"url"],"value":"https://user:password@nas.example/"}]},
-    {"name":"control in name","domain":"launcher","valid":false,"changes":[{"path":["links",0,"name"],"value":"NAS\u0000"}]},
-    {"name":"unregistered icon","domain":"launcher","valid":false,"changes":[{"path":["links",0,"glyph"],"value":"https://remote.example/icon.svg"}]},
-    {"name":"future launcher","domain":"launcher","valid":false,"changes":[{"path":["schemaVersion"],"value":2}]},
-    {"name":"explicit null is not auto preference","domain":"layout","valid":false,"changes":[{"path":["widgetPreferences","traffic","ruleVersion"],"value":null}]},
-    {"name":"explicit null is not absent intent","domain":"layout","valid":false,"changes":[{"path":["rows",0,"minHeight"],"value":null}]},
-    {"name":"null name is not empty link","domain":"launcher","valid":false,"changes":[{"path":["links",0,"name"],"value":null}]}
+  "launcher": {
+    "schemaVersion": 1,
+    "favorites": [
+      "tool-lan",
+      "tool-terminal",
+      "tool-firmware",
+      "tool-dns",
+      "tool-source",
+      "tool-sandbox",
+      "tool-logs",
+      "tool-maintenance"
+    ],
+    "links": [
+      {
+        "id": "user-link:nas",
+        "name": "家中 NAS",
+        "url": "https://nas.example/path?token=not-a-real-secret",
+        "glyph": "folder"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "name": "default layout",
+      "domain": "layout",
+      "valid": true,
+      "changes": []
+    },
+    {
+      "name": "valid empty homepage",
+      "domain": "layout",
+      "valid": true,
+      "changes": [
+        {
+          "path": [
+            "rows"
+          ],
+          "value": []
+        }
+      ]
+    },
+    {
+      "name": "space intent",
+      "domain": "layout",
+      "valid": true,
+      "changes": [
+        {
+          "path": [
+            "rows",
+            0,
+            "minHeight"
+          ],
+          "value": 720
+        },
+        {
+          "path": [
+            "rows",
+            0,
+            "columns",
+            1,
+            "upperShare"
+          ],
+          "value": 65.1234
+        }
+      ]
+    },
+    {
+      "name": "future layout",
+      "domain": "layout",
+      "valid": false,
+      "changes": [
+        {
+          "path": [
+            "schemaVersion"
+          ],
+          "value": 5
+        }
+      ]
+    },
+    {
+      "name": "unknown widget",
+      "domain": "layout",
+      "valid": false,
+      "changes": [
+        {
+          "path": [
+            "rows",
+            0,
+            "columns",
+            0,
+            "cards",
+            0
+          ],
+          "value": "javascript"
+        }
+      ]
+    },
+    {
+      "name": "duplicate widget",
+      "domain": "layout",
+      "valid": false,
+      "changes": [
+        {
+          "path": [
+            "rows",
+            1,
+            "columns",
+            0,
+            "cards",
+            0
+          ],
+          "value": "traffic"
+        }
+      ]
+    },
+    {
+      "name": "duplicate row",
+      "domain": "layout",
+      "valid": false,
+      "changes": [
+        {
+          "path": [
+            "rows",
+            1,
+            "id"
+          ],
+          "value": "network"
+        }
+      ]
+    },
+    {
+      "name": "unknown field",
+      "domain": "layout",
+      "valid": false,
+      "changes": [
+        {
+          "path": [
+            "measuredHeight"
+          ],
+          "value": 900
+        }
+      ]
+    },
+    {
+      "name": "local revision is not server config",
+      "domain": "layout",
+      "valid": false,
+      "changes": [
+        {
+          "path": [
+            "revision"
+          ],
+          "value": 1
+        }
+      ]
+    },
+    {
+      "name": "invalid weight total",
+      "domain": "layout",
+      "valid": false,
+      "changes": [
+        {
+          "path": [
+            "rows",
+            0,
+            "columns",
+            0,
+            "weight"
+          ],
+          "value": 50
+        }
+      ]
+    },
+    {
+      "name": "oversize intent",
+      "domain": "layout",
+      "valid": false,
+      "changes": [
+        {
+          "path": [
+            "rows",
+            0,
+            "minHeight"
+          ],
+          "value": 1601
+        }
+      ]
+    },
+    {
+      "name": "unsupported stacked form",
+      "domain": "layout",
+      "valid": false,
+      "changes": [
+        {
+          "path": [
+            "widgetPreferences",
+            "networkInterface",
+            "mode"
+          ],
+          "value": "standard"
+        }
+      ]
+    },
+    {
+      "name": "invalid business preference",
+      "domain": "layout",
+      "valid": false,
+      "changes": [
+        {
+          "path": [
+            "widgetPreferences",
+            "traffic",
+            "iconRows"
+          ],
+          "value": 1
+        }
+      ]
+    },
+    {
+      "name": "valid launcher",
+      "domain": "launcher",
+      "valid": true,
+      "changes": []
+    },
+    {
+      "name": "valid empty pins and links",
+      "domain": "launcher",
+      "valid": true,
+      "changes": [
+        {
+          "path": [
+            "favorites"
+          ],
+          "value": []
+        },
+        {
+          "path": [
+            "links"
+          ],
+          "value": []
+        }
+      ]
+    },
+    {
+      "name": "pin user link",
+      "domain": "launcher",
+      "valid": true,
+      "changes": [
+        {
+          "path": [
+            "favorites",
+            0
+          ],
+          "value": "user-link:nas"
+        }
+      ]
+    },
+    {
+      "name": "orphaned user link",
+      "domain": "launcher",
+      "valid": false,
+      "changes": [
+        {
+          "path": [
+            "favorites",
+            0
+          ],
+          "value": "user-link:missing"
+        }
+      ]
+    },
+    {
+      "name": "duplicate pin",
+      "domain": "launcher",
+      "valid": false,
+      "changes": [
+        {
+          "path": [
+            "favorites",
+            1
+          ],
+          "value": "tool-lan"
+        }
+      ]
+    },
+    {
+      "name": "executable URL",
+      "domain": "launcher",
+      "valid": false,
+      "changes": [
+        {
+          "path": [
+            "links",
+            0,
+            "url"
+          ],
+          "value": "javascript:alert(1)"
+        }
+      ]
+    },
+    {
+      "name": "URL credentials",
+      "domain": "launcher",
+      "valid": false,
+      "changes": [
+        {
+          "path": [
+            "links",
+            0,
+            "url"
+          ],
+          "value": "https://user:password@nas.example/"
+        }
+      ]
+    },
+    {
+      "name": "control in name",
+      "domain": "launcher",
+      "valid": false,
+      "changes": [
+        {
+          "path": [
+            "links",
+            0,
+            "name"
+          ],
+          "value": "NAS\u0000"
+        }
+      ]
+    },
+    {
+      "name": "unregistered icon",
+      "domain": "launcher",
+      "valid": false,
+      "changes": [
+        {
+          "path": [
+            "links",
+            0,
+            "glyph"
+          ],
+          "value": "https://remote.example/icon.svg"
+        }
+      ]
+    },
+    {
+      "name": "future launcher",
+      "domain": "launcher",
+      "valid": false,
+      "changes": [
+        {
+          "path": [
+            "schemaVersion"
+          ],
+          "value": 2
+        }
+      ]
+    },
+    {
+      "name": "explicit null is not auto preference",
+      "domain": "layout",
+      "valid": false,
+      "changes": [
+        {
+          "path": [
+            "widgetPreferences",
+            "traffic",
+            "ruleVersion"
+          ],
+          "value": null
+        }
+      ]
+    },
+    {
+      "name": "explicit null is not absent intent",
+      "domain": "layout",
+      "valid": false,
+      "changes": [
+        {
+          "path": [
+            "rows",
+            0,
+            "minHeight"
+          ],
+          "value": null
+        }
+      ]
+    },
+    {
+      "name": "null name is not empty link",
+      "domain": "launcher",
+      "valid": false,
+      "changes": [
+        {
+          "path": [
+            "links",
+            0,
+            "name"
+          ],
+          "value": null
+        }
+      ]
+    }
   ]
 }

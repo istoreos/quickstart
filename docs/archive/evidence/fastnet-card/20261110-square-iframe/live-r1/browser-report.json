@@ -1,0 +1,330 @@
+{
+  "status": "failed",
+  "checks": [
+    "real saved homepage uses redesigned card; full frontend absent before click"
+  ],
+  "errors": [],
+  "requests": [
+    {
+      "path": "/cgi-bin/luci/admin/quickstart",
+      "method": "GET"
+    },
+    {
+      "path": "/luci-static/istorenas/css/cascade.css",
+      "method": "GET"
+    },
+    {
+      "path": "/luci-static/resources/easepi/easeicon.css",
+      "method": "GET"
+    },
+    {
+      "path": "/luci-static/istorenas/js/polyfill.min.js",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/translations/zh-cn",
+      "method": "GET"
+    },
+    {
+      "path": "/luci-static/resources/cbi.js",
+      "method": "GET"
+    },
+    {
+      "path": "/luci-static/istorenas/js/jquery.min.js",
+      "method": "GET"
+    },
+    {
+      "path": "/luci-static/resources/luci.js",
+      "method": "GET"
+    },
+    {
+      "path": "/luci-static/quickstart/index.js",
+      "method": "GET"
+    },
+    {
+      "path": "/luci-static/quickstart/style.css",
+      "method": "GET"
+    },
+    {
+      "path": "/luci-static/resources/ui.js",
+      "method": "GET"
+    },
+    {
+      "path": "/luci-static/resources/rpc.js",
+      "method": "GET"
+    },
+    {
+      "path": "/luci-static/resources/form.js",
+      "method": "GET"
+    },
+    {
+      "path": "/ubus/",
+      "method": "POST"
+    },
+    {
+      "path": "/luci-static/quickstart/card-runtime-v1.js",
+      "method": "GET"
+    },
+    {
+      "path": "/luci-static/quickstart/app.js",
+      "method": "GET"
+    },
+    {
+      "path": "/luci-static/quickstart/vendor.js",
+      "method": "GET"
+    },
+    {
+      "path": "/luci-static/resources/validation.js",
+      "method": "GET"
+    },
+    {
+      "path": "/luci-static/resources/uci.js",
+      "method": "GET"
+    },
+    {
+      "path": "/luci-static/resources/fs.js",
+      "method": "GET"
+    },
+    {
+      "path": "/luci-static/resources/menu-argon.js",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/menu",
+      "method": "GET"
+    },
+    {
+      "path": "/ubus/",
+      "method": "POST"
+    },
+    {
+      "path": "/luci-static/quickstart/i18n/zh-cn.json",
+      "method": "GET"
+    },
+    {
+      "path": "/luci-static/istorenas/fonts/TypoGraphica.woff",
+      "method": "GET"
+    },
+    {
+      "path": "/luci-static/resources/easepi/iconfont.woff2",
+      "method": "GET"
+    },
+    {
+      "path": "/luci-static/istorenas/fonts/argon.ttf",
+      "method": "GET"
+    },
+    {
+      "path": "/ubus/",
+      "method": "POST"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/layout/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/launcher/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/store/installed",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/nas/sandbox/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/u/network/status/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/network/port/list/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/u/network/statistics/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/lanctrl/v2/networks/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/nas/disk/status/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/raid/list/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/u/nas/service/status/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/guide/docker/status/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/guide/download-service/status/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/u/guide/ddns/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/system/status/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/u/system/version/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/cards/",
+      "method": "GET"
+    },
+    {
+      "path": "/ubus/",
+      "method": "POST"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/lanctrl/v2/devices/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/lanctrl/v2/router-context/",
+      "method": "GET"
+    },
+    {
+      "path": "/luci-static/fastnet/quickstart/card.3772201a.js",
+      "method": "GET"
+    },
+    {
+      "path": "/luci-static/quickstart/device-icons/computer.webp",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/embed",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/linkease_auth/auth",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/",
+      "method": "GET"
+    },
+    {
+      "path": "/",
+      "method": "GET"
+    },
+    {
+      "path": "/webui/",
+      "method": "GET"
+    },
+    {
+      "path": "/webui/assets/index-DQ9fHcUj.js",
+      "method": "GET"
+    },
+    {
+      "path": "/webui/assets/index-C74zC6wZ.css",
+      "method": "GET"
+    },
+    {
+      "path": "/api/card/summary",
+      "method": "GET"
+    },
+    {
+      "path": "/api/client-origin",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/system/check-update/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/u/guide/ddns/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/u/network/status/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/u/network/statistics/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/system/status/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/u/guide/ddns/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/u/guide/ddns/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/u/network/status/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/network/port/list/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/u/network/statistics/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/system/status/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/u/guide/ddns/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/u/network/status/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/u/network/statistics/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/u/guide/ddns/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/system/status/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/u/guide/ddns/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/u/network/status/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/network/port/list/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/u/network/statistics/",
+      "method": "GET"
+    }
+  ],
+  "failure": "locator.waitFor: Timeout 20000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.fn-web-loading') to be hidden\u001b[22m\n\u001b[2m    34 × locator resolved to visible <div role=\"status\" class=\"fn-web-loading\">…</div>\u001b[22m\n\u001b[2m    10 × locator resolved to visible <div role=\"alert\" class=\"fn-web-loading\">…</div>\u001b[22m\n"
+}

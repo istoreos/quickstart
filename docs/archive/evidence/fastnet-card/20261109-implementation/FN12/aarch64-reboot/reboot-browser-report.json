@@ -1,0 +1,5 @@
+{
+  "status": "failed",
+  "checks": [],
+  "failure": "locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-fastnet-card]') to be visible\u001b[22m\n\n"
+}

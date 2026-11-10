@@ -1,3 +1,4 @@
+import {cardRuntimePlugin} from './cardRuntimePlugin'
 // Design entry only: production vite.config.ts never imports this configuration.
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
@@ -25,6 +26,11 @@ const controlMiddleware=(server:any)=>{
     res.setHeader('Content-Type','application/json')
     res.end(JSON.stringify({owner,pid:process.pid,mode:'vue-design-built'}))
   })
+  server.middlewares.use((req:any,res:any,next:any)=>{
+    const url=new URL(req.url,'http://preview.invalid')
+    if(url.pathname!=='/cgi-bin/luci/admin/services/fastnet/embed')return next()
+    res.writeHead(302,{Location:'/apps/fastnet/webui/?embed=quickstart&theme='+(url.searchParams.get('theme')==='dark'?'dark':'light')});res.end()
+  })
   server.middlewares.use('/cgi-bin/', (_req:any,res:any)=>{res.statusCode=403;res.end('Design server never forwards router requests')})
 }
 
@@ -32,7 +38,7 @@ export default defineConfig({
   root: __dirname,
   cacheDir: path.join(process.env.BUILD_CACHE_WORK_DIR || '/tmp/quickstart-design-cache', 'vite'),
   resolve: { alias: [{ find: '/@', replacement: path.resolve(__dirname, 'src') }] },
-  plugins: [actionBridge,vue(), {
+  plugins: [actionBridge,cardRuntimePlugin(),vue(), {
     name: 'quickstart-design-entry',
     transformIndexHtml: {order:'pre',handler(html) { return html.replace('/src/main.ts','/src/design/main.ts') }},
     configureServer:controlMiddleware,
@@ -40,6 +46,6 @@ export default defineConfig({
   }],
   css: { preprocessorOptions: { scss: { charset: false, additionalData: `@import ${JSON.stringify(path.resolve(__dirname, 'src/style/theme.scss'))};` } } },
   server: { host: '0.0.0.0', port: 5180, strictPort: true, hmr: { overlay: true } },
-  build: { outDir:path.join(process.env.BUILD_CACHE_WORK_DIR || '/tmp/quickstart-design-cache','vue-preview'),emptyOutDir:true,chunkSizeWarningLimit:4096 },
+  build: { rollupOptions:{preserveEntrySignatures:"strict",input:path.resolve(__dirname,'index.html'),output:{entryFileNames:chunk=>chunk.name==='card-runtime-v1'?'luci-static/quickstart/card-runtime-v1.js':'assets/[name]-[hash].js'}}, outDir:path.join(process.env.BUILD_CACHE_WORK_DIR || '/tmp/quickstart-design-cache','vue-preview'),emptyOutDir:true,chunkSizeWarningLimit:4096 },
   preview: { host:'0.0.0.0',port:5180,strictPort:true },
 })

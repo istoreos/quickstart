@@ -1,0 +1,50 @@
+{
+  "status": "passed",
+  "scope": "local source candidate; explicit inputs; not a canonical feed build or publication",
+  "runtime": {
+    "path": "/var/cache/build-cache/users/911/projects/quickstart-f0ca7c908f5f/work/fastnet-candidate-FN08-final2/fastnet-binary-0.8.2.tar.gz",
+    "sha256": "b89df5d8e1e23671c5d63d79f2aac0da717232e07715edddcffafd35154034a5"
+  },
+  "packages": [
+    {
+      "name": "fastnet",
+      "version": "0.8.2-1",
+      "arch": "x86_64",
+      "path": "/var/cache/build-cache/users/911/projects/quickstart-f0ca7c908f5f/work/fastnet-candidate-FN08-final2/ipk/fastnet_0.8.2-1_x86_64.ipk",
+      "sha256": "a6a89757fecad40ab965578eeb288642eebf9c69256ddd97a342a7750eac4479",
+      "depends": "linkease-app-entry"
+    },
+    {
+      "name": "fastnet",
+      "version": "0.8.2-1",
+      "arch": "aarch64_generic",
+      "path": "/var/cache/build-cache/users/911/projects/quickstart-f0ca7c908f5f/work/fastnet-candidate-FN08-final2/ipk/fastnet_0.8.2-1_aarch64_generic.ipk",
+      "sha256": "485f4378c23cc66e77683c7f1007b4c3c115087ef7d19a61afcfd896bd6dc401",
+      "depends": "linkease-app-entry"
+    },
+    {
+      "name": "luci-app-fastnet",
+      "version": "0.8.2-r1",
+      "arch": "all",
+      "path": "/var/cache/build-cache/users/911/projects/quickstart-f0ca7c908f5f/work/fastnet-candidate-FN08-final2/ipk/luci-app-fastnet_0.8.2-r1_all.ipk",
+      "sha256": "2fb3da5b3edac9c8e88c7ec06fcce4a2986417164823f8bbdbbebdf5eb26aacc",
+      "depends": "fastnet (>= 0.8.2-1), luci-lib-linkeaseauth, linkease-app-entry, luci-lua-runtime"
+    },
+    {
+      "name": "luci-i18n-fastnet-zh-cn",
+      "version": "git-26.313.00000-082",
+      "arch": "all",
+      "path": "/var/cache/build-cache/users/911/projects/quickstart-f0ca7c908f5f/work/fastnet-candidate-FN08-final2/ipk/luci-i18n-fastnet-zh-cn_git-26.313.00000-082_all.ipk",
+      "sha256": "7dd666aec0d71c1e1b6d35d7af682e65cd0ad3b8c5869ccdf7ca683ef5cf0d9d",
+      "depends": "luci-app-fastnet"
+    },
+    {
+      "name": "app-meta-fastnet",
+      "version": "0.8.2-10",
+      "arch": "all",
+      "path": "/var/cache/build-cache/users/911/projects/quickstart-f0ca7c908f5f/work/fastnet-candidate-FN08-final2/ipk/app-meta-fastnet_0.8.2-10_all.ipk",
+      "sha256": "e2bec6e8d917048041dfd68bc609c5ae18c91590bc6d1f4390725da182025c90",
+      "depends": "fastnet (>= 0.8.2-1), luci-app-fastnet (>= 0.8.2-r1), luci-i18n-fastnet-zh-cn"
+    }
+  ]
+}

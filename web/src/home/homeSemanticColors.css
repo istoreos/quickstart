@@ -4,7 +4,7 @@
 :is(.ordered-home,.network-dialog).home-semantic-colors{
  --c-bg:#f3f5f7;--c-panel:#fff;--c-soft:#f5f7fa;--c-hover:#edf2f8;
  --c-text:#253247;--c-muted:#5b687a;--c-line:#e1e6ed;--c-accent:#155dfc;
- --c-good:#008236;--c-warning:#946000;
+ --c-good:#008236;--c-warning:#946000;--c-error:#b42318;--c-disabled:#697586;
  --home-surface-inset:#f6f8fa;--home-option:#f5f7fa;
  --home-option-selected:#f0f5ff;--home-option-border:#7e8ca1;
  --home-good-soft:#eaf9ef;--home-warning-soft:#fff5e5;
@@ -22,7 +22,7 @@ body[theme=dark] :is(.ordered-home,.network-dialog).home-semantic-colors,
 body[data-quickstart-theme=dark] :is(.ordered-home,.network-dialog).home-semantic-colors{
  --c-bg:#191d24;--c-panel:#2c2c2c;--c-soft:#343a43;--c-hover:#3b4655;
  --c-text:#e6ebf3;--c-muted:#b1bdce;--c-line:#414b59;--c-accent:#91b9ff;
- --c-good:#70e2b2;--c-warning:#ffce76;
+ --c-good:#70e2b2;--c-warning:#ffce76;--c-error:#ffaaa3;--c-disabled:#9ba8b9;
  --home-surface-inset:#30363e;--home-option:#343a43;
  --home-option-selected:#2c3e59;--home-option-border:#96a6bd;
  --home-good-soft:#194737;--home-warning-soft:#514024;
@@ -75,3 +75,11 @@ body[data-quickstart-theme=dark] :is(.ordered-home,.network-dialog).home-semanti
 :is(.ordered-home,.network-dialog).home-semantic-colors .native-sharing{--color-widget-icon:var(--home-icon-violet)}
 :is(.ordered-home,.network-dialog).home-semantic-colors :is(.native-storage,.native-system){--color-widget-icon:var(--color-icon-slate)}
 
+
+/* Public v1 tokens inherit the current semantic scope, including body portals. */
+:is(.ordered-home,.network-dialog).home-semantic-colors{
+ --qs-card-panel:var(--c-panel);--qs-card-text:var(--c-text);--qs-card-muted:var(--c-muted);
+ --qs-card-line:var(--c-line);--qs-card-soft:var(--c-soft);--qs-card-accent:var(--c-accent);
+ --qs-card-good:var(--c-good);--qs-card-warning:var(--c-warning);--qs-card-error:var(--c-error);
+ --qs-card-focus:var(--home-focus);--qs-card-disabled:var(--c-disabled);
+}

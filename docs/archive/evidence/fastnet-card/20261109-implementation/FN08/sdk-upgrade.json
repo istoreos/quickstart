@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "sdkSha256": "e53ed8db882767f1043a63e42e3f5a9c2707d2ce225678ee7b4115a4a4c4d1cc",
+  "standalone": true,
+  "sameBytesAcrossHostBuilds": true,
+  "vue": "3.5.44",
+  "abi": "quickstart-card-v1"
+}

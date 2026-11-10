@@ -1,0 +1,216 @@
+{
+  "milestone": "FN12",
+  "status": "failed",
+  "checks": [
+    "default uninstalled has catalog metadata only; cancelling installation does not save or download card",
+    "two tabs plus closing/reloading the installing page observe one installation; completion creates no layout or speed task",
+    "lab fixture explicitly enables the existing disabled service through its UCI setting",
+    "real placement saves exactly one v4 module without an executable URL; cancelling the other draft keeps the installed plugin"
+  ],
+  "errors": [],
+  "requests": [
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/layout/",
+      "method": "GET",
+      "time": 1794246446081
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/launcher/",
+      "method": "GET",
+      "time": 1794246446081
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/cards/",
+      "method": "GET",
+      "time": 1794246446081
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/layout/",
+      "method": "GET",
+      "time": 1794246446085
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/layout/",
+      "method": "GET",
+      "time": 1794246448641
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/layout/",
+      "method": "GET",
+      "time": 1794246449376
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/launcher/",
+      "method": "GET",
+      "time": 1794246449376
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/cards/",
+      "method": "GET",
+      "time": 1794246449377
+    },
+    {
+      "path": "/cgi-bin/luci/istore/app/install/",
+      "method": "POST",
+      "time": 1794246452903
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/layout/",
+      "method": "GET",
+      "time": 1794246453636
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/launcher/",
+      "method": "GET",
+      "time": 1794246453636
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/cards/",
+      "method": "GET",
+      "time": 1794246453636
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/cards/",
+      "method": "GET",
+      "time": 1794246463334
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/cards/",
+      "method": "GET",
+      "time": 1794246463457
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/cards/",
+      "method": "GET",
+      "time": 1794246463484
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/cards/",
+      "method": "GET",
+      "time": 1794246463557
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/layout/",
+      "method": "GET",
+      "time": 1794246463725
+    },
+    {
+      "path": "/luci-static/fastnet/quickstart/card.2962210c.js",
+      "method": "GET",
+      "time": 1794246464647
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "method": "GET",
+      "time": 1794246464661
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/layout/",
+      "method": "POST",
+      "time": 1794246464849
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/layout/",
+      "method": "GET",
+      "time": 1794246465131
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/layout/",
+      "method": "GET",
+      "time": 1794246465643
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/launcher/",
+      "method": "GET",
+      "time": 1794246465643
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/cards/",
+      "method": "GET",
+      "time": 1794246465644
+    },
+    {
+      "path": "/luci-static/fastnet/quickstart/card.2962210c.js",
+      "method": "GET",
+      "time": 1794246467183
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "method": "GET",
+      "time": 1794246467256
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/run",
+      "method": "POST",
+      "time": 1794246467649
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/layout/",
+      "method": "GET",
+      "time": 1794246469165
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/launcher/",
+      "method": "GET",
+      "time": 1794246469166
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/cards/",
+      "method": "GET",
+      "time": 1794246469166
+    }
+  ],
+  "dialogs": [],
+  "navigations": [
+    "/cgi-bin/luci/admin/quickstart",
+    "/cgi-bin/luci/admin/quickstart/",
+    "/cgi-bin/luci/admin/quickstart/",
+    "/cgi-bin/luci/admin/quickstart",
+    "/cgi-bin/luci/admin/quickstart/",
+    "/cgi-bin/luci/admin/quickstart/",
+    "/cgi-bin/luci/admin/quickstart/",
+    "/cgi-bin/luci/admin/quickstart/",
+    "/cgi-bin/luci/admin/quickstart/",
+    "/cgi-bin/luci/admin/quickstart/",
+    "/cgi-bin/luci/admin/quickstart/",
+    "/cgi-bin/luci/admin/quickstart/",
+    "/cgi-bin/luci/admin/quickstart/",
+    "/cgi-bin/luci/admin/quickstart/",
+    "/cgi-bin/luci/admin/quickstart/"
+  ],
+  "apiErrors": [],
+  "artifacts": {},
+  "navigationReasons": [
+    {
+      "type": "other"
+    },
+    {
+      "type": "other"
+    },
+    {
+      "type": "other"
+    },
+    {
+      "type": "other"
+    }
+  ],
+  "homeButton": {
+    "type": "submit"
+  },
+  "buttonForms": [
+    {
+      "type": "submit"
+    },
+    {
+      "type": "submit"
+    },
+    {
+      "type": "submit"
+    },
+    {
+      "type": "submit"
+    }
+  ],
+  "taskId": "run_15b9e9b0e77438e35e3d0c075209412c",
+  "failure": "locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-fastnet-card]') to be visible\u001b[22m\n"
+}

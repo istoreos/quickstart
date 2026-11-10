@@ -1,0 +1,349 @@
+{
+  "protocol": 1,
+  "abi": "quickstart-card-v1",
+  "vue": "3.5.44",
+  "compiler": "3.5.44",
+  "catalog": {
+    "id": "plugin.fastnet",
+    "title": "外网测速",
+    "description": "检测默认外网的上下行速率、NAT 与 IPv6",
+    "glyph": "activity",
+    "package": "app-meta-fastnet"
+  },
+  "manifest": {
+    "schemaVersion": 1,
+    "id": "plugin.fastnet",
+    "title": "外网测速",
+    "glyph": "activity",
+    "abi": "quickstart-card-v1",
+    "version": "0.8.2-1",
+    "entry": "/luci-static/fastnet/quickstart/card.0123456789abcdef.js",
+    "apiBase": "/cgi-bin/luci/admin/services/fastnet/card",
+    "forms": {
+      "standard": {
+        "minWidth": 280,
+        "minHeight": 260
+      },
+      "summary": {
+        "minWidth": 240,
+        "minHeight": 148
+      }
+    },
+    "stacked": [
+      "summary"
+    ]
+  },
+  "sdk": {
+    "url": "/luci-static/quickstart/card-runtime-v1.js",
+    "exports": [
+      "Vue runtime exports"
+    ],
+    "moduleExports": [
+      "apiVersion=1",
+      "default Vue component"
+    ],
+    "props": [
+      "context"
+    ],
+    "context": [
+      "theme(readonly reactive preference/effective)",
+      "form(readonly reactive standard/summary)",
+      "apiBase",
+      "locale",
+      "request(path,options)",
+      "openDetails(component,props)"
+    ]
+  },
+  "summary": {
+    "schemaVersion": 1,
+    "instanceId": "instance-example",
+    "service": {
+      "state": "ready"
+    },
+    "latest": {
+      "runId": "run-example",
+      "measuredAt": "2026-11-09T00:00:00Z",
+      "download": {
+        "status": "ok",
+        "value": 950000000,
+        "measuredAt": "2026-11-09T00:00:00Z",
+        "error": null
+      },
+      "upload": {
+        "status": "ok",
+        "value": 48000000,
+        "measuredAt": "2026-11-09T00:00:00Z",
+        "error": null
+      },
+      "nat": {
+        "status": "ok",
+        "value": "Full Cone",
+        "measuredAt": "2026-11-08T23:59:50Z",
+        "error": null
+      },
+      "ipv6": {
+        "status": "unavailable",
+        "value": null,
+        "measuredAt": "2026-11-08T23:59:55Z",
+        "error": null
+      }
+    },
+    "task": null
+  },
+  "task": {
+    "id": "run-example",
+    "instanceId": "instance-example",
+    "state": "running",
+    "stage": "download",
+    "startedAt": "2026-11-09T00:00:00Z",
+    "finishedAt": null,
+    "deadlineAt": "2026-11-09T00:02:00Z",
+    "error": null
+  },
+  "transitions": {
+    "idle": [
+      "running"
+    ],
+    "running": [
+      "cancel_requested",
+      "succeeded",
+      "partial",
+      "failed",
+      "interrupted"
+    ],
+    "cancel_requested": [
+      "cancelled",
+      "interrupted"
+    ]
+  },
+  "terminal": [
+    "succeeded",
+    "partial",
+    "failed",
+    "cancelled",
+    "interrupted"
+  ],
+  "compatibility": [
+    {
+      "scenario": "old-host/new-plugin",
+      "expected": "host ignores registration; existing full Web unaffected"
+    },
+    {
+      "scenario": "new-host/old-plugin",
+      "expected": "catalog available; missing registration; offer plugin upgrade, never import old full Web"
+    },
+    {
+      "scenario": "plugin missing",
+      "expected": "catalog installation prompt; saved layout placeholder retained"
+    },
+    {
+      "scenario": "controller missing",
+      "expected": "incomplete installation; repair; no card import"
+    },
+    {
+      "scenario": "service disabled",
+      "expected": "disabled state; no automatic enable/run"
+    },
+    {
+      "scenario": "unknown ABI",
+      "expected": "host upgrade placeholder; no import"
+    },
+    {
+      "scenario": "asset version mismatch",
+      "expected": "rediscover once; then explicit retry; no automatic run"
+    }
+  ],
+  "layoutV4": {
+    "schemaVersion": 4,
+    "rows": [
+      {
+        "id": "network",
+        "template": "left-big",
+        "height": 320,
+        "heightMode": "chart",
+        "columns": [
+          {
+            "weight": 60,
+            "split": 50,
+            "cards": [
+              "traffic"
+            ]
+          },
+          {
+            "weight": 40,
+            "split": 50,
+            "cards": [
+              "connection",
+              "networkInterface"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "devices",
+        "template": "pair",
+        "height": 340,
+        "heightMode": "content",
+        "columns": [
+          {
+            "weight": 50,
+            "split": 50,
+            "cards": [
+              "devices"
+            ]
+          },
+          {
+            "weight": 50,
+            "split": 50,
+            "cards": [
+              "applications"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "storage",
+        "template": "pair",
+        "height": 330,
+        "heightMode": "content",
+        "columns": [
+          {
+            "weight": 50,
+            "split": 50,
+            "cards": [
+              "storage"
+            ]
+          },
+          {
+            "weight": 50,
+            "split": 50,
+            "cards": [
+              "sharing"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "services",
+        "template": "triple",
+        "height": 280,
+        "heightMode": "content",
+        "columns": [
+          {
+            "weight": 34,
+            "split": 50,
+            "cards": [
+              "docker"
+            ]
+          },
+          {
+            "weight": 33,
+            "split": 50,
+            "cards": [
+              "downloads"
+            ]
+          },
+          {
+            "weight": 33,
+            "split": 50,
+            "cards": [
+              "remote"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "system",
+        "template": "single",
+        "height": 280,
+        "heightMode": "content",
+        "columns": [
+          {
+            "weight": 100,
+            "split": 50,
+            "cards": [
+              "system"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "external",
+        "template": "single",
+        "height": 280,
+        "heightMode": "content",
+        "columns": [
+          {
+            "weight": 100,
+            "split": 50,
+            "cards": [
+              "plugin.fastnet"
+            ]
+          }
+        ]
+      }
+    ],
+    "widgetPreferences": {
+      "traffic": {
+        "mode": "auto",
+        "iconRows": 0,
+        "ruleVersion": 2
+      },
+      "connection": {
+        "mode": "auto",
+        "iconRows": 0,
+        "ruleVersion": 2
+      },
+      "networkInterface": {
+        "mode": "auto",
+        "iconRows": 0,
+        "ruleVersion": 2
+      },
+      "devices": {
+        "mode": "auto",
+        "iconRows": 0,
+        "ruleVersion": 2
+      },
+      "applications": {
+        "mode": "auto",
+        "iconRows": 0,
+        "ruleVersion": 2
+      },
+      "storage": {
+        "mode": "auto",
+        "iconRows": 0,
+        "ruleVersion": 2
+      },
+      "sharing": {
+        "mode": "auto",
+        "iconRows": 0,
+        "ruleVersion": 2
+      },
+      "docker": {
+        "mode": "auto",
+        "iconRows": 0,
+        "ruleVersion": 2
+      },
+      "downloads": {
+        "mode": "auto",
+        "iconRows": 0,
+        "ruleVersion": 2
+      },
+      "remote": {
+        "mode": "auto",
+        "iconRows": 0,
+        "ruleVersion": 2
+      },
+      "system": {
+        "mode": "auto",
+        "iconRows": 0,
+        "ruleVersion": 2
+      },
+      "plugin.fastnet": {
+        "mode": "auto",
+        "iconRows": 0,
+        "ruleVersion": 2
+      }
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "hostInitialGzipDeltaBytes": 20265,
+  "limitBytes": 20480,
+  "lazyChunks": {
+    "luci-static/quickstart/installClient.js": 1767,
+    "luci-static/quickstart/FastnetInstallDialog.js": 2078
+  },
+  "measurement": "same gzip level 9/mtime=0 baseline; lazy chunks excluded only after browser confirms zero requests before install UI"
+}

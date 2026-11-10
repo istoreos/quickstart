@@ -1,0 +1,73 @@
+{
+  "milestone": "FN02",
+  "status": "passed",
+  "checks": [
+    {
+      "id": "ordered-light-system",
+      "status": "passed"
+    },
+    {
+      "id": "ordered-light-light",
+      "status": "passed"
+    },
+    {
+      "id": "ordered-light-dark",
+      "status": "passed"
+    },
+    {
+      "id": "ordered-dark-system",
+      "status": "passed"
+    },
+    {
+      "id": "ordered-dark-light",
+      "status": "passed"
+    },
+    {
+      "id": "ordered-dark-dark",
+      "status": "passed"
+    },
+    {
+      "id": "baseline-light-system",
+      "status": "passed"
+    },
+    {
+      "id": "baseline-light-light",
+      "status": "passed"
+    },
+    {
+      "id": "baseline-light-dark",
+      "status": "passed"
+    },
+    {
+      "id": "baseline-dark-system",
+      "status": "passed"
+    },
+    {
+      "id": "baseline-dark-light",
+      "status": "passed"
+    },
+    {
+      "id": "baseline-dark-dark",
+      "status": "passed"
+    },
+    {
+      "id": "reload-storage-LuCI-open-portal-query",
+      "status": "passed",
+      "light": {
+        "panel": "rgb(255, 255, 255)",
+        "token": "#fff",
+        "inline": ""
+      },
+      "dark": {
+        "panel": "rgb(44, 44, 44)",
+        "token": "#2c2c2c",
+        "focused": true
+      }
+    },
+    {
+      "id": "storage-unavailable",
+      "status": "passed"
+    }
+  ],
+  "errors": []
+}

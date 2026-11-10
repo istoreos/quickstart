@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "checks": [
+    "two isolated browser contexts submit independently, join one real job and observe the same cancellation"
+  ],
+  "taskId": "run_748c7e8fffc5976fa02766c68320c515"
+}

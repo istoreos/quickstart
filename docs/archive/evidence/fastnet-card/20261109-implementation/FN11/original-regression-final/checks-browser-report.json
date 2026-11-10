@@ -1,0 +1,71 @@
+{
+  "status": "passed",
+  "checks": [
+    "twelve original real API reads and eleven original widgets survive an unavailable external business API",
+    "original application-library network entry and complete device/LAN management remain reachable with the keyboard",
+    "original FastNet LuCI settings/status and full-Web entry remain available"
+  ],
+  "api": [
+    {
+      "path": "/u/network/status/",
+      "status": 200,
+      "resultType": "object"
+    },
+    {
+      "path": "/network/port/list/",
+      "status": 200,
+      "resultType": "object"
+    },
+    {
+      "path": "/u/network/statistics/",
+      "status": 200,
+      "resultType": "object"
+    },
+    {
+      "path": "/lanctrl/v2/devices/",
+      "status": 200,
+      "resultType": "object"
+    },
+    {
+      "path": "/nas/disk/status/",
+      "status": 200,
+      "resultType": "object"
+    },
+    {
+      "path": "/raid/list/",
+      "status": 200,
+      "resultType": "object"
+    },
+    {
+      "path": "/u/nas/service/status/",
+      "status": 200,
+      "resultType": "object"
+    },
+    {
+      "path": "/guide/docker/status/",
+      "status": 200,
+      "resultType": "object"
+    },
+    {
+      "path": "/guide/download-service/status/",
+      "status": 200,
+      "resultType": "object"
+    },
+    {
+      "path": "/u/guide/ddns/",
+      "status": 200,
+      "resultType": "object"
+    },
+    {
+      "path": "/system/status/",
+      "status": 200,
+      "resultType": "object"
+    },
+    {
+      "path": "/u/system/version/",
+      "status": 200,
+      "resultType": "object"
+    }
+  ],
+  "errors": []
+}

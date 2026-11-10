@@ -1,0 +1,11 @@
+{
+  "milestone": "FN10",
+  "status": "failed",
+  "checks": [
+    "uninstalled and installed-but-unadded request no FastNet JS/API"
+  ],
+  "requests": [],
+  "samples": [],
+  "budgets": {},
+  "failure": "run 503"
+}

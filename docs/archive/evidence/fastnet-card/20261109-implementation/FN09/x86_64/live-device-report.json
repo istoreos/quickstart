@@ -1,0 +1,60 @@
+{
+  "milestone": "FN09",
+  "status": "passed",
+  "device": "x86_64",
+  "restored": true,
+  "checks": [
+    "two live browser tabs produce one real is-opkg installation; durable child journal confirms one attempt",
+    "browser task ID is the same completed Go job and persisted measurements"
+  ],
+  "artifacts": {
+    "backend": "d1470c04414a4a5f18347df878a35b99b12ea6788d6a74ff2538d5144be2e466",
+    "packages": [
+      "a6a89757fecad40ab965578eeb288642eebf9c69256ddd97a342a7750eac4479",
+      "2fb3da5b3edac9c8e88c7ec06fcce4a2986417164823f8bbdbbebdf5eb26aacc",
+      "7dd666aec0d71c1e1b6d35d7af682e65cd0ad3b8c5869ccdf7ca683ef5cf0d9d",
+      "e2bec6e8d917048041dfd68bc609c5ae18c91590bc6d1f4390725da182025c90"
+    ]
+  },
+  "sameRun": {
+    "id": "run_ad2685b4c79b0c05dcc35d5a8f6969ba",
+    "taskState": "partial",
+    "latest": {
+      "runId": "run_ad2685b4c79b0c05dcc35d5a8f6969ba",
+      "measuredAt": "2026-11-09T15:47:22.280916694Z",
+      "download": {
+        "status": "ok",
+        "value": 814349793,
+        "measuredAt": "2026-11-09T15:47:10.280137761Z",
+        "error": null,
+        "runId": "run_ad2685b4c79b0c05dcc35d5a8f6969ba"
+      },
+      "upload": {
+        "status": "ok",
+        "value": 63022542,
+        "measuredAt": "2026-11-09T15:47:22.280916694Z",
+        "error": null,
+        "runId": "run_ad2685b4c79b0c05dcc35d5a8f6969ba"
+      },
+      "nat": {
+        "status": "error",
+        "value": null,
+        "measuredAt": null,
+        "error": "probe_failed"
+      },
+      "ipv6": {
+        "status": "unavailable",
+        "value": null,
+        "measuredAt": "2026-11-09T15:47:25.700300404Z",
+        "error": null,
+        "runId": "run_ad2685b4c79b0c05dcc35d5a8f6969ba"
+      },
+      "bandwidth": {
+        "runId": "run_ad2685b4c79b0c05dcc35d5a8f6969ba",
+        "measuredAt": "2026-11-09T15:47:22.280916694Z",
+        "downloadBps": 814349793,
+        "uploadBps": 63022542
+      }
+    }
+  }
+}

@@ -1,0 +1,48 @@
+Package: fastnet
+Version: 0.8.2-1
+Architecture: x86_64
+Maintainer: FastNet local candidate
+Section: net
+Priority: optional
+Description: FastNet explicit source candidate
+Depends: linkease-app-entry
+Filename: fastnet_0.8.2-1_x86_64.ipk
+Size: 5093009
+SHA256sum: a6a89757fecad40ab965578eeb288642eebf9c69256ddd97a342a7750eac4479
+
+Package: luci-app-fastnet
+Version: 0.8.2-r1
+Architecture: all
+Maintainer: FastNet local candidate
+Section: net
+Priority: optional
+Description: FastNet explicit source candidate
+Depends: fastnet (>= 0.8.2-1), luci-lib-linkeaseauth, linkease-app-entry, luci-lua-runtime
+Filename: luci-app-fastnet_0.8.2-r1_all.ipk
+Size: 12627
+SHA256sum: 490e8983b3ca66dbebd4e80cf0733a25c3e21aa9ae9c94e5a3c70b4990b13caa
+
+Package: luci-i18n-fastnet-zh-cn
+Version: git-26.313.00000-082
+Architecture: all
+Maintainer: FastNet local candidate
+Section: net
+Priority: optional
+Description: FastNet explicit source candidate
+Depends: luci-app-fastnet
+Filename: luci-i18n-fastnet-zh-cn_git-26.313.00000-082_all.ipk
+Size: 986
+SHA256sum: 7dd666aec0d71c1e1b6d35d7af682e65cd0ad3b8c5869ccdf7ca683ef5cf0d9d
+
+Package: app-meta-fastnet
+Version: 0.8.2-10
+Architecture: all
+Maintainer: FastNet local candidate
+Section: net
+Priority: optional
+Description: FastNet explicit source candidate
+Depends: fastnet (>= 0.8.2-1), luci-app-fastnet (>= 0.8.2-r1), luci-i18n-fastnet-zh-cn
+Filename: app-meta-fastnet_0.8.2-10_all.ipk
+Size: 15563
+SHA256sum: e2bec6e8d917048041dfd68bc609c5ae18c91590bc6d1f4390725da182025c90
+

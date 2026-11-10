@@ -1,0 +1,482 @@
+{
+  "milestone": "FN09",
+  "status": "passed",
+  "checks": [
+    "default uninstalled has catalog metadata only; cancelling installation does not save or download card",
+    "two tabs plus closing/reloading the installing page observe one installation; completion creates no layout or speed task",
+    "real placement saves exactly one v4 module without an executable URL; cancelling the other draft keeps the installed plugin",
+    "real background task survives navigation and three theme preferences without another run",
+    "real row move preserves the same task and does not import or start another engine",
+    "real engine completes and updates WAN rate/time/NAT/IPv6 in the standalone card",
+    "real stop retains the previous results",
+    "summary preference and result survive real save/reload",
+    "hide and add again retain result/display preference, without reinstall or another speed task"
+  ],
+  "errors": [],
+  "requests": [
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/layout/",
+      "method": "GET",
+      "time": 1794239198402
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/launcher/",
+      "method": "GET",
+      "time": 1794239198403
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/cards/",
+      "method": "GET",
+      "time": 1794239198403
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/layout/",
+      "method": "GET",
+      "time": 1794239198480
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/layout/",
+      "method": "GET",
+      "time": 1794239199581
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/layout/",
+      "method": "GET",
+      "time": 1794239199920
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/launcher/",
+      "method": "GET",
+      "time": 1794239199920
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/cards/",
+      "method": "GET",
+      "time": 1794239199921
+    },
+    {
+      "path": "/cgi-bin/luci/istore/app/install/",
+      "method": "POST",
+      "time": 1794239200723
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/layout/",
+      "method": "GET",
+      "time": 1794239201117
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/launcher/",
+      "method": "GET",
+      "time": 1794239201117
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/cards/",
+      "method": "GET",
+      "time": 1794239201118
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/cards/",
+      "method": "GET",
+      "time": 1794239202114
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/cards/",
+      "method": "GET",
+      "time": 1794239202181
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/cards/",
+      "method": "GET",
+      "time": 1794239202311
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/cards/",
+      "method": "GET",
+      "time": 1794239202375
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/cards/",
+      "method": "GET",
+      "time": 1794239203921
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/cards/",
+      "method": "GET",
+      "time": 1794239203984
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/layout/",
+      "method": "GET",
+      "time": 1794239204109
+    },
+    {
+      "path": "/luci-static/fastnet/quickstart/card.d6bb4faf.js",
+      "method": "GET",
+      "time": 1794239204537
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "method": "GET",
+      "time": 1794239204542
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/layout/",
+      "method": "POST",
+      "time": 1794239204723
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/layout/",
+      "method": "GET",
+      "time": 1794239204969
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/layout/",
+      "method": "GET",
+      "time": 1794239205167
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/launcher/",
+      "method": "GET",
+      "time": 1794239205167
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/cards/",
+      "method": "GET",
+      "time": 1794239205167
+    },
+    {
+      "path": "/luci-static/fastnet/quickstart/card.d6bb4faf.js",
+      "method": "GET",
+      "time": 1794239205743
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "method": "GET",
+      "time": 1794239205743
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/run",
+      "method": "POST",
+      "time": 1794239205840
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/layout/",
+      "method": "GET",
+      "time": 1794239207167
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/launcher/",
+      "method": "GET",
+      "time": 1794239207167
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/cards/",
+      "method": "GET",
+      "time": 1794239207168
+    },
+    {
+      "path": "/luci-static/fastnet/quickstart/card.d6bb4faf.js",
+      "method": "GET",
+      "time": 1794239207768
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "method": "GET",
+      "time": 1794239207770
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/layout/",
+      "method": "POST",
+      "time": 1794239208637
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "method": "GET",
+      "time": 1794239208952
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/task",
+      "method": "GET",
+      "time": 1794239209796
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/task",
+      "method": "GET",
+      "time": 1794239211821
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/task",
+      "method": "GET",
+      "time": 1794239213852
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/task",
+      "method": "GET",
+      "time": 1794239215884
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/task",
+      "method": "GET",
+      "time": 1794239217916
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/task",
+      "method": "GET",
+      "time": 1794239219947
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/task",
+      "method": "GET",
+      "time": 1794239221980
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/task",
+      "method": "GET",
+      "time": 1794239224011
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/task",
+      "method": "GET",
+      "time": 1794239226041
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/task",
+      "method": "GET",
+      "time": 1794239228069
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/task",
+      "method": "GET",
+      "time": 1794239230097
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/task",
+      "method": "GET",
+      "time": 1794239232132
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/task",
+      "method": "GET",
+      "time": 1794239234159
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/task",
+      "method": "GET",
+      "time": 1794239236184
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/task",
+      "method": "GET",
+      "time": 1794239238207
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/task",
+      "method": "GET",
+      "time": 1794239240233
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/task",
+      "method": "GET",
+      "time": 1794239242260
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/task",
+      "method": "GET",
+      "time": 1794239244286
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/task",
+      "method": "GET",
+      "time": 1794239246312
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "method": "GET",
+      "time": 1794239246336
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "method": "GET",
+      "time": 1794239246497
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/run",
+      "method": "POST",
+      "time": 1794239246568
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/cancel",
+      "method": "POST",
+      "time": 1794239246771
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/task",
+      "method": "GET",
+      "time": 1794239248860
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "method": "GET",
+      "time": 1794239248888
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/layout/",
+      "method": "POST",
+      "time": 1794239249655
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/layout/",
+      "method": "GET",
+      "time": 1794239250055
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/launcher/",
+      "method": "GET",
+      "time": 1794239250055
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/cards/",
+      "method": "GET",
+      "time": 1794239250055
+    },
+    {
+      "path": "/luci-static/fastnet/quickstart/card.d6bb4faf.js",
+      "method": "GET",
+      "time": 1794239250590
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "method": "GET",
+      "time": 1794239250665
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/layout/",
+      "method": "POST",
+      "time": 1794239251359
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/layout/",
+      "method": "GET",
+      "time": 1794239251601
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "method": "GET",
+      "time": 1794239252389
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/layout/",
+      "method": "POST",
+      "time": 1794239252596
+    }
+  ],
+  "dialogs": [],
+  "navigations": [
+    "/cgi-bin/luci/admin/quickstart",
+    "/cgi-bin/luci/admin/quickstart/",
+    "/cgi-bin/luci/admin/quickstart/",
+    "/cgi-bin/luci/admin/quickstart",
+    "/cgi-bin/luci/admin/quickstart/",
+    "/cgi-bin/luci/admin/quickstart/",
+    "/cgi-bin/luci/admin/quickstart/",
+    "/cgi-bin/luci/admin/quickstart/",
+    "/cgi-bin/luci/admin/quickstart/",
+    "/cgi-bin/luci/admin/quickstart/",
+    "/cgi-bin/luci/admin/quickstart/",
+    "/cgi-bin/luci/admin/quickstart/",
+    "/cgi-bin/luci/admin/quickstart/",
+    "/cgi-bin/luci/admin/quickstart/",
+    "/cgi-bin/luci/admin/quickstart/",
+    "/cgi-bin/luci/admin/quickstart/",
+    "/cgi-bin/luci/admin/quickstart/",
+    "/cgi-bin/luci/admin/quickstart/"
+  ],
+  "apiErrors": [],
+  "artifacts": {
+    "modules": [
+      {
+        "path": "/luci-static/quickstart/card-runtime-v1.js",
+        "encoded": 0,
+        "transferred": 300
+      },
+      {
+        "path": "/luci-static/fastnet/quickstart/card.d6bb4faf.js",
+        "encoded": 17712,
+        "transferred": 0
+      }
+    ]
+  },
+  "navigationReasons": [
+    {
+      "type": "other"
+    },
+    {
+      "type": "other"
+    },
+    {
+      "type": "other"
+    },
+    {
+      "type": "other"
+    },
+    {
+      "type": "other"
+    }
+  ],
+  "homeButton": {
+    "type": "submit"
+  },
+  "buttonForms": [
+    {
+      "type": "submit"
+    },
+    {
+      "type": "submit"
+    },
+    {
+      "type": "submit"
+    },
+    {
+      "type": "submit"
+    }
+  ],
+  "taskId": "run_ad2685b4c79b0c05dcc35d5a8f6969ba",
+  "resultText": "外网测速\n测速\n⋮\n↓ 上次下载\n814\nMbps\n↑ 上次上传\n63\nMbps\n\n上次测速\n2026/11/09 15:47\n\nNAT\n检测失败 · 本次失败\nIPv6\n不可用\n\n部分检测未完成，已保留各项有效结果\n\n默认外网出口\nFastNet",
+  "publicLatest": {
+    "runId": "run_ad2685b4c79b0c05dcc35d5a8f6969ba",
+    "measuredAt": "2026-11-09T15:47:22.280916694Z",
+    "download": {
+      "status": "ok",
+      "value": 814349793,
+      "measuredAt": "2026-11-09T15:47:10.280137761Z",
+      "error": null,
+      "runId": "run_ad2685b4c79b0c05dcc35d5a8f6969ba"
+    },
+    "upload": {
+      "status": "ok",
+      "value": 63022542,
+      "measuredAt": "2026-11-09T15:47:22.280916694Z",
+      "error": null,
+      "runId": "run_ad2685b4c79b0c05dcc35d5a8f6969ba"
+    },
+    "nat": {
+      "status": "error",
+      "value": null,
+      "measuredAt": null,
+      "error": "probe_failed"
+    },
+    "ipv6": {
+      "status": "unavailable",
+      "value": null,
+      "measuredAt": "2026-11-09T15:47:25.700300404Z",
+      "error": null,
+      "runId": "run_ad2685b4c79b0c05dcc35d5a8f6969ba"
+    },
+    "bandwidth": {
+      "runId": "run_ad2685b4c79b0c05dcc35d5a8f6969ba",
+      "measuredAt": "2026-11-09T15:47:22.280916694Z",
+      "downloadBps": 814349793,
+      "uploadBps": 63022542
+    }
+  }
+}

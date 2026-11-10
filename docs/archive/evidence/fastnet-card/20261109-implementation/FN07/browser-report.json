@@ -1,0 +1,685 @@
+{
+  "milestone": "FN07",
+  "status": "passed",
+  "checks": [
+    {
+      "id": "size-320-standard",
+      "size": {
+        "width": 320,
+        "scroll": 320,
+        "height": 260.5,
+        "parent": 262.5,
+        "child": 261
+      }
+    },
+    {
+      "id": "size-320-summary",
+      "size": {
+        "width": 320,
+        "scroll": 320,
+        "height": 138.25,
+        "parent": 140.25,
+        "child": 138
+      }
+    },
+    {
+      "id": "size-390-standard",
+      "size": {
+        "width": 390,
+        "scroll": 390,
+        "height": 260.5,
+        "parent": 262.5,
+        "child": 261
+      }
+    },
+    {
+      "id": "size-390-summary",
+      "size": {
+        "width": 390,
+        "scroll": 390,
+        "height": 138.25,
+        "parent": 140.25,
+        "child": 138
+      }
+    },
+    {
+      "id": "size-768-standard",
+      "size": {
+        "width": 768,
+        "scroll": 768,
+        "height": 260.5,
+        "parent": 262.5,
+        "child": 261
+      }
+    },
+    {
+      "id": "size-768-summary",
+      "size": {
+        "width": 768,
+        "scroll": 768,
+        "height": 138.25,
+        "parent": 140.25,
+        "child": 138
+      }
+    },
+    {
+      "id": "size-1440-standard",
+      "size": {
+        "width": 1440,
+        "scroll": 1440,
+        "height": 260.5,
+        "parent": 262.5,
+        "child": 261
+      }
+    },
+    {
+      "id": "size-1440-summary",
+      "size": {
+        "width": 1440,
+        "scroll": 1440,
+        "height": 251.375,
+        "parent": 253.375,
+        "child": 251
+      }
+    },
+    {
+      "id": "size-1600-standard",
+      "size": {
+        "width": 1600,
+        "scroll": 1600,
+        "height": 260.5,
+        "parent": 262.5,
+        "child": 261
+      }
+    },
+    {
+      "id": "size-1600-summary",
+      "size": {
+        "width": 1600,
+        "scroll": 1600,
+        "height": 251.375,
+        "parent": 253.375,
+        "child": 251
+      }
+    },
+    {
+      "id": "TH12-system-390-standard-empty",
+      "colors": {
+        "fg": "rgb(230, 235, 243)",
+        "bg": "rgb(44, 44, 44)",
+        "text": "#e6ebf3",
+        "panel": "#2c2c2c"
+      }
+    },
+    {
+      "id": "TH12-system-390-standard-stale",
+      "colors": {
+        "fg": "rgb(230, 235, 243)",
+        "bg": "rgb(44, 44, 44)",
+        "text": "#e6ebf3",
+        "panel": "#2c2c2c"
+      }
+    },
+    {
+      "id": "TH12-system-390-standard-running",
+      "colors": {
+        "fg": "rgb(230, 235, 243)",
+        "bg": "rgb(44, 44, 44)",
+        "text": "#e6ebf3",
+        "panel": "#2c2c2c"
+      }
+    },
+    {
+      "id": "TH12-system-390-standard-failed",
+      "colors": {
+        "fg": "rgb(230, 235, 243)",
+        "bg": "rgb(44, 44, 44)",
+        "text": "#e6ebf3",
+        "panel": "#2c2c2c"
+      }
+    },
+    {
+      "id": "TH12-system-390-standard-partial",
+      "colors": {
+        "fg": "rgb(230, 235, 243)",
+        "bg": "rgb(44, 44, 44)",
+        "text": "#e6ebf3",
+        "panel": "#2c2c2c"
+      }
+    },
+    {
+      "id": "TH12-system-390-summary-empty",
+      "colors": {
+        "fg": "rgb(230, 235, 243)",
+        "bg": "rgb(44, 44, 44)",
+        "text": "#e6ebf3",
+        "panel": "#2c2c2c"
+      }
+    },
+    {
+      "id": "TH12-system-390-summary-stale",
+      "colors": {
+        "fg": "rgb(230, 235, 243)",
+        "bg": "rgb(44, 44, 44)",
+        "text": "#e6ebf3",
+        "panel": "#2c2c2c"
+      }
+    },
+    {
+      "id": "TH12-system-390-summary-running",
+      "colors": {
+        "fg": "rgb(230, 235, 243)",
+        "bg": "rgb(44, 44, 44)",
+        "text": "#e6ebf3",
+        "panel": "#2c2c2c"
+      }
+    },
+    {
+      "id": "TH12-system-390-summary-failed",
+      "colors": {
+        "fg": "rgb(230, 235, 243)",
+        "bg": "rgb(44, 44, 44)",
+        "text": "#e6ebf3",
+        "panel": "#2c2c2c"
+      }
+    },
+    {
+      "id": "TH12-system-390-summary-partial",
+      "colors": {
+        "fg": "rgb(230, 235, 243)",
+        "bg": "rgb(44, 44, 44)",
+        "text": "#e6ebf3",
+        "panel": "#2c2c2c"
+      }
+    },
+    {
+      "id": "TH12-system-1440-standard-empty",
+      "colors": {
+        "fg": "rgb(230, 235, 243)",
+        "bg": "rgb(44, 44, 44)",
+        "text": "#e6ebf3",
+        "panel": "#2c2c2c"
+      }
+    },
+    {
+      "id": "TH12-system-1440-standard-stale",
+      "colors": {
+        "fg": "rgb(230, 235, 243)",
+        "bg": "rgb(44, 44, 44)",
+        "text": "#e6ebf3",
+        "panel": "#2c2c2c"
+      }
+    },
+    {
+      "id": "TH12-system-1440-standard-running",
+      "colors": {
+        "fg": "rgb(230, 235, 243)",
+        "bg": "rgb(44, 44, 44)",
+        "text": "#e6ebf3",
+        "panel": "#2c2c2c"
+      }
+    },
+    {
+      "id": "TH12-system-1440-standard-failed",
+      "colors": {
+        "fg": "rgb(230, 235, 243)",
+        "bg": "rgb(44, 44, 44)",
+        "text": "#e6ebf3",
+        "panel": "#2c2c2c"
+      }
+    },
+    {
+      "id": "TH12-system-1440-standard-partial",
+      "colors": {
+        "fg": "rgb(230, 235, 243)",
+        "bg": "rgb(44, 44, 44)",
+        "text": "#e6ebf3",
+        "panel": "#2c2c2c"
+      }
+    },
+    {
+      "id": "TH12-system-1440-summary-empty",
+      "colors": {
+        "fg": "rgb(230, 235, 243)",
+        "bg": "rgb(44, 44, 44)",
+        "text": "#e6ebf3",
+        "panel": "#2c2c2c"
+      }
+    },
+    {
+      "id": "TH12-system-1440-summary-stale",
+      "colors": {
+        "fg": "rgb(230, 235, 243)",
+        "bg": "rgb(44, 44, 44)",
+        "text": "#e6ebf3",
+        "panel": "#2c2c2c"
+      }
+    },
+    {
+      "id": "TH12-system-1440-summary-running",
+      "colors": {
+        "fg": "rgb(230, 235, 243)",
+        "bg": "rgb(44, 44, 44)",
+        "text": "#e6ebf3",
+        "panel": "#2c2c2c"
+      }
+    },
+    {
+      "id": "TH12-system-1440-summary-failed",
+      "colors": {
+        "fg": "rgb(230, 235, 243)",
+        "bg": "rgb(44, 44, 44)",
+        "text": "#e6ebf3",
+        "panel": "#2c2c2c"
+      }
+    },
+    {
+      "id": "TH12-system-1440-summary-partial",
+      "colors": {
+        "fg": "rgb(230, 235, 243)",
+        "bg": "rgb(44, 44, 44)",
+        "text": "#e6ebf3",
+        "panel": "#2c2c2c"
+      }
+    },
+    {
+      "id": "TH12-light-390-standard-empty",
+      "colors": {
+        "fg": "rgb(37, 50, 71)",
+        "bg": "rgb(255, 255, 255)",
+        "text": "#253247",
+        "panel": "#fff"
+      }
+    },
+    {
+      "id": "TH12-light-390-standard-stale",
+      "colors": {
+        "fg": "rgb(37, 50, 71)",
+        "bg": "rgb(255, 255, 255)",
+        "text": "#253247",
+        "panel": "#fff"
+      }
+    },
+    {
+      "id": "TH12-light-390-standard-running",
+      "colors": {
+        "fg": "rgb(37, 50, 71)",
+        "bg": "rgb(255, 255, 255)",
+        "text": "#253247",
+        "panel": "#fff"
+      }
+    },
+    {
+      "id": "TH12-light-390-standard-failed",
+      "colors": {
+        "fg": "rgb(37, 50, 71)",
+        "bg": "rgb(255, 255, 255)",
+        "text": "#253247",
+        "panel": "#fff"
+      }
+    },
+    {
+      "id": "TH12-light-390-standard-partial",
+      "colors": {
+        "fg": "rgb(37, 50, 71)",
+        "bg": "rgb(255, 255, 255)",
+        "text": "#253247",
+        "panel": "#fff"
+      }
+    },
+    {
+      "id": "TH12-light-390-summary-empty",
+      "colors": {
+        "fg": "rgb(37, 50, 71)",
+        "bg": "rgb(255, 255, 255)",
+        "text": "#253247",
+        "panel": "#fff"
+      }
+    },
+    {
+      "id": "TH12-light-390-summary-stale",
+      "colors": {
+        "fg": "rgb(37, 50, 71)",
+        "bg": "rgb(255, 255, 255)",
+        "text": "#253247",
+        "panel": "#fff"
+      }
+    },
+    {
+      "id": "TH12-light-390-summary-running",
+      "colors": {
+        "fg": "rgb(37, 50, 71)",
+        "bg": "rgb(255, 255, 255)",
+        "text": "#253247",
+        "panel": "#fff"
+      }
+    },
+    {
+      "id": "TH12-light-390-summary-failed",
+      "colors": {
+        "fg": "rgb(37, 50, 71)",
+        "bg": "rgb(255, 255, 255)",
+        "text": "#253247",
+        "panel": "#fff"
+      }
+    },
+    {
+      "id": "TH12-light-390-summary-partial",
+      "colors": {
+        "fg": "rgb(37, 50, 71)",
+        "bg": "rgb(255, 255, 255)",
+        "text": "#253247",
+        "panel": "#fff"
+      }
+    },
+    {
+      "id": "TH12-light-1440-standard-empty",
+      "colors": {
+        "fg": "rgb(37, 50, 71)",
+        "bg": "rgb(255, 255, 255)",
+        "text": "#253247",
+        "panel": "#fff"
+      }
+    },
+    {
+      "id": "TH12-light-1440-standard-stale",
+      "colors": {
+        "fg": "rgb(37, 50, 71)",
+        "bg": "rgb(255, 255, 255)",
+        "text": "#253247",
+        "panel": "#fff"
+      }
+    },
+    {
+      "id": "TH12-light-1440-standard-running",
+      "colors": {
+        "fg": "rgb(37, 50, 71)",
+        "bg": "rgb(255, 255, 255)",
+        "text": "#253247",
+        "panel": "#fff"
+      }
+    },
+    {
+      "id": "TH12-light-1440-standard-failed",
+      "colors": {
+        "fg": "rgb(37, 50, 71)",
+        "bg": "rgb(255, 255, 255)",
+        "text": "#253247",
+        "panel": "#fff"
+      }
+    },
+    {
+      "id": "TH12-light-1440-standard-partial",
+      "colors": {
+        "fg": "rgb(37, 50, 71)",
+        "bg": "rgb(255, 255, 255)",
+        "text": "#253247",
+        "panel": "#fff"
+      }
+    },
+    {
+      "id": "TH12-light-1440-summary-empty",
+      "colors": {
+        "fg": "rgb(37, 50, 71)",
+        "bg": "rgb(255, 255, 255)",
+        "text": "#253247",
+        "panel": "#fff"
+      }
+    },
+    {
+      "id": "TH12-light-1440-summary-stale",
+      "colors": {
+        "fg": "rgb(37, 50, 71)",
+        "bg": "rgb(255, 255, 255)",
+        "text": "#253247",
+        "panel": "#fff"
+      }
+    },
+    {
+      "id": "TH12-light-1440-summary-running",
+      "colors": {
+        "fg": "rgb(37, 50, 71)",
+        "bg": "rgb(255, 255, 255)",
+        "text": "#253247",
+        "panel": "#fff"
+      }
+    },
+    {
+      "id": "TH12-light-1440-summary-failed",
+      "colors": {
+        "fg": "rgb(37, 50, 71)",
+        "bg": "rgb(255, 255, 255)",
+        "text": "#253247",
+        "panel": "#fff"
+      }
+    },
+    {
+      "id": "TH12-light-1440-summary-partial",
+      "colors": {
+        "fg": "rgb(37, 50, 71)",
+        "bg": "rgb(255, 255, 255)",
+        "text": "#253247",
+        "panel": "#fff"
+      }
+    },
+    {
+      "id": "TH12-dark-390-standard-empty",
+      "colors": {
+        "fg": "rgb(230, 235, 243)",
+        "bg": "rgb(44, 44, 44)",
+        "text": "#e6ebf3",
+        "panel": "#2c2c2c"
+      }
+    },
+    {
+      "id": "TH12-dark-390-standard-stale",
+      "colors": {
+        "fg": "rgb(230, 235, 243)",
+        "bg": "rgb(44, 44, 44)",
+        "text": "#e6ebf3",
+        "panel": "#2c2c2c"
+      }
+    },
+    {
+      "id": "TH12-dark-390-standard-running",
+      "colors": {
+        "fg": "rgb(230, 235, 243)",
+        "bg": "rgb(44, 44, 44)",
+        "text": "#e6ebf3",
+        "panel": "#2c2c2c"
+      }
+    },
+    {
+      "id": "TH12-dark-390-standard-failed",
+      "colors": {
+        "fg": "rgb(230, 235, 243)",
+        "bg": "rgb(44, 44, 44)",
+        "text": "#e6ebf3",
+        "panel": "#2c2c2c"
+      }
+    },
+    {
+      "id": "TH12-dark-390-standard-partial",
+      "colors": {
+        "fg": "rgb(230, 235, 243)",
+        "bg": "rgb(44, 44, 44)",
+        "text": "#e6ebf3",
+        "panel": "#2c2c2c"
+      }
+    },
+    {
+      "id": "TH12-dark-390-summary-empty",
+      "colors": {
+        "fg": "rgb(230, 235, 243)",
+        "bg": "rgb(44, 44, 44)",
+        "text": "#e6ebf3",
+        "panel": "#2c2c2c"
+      }
+    },
+    {
+      "id": "TH12-dark-390-summary-stale",
+      "colors": {
+        "fg": "rgb(230, 235, 243)",
+        "bg": "rgb(44, 44, 44)",
+        "text": "#e6ebf3",
+        "panel": "#2c2c2c"
+      }
+    },
+    {
+      "id": "TH12-dark-390-summary-running",
+      "colors": {
+        "fg": "rgb(230, 235, 243)",
+        "bg": "rgb(44, 44, 44)",
+        "text": "#e6ebf3",
+        "panel": "#2c2c2c"
+      }
+    },
+    {
+      "id": "TH12-dark-390-summary-failed",
+      "colors": {
+        "fg": "rgb(230, 235, 243)",
+        "bg": "rgb(44, 44, 44)",
+        "text": "#e6ebf3",
+        "panel": "#2c2c2c"
+      }
+    },
+    {
+      "id": "TH12-dark-390-summary-partial",
+      "colors": {
+        "fg": "rgb(230, 235, 243)",
+        "bg": "rgb(44, 44, 44)",
+        "text": "#e6ebf3",
+        "panel": "#2c2c2c"
+      }
+    },
+    {
+      "id": "TH12-dark-1440-standard-empty",
+      "colors": {
+        "fg": "rgb(230, 235, 243)",
+        "bg": "rgb(44, 44, 44)",
+        "text": "#e6ebf3",
+        "panel": "#2c2c2c"
+      }
+    },
+    {
+      "id": "TH12-dark-1440-standard-stale",
+      "colors": {
+        "fg": "rgb(230, 235, 243)",
+        "bg": "rgb(44, 44, 44)",
+        "text": "#e6ebf3",
+        "panel": "#2c2c2c"
+      }
+    },
+    {
+      "id": "TH12-dark-1440-standard-running",
+      "colors": {
+        "fg": "rgb(230, 235, 243)",
+        "bg": "rgb(44, 44, 44)",
+        "text": "#e6ebf3",
+        "panel": "#2c2c2c"
+      }
+    },
+    {
+      "id": "TH12-dark-1440-standard-failed",
+      "colors": {
+        "fg": "rgb(230, 235, 243)",
+        "bg": "rgb(44, 44, 44)",
+        "text": "#e6ebf3",
+        "panel": "#2c2c2c"
+      }
+    },
+    {
+      "id": "TH12-dark-1440-standard-partial",
+      "colors": {
+        "fg": "rgb(230, 235, 243)",
+        "bg": "rgb(44, 44, 44)",
+        "text": "#e6ebf3",
+        "panel": "#2c2c2c"
+      }
+    },
+    {
+      "id": "TH12-dark-1440-summary-empty",
+      "colors": {
+        "fg": "rgb(230, 235, 243)",
+        "bg": "rgb(44, 44, 44)",
+        "text": "#e6ebf3",
+        "panel": "#2c2c2c"
+      }
+    },
+    {
+      "id": "TH12-dark-1440-summary-stale",
+      "colors": {
+        "fg": "rgb(230, 235, 243)",
+        "bg": "rgb(44, 44, 44)",
+        "text": "#e6ebf3",
+        "panel": "#2c2c2c"
+      }
+    },
+    {
+      "id": "TH12-dark-1440-summary-running",
+      "colors": {
+        "fg": "rgb(230, 235, 243)",
+        "bg": "rgb(44, 44, 44)",
+        "text": "#e6ebf3",
+        "panel": "#2c2c2c"
+      }
+    },
+    {
+      "id": "TH12-dark-1440-summary-failed",
+      "colors": {
+        "fg": "rgb(230, 235, 243)",
+        "bg": "rgb(44, 44, 44)",
+        "text": "#e6ebf3",
+        "panel": "#2c2c2c"
+      }
+    },
+    {
+      "id": "TH12-dark-1440-summary-partial",
+      "colors": {
+        "fg": "rgb(230, 235, 243)",
+        "bg": "rgb(44, 44, 44)",
+        "text": "#e6ebf3",
+        "panel": "#2c2c2c"
+      }
+    },
+    {
+      "id": "TH01-07-light-system"
+    },
+    {
+      "id": "TH01-07-light-light"
+    },
+    {
+      "id": "TH01-07-light-dark"
+    },
+    {
+      "id": "TH01-07-dark-system"
+    },
+    {
+      "id": "TH01-07-dark-light"
+    },
+    {
+      "id": "TH01-07-dark-dark"
+    },
+    {
+      "id": "TH08-10-cross-tab-LuCI-live-details-focus"
+    },
+    {
+      "id": "TH11-running-theme-cancel",
+      "taskId": "preview-run-1"
+    },
+    {
+      "id": "run-error-old-results-explicit-retry-success"
+    },
+    {
+      "id": "TH07-storage-unavailable"
+    },
+    {
+      "id": "TH09-late-import-current-theme"
+    },
+    {
+      "id": "uninstalled-install-before-layout-no-auto-run"
+    }
+  ],
+  "errors": [],
+  "network": []
+}

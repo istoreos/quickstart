@@ -1,0 +1,133 @@
+{
+  "scope": "local source candidate; explicit inputs; not a canonical feed build or publication",
+  "version": "0.8.2",
+  "sourceCommit": "b11d3be744b393d7e9f0921a81824a25fa5d1023",
+  "tools": {
+    "ipkg-build": "60714afe9b93fd0d3ecfd2fcef7839928b1a99e826ae30e2e3c0e24f1efde474",
+    "meta.mk": "3942c0acbf86b0422c8100c9c55358799aa2a9d83196c94922d2c30ba42a951e",
+    "po2lmo": "26c0e5030499393eb7e9a681cf064e7d59765016b40ef9856e1d16d9cee4f0cb"
+  },
+  "sourceFiles": {
+    "app-meta-fastnet/Makefile": "453acb0663dfa06f5019ccb394d81be3238b5ec50a7df4e75b987f8e412aef3a",
+    "app-meta-fastnet/config.sh": "59b1042ef0c1979c7da7673a108d4ba591bb03367c8ee906b548bf61f1effc63",
+    "app-meta-fastnet/entry.sh": "2cfb7147822538802930074838feb68b14d730c170c4663fa6050a5aa40ab8a1",
+    "app-meta-fastnet/logo.png": "98791fd4b39d2eef48a9fe8a6283ece1530a0d449399c527d982afd40f00520d",
+    "app-meta-fastnet/root/usr/share/linkeasefull/desktop-apps.d/17-fastnet.json": "9ca279c3baca876bed3a4abe23d5edd69940fcaff4db17f27237e02c24cbabef",
+    "docs/quickstart-entry.md": "e824d6c5bcc252ca5b155f513590dadabef0d84af9fb2f2ebda980012e9643f2",
+    "fastnet/Makefile": "77a15bdb7d9bd50fed71d51a37e094a768f97c5833cc0778a59365daff5708e5",
+    "fastnet/files/fastnet-plugin.json": "ccf05c100c6865cc3862b9e362cd6766edfef966f2b89e2d52c5e9dd27347bc7",
+    "fastnet/files/fastnet.config": "bc8a9c25a87179c78d0a8f721cc46421c7e2aee62482602d7d0a8efd5518d6a0",
+    "fastnet/files/fastnet.init": "1da94b44ad55b86b7704b02973d3cbf9a66a4fb163123dca51d7308c66d3a7d5",
+    "fastnet/files/fastnet.uci-default": "5417905d984a9e19bbb08504446f3952a1ac6edde01ae93bebedea8b95e95b74",
+    "luci-app-fastnet/Makefile": "dbf698107e1621e52f2e0404c36b32e6d367fe553432721474e46da291d3eef4",
+    "luci-app-fastnet/luasrc/controller/fastnet.lua": "30bcf57310d1c16489899ab80c00b5b33986a5c11eba5beae3566f3b0c4c7fc3",
+    "luci-app-fastnet/luasrc/model/cbi/fastnet.lua": "d95cf719f5a96d0b3f2b66310f374cd3299d7b099608db2a09bd20170b2e4ce4",
+    "luci-app-fastnet/luasrc/model/fastnet/card.lua": "897acc6d08056666ddb7b67a6fcb0697f43848d45fdc36e69bb3a9d436c5706f",
+    "luci-app-fastnet/luasrc/view/fastnet/status.htm": "7bf774f85167f5eb9b19662baabbbaa1a4ebb0d65f361578e3579a417736dab6",
+    "luci-app-fastnet/po/zh-cn/fastnet.po": "865f3c9a6feaa747c89d6b1aee674134be7ffa7723d417a980fda8db9e24ceaf",
+    "luci-app-fastnet/po/zh_Hans/fastnet.po": "865f3c9a6feaa747c89d6b1aee674134be7ffa7723d417a980fda8db9e24ceaf",
+    "luci-app-fastnet/root/etc/uci-defaults/50_luci-fastnet": "cb8c82a52e62cdc210c0644789be55761a0041c6ba456cc75e6e4133a968e16e",
+    "luci-app-fastnet/root/usr/libexec/fastnet-card-register": "91186df40aee9d7ad68a05148bc45af729b09bb37f7b20517636637be72e6e51",
+    "luci-app-fastnet/root/usr/share/fastnet/quickstart/fastnet.json": "f98956a58757de7550b80b81c14dbab0abfc3ed27678492a70aa170699db86ee",
+    "luci-app-fastnet/root/www/luci-static/fastnet/quickstart/card.d6bb4faf.js": "4e616d951f18b86f4d0f962e4a17ac9f719bf4f501d6ccfa4266d390392159b6",
+    "luci-app-fastnet/root/www/luci-static/fastnet/quickstart/provenance.json": "b6233c8df4bca37a9625b55637cf0e4dd150c37e7fcc3b67d4313722639e5f38",
+    "tests/build_card_candidates.py": "952e7bd191ca49af1d65f292951a87f4c67de4fe009842ea93b1c43f0b30e885",
+    "tests/card_adapter_test.lua": "37624777f6d28424c3a17e38d4ce7543b75868e6a2c9919bea7138f0ba40be08",
+    "tests/check_entry_status_on_device.py": "83c946aae42fe9d2a4f14a3c214eafa3733c270bcbc724fa6893405cb0d59913",
+    "tests/test_fastnet_package_contract.py": "84c2ae4ddd03088b4aa893dfff14607c421d3d9c3241a81f84791215e3402f12"
+  },
+  "packages": [
+    {
+      "path": "/var/cache/build-cache/users/911/projects/quickstart-f0ca7c908f5f/work/fastnet-candidate-FN08-final2/ipk/fastnet_0.8.2-1_x86_64.ipk",
+      "name": "fastnet",
+      "version": "0.8.2-1",
+      "arch": "x86_64",
+      "sha256": "a6a89757fecad40ab965578eeb288642eebf9c69256ddd97a342a7750eac4479",
+      "depends": "linkease-app-entry",
+      "files": {
+        "CONTROL/conffiles": "509c990d63d5842ffda147933a0c023e73f915aac3982b847e91e176f6316567",
+        "CONTROL/control": "81fd3b4b2997ba9e1f923eb28ca7a8921df8a3970e55fd956b281436e41d2ffc",
+        "CONTROL/postinst": "8ed8fb1e5d1b2454c536535928f46cd2d3d5218d5a0d538a9272e1923bae3eb3",
+        "CONTROL/prerm": "c3dc928c7ced74d39acdd351f7000ef1743e6eadcb40df31eae6061d053fcba7",
+        "etc/config/fastnet": "bc8a9c25a87179c78d0a8f721cc46421c7e2aee62482602d7d0a8efd5518d6a0",
+        "etc/init.d/fastnet": "1da94b44ad55b86b7704b02973d3cbf9a66a4fb163123dca51d7308c66d3a7d5",
+        "etc/uci-defaults/fastnet": "5417905d984a9e19bbb08504446f3952a1ac6edde01ae93bebedea8b95e95b74",
+        "usr/sbin/FastNet": "0bc7dd49ac3e1bb210fe87891170e40af88cd644eec8f6976ae09c9a12f17a88",
+        "usr/share/fastnet/fastnet-plugin.json": "ccf05c100c6865cc3862b9e362cd6766edfef966f2b89e2d52c5e9dd27347bc7"
+      }
+    },
+    {
+      "path": "/var/cache/build-cache/users/911/projects/quickstart-f0ca7c908f5f/work/fastnet-candidate-FN08-final2/ipk/fastnet_0.8.2-1_aarch64_generic.ipk",
+      "name": "fastnet",
+      "version": "0.8.2-1",
+      "arch": "aarch64_generic",
+      "sha256": "485f4378c23cc66e77683c7f1007b4c3c115087ef7d19a61afcfd896bd6dc401",
+      "depends": "linkease-app-entry",
+      "files": {
+        "CONTROL/conffiles": "509c990d63d5842ffda147933a0c023e73f915aac3982b847e91e176f6316567",
+        "CONTROL/control": "de32c9c694132b05ff7c089b22d3bd47f14b60bc812a194ded02086a314ec4dc",
+        "CONTROL/postinst": "8ed8fb1e5d1b2454c536535928f46cd2d3d5218d5a0d538a9272e1923bae3eb3",
+        "CONTROL/prerm": "c3dc928c7ced74d39acdd351f7000ef1743e6eadcb40df31eae6061d053fcba7",
+        "etc/config/fastnet": "bc8a9c25a87179c78d0a8f721cc46421c7e2aee62482602d7d0a8efd5518d6a0",
+        "etc/init.d/fastnet": "1da94b44ad55b86b7704b02973d3cbf9a66a4fb163123dca51d7308c66d3a7d5",
+        "etc/uci-defaults/fastnet": "5417905d984a9e19bbb08504446f3952a1ac6edde01ae93bebedea8b95e95b74",
+        "usr/sbin/FastNet": "8cdac63458ffacd8d48315b05f8af279801bc4e0a6e51366ecbcb58b73e331cb",
+        "usr/share/fastnet/fastnet-plugin.json": "ccf05c100c6865cc3862b9e362cd6766edfef966f2b89e2d52c5e9dd27347bc7"
+      }
+    },
+    {
+      "path": "/var/cache/build-cache/users/911/projects/quickstart-f0ca7c908f5f/work/fastnet-candidate-FN08-final2/ipk/luci-app-fastnet_0.8.2-r1_all.ipk",
+      "name": "luci-app-fastnet",
+      "version": "0.8.2-r1",
+      "arch": "all",
+      "sha256": "2fb3da5b3edac9c8e88c7ec06fcce4a2986417164823f8bbdbbebdf5eb26aacc",
+      "depends": "fastnet (>= 0.8.2-1), luci-lib-linkeaseauth, linkease-app-entry, luci-lua-runtime",
+      "files": {
+        "CONTROL/control": "d1fed73fcced3abc75dd8b0cf6fa4d9ae44441280d6c63d8d9ad203c164d02ca",
+        "CONTROL/postinst": "fb54b8809d264b6082cf93eb07827bf46a5ad5c5ab7459509482e485ca2c4c4a",
+        "CONTROL/prerm": "29875dc6c8c8902f4bdcc30c4d94667703301cccb72cd8d3090ca6264912cf55",
+        "etc/uci-defaults/50_luci-fastnet": "cb8c82a52e62cdc210c0644789be55761a0041c6ba456cc75e6e4133a968e16e",
+        "usr/lib/lua/luci/controller/fastnet.lua": "30bcf57310d1c16489899ab80c00b5b33986a5c11eba5beae3566f3b0c4c7fc3",
+        "usr/lib/lua/luci/model/cbi/fastnet.lua": "d95cf719f5a96d0b3f2b66310f374cd3299d7b099608db2a09bd20170b2e4ce4",
+        "usr/lib/lua/luci/model/fastnet/card.lua": "897acc6d08056666ddb7b67a6fcb0697f43848d45fdc36e69bb3a9d436c5706f",
+        "usr/lib/lua/luci/view/fastnet/status.htm": "7bf774f85167f5eb9b19662baabbbaa1a4ebb0d65f361578e3579a417736dab6",
+        "usr/libexec/fastnet-card-register": "91186df40aee9d7ad68a05148bc45af729b09bb37f7b20517636637be72e6e51",
+        "usr/share/fastnet/quickstart/fastnet.json": "f98956a58757de7550b80b81c14dbab0abfc3ed27678492a70aa170699db86ee",
+        "www/luci-static/fastnet/quickstart/card.d6bb4faf.js": "4e616d951f18b86f4d0f962e4a17ac9f719bf4f501d6ccfa4266d390392159b6",
+        "www/luci-static/fastnet/quickstart/provenance.json": "b6233c8df4bca37a9625b55637cf0e4dd150c37e7fcc3b67d4313722639e5f38"
+      }
+    },
+    {
+      "path": "/var/cache/build-cache/users/911/projects/quickstart-f0ca7c908f5f/work/fastnet-candidate-FN08-final2/ipk/luci-i18n-fastnet-zh-cn_git-26.313.00000-082_all.ipk",
+      "name": "luci-i18n-fastnet-zh-cn",
+      "version": "git-26.313.00000-082",
+      "arch": "all",
+      "sha256": "7dd666aec0d71c1e1b6d35d7af682e65cd0ad3b8c5869ccdf7ca683ef5cf0d9d",
+      "depends": "luci-app-fastnet",
+      "files": {
+        "CONTROL/control": "b75bbd5f23c205e3be1c5ddf5d544a92c4834b6726d20812124abd64cf709255",
+        "usr/lib/lua/luci/i18n/fastnet.zh-cn.lmo": "0db35e85f35d6ea779ecda3c88078b4e3b3d797cfa032c4f972b3c5b5838b510"
+      }
+    },
+    {
+      "path": "/var/cache/build-cache/users/911/projects/quickstart-f0ca7c908f5f/work/fastnet-candidate-FN08-final2/ipk/app-meta-fastnet_0.8.2-10_all.ipk",
+      "name": "app-meta-fastnet",
+      "version": "0.8.2-10",
+      "arch": "all",
+      "sha256": "e2bec6e8d917048041dfd68bc609c5ae18c91590bc6d1f4390725da182025c90",
+      "depends": "fastnet (>= 0.8.2-1), luci-app-fastnet (>= 0.8.2-r1), luci-i18n-fastnet-zh-cn",
+      "files": {
+        "CONTROL/control": "ab5c86aed49b0cba3629944d8769d3a5c52e5e42284ebfa6207a66e545babc3a",
+        "usr/lib/opkg/meta/fastnet.json": "60ee2183dcaf3d1c2f65e5933adcc80723194c341129706439c438fd66c73665",
+        "usr/libexec/istorea/fastnet.sh": "59b1042ef0c1979c7da7673a108d4ba591bb03367c8ee906b548bf61f1effc63",
+        "usr/libexec/istoree/fastnet.sh": "2cfb7147822538802930074838feb68b14d730c170c4663fa6050a5aa40ab8a1",
+        "usr/share/linkeasefull/desktop-apps.d/17-fastnet.json": "9ca279c3baca876bed3a4abe23d5edd69940fcaff4db17f27237e02c24cbabef",
+        "www/luci-static/resources/app-icons/fastnet.png": "98791fd4b39d2eef48a9fe8a6283ece1530a0d449399c527d982afd40f00520d"
+      }
+    }
+  ],
+  "runtime": {
+    "path": "/var/cache/build-cache/users/911/projects/quickstart-f0ca7c908f5f/work/fastnet-candidate-FN08-final2/fastnet-binary-0.8.2.tar.gz",
+    "sha256": "b89df5d8e1e23671c5d63d79f2aac0da717232e07715edddcffafd35154034a5"
+  }
+}

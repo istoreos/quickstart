@@ -1,0 +1,1313 @@
+{
+  "status": "passed",
+  "layer": "formal LuCI host and installed external module; deterministic business view states",
+  "checks": [
+    {
+      "id": "TH12-system-320-standard-empty",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 320,
+        "height": 268,
+        "content": 268,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-320-standard-stale",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 320,
+        "height": 268,
+        "content": 268,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-320-standard-running",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 320,
+        "height": 324,
+        "content": 324,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-320-standard-failed",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 320,
+        "height": 326,
+        "content": 326,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-320-standard-partial",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 320,
+        "height": 298,
+        "content": 298,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-320-summary-empty",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 320,
+        "height": 150,
+        "content": 150,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-320-summary-stale",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 320,
+        "height": 150,
+        "content": 150,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-320-summary-running",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 320,
+        "height": 170,
+        "content": 170,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-320-summary-failed",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 320,
+        "height": 175,
+        "content": 175,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-320-summary-partial",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 320,
+        "height": 167,
+        "content": 167,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-390-standard-empty",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 390,
+        "height": 268,
+        "content": 268,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-390-standard-stale",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 390,
+        "height": 268,
+        "content": 268,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-390-standard-running",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 390,
+        "height": 324,
+        "content": 324,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-390-standard-failed",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 390,
+        "height": 308,
+        "content": 308,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-390-standard-partial",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 390,
+        "height": 298,
+        "content": 298,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-390-summary-empty",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 390,
+        "height": 150,
+        "content": 150,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-390-summary-stale",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 390,
+        "height": 150,
+        "content": 150,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-390-summary-running",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 390,
+        "height": 170,
+        "content": 170,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-390-summary-failed",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 390,
+        "height": 175,
+        "content": 175,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-390-summary-partial",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 390,
+        "height": 167,
+        "content": 167,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-1440-standard-empty",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 1440,
+        "height": 261,
+        "content": 261,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-1440-standard-stale",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 1440,
+        "height": 261,
+        "content": 261,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-1440-standard-running",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 1440,
+        "height": 306,
+        "content": 306,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-1440-standard-failed",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 1440,
+        "height": 301,
+        "content": 301,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-1440-standard-partial",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 1440,
+        "height": 290,
+        "content": 290,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-1440-summary-empty",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 1440,
+        "height": 138,
+        "content": 138,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-1440-summary-stale",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 1440,
+        "height": 138,
+        "content": 138,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-1440-summary-running",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 1440,
+        "height": 158,
+        "content": 158,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-1440-summary-failed",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 1440,
+        "height": 163,
+        "content": 163,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-1440-summary-partial",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 1440,
+        "height": 155,
+        "content": 155,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-light-320-standard-empty",
+      "style": {
+        "fg": "rgb(37, 50, 71)",
+        "panel": "#fff",
+        "line": "#e1e6ed",
+        "focus": "#155dfc",
+        "disabled": "#697586",
+        "width": 320,
+        "height": 268,
+        "content": 268,
+        "shell": "rgb(255, 255, 255)"
+      }
+    },
+    {
+      "id": "TH12-light-320-standard-stale",
+      "style": {
+        "fg": "rgb(37, 50, 71)",
+        "panel": "#fff",
+        "line": "#e1e6ed",
+        "focus": "#155dfc",
+        "disabled": "#697586",
+        "width": 320,
+        "height": 268,
+        "content": 268,
+        "shell": "rgb(255, 255, 255)"
+      }
+    },
+    {
+      "id": "TH12-light-320-standard-running",
+      "style": {
+        "fg": "rgb(37, 50, 71)",
+        "panel": "#fff",
+        "line": "#e1e6ed",
+        "focus": "#155dfc",
+        "disabled": "#697586",
+        "width": 320,
+        "height": 324,
+        "content": 324,
+        "shell": "rgb(255, 255, 255)"
+      }
+    },
+    {
+      "id": "TH12-light-320-standard-failed",
+      "style": {
+        "fg": "rgb(37, 50, 71)",
+        "panel": "#fff",
+        "line": "#e1e6ed",
+        "focus": "#155dfc",
+        "disabled": "#697586",
+        "width": 320,
+        "height": 326,
+        "content": 326,
+        "shell": "rgb(255, 255, 255)"
+      }
+    },
+    {
+      "id": "TH12-light-320-standard-partial",
+      "style": {
+        "fg": "rgb(37, 50, 71)",
+        "panel": "#fff",
+        "line": "#e1e6ed",
+        "focus": "#155dfc",
+        "disabled": "#697586",
+        "width": 320,
+        "height": 298,
+        "content": 298,
+        "shell": "rgb(255, 255, 255)"
+      }
+    },
+    {
+      "id": "TH12-light-320-summary-empty",
+      "style": {
+        "fg": "rgb(37, 50, 71)",
+        "panel": "#fff",
+        "line": "#e1e6ed",
+        "focus": "#155dfc",
+        "disabled": "#697586",
+        "width": 320,
+        "height": 150,
+        "content": 150,
+        "shell": "rgb(255, 255, 255)"
+      }
+    },
+    {
+      "id": "TH12-light-320-summary-stale",
+      "style": {
+        "fg": "rgb(37, 50, 71)",
+        "panel": "#fff",
+        "line": "#e1e6ed",
+        "focus": "#155dfc",
+        "disabled": "#697586",
+        "width": 320,
+        "height": 150,
+        "content": 150,
+        "shell": "rgb(255, 255, 255)"
+      }
+    },
+    {
+      "id": "TH12-light-320-summary-running",
+      "style": {
+        "fg": "rgb(37, 50, 71)",
+        "panel": "#fff",
+        "line": "#e1e6ed",
+        "focus": "#155dfc",
+        "disabled": "#697586",
+        "width": 320,
+        "height": 170,
+        "content": 170,
+        "shell": "rgb(255, 255, 255)"
+      }
+    },
+    {
+      "id": "TH12-light-320-summary-failed",
+      "style": {
+        "fg": "rgb(37, 50, 71)",
+        "panel": "#fff",
+        "line": "#e1e6ed",
+        "focus": "#155dfc",
+        "disabled": "#697586",
+        "width": 320,
+        "height": 175,
+        "content": 175,
+        "shell": "rgb(255, 255, 255)"
+      }
+    },
+    {
+      "id": "TH12-light-320-summary-partial",
+      "style": {
+        "fg": "rgb(37, 50, 71)",
+        "panel": "#fff",
+        "line": "#e1e6ed",
+        "focus": "#155dfc",
+        "disabled": "#697586",
+        "width": 320,
+        "height": 167,
+        "content": 167,
+        "shell": "rgb(255, 255, 255)"
+      }
+    },
+    {
+      "id": "TH12-light-390-standard-empty",
+      "style": {
+        "fg": "rgb(37, 50, 71)",
+        "panel": "#fff",
+        "line": "#e1e6ed",
+        "focus": "#155dfc",
+        "disabled": "#697586",
+        "width": 390,
+        "height": 268,
+        "content": 268,
+        "shell": "rgb(255, 255, 255)"
+      }
+    },
+    {
+      "id": "TH12-light-390-standard-stale",
+      "style": {
+        "fg": "rgb(37, 50, 71)",
+        "panel": "#fff",
+        "line": "#e1e6ed",
+        "focus": "#155dfc",
+        "disabled": "#697586",
+        "width": 390,
+        "height": 268,
+        "content": 268,
+        "shell": "rgb(255, 255, 255)"
+      }
+    },
+    {
+      "id": "TH12-light-390-standard-running",
+      "style": {
+        "fg": "rgb(37, 50, 71)",
+        "panel": "#fff",
+        "line": "#e1e6ed",
+        "focus": "#155dfc",
+        "disabled": "#697586",
+        "width": 390,
+        "height": 324,
+        "content": 324,
+        "shell": "rgb(255, 255, 255)"
+      }
+    },
+    {
+      "id": "TH12-light-390-standard-failed",
+      "style": {
+        "fg": "rgb(37, 50, 71)",
+        "panel": "#fff",
+        "line": "#e1e6ed",
+        "focus": "#155dfc",
+        "disabled": "#697586",
+        "width": 390,
+        "height": 308,
+        "content": 308,
+        "shell": "rgb(255, 255, 255)"
+      }
+    },
+    {
+      "id": "TH12-light-390-standard-partial",
+      "style": {
+        "fg": "rgb(37, 50, 71)",
+        "panel": "#fff",
+        "line": "#e1e6ed",
+        "focus": "#155dfc",
+        "disabled": "#697586",
+        "width": 390,
+        "height": 298,
+        "content": 298,
+        "shell": "rgb(255, 255, 255)"
+      }
+    },
+    {
+      "id": "TH12-light-390-summary-empty",
+      "style": {
+        "fg": "rgb(37, 50, 71)",
+        "panel": "#fff",
+        "line": "#e1e6ed",
+        "focus": "#155dfc",
+        "disabled": "#697586",
+        "width": 390,
+        "height": 150,
+        "content": 150,
+        "shell": "rgb(255, 255, 255)"
+      }
+    },
+    {
+      "id": "TH12-light-390-summary-stale",
+      "style": {
+        "fg": "rgb(37, 50, 71)",
+        "panel": "#fff",
+        "line": "#e1e6ed",
+        "focus": "#155dfc",
+        "disabled": "#697586",
+        "width": 390,
+        "height": 150,
+        "content": 150,
+        "shell": "rgb(255, 255, 255)"
+      }
+    },
+    {
+      "id": "TH12-light-390-summary-running",
+      "style": {
+        "fg": "rgb(37, 50, 71)",
+        "panel": "#fff",
+        "line": "#e1e6ed",
+        "focus": "#155dfc",
+        "disabled": "#697586",
+        "width": 390,
+        "height": 170,
+        "content": 170,
+        "shell": "rgb(255, 255, 255)"
+      }
+    },
+    {
+      "id": "TH12-light-390-summary-failed",
+      "style": {
+        "fg": "rgb(37, 50, 71)",
+        "panel": "#fff",
+        "line": "#e1e6ed",
+        "focus": "#155dfc",
+        "disabled": "#697586",
+        "width": 390,
+        "height": 175,
+        "content": 175,
+        "shell": "rgb(255, 255, 255)"
+      }
+    },
+    {
+      "id": "TH12-light-390-summary-partial",
+      "style": {
+        "fg": "rgb(37, 50, 71)",
+        "panel": "#fff",
+        "line": "#e1e6ed",
+        "focus": "#155dfc",
+        "disabled": "#697586",
+        "width": 390,
+        "height": 167,
+        "content": 167,
+        "shell": "rgb(255, 255, 255)"
+      }
+    },
+    {
+      "id": "TH12-light-1440-standard-empty",
+      "style": {
+        "fg": "rgb(37, 50, 71)",
+        "panel": "#fff",
+        "line": "#e1e6ed",
+        "focus": "#155dfc",
+        "disabled": "#697586",
+        "width": 1440,
+        "height": 261,
+        "content": 261,
+        "shell": "rgb(255, 255, 255)"
+      }
+    },
+    {
+      "id": "TH12-light-1440-standard-stale",
+      "style": {
+        "fg": "rgb(37, 50, 71)",
+        "panel": "#fff",
+        "line": "#e1e6ed",
+        "focus": "#155dfc",
+        "disabled": "#697586",
+        "width": 1440,
+        "height": 261,
+        "content": 261,
+        "shell": "rgb(255, 255, 255)"
+      }
+    },
+    {
+      "id": "TH12-light-1440-standard-running",
+      "style": {
+        "fg": "rgb(37, 50, 71)",
+        "panel": "#fff",
+        "line": "#e1e6ed",
+        "focus": "#155dfc",
+        "disabled": "#697586",
+        "width": 1440,
+        "height": 306,
+        "content": 306,
+        "shell": "rgb(255, 255, 255)"
+      }
+    },
+    {
+      "id": "TH12-light-1440-standard-failed",
+      "style": {
+        "fg": "rgb(37, 50, 71)",
+        "panel": "#fff",
+        "line": "#e1e6ed",
+        "focus": "#155dfc",
+        "disabled": "#697586",
+        "width": 1440,
+        "height": 301,
+        "content": 301,
+        "shell": "rgb(255, 255, 255)"
+      }
+    },
+    {
+      "id": "TH12-light-1440-standard-partial",
+      "style": {
+        "fg": "rgb(37, 50, 71)",
+        "panel": "#fff",
+        "line": "#e1e6ed",
+        "focus": "#155dfc",
+        "disabled": "#697586",
+        "width": 1440,
+        "height": 290,
+        "content": 290,
+        "shell": "rgb(255, 255, 255)"
+      }
+    },
+    {
+      "id": "TH12-light-1440-summary-empty",
+      "style": {
+        "fg": "rgb(37, 50, 71)",
+        "panel": "#fff",
+        "line": "#e1e6ed",
+        "focus": "#155dfc",
+        "disabled": "#697586",
+        "width": 1440,
+        "height": 138,
+        "content": 138,
+        "shell": "rgb(255, 255, 255)"
+      }
+    },
+    {
+      "id": "TH12-light-1440-summary-stale",
+      "style": {
+        "fg": "rgb(37, 50, 71)",
+        "panel": "#fff",
+        "line": "#e1e6ed",
+        "focus": "#155dfc",
+        "disabled": "#697586",
+        "width": 1440,
+        "height": 138,
+        "content": 138,
+        "shell": "rgb(255, 255, 255)"
+      }
+    },
+    {
+      "id": "TH12-light-1440-summary-running",
+      "style": {
+        "fg": "rgb(37, 50, 71)",
+        "panel": "#fff",
+        "line": "#e1e6ed",
+        "focus": "#155dfc",
+        "disabled": "#697586",
+        "width": 1440,
+        "height": 158,
+        "content": 158,
+        "shell": "rgb(255, 255, 255)"
+      }
+    },
+    {
+      "id": "TH12-light-1440-summary-failed",
+      "style": {
+        "fg": "rgb(37, 50, 71)",
+        "panel": "#fff",
+        "line": "#e1e6ed",
+        "focus": "#155dfc",
+        "disabled": "#697586",
+        "width": 1440,
+        "height": 163,
+        "content": 163,
+        "shell": "rgb(255, 255, 255)"
+      }
+    },
+    {
+      "id": "TH12-light-1440-summary-partial",
+      "style": {
+        "fg": "rgb(37, 50, 71)",
+        "panel": "#fff",
+        "line": "#e1e6ed",
+        "focus": "#155dfc",
+        "disabled": "#697586",
+        "width": 1440,
+        "height": 155,
+        "content": 155,
+        "shell": "rgb(255, 255, 255)"
+      }
+    },
+    {
+      "id": "TH12-dark-320-standard-empty",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 320,
+        "height": 268,
+        "content": 268,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-dark-320-standard-stale",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 320,
+        "height": 268,
+        "content": 268,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-dark-320-standard-running",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 320,
+        "height": 324,
+        "content": 324,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-dark-320-standard-failed",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 320,
+        "height": 326,
+        "content": 326,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-dark-320-standard-partial",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 320,
+        "height": 298,
+        "content": 298,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-dark-320-summary-empty",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 320,
+        "height": 150,
+        "content": 150,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-dark-320-summary-stale",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 320,
+        "height": 150,
+        "content": 150,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-dark-320-summary-running",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 320,
+        "height": 170,
+        "content": 170,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-dark-320-summary-failed",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 320,
+        "height": 175,
+        "content": 175,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-dark-320-summary-partial",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 320,
+        "height": 167,
+        "content": 167,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-dark-390-standard-empty",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 390,
+        "height": 268,
+        "content": 268,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-dark-390-standard-stale",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 390,
+        "height": 268,
+        "content": 268,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-dark-390-standard-running",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 390,
+        "height": 324,
+        "content": 324,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-dark-390-standard-failed",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 390,
+        "height": 308,
+        "content": 308,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-dark-390-standard-partial",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 390,
+        "height": 298,
+        "content": 298,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-dark-390-summary-empty",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 390,
+        "height": 150,
+        "content": 150,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-dark-390-summary-stale",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 390,
+        "height": 150,
+        "content": 150,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-dark-390-summary-running",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 390,
+        "height": 170,
+        "content": 170,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-dark-390-summary-failed",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 390,
+        "height": 175,
+        "content": 175,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-dark-390-summary-partial",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 390,
+        "height": 167,
+        "content": 167,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-dark-1440-standard-empty",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 1440,
+        "height": 261,
+        "content": 261,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-dark-1440-standard-stale",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 1440,
+        "height": 261,
+        "content": 261,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-dark-1440-standard-running",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 1440,
+        "height": 306,
+        "content": 306,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-dark-1440-standard-failed",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 1440,
+        "height": 301,
+        "content": 301,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-dark-1440-standard-partial",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 1440,
+        "height": 290,
+        "content": 290,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-dark-1440-summary-empty",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 1440,
+        "height": 138,
+        "content": 138,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-dark-1440-summary-stale",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 1440,
+        "height": 138,
+        "content": 138,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-dark-1440-summary-running",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 1440,
+        "height": 158,
+        "content": 158,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-dark-1440-summary-failed",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 1440,
+        "height": 163,
+        "content": 163,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-dark-1440-summary-partial",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 1440,
+        "height": 155,
+        "content": 155,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH01-07-light-system"
+    },
+    {
+      "id": "TH01-07-light-light"
+    },
+    {
+      "id": "TH01-07-light-dark"
+    },
+    {
+      "id": "TH01-07-dark-system"
+    },
+    {
+      "id": "TH01-07-dark-light"
+    },
+    {
+      "id": "TH01-07-dark-dark"
+    },
+    {
+      "id": "TH11-instance-task-results-imports-and-requests-unchanged"
+    },
+    {
+      "id": "TH08-TH10-details-cross-tab-keyboard-focus",
+      "outline": {
+        "width": "2px",
+        "style": "solid"
+      }
+    },
+    {
+      "id": "TH08-external-LuCI-body-and-OS"
+    },
+    {
+      "id": "TH09-late-import-first-frame"
+    },
+    {
+      "id": "TH07-storage-blocked-current-selection"
+    },
+    {
+      "id": "TH10-installation-prompt-live-OS"
+    },
+    {
+      "id": "TH10-installation-error-live-OS"
+    },
+    {
+      "id": "original-homepage-preserves-existing-visible-and-hidden-preferences"
+    }
+  ],
+  "errors": []
+}

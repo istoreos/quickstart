@@ -1,0 +1,20 @@
+{
+  "status": "passed",
+  "tests": [
+    "TestCardDetachedHTTPAndIdempotency",
+    "TestCardCancelDeadlineAndLateProgress/cancel",
+    "TestCardCancelDeadlineAndLateProgress/deadline",
+    "TestCardCancelDeadlineAndLateProgress",
+    "TestCardResultProvenancePartialAndZero",
+    "TestCardPersistenceFaultsAndNoProgressWrites",
+    "TestCardBoundedHistoryLogsAndCrossProcessLock",
+    "TestCardLegacyWebSharesGateAndRejectsBadMutations",
+    "TestCardProcessHelper",
+    "TestCardWorkerSupervisorStopsUncooperativeProcess",
+    "TestCardIndependentServiceRestart",
+    "TestCardInvalidStateIsReadOnlyAndNeverOverwritten",
+    "TestCardPrivateSocketDoesNotNeedPublicPortOrToken"
+  ],
+  "count": 13,
+  "race": "passed"
+}

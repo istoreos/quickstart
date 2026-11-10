@@ -1,0 +1,19 @@
+{
+  "milestone": "FN10",
+  "status": "passed",
+  "device": "x86_64",
+  "restored": true,
+  "checks": [
+    "two live browser tabs produce one real is-opkg installation; durable child journal confirms one attempt",
+    "browser observations match the same installed core and bounded persisted job history"
+  ],
+  "artifacts": {
+    "backend": "d1470c04414a4a5f18347df878a35b99b12ea6788d6a74ff2538d5144be2e466",
+    "packages": [
+      "a6a89757fecad40ab965578eeb288642eebf9c69256ddd97a342a7750eac4479",
+      "2fb3da5b3edac9c8e88c7ec06fcce4a2986417164823f8bbdbbebdf5eb26aacc",
+      "7dd666aec0d71c1e1b6d35d7af682e65cd0ad3b8c5869ccdf7ca683ef5cf0d9d",
+      "e2bec6e8d917048041dfd68bc609c5ae18c91590bc6d1f4390725da182025c90"
+    ]
+  }
+}

@@ -10,6 +10,9 @@
 <script setup lang="ts">
 import {computed,onMounted,onUnmounted,reactive,ref,watch} from 'vue'
 import {useRouter} from 'vue-router'
+import {provide} from 'vue'
+import {cardInstallerKey} from '/@/home/cards/installContext'
+import {useCardRegistry} from '/@/home/cards/useCardRegistry'
 import HomeWidget from '/@/home/HomeWidget.vue'
 import HomeApplications from '/@/home/HomeApplications.vue'
 // Load the shared shell after its views, preserving the accepted override order.
@@ -21,6 +24,7 @@ import type {WidgetId} from '/@/home/layout/rowLayout'
 import {visibleIds} from '/@/home/layout/orderedLayout'
 import {getTheme,subscribeTheme} from '/@/utils/theme'
 import type {ConfigDomain,LayoutConfig} from '/@/home/configContract'
+provide(cardInstallerKey,{inspect:(id,signal)=>import('/@/home/cards/installClient').then(m=>m.cardInstaller.inspect(id,signal)),install:(id,signal)=>import('/@/home/cards/installClient').then(m=>m.cardInstaller.install(id,signal))})
 const previewIds=ref<WidgetId[]|null>(null)
 const config=useHomeConfig(),launcher=provideLauncher(config),model=useHomeData(computed(()=>previewIds.value||visibleIds(config.layout.value.rows)))
 // Only the two bounded homepage settings gate the first layout. Business data
@@ -42,7 +46,7 @@ function returnReady(widgets:readonly string[]){return !config.state.layout.load
 function navigate(path:string){if(editing.value)return;if(path.startsWith('/cgi-bin/'))window.location.assign(path);else void router.push(path)}
 function openDevice(id:string){if(!editing.value)void router.push({path:'/devicemanagement',query:{device:id}})}
 let unsubscribeTheme=()=>{}
-onMounted(()=>{unsubscribeTheme=subscribeTheme(snapshot=>theme.value=snapshot.effective)})
+onMounted(()=>{void useCardRegistry().discover();unsubscribeTheme=subscribeTheme(snapshot=>theme.value=snapshot.effective)})
 onUnmounted(()=>unsubscribeTheme())
 </script>
 <style scoped>

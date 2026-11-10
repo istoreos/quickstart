@@ -1,0 +1,54 @@
+{
+  "milestone": "FN10",
+  "status": "passed",
+  "checks": [
+    {
+      "id": "read-403",
+      "status": "passed"
+    },
+    {
+      "id": "read-404",
+      "status": "passed"
+    },
+    {
+      "id": "read-503",
+      "status": "passed"
+    },
+    {
+      "id": "read-json",
+      "status": "passed"
+    },
+    {
+      "id": "read-slow",
+      "status": "passed"
+    },
+    {
+      "id": "read-bandwidth",
+      "status": "passed"
+    },
+    {
+      "id": "read-redirect",
+      "status": "passed"
+    },
+    {
+      "id": "persistence-error-with-partial-result",
+      "status": "passed"
+    },
+    {
+      "id": "write-503-retains-idempotency",
+      "status": "passed"
+    },
+    {
+      "id": "three-failures-pause-sequential-poll",
+      "status": "passed"
+    },
+    {
+      "id": "hide-resume-same-task",
+      "status": "passed"
+    },
+    {
+      "id": "restart-retains-results-no-auto-run",
+      "status": "passed"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "status": "ready",
+  "configuredFeed": "/etc/opkg/quickstart-fastnet-test.conf",
+  "URL": "http://127.0.0.1:10000/quickstart-fastnet-test",
+  "expectedMeta": "0.8.2-10",
+  "packageIndexSha256": "839022a7d754cf7ab027c14a32160cebdc230de4d5aac271a3d662b3945d344e",
+  "packages": 4,
+  "iStoreCodeChanged": false,
+  "iStoreScriptSha256": "0575d5b38ce1d47e2272cfc84f831cbab044c018e1ef4e28465df4d9dd74f366",
+  "updateMethod": "standard is-opkg update; no implementation or signature policy changes",
+  "resolutionDryRun": "passed: all four local candidate packages resolve; no installation executed"
+}

@@ -1,0 +1,9 @@
+{
+  "status": "passed",
+  "cardFocus": {
+    "active": true,
+    "outline": "solid",
+    "width": "2px"
+  },
+  "installationPortalFollowsLiveOS": true
+}

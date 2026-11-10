@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "backendTest": "TestIncompatibleRegistrationRetainsSafeIdentity",
+  "browser": "Chromium 140.0.7339.16",
+  "placeholder": "upgrade Quickstart, retain position",
+  "businessImports": 0,
+  "installCalls": 0
+}

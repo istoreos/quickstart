@@ -1,0 +1,48 @@
+{
+  "status": "failed",
+  "layer": "formal LuCI host and installed external module; deterministic business view states",
+  "checks": [
+    {
+      "id": "TH01-07-light-system"
+    },
+    {
+      "id": "TH01-07-light-light"
+    },
+    {
+      "id": "TH01-07-light-dark"
+    },
+    {
+      "id": "TH01-07-dark-system"
+    },
+    {
+      "id": "TH01-07-dark-light"
+    },
+    {
+      "id": "TH01-07-dark-dark"
+    },
+    {
+      "id": "TH11-instance-task-results-imports-and-requests-unchanged"
+    },
+    {
+      "id": "TH08-TH10-details-cross-tab-keyboard-focus",
+      "outline": {
+        "width": "2px",
+        "style": "solid"
+      }
+    },
+    {
+      "id": "TH08-external-LuCI-body-and-OS"
+    },
+    {
+      "id": "TH09-late-import-first-frame"
+    },
+    {
+      "id": "TH07-storage-blocked-current-selection"
+    },
+    {
+      "id": "TH10-installation-prompt-live-OS"
+    }
+  ],
+  "errors": [],
+  "failure": "locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-confirm-card-install]') to be visible\u001b[22m\n"
+}

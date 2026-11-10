@@ -1,0 +1,581 @@
+{
+  "status": "passed",
+  "milestones": 12,
+  "cases": 76,
+  "requirements": {
+    "R01": {
+      "status": "passed",
+      "description": "独立外网卡片，标准/摘要形态，不包含 LAN 或整页测速 UI",
+      "cases": [
+        "FN07-T01",
+        "FN07-T05",
+        "FN07-T03",
+        "FN11-T01"
+      ]
+    },
+    "R02": {
+      "status": "passed",
+      "description": "上次速率、UTC 时间、独立 NAT/IPv6 时间、缺值与部分成功",
+      "cases": [
+        "FN01-T02",
+        "FN05-T04",
+        "FN07-T01",
+        "FN12-T01"
+      ]
+    },
+    "R03": {
+      "status": "passed",
+      "description": "卡片直接测速、原位进度、防重复、停止和重试",
+      "cases": [
+        "FN05-T02",
+        "FN07-T02",
+        "FN09-T06"
+      ]
+    },
+    "R04": {
+      "status": "passed",
+      "description": "默认未安装；可安装元信息内置 Quickstart；不修改 iStore",
+      "cases": [
+        "FN04-T01",
+        "FN08-T01",
+        "FN09-T01"
+      ]
+    },
+    "R05": {
+      "status": "passed",
+      "description": "确认安装后添加；取消/失败不改布局；安装与草稿分离",
+      "cases": [
+        "FN09-T01",
+        "FN09-T02",
+        "FN09-T03",
+        "FN12-T01"
+      ]
+    },
+    "R06": {
+      "status": "passed",
+      "description": "未知、权限失败、未启用、未安装及部分安装分别处理",
+      "cases": [
+        "FN06-T04",
+        "FN09-T01",
+        "FN09-T04",
+        "FN12-T03"
+      ]
+    },
+    "R07": {
+      "status": "passed",
+      "description": "由 luci-app-fastnet 包注册、发现和删除已安装卡片信息",
+      "cases": [
+        "FN04-T01",
+        "FN04-T02",
+        "FN08-T01",
+        "FN08-T03",
+        "FN12-T01"
+      ]
+    },
+    "R08": {
+      "status": "passed",
+      "description": "FastNet 独立构建组件，静态资源直接由 /luci-static/ 提供",
+      "cases": [
+        "FN03-T01",
+        "FN07-T04",
+        "FN08-T04",
+        "FN10-T01"
+      ]
+    },
+    "R09": {
+      "status": "passed",
+      "description": "共享 Vue/SDK、版本化 ABI、无第二套应用和重依赖",
+      "cases": [
+        "FN01-T04",
+        "FN03-T01",
+        "FN08-T02",
+        "FN03-T07",
+        "FN10-T01"
+      ]
+    },
+    "R10": {
+      "status": "passed",
+      "description": "只在需要展示时加载；目录轻量；发现不阻塞原首页",
+      "cases": [
+        "FN03-T02",
+        "FN04-T07",
+        "FN10-T02"
+      ]
+    },
+    "R11": {
+      "status": "passed",
+      "description": "内容哈希、实际缓存、加载合并、升级中间态及有界重试",
+      "cases": [
+        "FN03-T03",
+        "FN03-T05",
+        "FN08-T04",
+        "FN08-T05",
+        "FN12-T04"
+      ]
+    },
+    "R12": {
+      "status": "passed",
+      "description": "公共 CSS、只读响应式主题上下文、图标与状态语义",
+      "cases": [
+        "FN02-T04",
+        "FN03-T04",
+        "FN07-T04",
+        "FN02-T06",
+        "FN11-T01"
+      ]
+    },
+    "R13": {
+      "status": "passed",
+      "description": "浅/深/跟随系统、偏好保存、OS 实时变化和 LuCI 同步",
+      "cases": [
+        "FN02-T02",
+        "FN02-T03",
+        "FN11-T01",
+        "FN12-T02"
+      ]
+    },
+    "R14": {
+      "status": "passed",
+      "description": "预览复用正式主题，不用路由或二态按钮覆盖偏好",
+      "cases": [
+        "FN02-T01",
+        "FN07-T06",
+        "FN11-T06"
+      ]
+    },
+    "R15": {
+      "status": "passed",
+      "description": "持续打开的安装/详情/错误弹层变色、键盘与焦点",
+      "cases": [
+        "FN02-T05",
+        "FN11-T03"
+      ]
+    },
+    "R16": {
+      "status": "passed",
+      "description": "懒加载首帧、测速中切主题，不 remount 或重发业务请求",
+      "cases": [
+        "FN03-T04",
+        "FN07-T07",
+        "FN11-T02"
+      ]
+    },
+    "R17": {
+      "status": "passed",
+      "description": "前后端动态模块校验、v3→v4、旧版只读与冲突/损坏保护",
+      "cases": [
+        "FN04-T03",
+        "FN04-T04",
+        "FN04-T06",
+        "FN11-T04"
+      ]
+    },
+    "R18": {
+      "status": "passed",
+      "description": "统一移动/隐藏/尺寸/换位、单实例、插件缺失仍保留布局",
+      "cases": [
+        "FN04-T03",
+        "FN04-T05",
+        "FN09-T05",
+        "FN12-T01"
+      ]
+    },
+    "R19": {
+      "status": "passed",
+      "description": "LuCI 同源 summary/run/task/cancel、认证和写操作保护",
+      "cases": [
+        "FN06-T01",
+        "FN06-T02",
+        "FN06-T03",
+        "FN06-T05",
+        "FN12-T03"
+      ]
+    },
+    "R20": {
+      "status": "passed",
+      "description": "Go 后台持有任务，浏览器断开不取消，controller 快速返回",
+      "cases": [
+        "FN05-T01",
+        "FN06-T02",
+        "FN01-T03",
+        "FN09-T06"
+      ]
+    },
+    "R21": {
+      "status": "passed",
+      "description": "双击/双标签/响应丢失的幂等，卡片与原 Web 并发一致",
+      "cases": [
+        "FN05-T02",
+        "FN10-T05"
+      ]
+    },
+    "R22": {
+      "status": "passed",
+      "description": "取消、截止、迟到进度、进程/设备重启与恢复",
+      "cases": [
+        "FN05-T03",
+        "FN05-T06",
+        "FN12-T01"
+      ]
+    },
+    "R23": {
+      "status": "passed",
+      "description": "最近有效结果、有界任务/日志、原子保存、Flash 写入限制",
+      "cases": [
+        "FN05-T05",
+        "FN05-T07",
+        "FN10-T06"
+      ]
+    },
+    "R24": {
+      "status": "passed",
+      "description": "闲置无轮询、运行时顺序查询、隐藏中止查询不停止任务",
+      "cases": [
+        "FN03-T06",
+        "FN10-T02",
+        "FN12-T01"
+      ]
+    },
+    "R25": {
+      "status": "passed",
+      "description": "核心与 LuCI 依赖、哈希资源、候选包与两架构",
+      "cases": [
+        "FN08-T01",
+        "FN08-T02",
+        "FN08-T06",
+        "FN12-T01"
+      ]
+    },
+    "R26": {
+      "status": "passed",
+      "description": "加载/API/注册/权限错误单卡片降级，不自动安装或重测",
+      "cases": [
+        "FN03-T05",
+        "FN04-T02",
+        "FN06-T03",
+        "FN10-T04"
+      ]
+    },
+    "R27": {
+      "status": "passed",
+      "description": "旧宿主/新插件、新宿主/旧插件、升级和回退",
+      "cases": [
+        "FN01-T04",
+        "FN08-T05",
+        "FN12-T04"
+      ]
+    },
+    "R28": {
+      "status": "passed",
+      "description": "原首页、LAN、存储、Docker、完整 FastNet Web 不回归",
+      "cases": [
+        "FN05-T07",
+        "FN06-T06",
+        "FN11-T05"
+      ]
+    },
+    "R29": {
+      "status": "passed",
+      "description": "首屏体积、传输、缓存、CPU/RSS、请求和资源释放预算",
+      "cases": [
+        "FN01-T05",
+        "FN10-T01",
+        "FN10-T03",
+        "FN10-T06"
+      ]
+    },
+    "R30": {
+      "status": "passed",
+      "description": "契约冻结、三仓库版本与产物追溯、测试分层、完整覆盖与真实证据",
+      "cases": [
+        "FN01-T05",
+        "FN01-T06",
+        "FN01-T01",
+        "FN12-T05",
+        "FN12-T06"
+      ]
+    }
+  },
+  "themes": {
+    "TH01": {
+      "status": "passed",
+      "evidence": [
+        "FN11/formal-themes-final-pass/checks-browser-report.json",
+        "FN11/preview/browser-report.json",
+        "FN12/x86_64-reboot-r2/live-browser-report.json",
+        "FN12/x86_64-reboot-r2/reboot-browser-report.json",
+        "FN12/aarch64-reboot-r3/live-browser-report.json",
+        "FN12/aarch64-reboot-r3/reboot-browser-report.json"
+      ],
+      "layer": "formal installed LuCI page: full deterministic state matrix; both architectures additionally real tasks and real reboots, with browser mobile/media emulation"
+    },
+    "TH02": {
+      "status": "passed",
+      "evidence": [
+        "FN11/formal-themes-final-pass/checks-browser-report.json",
+        "FN11/preview/browser-report.json",
+        "FN12/x86_64-reboot-r2/live-browser-report.json",
+        "FN12/x86_64-reboot-r2/reboot-browser-report.json",
+        "FN12/aarch64-reboot-r3/live-browser-report.json",
+        "FN12/aarch64-reboot-r3/reboot-browser-report.json"
+      ],
+      "layer": "formal installed LuCI page: full deterministic state matrix; both architectures additionally real tasks and real reboots, with browser mobile/media emulation"
+    },
+    "TH03": {
+      "status": "passed",
+      "evidence": [
+        "FN11/formal-themes-final-pass/checks-browser-report.json",
+        "FN11/preview/browser-report.json",
+        "FN12/x86_64-reboot-r2/live-browser-report.json",
+        "FN12/x86_64-reboot-r2/reboot-browser-report.json",
+        "FN12/aarch64-reboot-r3/live-browser-report.json",
+        "FN12/aarch64-reboot-r3/reboot-browser-report.json"
+      ],
+      "layer": "formal installed LuCI page: full deterministic state matrix; both architectures additionally real tasks and real reboots, with browser mobile/media emulation"
+    },
+    "TH04": {
+      "status": "passed",
+      "evidence": [
+        "FN11/formal-themes-final-pass/checks-browser-report.json",
+        "FN11/preview/browser-report.json",
+        "FN12/x86_64-reboot-r2/live-browser-report.json",
+        "FN12/x86_64-reboot-r2/reboot-browser-report.json",
+        "FN12/aarch64-reboot-r3/live-browser-report.json",
+        "FN12/aarch64-reboot-r3/reboot-browser-report.json"
+      ],
+      "layer": "formal installed LuCI page: full deterministic state matrix; both architectures additionally real tasks and real reboots, with browser mobile/media emulation"
+    },
+    "TH05": {
+      "status": "passed",
+      "evidence": [
+        "FN11/formal-themes-final-pass/checks-browser-report.json",
+        "FN11/preview/browser-report.json",
+        "FN12/x86_64-reboot-r2/live-browser-report.json",
+        "FN12/x86_64-reboot-r2/reboot-browser-report.json",
+        "FN12/aarch64-reboot-r3/live-browser-report.json",
+        "FN12/aarch64-reboot-r3/reboot-browser-report.json"
+      ],
+      "layer": "formal installed LuCI page: full deterministic state matrix; both architectures additionally real tasks and real reboots, with browser mobile/media emulation"
+    },
+    "TH06": {
+      "status": "passed",
+      "evidence": [
+        "FN11/formal-themes-final-pass/checks-browser-report.json",
+        "FN11/preview/browser-report.json",
+        "FN12/x86_64-reboot-r2/live-browser-report.json",
+        "FN12/x86_64-reboot-r2/reboot-browser-report.json",
+        "FN12/aarch64-reboot-r3/live-browser-report.json",
+        "FN12/aarch64-reboot-r3/reboot-browser-report.json"
+      ],
+      "layer": "formal installed LuCI page: full deterministic state matrix; both architectures additionally real tasks and real reboots, with browser mobile/media emulation"
+    },
+    "TH07": {
+      "status": "passed",
+      "evidence": [
+        "FN11/formal-themes-final-pass/checks-browser-report.json",
+        "FN11/preview/browser-report.json",
+        "FN12/x86_64-reboot-r2/live-browser-report.json",
+        "FN12/x86_64-reboot-r2/reboot-browser-report.json",
+        "FN12/aarch64-reboot-r3/live-browser-report.json",
+        "FN12/aarch64-reboot-r3/reboot-browser-report.json"
+      ],
+      "layer": "formal installed LuCI page: full deterministic state matrix; both architectures additionally real tasks and real reboots, with browser mobile/media emulation"
+    },
+    "TH08": {
+      "status": "passed",
+      "evidence": [
+        "FN11/formal-themes-final-pass/checks-browser-report.json",
+        "FN11/preview/browser-report.json",
+        "FN12/x86_64-reboot-r2/live-browser-report.json",
+        "FN12/x86_64-reboot-r2/reboot-browser-report.json",
+        "FN12/aarch64-reboot-r3/live-browser-report.json",
+        "FN12/aarch64-reboot-r3/reboot-browser-report.json"
+      ],
+      "layer": "formal installed LuCI page: full deterministic state matrix; both architectures additionally real tasks and real reboots, with browser mobile/media emulation"
+    },
+    "TH09": {
+      "status": "passed",
+      "evidence": [
+        "FN11/formal-themes-final-pass/checks-browser-report.json",
+        "FN11/preview/browser-report.json",
+        "FN12/x86_64-reboot-r2/live-browser-report.json",
+        "FN12/x86_64-reboot-r2/reboot-browser-report.json",
+        "FN12/aarch64-reboot-r3/live-browser-report.json",
+        "FN12/aarch64-reboot-r3/reboot-browser-report.json"
+      ],
+      "layer": "formal installed LuCI page: full deterministic state matrix; both architectures additionally real tasks and real reboots, with browser mobile/media emulation"
+    },
+    "TH10": {
+      "status": "passed",
+      "evidence": [
+        "FN11/formal-themes-final-pass/checks-browser-report.json",
+        "FN11/preview/browser-report.json",
+        "FN12/x86_64-reboot-r2/live-browser-report.json",
+        "FN12/x86_64-reboot-r2/reboot-browser-report.json",
+        "FN12/aarch64-reboot-r3/live-browser-report.json",
+        "FN12/aarch64-reboot-r3/reboot-browser-report.json"
+      ],
+      "layer": "formal installed LuCI page: full deterministic state matrix; both architectures additionally real tasks and real reboots, with browser mobile/media emulation"
+    },
+    "TH11": {
+      "status": "passed",
+      "evidence": [
+        "FN11/formal-themes-final-pass/checks-browser-report.json",
+        "FN11/preview/browser-report.json",
+        "FN12/x86_64-reboot-r2/live-browser-report.json",
+        "FN12/x86_64-reboot-r2/reboot-browser-report.json",
+        "FN12/aarch64-reboot-r3/live-browser-report.json",
+        "FN12/aarch64-reboot-r3/reboot-browser-report.json"
+      ],
+      "layer": "formal installed LuCI page: full deterministic state matrix; both architectures additionally real tasks and real reboots, with browser mobile/media emulation"
+    },
+    "TH12": {
+      "status": "passed",
+      "evidence": [
+        "FN11/formal-themes-final-pass/checks-browser-report.json",
+        "FN11/preview/browser-report.json",
+        "FN12/x86_64-reboot-r2/live-browser-report.json",
+        "FN12/x86_64-reboot-r2/reboot-browser-report.json",
+        "FN12/aarch64-reboot-r3/live-browser-report.json",
+        "FN12/aarch64-reboot-r3/reboot-browser-report.json"
+      ],
+      "layer": "formal installed LuCI page: full deterministic state matrix; both architectures additionally real tasks and real reboots, with browser mobile/media emulation"
+    }
+  },
+  "budgets": {
+    "B01": {
+      "status": "passed",
+      "evidence": [
+        "FN11/artifact-check.json"
+      ],
+      "hostInitialGzipDeltaBytes": 19610,
+      "cardRawBytes": 18312,
+      "cardGzipBytes": 5942,
+      "cardEntry": "/luci-static/fastnet/quickstart/card.2962210c.js"
+    },
+    "B02": {
+      "status": "passed",
+      "evidence": [
+        "FN11/artifact-check.json",
+        "FN10/budgets.json"
+      ],
+      "dedicatedCSSBytes": 0,
+      "fonts": 0,
+      "bitmaps": 0,
+      "charts": 0
+    },
+    "B03": {
+      "status": "passed",
+      "evidence": [
+        "FN11/performance-x86_64/performance-browser-report.json",
+        "FN11/performance-aarch64/performance-browser-report.json"
+      ]
+    },
+    "B04": {
+      "status": "passed",
+      "evidence": [
+        "FN11/performance-x86_64/performance-browser-report.json",
+        "FN11/performance-aarch64/performance-browser-report.json",
+        "FN12/x86_64-reboot-r2/core-state.json",
+        "FN12/aarch64-reboot-r3/core-state.json"
+      ]
+    },
+    "B05": {
+      "status": "passed",
+      "evidence": [
+        "FN11/performance-x86_64/performance-browser-report.json",
+        "FN11/performance-aarch64/performance-browser-report.json"
+      ]
+    },
+    "B06": {
+      "status": "passed",
+      "evidence": [
+        "FN11/preview-faults/fault-browser-report.json",
+        "FN10/core-tests.json"
+      ]
+    },
+    "B07": {
+      "status": "passed",
+      "evidence": [
+        "FN11/performance-x86_64/performance-browser-report.json",
+        "FN11/performance-aarch64/performance-browser-report.json",
+        "FN11/formal-themes-final-pass/checks-browser-report.json"
+      ]
+    },
+    "B08": {
+      "status": "passed",
+      "evidence": [
+        "FN11/performance-x86_64/performance-browser-report.json",
+        "FN11/performance-aarch64/performance-browser-report.json"
+      ]
+    },
+    "B09": {
+      "status": "passed",
+      "evidence": [
+        "FN11/performance-x86_64/performance-browser-report.json",
+        "FN11/performance-aarch64/performance-browser-report.json"
+      ]
+    },
+    "B10": {
+      "status": "passed",
+      "evidence": [
+        "FN11/performance-x86_64/performance-browser-report.json",
+        "FN11/performance-aarch64/performance-browser-report.json",
+        "FN10/concurrency/checks-browser-report.json",
+        "FN10/core-tests.json",
+        "FN12/x86_64-reboot-r2/core-state.json",
+        "FN12/aarch64-reboot-r3/core-state.json"
+      ]
+    }
+  },
+  "reports": {
+    "FN01": {
+      "path": "docs/archive/evidence/fastnet-card/20261109-implementation/FN01/report.json",
+      "sha256": "ed92e2d6a39d32556bc58dee3c2905498c2f80e7277fd98b6b45453d23db4735"
+    },
+    "FN02": {
+      "path": "docs/archive/evidence/fastnet-card/20261109-implementation/FN02/report.json",
+      "sha256": "11b1f4363f8b33f18f7b080909700e104c235f67d6aab7efc820f1ed8065ae2c"
+    },
+    "FN03": {
+      "path": "docs/archive/evidence/fastnet-card/20261109-implementation/FN03/report.json",
+      "sha256": "7d6f669869bb91af26db4b9d59c50e7babc3770cf64c5dd5398569ff88faaff9"
+    },
+    "FN04": {
+      "path": "docs/archive/evidence/fastnet-card/20261109-implementation/FN04/report.json",
+      "sha256": "8654f147237b3141a0c70dbc8345db9fe41121067d437b0829c32caa56553cf5"
+    },
+    "FN05": {
+      "path": "docs/archive/evidence/fastnet-card/20261109-implementation/FN05/report.json",
+      "sha256": "1a8ece7b84413adad1507e981d2440fddbb7b913f47a30e31d3e85a3f0eb3e62"
+    },
+    "FN06": {
+      "path": "docs/archive/evidence/fastnet-card/20261109-implementation/FN06/report.json",
+      "sha256": "b4f6e89a4060f553697f29342614e6cadf6220a1c13d8ca2a24121ad0ab13aa0"
+    },
+    "FN07": {
+      "path": "docs/archive/evidence/fastnet-card/20261109-implementation/FN07/report.json",
+      "sha256": "a3a0bc0631c7f01a8b94c8b2301243e062620e2edea96e7b3b3fb245b1c6afb7"
+    },
+    "FN08": {
+      "path": "docs/archive/evidence/fastnet-card/20261109-implementation/FN08/report.json",
+      "sha256": "9b3fd0e93d4405f22ac24ab15e7ac96baf304ac499a3691880cfeca646f2f35d"
+    },
+    "FN09": {
+      "path": "docs/archive/evidence/fastnet-card/20261109-implementation/FN09/report.json",
+      "sha256": "68fda2be853eb4584fb457322677415aeb24c3c42b0e3f1bb4df7e6b5bb99ee4"
+    },
+    "FN10": {
+      "path": "docs/archive/evidence/fastnet-card/20261109-implementation/FN10/report.json",
+      "sha256": "dd1d3a64cf8967f875e0494674274dbbb5dc3fad5ac168e26455ebd567dd89e4"
+    },
+    "FN11": {
+      "path": "docs/archive/evidence/fastnet-card/20261109-implementation/FN11/report.json",
+      "sha256": "b1566049cb5bc6a2aeed43977d66ec486640ee285dc5f8d91da06072e4cebf30"
+    },
+    "FN12": {
+      "path": "docs/archive/evidence/fastnet-card/20261109-implementation/FN12/report.json",
+      "sha256": "4c161011174b9c30c68c75f99718e988b078fbe41764513f99b887206f740b25"
+    }
+  }
+}

@@ -1,10 +1,11 @@
 import {ref} from 'vue'
 import {recommended as baseRecommended,makeRow,type OrderedRow} from '../home/layout/orderedLayout'
 import {fastnetWidgetId} from './fastnetModel'
-import type {WidgetId} from '../home/layout/rowLayout'
+import {widgetDefinitions,type WidgetId} from '../home/layout/rowLayout'
 export * from '../home/layout/orderedLayout'
 export function recommended():OrderedRow[]{
  const rows=baseRecommended()
+ if(!widgetDefinitions.some(w=>w.id===fastnetWidgetId))return rows
  rows[0]=makeRow(['traffic','connection'],'pair',320,'network')
  const internet=makeRow([fastnetWidgetId,'networkInterface'],'pair',260,'internet')
  internet.columns.forEach(c=>c.weight=50)

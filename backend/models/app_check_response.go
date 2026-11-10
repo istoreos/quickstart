@@ -15,8 +15,10 @@ type AppCheckResponse struct {
 	// success
 	Success ResponseSuccess `json:"success,omitempty"`
 }
+
 // swagger:model AppCheckResponseResult
 type AppCheckResponseResult struct {
+	Installation string `json:"installation,omitempty"`
 
 	// 插件名称
 	Name string `json:"name,omitempty"`

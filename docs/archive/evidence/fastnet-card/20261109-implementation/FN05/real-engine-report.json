@@ -1,0 +1,31 @@
+{
+  "status": "passed",
+  "environment": "local Linux build host; real engine, not router acceptance",
+  "checks": [
+    "real runId, units and detection timestamps match the same worker engine record",
+    "real worker cancellation is idempotent, releases within two seconds and keeps previous results",
+    "actual service SIGKILL/restart preserves results, interrupts its prior task and never automatically reruns"
+  ],
+  "stages": [
+    "preparing",
+    "download",
+    "upload",
+    "nat",
+    "ipv6"
+  ],
+  "binarySha256": "3e55577cb7ff69391fbdb31bc8f1b7ea6ccf7814e05b475fe1aeda0ca36fd21f",
+  "submitSeconds": 0.0022230809554457664,
+  "realResult": {
+    "runId": "run_2568930eb20c24ef2058a0aa3489a654",
+    "state": "succeeded",
+    "engineFieldsMatched": [
+      "download",
+      "upload",
+      "nat",
+      "ipv6"
+    ],
+    "bandwidthComplete": true,
+    "storedJobs": 1
+  },
+  "cancelSeconds": 0.006622498854994774
+}

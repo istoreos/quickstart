@@ -60,6 +60,7 @@ type Link struct {
 var widgets = []string{"traffic", "connection", "networkInterface", "devices", "applications", "storage", "sharing", "docker", "downloads", "remote", "system"}
 var templates = map[string][]int{"single": {1}, "pair": {1, 1}, "triple": {1, 1, 1}, "left-big": {1, 2}, "right-big": {2, 1}}
 var summaries = map[string]bool{"connection": true, "networkInterface": true, "devices": true, "sharing": true, "docker": true, "downloads": true, "remote": true, "system": true}
+var externalID = regexp.MustCompile(`^plugin\.[a-z][a-z0-9-]{0,47}$`)
 var safeID = regexp.MustCompile(`^[A-Za-z0-9][A-Za-z0-9_.+-]{0,127}$`)
 var linkID = regexp.MustCompile(`^user-link:[A-Za-z0-9_-]{1,64}$`)
 var icons = map[string]bool{"globe": true, "folder": true, "layers": true, "network": true, "shield": true, "download": true, "terminal": true, "grid": true}
@@ -196,13 +197,14 @@ func Canonical(domain string, raw []byte) ([]byte, error) {
 		return nil, ErrInvalid
 	}
 	if domain == "layout" {
-		if header.SchemaVersion > 3 {
+		if header.SchemaVersion > 4 {
 			return nil, ErrFuture
 		}
 		var doc Layout
 		if DecodeStrict(raw, &doc) != nil || validateLayout(doc) != nil {
 			return nil, ErrInvalid
 		}
+		doc.SchemaVersion = 4
 		return json.Marshal(doc)
 	}
 	if domain == "launcher" {
@@ -222,13 +224,29 @@ func finite(value, min, max float64) bool {
 	return !math.IsNaN(value) && !math.IsInf(value, 0) && value >= min && value <= max
 }
 func validateLayout(doc Layout) error {
-	if doc.SchemaVersion != 3 || doc.Rows == nil || len(doc.Rows) > 32 || len(doc.WidgetPreferences) != len(widgets) {
+	if (doc.SchemaVersion != 3 && doc.SchemaVersion != 4) || doc.Rows == nil || len(doc.Rows) > 32 || len(doc.WidgetPreferences) < len(widgets) || len(doc.WidgetPreferences) > len(widgets)+32 || doc.SchemaVersion == 3 && len(doc.WidgetPreferences) != len(widgets) {
 		return ErrInvalid
 	}
 	for _, id := range widgets {
 		p, ok := doc.WidgetPreferences[id]
 		modeOK := p.Mode == "auto" || p.Mode == "standard" && id != "applications" || p.Mode == "summary" && summaries[id] || id == "applications" && (p.Mode == "grid" || p.Mode == "strip")
 		if !ok || !modeOK || p.IconRows < 0 || p.IconRows > 3 || id != "applications" && p.IconRows != 0 || p.RuleVersion < 0 || p.RuleVersion > 2 {
+			return ErrInvalid
+		}
+	}
+
+	for id, p := range doc.WidgetPreferences {
+		known := false
+		for _, builtin := range widgets {
+			if id == builtin {
+				known = true
+				break
+			}
+		}
+		if known {
+			continue
+		}
+		if doc.SchemaVersion != 4 || !externalID.MatchString(id) || (p.Mode != "auto" && p.Mode != "standard" && p.Mode != "summary") || p.IconRows != 0 || p.RuleVersion < 0 || p.RuleVersion > 2 {
 			return ErrInvalid
 		}
 	}
@@ -262,7 +280,7 @@ func validateLayout(doc Layout) error {
 							mode = "standard"
 						}
 					}
-					if !(*id == "connection" && mode == "standard") && !(summaries[*id] && *id != "devices" && mode == "summary") {
+					if !(*id == "connection" && mode == "standard") && !((summaries[*id] || externalID.MatchString(*id)) && *id != "devices" && mode == "summary") {
 						return ErrInvalid
 					}
 				}

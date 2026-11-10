@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "checks": [
+    "ready",
+    "empty",
+    "failed",
+    "partial",
+    "uninstalled"
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "status": "failed",
+  "checks": [
+    "actual FastNet public-port/token change preserves authenticated LuCI card access and exact measurements",
+    "actual old core with new LuCI degrades read-only without losing measurements; restoring new core recovers the private socket"
+  ],
+  "latest": {
+    "runId": "run_fd3f9af31a5fa2536ef5e8c8d8096602",
+    "measuredAt": "2026-11-09T17:48:00.061513318Z",
+    "download": {
+      "status": "ok",
+      "value": 755736439,
+      "measuredAt": "2026-11-09T17:47:48.060374433Z",
+      "error": null,
+      "runId": "run_fd3f9af31a5fa2536ef5e8c8d8096602"
+    },
+    "upload": {
+      "status": "ok",
+      "value": 65552358,
+      "measuredAt": "2026-11-09T17:48:00.061513318Z",
+      "error": null,
+      "runId": "run_fd3f9af31a5fa2536ef5e8c8d8096602"
+    },
+    "nat": {
+      "status": "ok",
+      "value": "NAT3 (Port Restricted Cone)",
+      "measuredAt": "2026-11-09T17:48:06.319101924Z",
+      "error": null,
+      "runId": "run_fd3f9af31a5fa2536ef5e8c8d8096602"
+    },
+    "ipv6": {
+      "status": "unavailable",
+      "value": null,
+      "measuredAt": "2026-11-09T17:48:06.747341577Z",
+      "error": null,
+      "runId": "run_fd3f9af31a5fa2536ef5e8c8d8096602"
+    },
+    "bandwidth": {
+      "runId": "run_fd3f9af31a5fa2536ef5e8c8d8096602",
+      "measuredAt": "2026-11-09T17:48:00.061513318Z",
+      "downloadBps": 755736439,
+      "uploadBps": 65552358
+    }
+  },
+  "failure": "Unexpected token '<', \"<!--]]>-->\"... is not valid JSON"
+}

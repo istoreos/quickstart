@@ -1,0 +1,452 @@
+{
+  "B01": {
+    "status": "passed",
+    "initialHostGzipDeltaBytes": 19566,
+    "limit": 20480,
+    "baseline": {
+      "luci-static/quickstart/style.css": {
+        "raw": 561634,
+        "gzip": 70556,
+        "sha256": "4b3a51ac4eb1d0ed25cba2a66aab48f2817e68c369c8cc710681eaff8392c73c"
+      },
+      "luci-static/quickstart/index.js": {
+        "raw": 773395,
+        "gzip": 233310,
+        "sha256": "be7c070409c060a3004c270b65d470bc1f7842cbe066bd372f7a8dc372c78cb3"
+      },
+      "luci-static/quickstart/vendor.js": {
+        "raw": 765406,
+        "gzip": 267404,
+        "sha256": "a8aacd35063e93bcac90e1b1a730a29f209eeb96a7b2a51f3bedff06b91e984e"
+      }
+    },
+    "host": {
+      "luci-static/quickstart/app.js": {
+        "raw": 789191,
+        "gzip": 241339,
+        "sha256": "27357ed58251f3f739277369465ca44bec587a2230fa08ed369ce7b54d496351"
+      },
+      "luci-static/quickstart/card-runtime-v1.js": {
+        "raw": 114054,
+        "gzip": 44849,
+        "sha256": "74adb16e5710e4206768873ef583cf8410fb2a970ab7b8df28bb177275c02d9c"
+      },
+      "luci-static/quickstart/installClient.js": {
+        "raw": 2948,
+        "gzip": 1499,
+        "sha256": "2a2f1f73b9dac58b8b321c8a16283f72dee55b0dbb1afac7b0055bc3e7a8864c"
+      },
+      "luci-static/quickstart/style.css": {
+        "raw": 567725,
+        "gzip": 71629,
+        "sha256": "bd91b1fd6300469f48bed92b203ee7b4026ac6e8c1be14b0d197920aa73aa82d"
+      },
+      "luci-static/quickstart/index.js": {
+        "raw": 1438,
+        "gzip": 730,
+        "sha256": "7e52dd4b9e8e6ba3ea43f17939171ee47e5810b9adc1a32da851ad4bf9a5678a"
+      },
+      "luci-static/quickstart/vendor.js": {
+        "raw": 673843,
+        "gzip": 232289,
+        "sha256": "14ac2626cbb8041de4f2544bc163d181dc4e863a69d37f052dac4c5a5b37a3c8"
+      }
+    },
+    "excludedLazyChunk": "installClient.js; absent before user opens install prompt",
+    "cardRaw": 18202,
+    "cardGzip": 5901
+  },
+  "B02": {
+    "status": "passed",
+    "dedicatedCSSBytes": 0,
+    "fonts": 0,
+    "bitmaps": 0,
+    "charts": 0
+  },
+  "devices": {
+    "x86_64": {
+      "artifacts": {
+        "backend": "c327e870abb0ff5a4582a3fb79da353ece1fafaea64dfa999b61d3ff8829eec3",
+        "packages": [
+          "a6a89757fecad40ab965578eeb288642eebf9c69256ddd97a342a7750eac4479",
+          "fe0f6f4934d8de5d4efb3cd06054052660e18f6164608f64ce913fefae637541",
+          "7dd666aec0d71c1e1b6d35d7af682e65cd0ad3b8c5869ccdf7ca683ef5cf0d9d",
+          "e2bec6e8d917048041dfd68bc609c5ae18c91590bc6d1f4390725da182025c90"
+        ],
+        "web": {
+          "luci-static/quickstart/app.js": "27357ed58251f3f739277369465ca44bec587a2230fa08ed369ce7b54d496351",
+          "luci-static/quickstart/card-runtime-v1.js": "74adb16e5710e4206768873ef583cf8410fb2a970ab7b8df28bb177275c02d9c",
+          "luci-static/quickstart/device-icons/access-point.webp": "14b2b7ab688d6245a26db5046f3b0ca86cd44c60fdbd36d55be5feac7a79d94f",
+          "luci-static/quickstart/device-icons/air-conditioner.webp": "c0e54cc7ad393c841305ef733aebc84e558ad42c2f123f66f9c0ff8e3f31f565",
+          "luci-static/quickstart/device-icons/camera.webp": "672faae9d2402c13da85b48186d1e4200542ebab8e9daf68b7c0ae26fe622fc6",
+          "luci-static/quickstart/device-icons/computer.webp": "82bb257156dc0dc2d457913cf3ab937d6c89509f99221864794f4c9fa7188189",
+          "luci-static/quickstart/device-icons/desktop.webp": "036f4d5390606a91b53d2e12afaa2574107da672e6b31088d3acd11f70d161a5",
+          "luci-static/quickstart/device-icons/door-lock.webp": "c42d86fd75aeb665f9066ade02e5cad7946c4ef2267cc13348e558fc532e4473",
+          "luci-static/quickstart/device-icons/e-reader.webp": "b4e6e7f9a9a1f8add0bb36d944680e14c0b52f34cdf859178103d5a5d76329e6",
+          "luci-static/quickstart/device-icons/game-console.webp": "4206a5805bf63af3fd2dd3b43f0021de658ade8d8cef89f0014a71f108cf5293",
+          "luci-static/quickstart/device-icons/gaming.webp": "085dd683126431571e8040ebaf9e438c14b495bafb3388656d2fdbd4f1d76e48",
+          "luci-static/quickstart/device-icons/handheld-game.webp": "e60ed0dbda76dbfd9729d881bc7c56c4003baa02da71e3860abbeb47a61d4996",
+          "luci-static/quickstart/device-icons/home-server.webp": "65890c82967d579e801efdb30de338408a96ef956411a944ab74f97a06b126f9",
+          "luci-static/quickstart/device-icons/laptop.webp": "b5bd95e817420998d8134a5dca82d00800284640144f48931c6e744d37a2d0fe",
+          "luci-static/quickstart/device-icons/manifest.json": "393f9be7ca9252a94646a8111814df2a9e07690cd5777392fab85053b36e7309",
+          "luci-static/quickstart/device-icons/network-bridge.webp": "d5fd123d4e3792fd6f4cfe3b2f319022bf120092b7d577786d86e9fcd39d12a2",
+          "luci-static/quickstart/device-icons/network-switch.webp": "ce53010376bd3ed847bff478c03eaf032368f430611d6a3403ae7dbd0be0c8eb",
+          "luci-static/quickstart/device-icons/network.webp": "99ad870128e25713c73276064969629d0f7dd637946e0087ebabab2fc69493e1",
+          "luci-static/quickstart/device-icons/phone.webp": "15639ef366a0602dc90aef6df68ce3cc7a2f403c52dde4c9d1510e15cd6842ea",
+          "luci-static/quickstart/device-icons/printer.webp": "98963de59f526c38eea9861d4276e4a67a7377bc6c209de18ee248e3dcdcb1eb",
+          "luci-static/quickstart/device-icons/projector.webp": "df70cb8ce47f9d3c19d9cfa71b940e2c33c723786162aa40ab5a49842ff1e212",
+          "luci-static/quickstart/device-icons/robot-vacuum.webp": "818178d38f30d54923eb134e992182a4105deb39b4bf2aca0710ffde8f9adf7e",
+          "luci-static/quickstart/device-icons/sensor.webp": "e222377ea4916504d49974fa87d3b2e58145d9f81edb6df07e8e93522a2fd3c3",
+          "luci-static/quickstart/device-icons/set-top-box.webp": "8712b0ad0d1c6e3a371e824735854eff92f756db82e9d90ffdd88cf5edcc3da4",
+          "luci-static/quickstart/device-icons/smart-bulb.webp": "82f8e187cc1a643a75f656c24cd18aa9c21290b9332ccfcdf9fb7638ce7bbf94",
+          "luci-static/quickstart/device-icons/smart-home.webp": "ec1694171dfdeede9bd5d2f8f075a6a8fed00a2e877ccca25d3edf3ab4288c23",
+          "luci-static/quickstart/device-icons/smart-speaker.webp": "a501cc7ea35f3660af0248b57773272c673959b8574689a9d32e3116ac8987ce",
+          "luci-static/quickstart/device-icons/storage.webp": "797b4c4ebe880dfddd8c94f98ee2d13a910f9dbd6787ea690cddeec49a3a0cf5",
+          "luci-static/quickstart/device-icons/tablet.webp": "557b1d381a1d02809e7e64a12f7f9aa55a5fa888539a0d2a3769b08bfba3fc06",
+          "luci-static/quickstart/device-icons/thermostat.webp": "34966b0ea77c04ae05cccbe1af11bd5cf93e8ccf9aa538f120fba4d3be7df02d",
+          "luci-static/quickstart/device-icons/tv.webp": "79077d3a0ff8dc84acbd90694833332b42e19f5793fb555f370bf849a201b2bd",
+          "luci-static/quickstart/device-icons/unknown.webp": "586f82007312632c62a888778f24e7283430db40e86d5e60ed7595c264fb1813",
+          "luci-static/quickstart/device-icons/wearable.webp": "4da8efb8ec12fd9113569a8fbfa39c78c8f2ada9beec29d783057e07878be319",
+          "luci-static/quickstart/i18n/en.json": "c2ffff160210d94c07799b9c24b2e6f4be56e8336150204cae72a342395fc00f",
+          "luci-static/quickstart/i18n/zh-cn.json": "799a23b2c098bf689311a3cb54dead69d472234861cc84c1ecb2f116f5bea1f3",
+          "luci-static/quickstart/index.js": "7e52dd4b9e8e6ba3ea43f17939171ee47e5810b9adc1a32da851ad4bf9a5678a",
+          "luci-static/quickstart/installClient.js": "2a2f1f73b9dac58b8b321c8a16283f72dee55b0dbb1afac7b0055bc3e7a8864c",
+          "luci-static/quickstart/style.css": "bd91b1fd6300469f48bed92b203ee7b4026ac6e8c1be14b0d197920aa73aa82d",
+          "luci-static/quickstart/vendor.js": "14ac2626cbb8041de4f2544bc163d181dc4e863a69d37f052dac4c5a5b37a3c8",
+          "luci-static/quickstart/bench/bench.js": "72340c2eb4d72a5b019a9ef2ad97de6c7aa2e4eeae1ca1a087789cb987c10218",
+          "luci-static/quickstart/bench/fastnet-bench.css": "022bc3bf9111a4cfa9a93e7fef2e7eb686066dc105d5d7a2f25be3f97c6188dd",
+          "luci-static/quickstart/bench/index.html": "b437747a1496444cbf8b6f0d047302e7050368f448d81c840bb14b311c98e345"
+        }
+      },
+      "budgets": {
+        "B03": {
+          "summaryP95ms": 72.22781699999996,
+          "runP95ms": 85.49215799999911,
+          "warmup": 5,
+          "samples": 30,
+          "summarySamplesMs": [
+            67.96208000000024,
+            66.33050100000037,
+            64.75382799999988,
+            63.81779499999993,
+            63.55467000000044,
+            64.26680599999963,
+            68.01300099999935,
+            68.69161799999983,
+            68.49901099999988,
+            71.65842199999952,
+            68.3867739999996,
+            66.24095800000032,
+            64.34306899999956,
+            69.01048400000036,
+            66.18872099999953,
+            66.04837300000054,
+            66.27748800000063,
+            63.967446000000564,
+            64.66652200000044,
+            63.1832000000004,
+            67.94379299999946,
+            70.14274599999953,
+            75.38745800000015,
+            72.22781699999996,
+            66.68868600000042,
+            63.71838200000002,
+            65.43424199999936,
+            63.568851999999424,
+            66.68562399999973,
+            64.55474900000081
+          ],
+          "runSamplesMs": [
+            80.40568799999892,
+            77.26627700000063,
+            83.52747400000044,
+            79.35887400000138,
+            81.67402100000072,
+            81.68498400000135,
+            80.06751000000077,
+            80.04961099999855,
+            79.92652699999962,
+            80.73666000000048,
+            80.16631899999993,
+            82.2842469999996,
+            79.85246200000074,
+            80.63188699999955,
+            85.49215799999911,
+            88.43251799999962,
+            80.01366899999994,
+            81.19348400000126,
+            75.86449100000027,
+            79.58510899999965,
+            79.26738999999907,
+            81.82218699999976,
+            79.58590700000059,
+            81.15284000000065,
+            78.79528800000116,
+            83.07248400000026,
+            79.92635999999948,
+            81.29650799999945,
+            80.27131499999996,
+            84.00853000000097
+          ]
+        },
+        "B04": {
+          "maximumSummaryBytes": 130,
+          "maximumTaskBytes": 287,
+          "registryBytes": 405
+        },
+        "B10": {
+          "realStarts": 35,
+          "maximumStopMs": 154.93273699999918
+        },
+        "B08": {
+          "mountCycles": 50,
+          "scope": {
+            "timers": 0,
+            "observers": 1,
+            "listeners": 0,
+            "pending": 0,
+            "queries": 1
+          },
+          "end": {
+            "timers": 0,
+            "observers": 1,
+            "listeners": 0,
+            "pending": 0,
+            "queries": 51
+          },
+          "heapGrowthBytes": 404708
+        },
+        "B07": {
+          "successfulImports": 1,
+          "modules": [
+            {
+              "path": "/luci-static/fastnet/quickstart/card.303484f1.js",
+              "wire": 18502,
+              "encoded": 18202
+            }
+          ]
+        },
+        "B05": {
+          "idleSecondsPerVisibleInterval": 60,
+          "intervals": 3,
+          "periodicRequests": 0
+        },
+        "B09": {
+          "warmupSeconds": 30,
+          "pairs": 3,
+          "secondsEach": 60,
+          "cpuDeltasPercentagePoints": [
+            1.145583330077316,
+            0.7226637914261493,
+            -1.1118848901076834
+          ],
+          "meanCpuDelta": 0.25212074379859395,
+          "rssDeltasKiB": [
+            128,
+            1546,
+            -1384
+          ],
+          "meanRSSDeltaKiB": 96.66666666666667,
+          "newPersistentProcesses": 0,
+          "measurement": "whole-device /proc/stat CPU; RSS of same FastNet + Quickstart + uhttpd PIDs; isolated production CardShell fixture"
+        }
+      },
+      "historyCount": 32,
+      "deadlineSeconds": [
+        120
+      ]
+    },
+    "aarch64": {
+      "artifacts": {
+        "backend": "a10a4f1adaa7feb279a33489415998c68c7eecf3afe8e047805c6a69588bff51",
+        "packages": [
+          "485f4378c23cc66e77683c7f1007b4c3c115087ef7d19a61afcfd896bd6dc401",
+          "fe0f6f4934d8de5d4efb3cd06054052660e18f6164608f64ce913fefae637541",
+          "7dd666aec0d71c1e1b6d35d7af682e65cd0ad3b8c5869ccdf7ca683ef5cf0d9d",
+          "e2bec6e8d917048041dfd68bc609c5ae18c91590bc6d1f4390725da182025c90"
+        ],
+        "web": {
+          "luci-static/quickstart/app.js": "27357ed58251f3f739277369465ca44bec587a2230fa08ed369ce7b54d496351",
+          "luci-static/quickstart/card-runtime-v1.js": "74adb16e5710e4206768873ef583cf8410fb2a970ab7b8df28bb177275c02d9c",
+          "luci-static/quickstart/device-icons/access-point.webp": "14b2b7ab688d6245a26db5046f3b0ca86cd44c60fdbd36d55be5feac7a79d94f",
+          "luci-static/quickstart/device-icons/air-conditioner.webp": "c0e54cc7ad393c841305ef733aebc84e558ad42c2f123f66f9c0ff8e3f31f565",
+          "luci-static/quickstart/device-icons/camera.webp": "672faae9d2402c13da85b48186d1e4200542ebab8e9daf68b7c0ae26fe622fc6",
+          "luci-static/quickstart/device-icons/computer.webp": "82bb257156dc0dc2d457913cf3ab937d6c89509f99221864794f4c9fa7188189",
+          "luci-static/quickstart/device-icons/desktop.webp": "036f4d5390606a91b53d2e12afaa2574107da672e6b31088d3acd11f70d161a5",
+          "luci-static/quickstart/device-icons/door-lock.webp": "c42d86fd75aeb665f9066ade02e5cad7946c4ef2267cc13348e558fc532e4473",
+          "luci-static/quickstart/device-icons/e-reader.webp": "b4e6e7f9a9a1f8add0bb36d944680e14c0b52f34cdf859178103d5a5d76329e6",
+          "luci-static/quickstart/device-icons/game-console.webp": "4206a5805bf63af3fd2dd3b43f0021de658ade8d8cef89f0014a71f108cf5293",
+          "luci-static/quickstart/device-icons/gaming.webp": "085dd683126431571e8040ebaf9e438c14b495bafb3388656d2fdbd4f1d76e48",
+          "luci-static/quickstart/device-icons/handheld-game.webp": "e60ed0dbda76dbfd9729d881bc7c56c4003baa02da71e3860abbeb47a61d4996",
+          "luci-static/quickstart/device-icons/home-server.webp": "65890c82967d579e801efdb30de338408a96ef956411a944ab74f97a06b126f9",
+          "luci-static/quickstart/device-icons/laptop.webp": "b5bd95e817420998d8134a5dca82d00800284640144f48931c6e744d37a2d0fe",
+          "luci-static/quickstart/device-icons/manifest.json": "393f9be7ca9252a94646a8111814df2a9e07690cd5777392fab85053b36e7309",
+          "luci-static/quickstart/device-icons/network-bridge.webp": "d5fd123d4e3792fd6f4cfe3b2f319022bf120092b7d577786d86e9fcd39d12a2",
+          "luci-static/quickstart/device-icons/network-switch.webp": "ce53010376bd3ed847bff478c03eaf032368f430611d6a3403ae7dbd0be0c8eb",
+          "luci-static/quickstart/device-icons/network.webp": "99ad870128e25713c73276064969629d0f7dd637946e0087ebabab2fc69493e1",
+          "luci-static/quickstart/device-icons/phone.webp": "15639ef366a0602dc90aef6df68ce3cc7a2f403c52dde4c9d1510e15cd6842ea",
+          "luci-static/quickstart/device-icons/printer.webp": "98963de59f526c38eea9861d4276e4a67a7377bc6c209de18ee248e3dcdcb1eb",
+          "luci-static/quickstart/device-icons/projector.webp": "df70cb8ce47f9d3c19d9cfa71b940e2c33c723786162aa40ab5a49842ff1e212",
+          "luci-static/quickstart/device-icons/robot-vacuum.webp": "818178d38f30d54923eb134e992182a4105deb39b4bf2aca0710ffde8f9adf7e",
+          "luci-static/quickstart/device-icons/sensor.webp": "e222377ea4916504d49974fa87d3b2e58145d9f81edb6df07e8e93522a2fd3c3",
+          "luci-static/quickstart/device-icons/set-top-box.webp": "8712b0ad0d1c6e3a371e824735854eff92f756db82e9d90ffdd88cf5edcc3da4",
+          "luci-static/quickstart/device-icons/smart-bulb.webp": "82f8e187cc1a643a75f656c24cd18aa9c21290b9332ccfcdf9fb7638ce7bbf94",
+          "luci-static/quickstart/device-icons/smart-home.webp": "ec1694171dfdeede9bd5d2f8f075a6a8fed00a2e877ccca25d3edf3ab4288c23",
+          "luci-static/quickstart/device-icons/smart-speaker.webp": "a501cc7ea35f3660af0248b57773272c673959b8574689a9d32e3116ac8987ce",
+          "luci-static/quickstart/device-icons/storage.webp": "797b4c4ebe880dfddd8c94f98ee2d13a910f9dbd6787ea690cddeec49a3a0cf5",
+          "luci-static/quickstart/device-icons/tablet.webp": "557b1d381a1d02809e7e64a12f7f9aa55a5fa888539a0d2a3769b08bfba3fc06",
+          "luci-static/quickstart/device-icons/thermostat.webp": "34966b0ea77c04ae05cccbe1af11bd5cf93e8ccf9aa538f120fba4d3be7df02d",
+          "luci-static/quickstart/device-icons/tv.webp": "79077d3a0ff8dc84acbd90694833332b42e19f5793fb555f370bf849a201b2bd",
+          "luci-static/quickstart/device-icons/unknown.webp": "586f82007312632c62a888778f24e7283430db40e86d5e60ed7595c264fb1813",
+          "luci-static/quickstart/device-icons/wearable.webp": "4da8efb8ec12fd9113569a8fbfa39c78c8f2ada9beec29d783057e07878be319",
+          "luci-static/quickstart/i18n/en.json": "c2ffff160210d94c07799b9c24b2e6f4be56e8336150204cae72a342395fc00f",
+          "luci-static/quickstart/i18n/zh-cn.json": "799a23b2c098bf689311a3cb54dead69d472234861cc84c1ecb2f116f5bea1f3",
+          "luci-static/quickstart/index.js": "7e52dd4b9e8e6ba3ea43f17939171ee47e5810b9adc1a32da851ad4bf9a5678a",
+          "luci-static/quickstart/installClient.js": "2a2f1f73b9dac58b8b321c8a16283f72dee55b0dbb1afac7b0055bc3e7a8864c",
+          "luci-static/quickstart/style.css": "bd91b1fd6300469f48bed92b203ee7b4026ac6e8c1be14b0d197920aa73aa82d",
+          "luci-static/quickstart/vendor.js": "14ac2626cbb8041de4f2544bc163d181dc4e863a69d37f052dac4c5a5b37a3c8",
+          "luci-static/quickstart/bench/bench.js": "72340c2eb4d72a5b019a9ef2ad97de6c7aa2e4eeae1ca1a087789cb987c10218",
+          "luci-static/quickstart/bench/fastnet-bench.css": "022bc3bf9111a4cfa9a93e7fef2e7eb686066dc105d5d7a2f25be3f97c6188dd",
+          "luci-static/quickstart/bench/index.html": "b437747a1496444cbf8b6f0d047302e7050368f448d81c840bb14b311c98e345"
+        }
+      },
+      "budgets": {
+        "B03": {
+          "summaryP95ms": 158.8458559999999,
+          "runP95ms": 163.86814199999935,
+          "warmup": 5,
+          "samples": 30,
+          "summarySamplesMs": [
+            142.77898900000037,
+            136.02137299999958,
+            152.55051899999853,
+            146.78893499999867,
+            132.052103,
+            141.21122800000012,
+            158.8458559999999,
+            141.33482300000105,
+            140.24024099999951,
+            658.5231129999993,
+            137.4025819999988,
+            140.1449049999992,
+            142.17117299999882,
+            141.6851289999995,
+            142.75136600000042,
+            140.83114300000125,
+            138.6799800000008,
+            137.37266700000146,
+            139.94836199999918,
+            151.6286309999996,
+            139.20309500000076,
+            147.67283099999986,
+            142.28166199999941,
+            139.24477600000137,
+            136.32753599999887,
+            150.4882120000002,
+            137.0993500000004,
+            153.32867799999985,
+            145.81133899999986,
+            145.02047200000015
+          ],
+          "runSamplesMs": [
+            149.23053900000014,
+            151.4143729999996,
+            151.34748899999977,
+            151.59925300000032,
+            157.22047499999826,
+            151.30453599999964,
+            144.05676999999923,
+            170.12347800000134,
+            157.58241100000305,
+            151.6833540000007,
+            156.9795180000001,
+            149.07560999999987,
+            148.2995669999982,
+            150.1776499999978,
+            158.2634050000015,
+            163.86814199999935,
+            142.73053100000106,
+            147.38884099999996,
+            151.3816659999975,
+            152.41385600000285,
+            148.4277089999996,
+            147.8469359999981,
+            151.1695600000021,
+            149.0690829999985,
+            153.11157299999832,
+            153.10435099999813,
+            151.74659599999723,
+            158.61466999999539,
+            157.36012199999823,
+            151.63056400000642
+          ]
+        },
+        "B04": {
+          "maximumSummaryBytes": 130,
+          "maximumTaskBytes": 287,
+          "registryBytes": 405
+        },
+        "B10": {
+          "realStarts": 35,
+          "maximumStopMs": 916.1962030000032
+        },
+        "B08": {
+          "mountCycles": 50,
+          "scope": {
+            "timers": 0,
+            "observers": 1,
+            "listeners": 0,
+            "pending": 0,
+            "queries": 1
+          },
+          "end": {
+            "timers": 0,
+            "observers": 1,
+            "listeners": 0,
+            "pending": 0,
+            "queries": 51
+          },
+          "heapGrowthBytes": 403388
+        },
+        "B07": {
+          "successfulImports": 1,
+          "modules": [
+            {
+              "path": "/luci-static/fastnet/quickstart/card.303484f1.js",
+              "wire": 18502,
+              "encoded": 18202
+            }
+          ]
+        },
+        "B05": {
+          "idleSecondsPerVisibleInterval": 60,
+          "intervals": 3,
+          "periodicRequests": 0
+        },
+        "B09": {
+          "warmupSeconds": 30,
+          "pairs": 3,
+          "secondsEach": 60,
+          "cpuDeltasPercentagePoints": [
+            0.007116544477838271,
+            0.08850676444556838,
+            0.06533296560988555
+          ],
+          "meanCpuDelta": 0.0536520915110974,
+          "rssDeltasKiB": [
+            -1178,
+            736,
+            450
+          ],
+          "meanRSSDeltaKiB": 2.6666666666666665,
+          "newPersistentProcesses": 0,
+          "measurement": "whole-device /proc/stat CPU; RSS of same FastNet + Quickstart + uhttpd PIDs; isolated production CardShell fixture"
+        }
+      },
+      "historyCount": 32,
+      "deadlineSeconds": [
+        120
+      ]
+    }
+  }
+}

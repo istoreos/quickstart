@@ -1,6 +1,8 @@
 // Shared finite widget definitions and pure layout helpers.
 export type LayoutVariant='rows'|'grid'|'free'
-export type WidgetId='traffic'|'connection'|'networkInterface'|'applications'|'devices'|'system'|'storage'|'sharing'|'docker'|'downloads'|'remote'
+import {externalWidget} from '../cards/catalog'
+export type BuiltinWidgetId='traffic'|'connection'|'networkInterface'|'applications'|'devices'|'system'|'storage'|'sharing'|'docker'|'downloads'|'remote'
+export type WidgetId=BuiltinWidgetId|`plugin.${string}`
 export const layoutVariants:Array<{id:LayoutVariant;key:string;zh:string;en:string;description:string}>=[
   {id:'rows',key:'R',zh:'有序行',en:'Proportional rows',description:'分组与比例可调，同排等高，窄屏按顺序拆行。'},
   {id:'grid',key:'G',zh:'自动网格',en:'Auto grid',description:'统一网格自动排列，可调整列数与密度。'},
@@ -27,7 +29,7 @@ export const previewRows=():PreviewRow[]=>[
   {id:'storage',cards:['storage','sharing'],weights:[60,40],height:310},
   {id:'services',cards:['docker','downloads','remote'],weights:[34,33,33],height:270},
 ]
-export const widget=(id:WidgetId)=>widgetDefinitions.find(item=>item.id===id)!
+export const widget=(id:WidgetId)=>id.startsWith('plugin.')?externalWidget(id as `plugin.${string}`):widgetDefinitions.find(item=>item.id===id)!
 // Preserve row order; split only into consecutive subrows. No dense gap filling.
 export function splitPreviewRows(rows:PreviewRow[],width:number,visible:WidgetId[],gap=18):PreviewRow[]{
   const result:PreviewRow[]=[]

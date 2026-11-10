@@ -1,0 +1,7 @@
+{
+  "status": "failed",
+  "layer": "actual authenticated LuCI homepage",
+  "checks": [],
+  "errors": [],
+  "failure": "locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('section.network-dialog') to be hidden\u001b[22m\n\u001b[2m    64 × locator resolved to visible <section role=\"dialog\" tabindex=\"-1\" aria-modal=\"true\" data-v-abda4bf2=\"\" aria-label=\"安装 FastNet 插件\" class=\"network-dialog home-semantic-colors\">…</section>\u001b[22m\n"
+}

@@ -1,3 +1,4 @@
+import {cardRuntimePlugin} from './cardRuntimePlugin'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import path from "path";
@@ -41,7 +42,7 @@ export default defineConfig({
 		],
 	},
 	plugins: [
-		vue(),
+		cardRuntimePlugin(),vue(),
 	],
 	css: {
 		preprocessorOptions: {
@@ -61,8 +62,13 @@ export default defineConfig({
 		assetsInlineLimit: 0,
 		chunkSizeWarningLimit: 4096,
 		rollupOptions: {
+            preserveEntrySignatures:"strict",
+			input:path.resolve(__dirname,"index.html"),
 			output: {
-				manualChunks: (id) => id.includes('/node_modules/') ? 'vendor' : undefined,
+				// Async modules must never import the HTML bootstrap entry: LuCI adds
+				// its own ?v to index.js; a reverse import with Rollup’s different ?v would
+				// execute the app a second time. Keep shared app code in its own chunk.
+				manualChunks: (id) => id.includes('/node_modules/') ? 'vendor' : id.includes('/src/')&&!id.endsWith('/src/main.ts')&&!id.endsWith('/cards/installClient.ts')&&!id.includes('/cards/FastnetInstallDialog.vue') ? 'app' : undefined,
 				entryFileNames: `luci-static/quickstart/[name].js`,
 				chunkFileNames: `luci-static/quickstart/[name].js?v=[hash]`,
 				assetFileNames: `luci-static/quickstart/[name].[ext]`

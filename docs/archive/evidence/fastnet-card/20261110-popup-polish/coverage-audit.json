@@ -1,0 +1,56 @@
+{
+  "status": "passed",
+  "baselineAcceptance": "docs/archive/evidence/fastnet-card/20261109-implementation/FN12/coverage-audit.json",
+  "currentChangeVerification": {
+    "status": "passed",
+    "productionUI": "web/src/home/cards/FastnetInstallDialog.vue mounted by production HomeLayout and production index page; same component in ui-design",
+    "uiChecks": {
+      "preview": 26,
+      "formalLuCI": 19,
+      "cardRegression": 82,
+      "frontendUnitTests": 193,
+      "typecheck": "passed",
+      "backend": "service, app modules, installation jobs, discovery, layout, server passed"
+    },
+    "scopeReview": {
+      "AppVueByteIdenticalToBaseline": true,
+      "unrelatedBusinessDirectoriesChanged": [],
+      "FastNetSourceUnchangedThisTurn": true,
+      "OpenWrtPackageSourceUnchangedThisTurn": true,
+      "necessarySharedInfrastructure": [
+        "card discovery and Vue runtime ABI",
+        "external module layout v4 and migration",
+        "semantic theme variables",
+        "FastNet-specific install status and deduplication"
+      ],
+      "scopeCorrections": [
+        "restore global App.vue focus reset; override only external card controls",
+        "retain original installation and package checks for unrelated applications; track FastNet only",
+        "preserve explicit legacy preview routing"
+      ],
+      "touchedInThisUIReview": [
+        "web/src/home/cards/FastnetInstallDialog.vue",
+        "web/src/home/HomeLayout.vue",
+        "web/src/home/cards/card.css",
+        "web/src/App.vue (reverted to HEAD)",
+        "web/vite.config.ts",
+        "web/src/design/HomePreview.vue",
+        "backend/service/app.go",
+        "backend/service/app_install_scope_test.go",
+        "UI verification scripts and product/evidence documentation"
+      ]
+    },
+    "resources": {
+      "status": "passed",
+      "hostInitialGzipDeltaBytes": 20265,
+      "limitBytes": 20480,
+      "lazyChunks": {
+        "luci-static/quickstart/installClient.js": 1767,
+        "luci-static/quickstart/FastnetInstallDialog.js": 2078
+      },
+      "measurement": "same gzip level 9/mtime=0 baseline; lazy chunks excluded only after browser confirms zero requests before install UI"
+    },
+    "baselineAcceptance": "docs/archive/evidence/fastnet-card/20261109-implementation/FN12/coverage-audit.json",
+    "note": "FN01-FN12 historical complete acceptance remains the baseline; this record verifies the subsequent UI/scope changes and does not claim all 76 cases were rerun."
+  }
+}

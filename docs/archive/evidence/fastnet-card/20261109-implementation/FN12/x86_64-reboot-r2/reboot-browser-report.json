@@ -1,0 +1,60 @@
+{
+  "status": "passed",
+  "checks": [
+    "actual FastNet public-port/token change preserves authenticated LuCI card access and exact measurements",
+    "actual old core with new LuCI degrades read-only without losing measurements; restoring new core recovers the private socket",
+    "actual old LuCI registration rollback preserves the saved external-card position and form; new LuCI restoration rediscovers it",
+    "actual original Quickstart backend treats layout v4 as future, rejects overwrite, and new host resumes the identical saved bytes",
+    "real HTTPS authenticated LuCI homepage loads with a private lab session",
+    "physical lab-device reboot changes boot identity and expires the previous LuCI session",
+    "same v4 layout, summary preference, browser theme and exact last results survive reboot; running task becomes interrupted without automatic retry",
+    "formal mobile viewport after reboot follows live OS light/dark and retains task/result identity"
+  ],
+  "latest": {
+    "runId": "run_850fa2fea09cac9e2dd20e63a04217b5",
+    "measuredAt": "2026-11-09T17:55:10.487364269Z",
+    "download": {
+      "status": "ok",
+      "value": 872989980,
+      "measuredAt": "2026-11-09T17:54:58.48632Z",
+      "error": null,
+      "runId": "run_850fa2fea09cac9e2dd20e63a04217b5"
+    },
+    "upload": {
+      "status": "ok",
+      "value": 64002133,
+      "measuredAt": "2026-11-09T17:55:10.487364269Z",
+      "error": null,
+      "runId": "run_850fa2fea09cac9e2dd20e63a04217b5"
+    },
+    "nat": {
+      "status": "ok",
+      "value": "NAT3 (Port Restricted Cone)",
+      "measuredAt": "2026-11-09T17:55:16.822540952Z",
+      "error": null,
+      "runId": "run_850fa2fea09cac9e2dd20e63a04217b5"
+    },
+    "ipv6": {
+      "status": "unavailable",
+      "value": null,
+      "measuredAt": "2026-11-09T17:55:21.82384169Z",
+      "error": null,
+      "runId": "run_850fa2fea09cac9e2dd20e63a04217b5"
+    },
+    "bandwidth": {
+      "runId": "run_850fa2fea09cac9e2dd20e63a04217b5",
+      "measuredAt": "2026-11-09T17:55:10.487364269Z",
+      "downloadBps": 872989980,
+      "uploadBps": 64002133
+    }
+  },
+  "interruptedTaskId": "run_b511c5a1deda1654603d4bc27f3e5ed4",
+  "installationBeforeReboot": {
+    "schemaVersion": 1,
+    "state": "done",
+    "exitCode": 0,
+    "attempt": 1
+  },
+  "bootIdBefore": "4df71cba-2769-4f59-a697-4e22420155f6",
+  "bootIdAfter": "f1b7690b-4ba6-47af-a1d4-e6f291fd0874"
+}

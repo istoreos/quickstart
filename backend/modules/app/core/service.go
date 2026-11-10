@@ -28,6 +28,15 @@ func (service *Service) Check(ctx context.Context, req models.AppCheckRequest) (
 		return nil, errors.New("invalid package name")
 	}
 	model := models.AppCheckResponseResult{Name: req.Name}
+	if observer, ok := service.store.(interface {
+		InstallationState(context.Context, string) (string, error)
+	}); ok {
+		state, err := observer.InstallationState(ctx, req.Name)
+		if err != nil {
+			state = "unknown"
+		}
+		model.Installation = state
+	}
 	didInstall, err := service.store.IsInstalled(ctx, req.Name)
 	if err != nil {
 		return nil, errors.New("检测" + req.Name + "失败")

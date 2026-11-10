@@ -1,4 +1,5 @@
 // Shared, finite display contract. No DOM, requests, or layout writes.
+import {registeredCard} from '../cards/catalog'
 import {widgetDefinitions,widget,type WidgetId} from './rowLayout'
 import type {OrderedRow} from './orderedLayout'
 export type PresentationId='standard'|'summary'|'grid'|'strip'
@@ -9,12 +10,13 @@ export type PresentationContext={width:number;height:number;role:PositionRole;fa
 export type ResolvedPresentation={id:PresentationId;minWidth:number;minHeight:number;preferredHeight:number;columns:number;rows:number;capacity:number;issue:string;stretch:boolean;legacy:boolean}
 const summaryIds:WidgetId[]=['connection','networkInterface','system','sharing','docker','downloads','remote']
 export const presentationDefinitions=widgetDefinitions.map(w=>({id:w.id,forms:w.id==='applications'?['grid','strip'] as PresentationId[]:w.id==='devices'||summaryIds.includes(w.id)?['standard','summary'] as PresentationId[]:['standard'] as PresentationId[],stacked:summaryIds.includes(w.id)}))
-export const definition=(id:WidgetId)=>presentationDefinitions.find(w=>w.id===id)!
+export const definition=(id:WidgetId)=>id.startsWith('plugin.')?{id,forms:Object.keys(registeredCard(id)?.forms||{standard:1,summary:1}) as PresentationId[],stacked:registeredCard(id)?.stacked.includes('summary')??true}:presentationDefinitions.find(w=>w.id===id)!
 export function defaultPreferences(ruleVersion:0|1|2=2):WidgetPreferences{return Object.fromEntries(widgetDefinitions.map(w=>[w.id,{mode:'auto',iconRows:0,ruleVersion}])) as WidgetPreferences}
-export function preferenceIssue(id:WidgetId,p:WidgetPreference){return !p||p.ruleVersion!==undefined&&![0,1,2].includes(p.ruleVersion)||!['auto',...definition(id).forms].includes(p.mode)||![0,1,2,3].includes(p.iconRows)||id!=='applications'&&p.iconRows!==0?'preference':''}
+export function preferenceIssue(id:WidgetId,p:WidgetPreference){return !p||p.ruleVersion!==undefined&&![0,1,2].includes(p.ruleVersion)||!['auto',...(id.startsWith('plugin.')?['standard','summary']:definition(id).forms)].includes(p.mode)||![0,1,2,3].includes(p.iconRows)||id!=='applications'&&p.iconRows!==0?'preference':''}
 // Position eligibility belongs to the form, not to a small/large slot label.
-export function formCapability(id:WidgetId,form:PresentationId){return {stacked:form==='summary'&&summaryIds.includes(id)||id==='connection'&&form==='standard',stretch:id==='traffic'||id==='connection'&&form==='standard',contentLimit:id==='networkInterface'?2:id==='storage'?3:id==='sharing'?2:undefined}}
+export function formCapability(id:WidgetId,form:PresentationId){return {stacked:form==='summary'&&(summaryIds.includes(id)||id.startsWith('plugin.')&&(registeredCard(id)?.stacked.includes('summary')??true))||id==='connection'&&form==='standard',stretch:id==='traffic'||id==='connection'&&form==='standard',contentLimit:id==='networkInterface'?2:id==='storage'?3:id==='sharing'?2:undefined}}
 export function automaticForm(id:WidgetId,p:WidgetPreference,ctx:PresentationContext):PresentationId{
+ if(id.startsWith('plugin.')){const forms=definition(id).forms,wanted=ctx.role==='stacked'?'summary':'standard';return forms.includes(wanted)?wanted:forms[0]||wanted}
  if(p.ruleVersion===0)return ctx.role==='stacked'?'summary':id==='applications'?'grid':'standard'
  if(p.ruleVersion===1&&ctx.role==='stacked')return 'summary'
  if(id==='connection')return 'standard'
@@ -28,6 +30,7 @@ export function resolvePresentation(id:WidgetId,p:WidgetPreference,ctx:Presentat
  let minWidth=ctx.mobile?240:form==='summary'&&id==='devices'?240:w.minWidth,minHeight=role==='stacked'&&form==='summary'?148:form==='summary'?(id==='devices'?(ctx.width<450?280:260):176):w.minHeight
  // Current compact port tiles have two text rows. Keep legacy summary sizing.
  if(id==='networkInterface'&&form==='summary'&&(p.ruleVersion??2)>=2)minHeight=136
+ if(id.startsWith('plugin.')){const size=registeredCard(id)?.forms[form as 'standard'|'summary'];minWidth=ctx.mobile?240:size?.minWidth||(form==='summary'?240:w.minWidth);minHeight=size?.minHeight||(form==='summary'?148:w.minHeight)}
  let columns=1,rows=1,capacity=1,preferredHeight=minHeight
  if(id==='applications'){
   // 36px icon, two 16px name lines, 82px tile, 12px gap; 94px chrome
