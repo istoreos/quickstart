@@ -61,7 +61,7 @@ fs.mkdirSync(out,{recursive:true})
      window.fetch=async(input,options)=>{if(String(input).includes('/api/history/')){window.__historyFaults++;return new Response('{}',{status,headers:{'Content-Type':'application/json'}})}return original(input,options)}
      let tick=0;performance.now=()=>tick+=1000
     },status)
-    await f.getByRole('button',{name:'开始全链路体检',exact:true}).click();await f.getByRole('button',{name:'正在扫描网络…',exact:true}).waitFor()
+    await f.getByRole('button',{name:'开始全链路体检',exact:true}).click();await f.getByRole('button',{name:'测速中…',exact:true}).waitFor()
     await f.getByRole('button',{name:'开始全链路体检',exact:true}).waitFor({timeout:60000})
     assert.equal(await frame.evaluate(()=>window.__historyFaults>0),true)
     assert.equal(await f.locator('.history-save-error').count(),0);assert.doesNotMatch(await f.locator('body').innerText(),/历史记录请求失败|无法建立测速记录/)

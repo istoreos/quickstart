@@ -1,0 +1,36 @@
+{
+  "status": "scoped_acceptance_passed",
+  "productOptimizationRounds": 1,
+  "tasks": {
+    "Q01": "passed",
+    "Q02": "passed",
+    "Q03": "passed",
+    "Q04": "passed",
+    "Q05": "passed",
+    "Q06": "passed"
+  },
+  "unitTests": 39,
+  "goTests": "go test ./cmd/fastnet -count=1 passed",
+  "packageTests": 3,
+  "expandedBrowserTests": {
+    "passed": 17,
+    "skippedOptInWAN": 1,
+    "preExistingFailures": 3,
+    "baselineReproducedFailures": 3
+  },
+  "sourceUnchanged": {
+    "cmd/fastnet/webui-src/src/composables/useFastnet.js": "83f3424d2b3ceb167953229187e6c80c7624fa6dfe0c433fd90001fad2b9be08",
+    "cmd/fastnet/webui-src/src/composables/useLanSpeed.js": "459cb29d437e1336b90480fea20581ca6a8d5b9f1421ad719e77b46892bdc347",
+    "cmd/fastnet/measurement_history.go": "4a2e88415b0240a19aad2b1c5c6fcc8706350c934025347e75602d1f6b41bf7b",
+    "cmd/fastnet/history_legacy.go": "afe95b0f7f636dceb0cf00d3ee8b77c189dbe3a96fd0be7ed4e1c524b3f29f6a",
+    "cmd/fastnet/webui-src/src/composables/runHistory.js": "4193b2bb683b434788d5c627db4d9233703373abba8e5166c150b518cfb1677d"
+  },
+  "cssOutsideQuickExperience": "all original selector declarations preserved",
+  "frontendGzip9": {
+    "before": 81793,
+    "after": 80827,
+    "delta": -966
+  },
+  "version": "0.8.5",
+  "runtimeArchiveSha256": "4259d2bf3aa4aaa3924747dc08945ec5d349f1ca536fe965b4043e76353033da"
+}

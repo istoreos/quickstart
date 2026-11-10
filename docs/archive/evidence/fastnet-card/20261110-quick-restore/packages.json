@@ -1,0 +1,32 @@
+[
+  {
+    "name": "fastnet",
+    "version": "0.8.5-1",
+    "arch": "x86_64",
+    "sha256": "64baf474d4a7c3952dc426d7a4b662f3a50fc9a7ddcee30ae8abf4330dbadf3d"
+  },
+  {
+    "name": "fastnet",
+    "version": "0.8.5-1",
+    "arch": "aarch64_generic",
+    "sha256": "992d20f84a96b1856c79c79f0734dd97743edf0eed164088bad2dcfb9bad7d3a"
+  },
+  {
+    "name": "luci-app-fastnet",
+    "version": "0.8.5-r1",
+    "arch": "all",
+    "sha256": "7caa054c38d61a4b9539cc4b0c02438b3563ed529a234df164cf2871113e30ee"
+  },
+  {
+    "name": "luci-i18n-fastnet-zh-cn",
+    "version": "git-26.313.00000-082",
+    "arch": "all",
+    "sha256": "7dd666aec0d71c1e1b6d35d7af682e65cd0ad3b8c5869ccdf7ca683ef5cf0d9d"
+  },
+  {
+    "name": "app-meta-fastnet",
+    "version": "0.8.5-14",
+    "arch": "all",
+    "sha256": "69e74e7a0c81e3973cd898ffa2a87041aa5a2ed5ea51a5bbbfa93ce07098eea6"
+  }
+]

@@ -84,3 +84,6 @@ FastNet 卡片右上角现在直接复用 Quickstart 原有主操作和更多菜
 本轮任务树在FastNet仓库 `docs/product/unified-history-plan.md`，实现与接口说明在 `docs/product/unified-history.md`。[本轮验收](../archive/evidence/fastnet-card/20261110-unified-history/verification.md)明确区分真实WAN/LAN、受控测试数据、过程脚本问题与最终补验。
 
 历史读取和保存是附加功能：失败不作为测速错误，不中断默认快速体验、单独 WAN/LAN/NAT/IPv6 测试，不在卡片或测试页面全局弹错。历史页按需显示中性不可用/未保存状态；保存重试不重新测速。HTTP 网关与 HTTPS 网关均可正常记录，最多 32 条的归档和分类最新值规则保持一致。
+
+
+快速体验在 0.8.5 恢复早期交互：保留晴岚视觉和主题，顶部只有功能说明与一个固定测速按钮，结果紧接其后。删除路径示意、五步进度、完成横幅与第二组重测/技术详情按钮；完成后查看原位置结果，并通过原按钮重测。日志回到底部，summary JSON 默认折叠；其他页面的技术详情和原测速业务保持。实施与验收见 FastNet 仓库 docs/product/quick-experience-restore-plan.md。
