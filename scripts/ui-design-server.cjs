@@ -13,15 +13,13 @@ const { build, preview } = require(path.join(root, 'web/node_modules/vite'));
   const fixture=JSON.parse(fs.readFileSync(path.join(root,'docs/contracts/fastnet-card.json'),'utf8')).manifest;fixture.entry='/luci-static/fastnet/quickstart/'+entry;
   fs.writeFileSync(path.join(target,'preview-manifest.json'),JSON.stringify(fixture));
   // Build the real full FastNet frontend for iframe interaction. The bridge is
-  // preview-only: every WAN request goes to the parent's simulated card API.
+  // preview-only: both entries share the parent's in-memory history fixtures.
   const fullOut=path.join(process.env.BUILD_CACHE_WORK_DIR,'vue-preview/apps/fastnet/webui');
   execFileSync('/var/cache/build-cache/run.sh',['--','npm','run','build','--','--outDir',fullOut],{cwd:path.join(fastnet,'cmd/fastnet/webui-src'),stdio:'pipe'});
   const version=fs.readFileSync(path.join(fastnet,'cmd/fastnet/version.go'),'utf8').match(/const VERSION = "([^"]+)"/)[1];
   const html=path.join(fullOut,'index.html');
-  fs.writeFileSync(html,fs.readFileSync(html,'utf8').replace('<head>',`<head><script>
-  const originalFetch=window.fetch.bind(window);
-  window.fetch=(input,options)=>{const url=new URL(input,location.href),match=url.pathname.match(/\\/api\\/card\\/(.*)/);if(match)return parent.fetch('/cgi-bin/luci/admin/services/fastnet/card/'+match[1]+url.search,options);return Promise.resolve(new Response(JSON.stringify(url.pathname.includes('/api/version')?{version:${JSON.stringify(version)}}:url.pathname.includes('test-usage')?{used:0,limit:5,remaining:5}:{}),{headers:{'Content-Type':'application/json'}}))};
-  </script>`));
+  fs.copyFileSync(path.join(root,'scripts/ui-design-fastnet-bridge.js'),path.join(fullOut,'preview-bridge.js'));
+  fs.writeFileSync(html,fs.readFileSync(html,'utf8').replace('<head>',`<head><script>document.documentElement.dataset.previewVersion=${JSON.stringify(version)}</script><script src="./preview-bridge.js"></script>`));
   const server=await preview({configFile});
   console.log('Quickstart Vue design: http://0.0.0.0:5180/');
   console.log(`Design artifacts: ${server.config.build.outDir}`);

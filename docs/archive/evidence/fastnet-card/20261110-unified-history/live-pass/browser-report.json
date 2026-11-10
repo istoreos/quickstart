@@ -1,0 +1,518 @@
+{
+  "status": "failed",
+  "checks": [
+    "same production page/default quick experience/navigation in HTTPS Quickstart iframe and direct FastNet; no automatic test",
+    "real HTTPS gateway LAN saves exactly one LAN-only record; only LAN snapshot updates; live host theme and immediate card refresh work",
+    "direct FastNet quick experience archives one shared native-and-browser operation; actual WAN and LAN succeed; card reads the same categorized snapshots"
+  ],
+  "errors": [],
+  "network": [
+    {
+      "path": "/apps/fastnet/ping",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/ping",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/ping",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/ping",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/ping",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/ping",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/ping",
+      "method": "GET"
+    },
+    {
+      "path": "/ping",
+      "method": "GET"
+    },
+    {
+      "path": "/ping",
+      "method": "GET"
+    },
+    {
+      "path": "/ping",
+      "method": "GET"
+    },
+    {
+      "path": "/ping",
+      "method": "GET"
+    },
+    {
+      "path": "/ping",
+      "method": "GET"
+    },
+    {
+      "path": "/download",
+      "method": "GET"
+    },
+    {
+      "path": "/download",
+      "method": "GET"
+    },
+    {
+      "path": "/download",
+      "method": "GET"
+    },
+    {
+      "path": "/download",
+      "method": "GET"
+    },
+    {
+      "path": "/download",
+      "method": "GET"
+    },
+    {
+      "path": "/download",
+      "method": "GET"
+    },
+    {
+      "path": "/download",
+      "method": "GET"
+    },
+    {
+      "path": "/download",
+      "method": "GET"
+    },
+    {
+      "path": "/download",
+      "method": "GET"
+    },
+    {
+      "path": "/download",
+      "method": "GET"
+    },
+    {
+      "path": "/download",
+      "method": "GET"
+    },
+    {
+      "path": "/download",
+      "method": "GET"
+    },
+    {
+      "path": "/download",
+      "method": "GET"
+    },
+    {
+      "path": "/download",
+      "method": "GET"
+    },
+    {
+      "path": "/download",
+      "method": "GET"
+    },
+    {
+      "path": "/download",
+      "method": "GET"
+    },
+    {
+      "path": "/download",
+      "method": "GET"
+    },
+    {
+      "path": "/download",
+      "method": "GET"
+    },
+    {
+      "path": "/download",
+      "method": "GET"
+    },
+    {
+      "path": "/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/upload",
+      "method": "POST"
+    }
+  ],
+  "observedNAT": [
+    "run_7a622ed46c235d179501af32271d68d6",
+    "run_7a622ed46c235d179501af32271d68d6",
+    "run_7a622ed46c235d179501af32271d68d6",
+    "run_7a622ed46c235d179501af32271d68d6",
+    "run_18f80b294f618def213a980d731d7aa4",
+    "run_18f80b294f618def213a980d731d7aa4"
+  ],
+  "before": {
+    "activeRuns": [],
+    "historyCount": 4,
+    "latestResults": {
+      "download": {
+        "status": "ok",
+        "value": 907221424,
+        "measuredAt": "2026-11-10T01:02:01.857586279Z",
+        "runId": "run_7a622ed46c235d179501af32271d68d6",
+        "source": "router"
+      },
+      "ipv6": {
+        "status": "unavailable",
+        "value": null,
+        "measuredAt": "2026-11-10T01:02:28.501560317Z",
+        "runId": "run_7a622ed46c235d179501af32271d68d6",
+        "source": "router"
+      },
+      "lanDownload": {
+        "status": "ok",
+        "value": 921466980.5429246,
+        "measuredAt": "2026-11-10T04:08:01.687022873Z",
+        "runId": "run_bd5003ce5ef79d5e0fe72bac14629770",
+        "source": "browser"
+      },
+      "lanPing": {
+        "status": "ok",
+        "value": 22.05999994277954,
+        "measuredAt": "2026-11-10T04:08:01.687021414Z",
+        "runId": "run_bd5003ce5ef79d5e0fe72bac14629770",
+        "source": "browser"
+      },
+      "lanUpload": {
+        "status": "ok",
+        "value": 2741468486.8085103,
+        "measuredAt": "2026-11-10T04:08:01.687023672Z",
+        "runId": "run_bd5003ce5ef79d5e0fe72bac14629770",
+        "source": "browser"
+      },
+      "nat": {
+        "status": "ok",
+        "value": "NAT3 (Port Restricted Cone)",
+        "measuredAt": "2026-11-10T01:02:20.074871488Z",
+        "runId": "run_7a622ed46c235d179501af32271d68d6",
+        "source": "router"
+      },
+      "ping": {
+        "status": "ok",
+        "value": 7.363636363636363,
+        "measuredAt": "2026-11-10T01:01:41.857348736Z",
+        "runId": "run_7a622ed46c235d179501af32271d68d6",
+        "source": "router"
+      },
+      "upload": {
+        "status": "ok",
+        "value": 65382185,
+        "measuredAt": "2026-11-10T01:02:13.858123887Z",
+        "runId": "run_7a622ed46c235d179501af32271d68d6",
+        "source": "router"
+      }
+    },
+    "persistenceError": "",
+    "revision": "service_f5e132801e7b477e59a243726b0f21b1-8",
+    "schemaVersion": 1
+  },
+  "firstLAN": {
+    "id": "run_96c9531fa58ba5888b3139d7c4965c07",
+    "key": "",
+    "kind": "lan",
+    "state": "succeeded",
+    "startedAt": "2026-11-10T04:18:49.706741747Z",
+    "finishedAt": "2026-11-10T04:19:14.781737452Z",
+    "deadlineAt": "2026-11-10T04:23:49.706741747Z",
+    "expected": [
+      "lanPing",
+      "lanDownload",
+      "lanUpload"
+    ],
+    "results": {
+      "lanDownload": {
+        "status": "ok",
+        "value": 918582956.192581,
+        "measuredAt": "2026-11-10T04:19:14.694492758Z",
+        "runId": "run_96c9531fa58ba5888b3139d7c4965c07",
+        "source": "browser"
+      },
+      "lanPing": {
+        "status": "ok",
+        "value": 30.180000019073486,
+        "measuredAt": "2026-11-10T04:19:14.694491463Z",
+        "runId": "run_96c9531fa58ba5888b3139d7c4965c07",
+        "source": "browser"
+      },
+      "lanUpload": {
+        "status": "ok",
+        "value": 2755539325.9195895,
+        "measuredAt": "2026-11-10T04:19:14.694493613Z",
+        "runId": "run_96c9531fa58ba5888b3139d7c4965c07",
+        "source": "browser"
+      }
+    },
+    "parameters": {
+      "direction": "both",
+      "mode": "single",
+      "packetMiB": "64",
+      "parallel": "3"
+    },
+    "managed": true
+  },
+  "quick": {
+    "id": "run_18f80b294f618def213a980d731d7aa4",
+    "key": "",
+    "kind": "quick",
+    "state": "succeeded",
+    "startedAt": "2026-11-10T04:19:16.626977318Z",
+    "finishedAt": "2026-11-10T04:20:39.031297136Z",
+    "deadlineAt": "2026-11-10T04:24:16.626977318Z",
+    "expected": [
+      "ping",
+      "download",
+      "upload",
+      "nat",
+      "ipv6",
+      "lanPing",
+      "lanDownload",
+      "lanUpload",
+      "browserNat",
+      "browserIpv6"
+    ],
+    "results": {
+      "browserIpv6": {
+        "status": "ok",
+        "value": "IPv6 0/10 需要改进",
+        "measuredAt": "2026-11-10T04:20:39.015707213Z",
+        "runId": "run_18f80b294f618def213a980d731d7aa4",
+        "source": "browser"
+      },
+      "browserNat": {
+        "status": "ok",
+        "value": "NAT3 · 端口受限",
+        "measuredAt": "2026-11-10T04:20:38.986156243Z",
+        "runId": "run_18f80b294f618def213a980d731d7aa4",
+        "source": "browser"
+      },
+      "download": {
+        "status": "ok",
+        "value": 738275093,
+        "measuredAt": "2026-11-10T04:19:38.010989172Z",
+        "runId": "run_18f80b294f618def213a980d731d7aa4",
+        "source": "router"
+      },
+      "ipv6": {
+        "status": "unavailable",
+        "value": null,
+        "measuredAt": "2026-11-10T04:20:09.197042371Z",
+        "runId": "run_18f80b294f618def213a980d731d7aa4",
+        "source": "router"
+      },
+      "lanDownload": {
+        "status": "ok",
+        "value": 939008876.6228606,
+        "measuredAt": "2026-11-10T04:20:34.133268804Z",
+        "runId": "run_18f80b294f618def213a980d731d7aa4",
+        "source": "browser"
+      },
+      "lanPing": {
+        "status": "ok",
+        "value": 1.4199999809265136,
+        "measuredAt": "2026-11-10T04:20:34.133268013Z",
+        "runId": "run_18f80b294f618def213a980d731d7aa4",
+        "source": "browser"
+      },
+      "lanUpload": {
+        "status": "ok",
+        "value": 2769755349.957008,
+        "measuredAt": "2026-11-10T04:20:34.133266559Z",
+        "runId": "run_18f80b294f618def213a980d731d7aa4",
+        "source": "browser"
+      },
+      "nat": {
+        "status": "ok",
+        "value": "NAT3 (Port Restricted Cone)",
+        "measuredAt": "2026-11-10T04:20:01.195859815Z",
+        "runId": "run_18f80b294f618def213a980d731d7aa4",
+        "source": "router"
+      },
+      "ping": {
+        "status": "ok",
+        "value": 7.2727272727272725,
+        "measuredAt": "2026-11-10T04:19:18.01075133Z",
+        "runId": "run_18f80b294f618def213a980d731d7aa4",
+        "source": "router"
+      },
+      "upload": {
+        "status": "ok",
+        "value": 60618027,
+        "measuredAt": "2026-11-10T04:19:50.011756161Z",
+        "runId": "run_18f80b294f618def213a980d731d7aa4",
+        "source": "router"
+      }
+    },
+    "parameters": {
+      "browser": "true"
+    },
+    "managed": true
+  },
+  "failure": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n'quick' !== 'nat'\n\n    at /config/.agentflow-workspaces/.agentflow-workspaces/quickstart-onu/579c-multi-lan/quickstart/scripts/ops/fastnet-unified-history-live.cjs:27:420"
+}

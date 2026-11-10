@@ -1,0 +1,9 @@
+{
+  "checks": [
+    "same production page/default quick experience/navigation in HTTPS Quickstart iframe and direct FastNet; no automatic test",
+    "continuation reads the already verified real quick result; WAN/LAN are not repeated",
+    "independent NAT attempt has NAT-only history and preserves WAN/LAN; failed STUN keeps valid NAT; card observes its terminal state",
+    "card history opens the common history page over HTTPS; light mobile layout fits and closes correctly",
+    "HTTP homepage also opens the same default page without adding a measurement"
+  ]
+}

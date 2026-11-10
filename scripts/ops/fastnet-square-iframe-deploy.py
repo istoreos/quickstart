@@ -22,7 +22,7 @@ for item in record['packages']:assert sha(Path(item['path']))==item['sha256']
 manifest=json.loads((hub/'luci-app-fastnet/root/usr/share/fastnet/quickstart/fastnet.json').read_text())
 release='fastnet-square-'+datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%SZ')
 stage='/tmp/'+release;backup='/root/quickstart-backups/'+release
-report={'status':'in_progress','host':'root@192.168.30.7','url':'http://192.168.30.7:10000/cgi-bin/luci/admin/quickstart','release':release,'privateBackup':backup,'scope':'Quickstart web/template; FastNet core embedded frontend; FastNet controller and card assets; local test feed','packageRecordsChanged':False}
+report={'status':'in_progress','host':'root@192.168.30.7','url':'http://192.168.30.7:10000/cgi-bin/luci/admin/quickstart','release':release,'privateBackup':backup,'scope':'Quickstart web/template; FastNet core embedded frontend; FastNet controller/model and card assets; journal migration with private backup; local test feed','packageRecordsChanged':False}
 changed=False
 try:
  report['before']=snapshot()
@@ -33,6 +33,7 @@ try:
  shutil.copy2(a.candidate/'payload/x86_64/fastnet/usr/sbin/FastNet',payload/'usr/sbin/FastNet')
  shutil.copytree(a.web/'luci-static/quickstart',payload/'www/luci-static/quickstart')
  luci=hub/'luci-app-fastnet';controller=Path('usr/lib/lua/luci/controller/fastnet.lua');(payload/controller.parent).mkdir(parents=True,exist_ok=True);shutil.copy2(luci/'luasrc/controller/fastnet.lua',payload/controller)
+ model=payload/'usr/lib/lua/luci/model/fastnet/card.lua';model.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(luci/'luasrc/model/fastnet/card.lua',model)
  shutil.copytree(luci/'root/www/luci-static/fastnet/quickstart',payload/'www/luci-static/fastnet/quickstart')
  plugin=payload/'usr/share/fastnet/fastnet-plugin.json';plugin.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(hub/'fastnet/files/fastnet-plugin.json',plugin)
  for path in ['usr/share/fastnet/quickstart/fastnet.json','usr/share/quickstart/cards.d/fastnet.json']:
@@ -50,10 +51,13 @@ try:
   for file in sorted(payload.rglob('*')):
    if file.is_file():
     info=tar.gettarinfo(str(file),str(file.relative_to(payload)));info.uid=info.gid=0;info.uname=info.gname='root';tar.addfile(info,file.open('rb'))
- paths=['usr/sbin/FastNet','usr/share/fastnet/fastnet-plugin.json','www/luci-static/quickstart','www/luci-static/fastnet/quickstart','usr/lib/lua/luci/controller/fastnet.lua','usr/lib/lua/luci/view/quickstart/main.htm','usr/share/fastnet/quickstart/fastnet.json','usr/share/quickstart/cards.d/fastnet.json','www/quickstart-fastnet-test']
+ paths=['usr/sbin/FastNet','usr/share/fastnet/fastnet-plugin.json','www/luci-static/quickstart','www/luci-static/fastnet/quickstart','usr/lib/lua/luci/controller/fastnet.lua','usr/lib/lua/luci/model/fastnet/card.lua','usr/lib/lua/luci/view/quickstart/main.htm','usr/share/fastnet/quickstart/fastnet.json','usr/share/quickstart/cards.d/fastnet.json','www/quickstart-fastnet-test']
+ journal_present=remote('test ! -f /etc/fastnet/card-state.json || echo present').strip()==b'present'
+ if journal_present:paths.append('etc/fastnet/card-state.json')
+ report['journalBackupIncluded']=journal_present
  remote('set -eu; umask 077; mkdir '+q(stage)+'; mkdir '+q(backup)+'; tar -czf '+q(backup+'/before.tar.gz')+' -C / '+' '.join(map(q,paths)))
  remote('cat > '+q(stage+'/payload.tar.gz'),archive.read_bytes())
- rollback='#!/bin/sh\nset -eu\n/etc/init.d/fastnet stop\nrm -rf /www/luci-static/quickstart /www/luci-static/fastnet/quickstart /www/quickstart-fastnet-test\ntar -xzf "$(dirname "$0")/before.tar.gz" -C /\nrm -f /tmp/luci-indexcache /tmp/luci-indexcache.*\nrm -rf /tmp/luci-modulecache/\n/etc/init.d/fastnet start\nsync\n'
+ rollback='#!/bin/sh\nset -eu\n/etc/init.d/fastnet stop\nrm -rf /www/luci-static/quickstart /www/luci-static/fastnet/quickstart /www/quickstart-fastnet-test\nrm -f /etc/fastnet/card-state.json\ntar -xzf "$(dirname "$0")/before.tar.gz" -C /\nrm -f /tmp/luci-indexcache /tmp/luci-indexcache.*\nrm -rf /tmp/luci-modulecache/\n/etc/init.d/fastnet start\nsync\n'
  remote('cat > '+q(backup+'/rollback.sh'),rollback.encode());remote('chmod 700 '+q(backup+'/rollback.sh'))
  # Check the shared task slot again immediately before the one service restart.
  summary=json.loads(remote('curl --fail -s --max-time 8 --unix-socket /var/run/fastnet-card.sock http://localhost/api/card/summary'));assert summary['task'] is None

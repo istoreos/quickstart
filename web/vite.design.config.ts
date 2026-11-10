@@ -29,7 +29,7 @@ const controlMiddleware=(server:any)=>{
   server.middlewares.use((req:any,res:any,next:any)=>{
     const url=new URL(req.url,'http://preview.invalid')
     if(url.pathname!=='/cgi-bin/luci/admin/services/fastnet/embed')return next()
-    res.writeHead(302,{Location:'/apps/fastnet/webui/?embed=quickstart&theme='+(url.searchParams.get('theme')==='dark'?'dark':'light')});res.end()
+    res.writeHead(302,{Location:'/apps/fastnet/webui/?embed=quickstart&theme='+(url.searchParams.get('theme')==='dark'?'dark':'light')+(url.searchParams.get('view')==='history'?'&view=history':'')});res.end()
   })
   server.middlewares.use('/cgi-bin/', (_req:any,res:any)=>{res.statusCode=403;res.end('Design server never forwards router requests')})
 }

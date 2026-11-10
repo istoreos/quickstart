@@ -1,0 +1,22 @@
+{
+  "status": "passed",
+  "hostInitialGzipDelta": 20442,
+  "hostBudget": 20480,
+  "hostProductionSourceChanges": false,
+  "cardAssetsGzip": {
+    "chunk.b5a86843.js": 2471,
+    "card.e5dbb4e5.js": 8126,
+    "chunk.31ac0177.js": 1365
+  },
+  "cardBudget": 8192,
+  "fullAppGzip": {
+    "index-DGHmzWbT.js": 67997,
+    "HistoryPanel-DPd-yUWS.css": 867,
+    "index-Ym-W-CSv.css": 10539,
+    "HistoryPanel-DcgcNhZr.js": 2405
+  },
+  "historyLimit": 32,
+  "stateByteLimit": 131072,
+  "actualDeviceStateBytes": 12511,
+  "historyAndFullAppLoadedOnDemand": true
+}

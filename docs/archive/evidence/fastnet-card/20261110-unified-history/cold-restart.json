@@ -1,0 +1,12 @@
+{
+  "status": "passed",
+  "scope": "one FastNet stop/start only; no OS reboot or configuration/package changes",
+  "stateBytes": 12511,
+  "sha256Before": "e1e25681caf7bc3396351f5499cae6446e39282ef1d91547c15ff55fd8fca40a",
+  "stoppedSnapshot": "passed",
+  "sha256After": "e1e25681caf7bc3396351f5499cae6446e39282ef1d91547c15ff55fd8fca40a",
+  "historyCount": 8,
+  "coldSnapshot": "passed",
+  "version": "0.8.3",
+  "journalMode": "0600"
+}

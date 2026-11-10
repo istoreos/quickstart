@@ -1,0 +1,11 @@
+{
+  "status": "passed",
+  "baseCommit": "2206ce1",
+  "unchangedFiles": {
+    "cmd/fastnet/webui-src/src/composables/useLanSpeed.js": "459cb29d437e1336b90480fea20581ca6a8d5b9f1421ad719e77b46892bdc347",
+    "cmd/fastnet/quick.go": "48703481f16d2753656f2109ecb2aee190e87ae5360d327fe949a844de37bd7b",
+    "cmd/fastnet/multi_stream.go": "14d9212c01473db4d3adfe81158782532cbbaf2081630ae3c5192f19aa4d621c",
+    "cmd/fastnet/ipv6_stream.go": "0acdc16726bec6814497ce6be0a8310f13beb36baa69a661086c08f309bd0524"
+  },
+  "note": "LAN timing, streams, concurrency and formulas unchanged; native quick/multi/IPv6 engines unchanged; Web orchestration and persistence adapted."
+}

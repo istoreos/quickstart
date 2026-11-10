@@ -66,3 +66,10 @@ FastNet 卡片入口仍是内容哈希 ESM，允许从同一插件目录按需�
 `context.components.PrimaryAction` 和 `Menu` 是可选的宿主 Vue 控件，使用同一共享 Vue SDK。PrimaryAction 接收 icon、默认文字 slot 和 click；Menu 接收 label、`{id,label,disabled?}[]` items，并发出 select(id)。它们直接复用首页已有的控件、边框、分隔线、焦点与键盘行为，不读取插件业务状态。旧宿主没有此字段时，插件使用原生回退。组件注册不进入安装目录元数据，测速与数据仍由 FastNet 负责。
 
 FastNet 完整前端按晴岚公共闭包独立构建；完整工作台不会进入 Quickstart 首屏。`GET /api/version` 显示实际核心版本。经应用代理运行的页面使用认证的 LuCI `GET /admin/services/fastnet/browser-origin` 判断真实浏览器来源；该接口只返回布尔能力，不信任浏览器转发头、不触发测速。LAN 的公开路径由原门面适配，原测量逻辑、计时、流与公式不变。
+# FastNet 0.8.3 统一历史补充
+
+FastNet 自有完整页面在独立端口和 iframe 中采用同一业务。卡片仍使用 `quickstart-card-v1`，summary schema 保持1；新增可选 `latestResults`（各指标含自身runId/时间/来源）、`revision`、`historyCount`。旧 `latest` 为兼容投影；LAN从 `lanPing/lanDownload/lanUpload` 读取。完整历史由FastNet核心 `/api/history/*` 管理，最多32条；Quickstart不存第二份测速记录。
+
+卡片在可见且前台时每15秒读取空闲摘要，任务期间每2秒；离屏、隐藏或打开iframe时暂停，恢复可见/关窗立即重读。原“空闲只读取一次”预算由此需求替代。历史页面及结果详情按需加载；卡片入口仍检查8KiB gzip门槛。
+
+`/admin/services/fastnet/embed?view=history` 可进入公共历史页面，普通打开仍默认快速体验。`fastnet:results-changed` 仅为失效通知，不接收跨窗口结果正文。核心已接受的任务独立于窗口；浏览器LAN/NAT/IPv6需要原浏览器继续执行。LuCI停止服务回退读取支持磁盘schema1/2。
