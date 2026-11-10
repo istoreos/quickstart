@@ -63,6 +63,8 @@ try:
  journal_present=not a.static_only and remote('test ! -f /etc/fastnet/card-state.json || echo present').strip()==b'present'
  if journal_present:paths.append('etc/fastnet/card-state.json')
  report['journalBackupIncluded']=journal_present
+ report['freeBytesBeforeBackup']=int(remote('df -Pk /').decode().splitlines()[-1].split()[3])*1024
+ assert report['freeBytesBeforeBackup'] >= max(48*1024*1024,archive.stat().st_size*2),'Insufficient space for backup and rollback; no device files changed'
  remote('set -eu; umask 077; mkdir '+q(stage)+'; mkdir '+q(backup)+'; tar -czf '+q(backup+'/before.tar.gz')+' -C / '+' '.join(map(q,paths)))
  remote('cat > '+q(stage+'/payload.tar.gz'),archive.read_bytes())
  rollback='#!/bin/sh\nset -eu\n/etc/init.d/fastnet stop\nrm -rf /www/luci-static/quickstart /www/luci-static/fastnet/quickstart /www/quickstart-fastnet-test\nrm -f /etc/fastnet/card-state.json\ntar -xzf "$(dirname "$0")/before.tar.gz" -C /\nrm -f /tmp/luci-indexcache /tmp/luci-indexcache.*\nrm -rf /tmp/luci-modulecache/\n/etc/init.d/fastnet start\nsync\n'

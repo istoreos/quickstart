@@ -1,0 +1,52 @@
+{
+  "status": "passed",
+  "checks": [
+    "HTTP and HTTPS proxy writes pass origin validation; history reads succeed; invalid probes create no records",
+    "real HTTP iframe LAN succeeds, saves one LAN-only history, and preserves WAN/NAT/IPv6",
+    "card footer and terminal retry note removed; light/dark render correctly"
+  ],
+  "origins": [
+    {
+      "origin": "http://192.168.30.7:10000",
+      "secureContext": false,
+      "writeStatus": 422,
+      "writeError": "invalid_request",
+      "readStatus": 200
+    },
+    {
+      "origin": "https://192.168.30.7",
+      "secureContext": true,
+      "writeStatus": 422,
+      "writeError": "invalid_request",
+      "readStatus": 200
+    }
+  ],
+  "errors": [],
+  "lan": {
+    "id": "run_7559efe812ed05356f7e6cb340bc67af",
+    "state": "succeeded",
+    "results": {
+      "lanDownload": {
+        "status": "ok",
+        "value": 931880225.8480333,
+        "measuredAt": "2026-11-10T05:55:36.345993271Z",
+        "runId": "run_7559efe812ed05356f7e6cb340bc67af",
+        "source": "browser"
+      },
+      "lanPing": {
+        "status": "ok",
+        "value": 5.939999961853028,
+        "measuredAt": "2026-11-10T05:55:36.345992097Z",
+        "runId": "run_7559efe812ed05356f7e6cb340bc67af",
+        "source": "browser"
+      },
+      "lanUpload": {
+        "status": "ok",
+        "value": 2743803638.8415675,
+        "measuredAt": "2026-11-10T05:55:36.345994022Z",
+        "runId": "run_7559efe812ed05356f7e6cb340bc67af",
+        "source": "browser"
+      }
+    }
+  }
+}

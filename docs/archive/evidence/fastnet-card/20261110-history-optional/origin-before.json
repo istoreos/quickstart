@@ -1,0 +1,14 @@
+[
+  {
+    "origin": "http://192.168.30.7:10000",
+    "status": 403,
+    "body": "{\"error\":\"cross_origin\"}\n",
+    "secureContext": false
+  },
+  {
+    "origin": "https://192.168.30.7",
+    "status": 422,
+    "body": "{\"error\":\"invalid_request\"}\n",
+    "secureContext": true
+  }
+]
