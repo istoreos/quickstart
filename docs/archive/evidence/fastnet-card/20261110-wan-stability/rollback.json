@@ -1,0 +1,12 @@
+{
+  "reason": "Three candidate rounds failed the WAN stability target; short-exploration handoff regression remains reproducible",
+  "restoreFrom": "/root/quickstart-backups/fastnet-wan-20261110T071406Z",
+  "expectedBinarySha256": "6a8b49a0f3954e0c8d232fc71f3f28f200b77e1cd05be6f861a8c1d68db429a4",
+  "historySha256Before": "a69573dc432fc7df996b66ecc7606629a8cb4034e3205041443b6b9b067667f0",
+  "binarySha256": "6a8b49a0f3954e0c8d232fc71f3f28f200b77e1cd05be6f861a8c1d68db429a4",
+  "version": "0.8.5",
+  "historySha256After": "a69573dc432fc7df996b66ecc7606629a8cb4034e3205041443b6b9b067667f0",
+  "historyCount": 32,
+  "ready": true,
+  "status": "rolled_back_to_original_core_history_preserved"
+}

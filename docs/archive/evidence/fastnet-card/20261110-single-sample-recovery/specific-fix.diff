@@ -1,0 +1,16 @@
+--- prior-candidate/download_runner.go
++++ single-sample/download_runner.go
+@@ -252,8 +252,12 @@
+ 			rate := float64(n-baseline) * 8 / now.Sub(lastTime).Seconds()
+ 			baseline = n
+ 			lastTime = now
+-			// Confirm the reference over two samples rather than a single burst.
++			// Keep the first usable sample even when exploration is almost over.
++			// Require two samples only when raising an established reference.
+ 			if paid == nil {
++				if stablePeakRate == 0 {
++					stablePeakRate = rate
++				}
+ 				if confirmed := min(lastRate, rate); confirmed > stablePeakRate {
+ 					stablePeakRate = confirmed
+ 				}

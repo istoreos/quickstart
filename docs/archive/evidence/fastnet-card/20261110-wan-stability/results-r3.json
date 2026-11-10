@@ -1,0 +1,252 @@
+{
+  "host": "root@192.168.30.7",
+  "startedAt": "2026-11-10T07:31:45.837356+00:00",
+  "health": {
+    "ok": true
+  },
+  "params": {
+    "endpoint": "/api/quick/stream",
+    "referenceMbps": 0,
+    "browserLan": false,
+    "note": "same native WAN/NAT/IPv6 engine as UI; no browser LAN load"
+  },
+  "rounds": [
+    {
+      "round": 1,
+      "elapsedSeconds": 46.66299926303327,
+      "summary": {
+        "dockerBytes": 377453997,
+        "dockerUsed": true,
+        "downloadBps": 470539892,
+        "downloadSeconds": 20.000353539,
+        "historyRunId": "run_158c8e7dec1b0745cdf22a097d7d29b9",
+        "ipv6Info": "未检测到 IPv6；IPv6 准备度 0/10",
+        "jitterMs": 258.238353408,
+        "measurementConclusion": "measured_lower_bound",
+        "natType": "NAT3 (Port Restricted Cone)",
+        "pingMs": 100.54545454545455,
+        "uploadBps": 58892750
+      },
+      "downloadMbps": 470.539892,
+      "uploadMbps": 58.89275,
+      "candidateBusy": 0,
+      "safetyFallback": 0,
+      "logCaptured": true
+    },
+    {
+      "round": 2,
+      "elapsedSeconds": 48.51597839873284,
+      "summary": {
+        "dockerBytes": 752352685,
+        "dockerUsed": true,
+        "downloadBps": 755987200,
+        "downloadSeconds": 20.000169982,
+        "historyRunId": "run_bddaec0611dc5dd8edb7e814280e7490",
+        "ipv6Info": "未检测到 IPv6；IPv6 准备度 0/10",
+        "jitterMs": 62.51880168799997,
+        "measurementConclusion": "measured_lower_bound",
+        "natError": "stun timeout",
+        "pingMs": 197.1818181818182,
+        "uploadBps": 64329056
+      },
+      "downloadMbps": 755.9872,
+      "uploadMbps": 64.329056,
+      "candidateBusy": 0,
+      "safetyFallback": 0,
+      "logCaptured": true
+    },
+    {
+      "round": 3,
+      "elapsedSeconds": 45.74314698390663,
+      "summary": {
+        "dockerBytes": 424508845,
+        "dockerUsed": true,
+        "downloadBps": 351681319,
+        "downloadSeconds": 20.000426561,
+        "historyRunId": "run_b113e8e0e31c4ca8755924afbf22507e",
+        "ipv6Info": "未检测到 IPv6；IPv6 准备度 0/10",
+        "jitterMs": 304.84533401600004,
+        "measurementConclusion": "measured_lower_bound",
+        "natType": "NAT3 (Port Restricted Cone)",
+        "pingMs": 385.27272727272725,
+        "uploadBps": 65358690
+      },
+      "downloadMbps": 351.681319,
+      "uploadMbps": 65.35869,
+      "candidateBusy": 0,
+      "safetyFallback": 0,
+      "logCaptured": true
+    },
+    {
+      "round": 4,
+      "elapsedSeconds": 39.65608147997409,
+      "summary": {
+        "dockerBytes": 960560557,
+        "dockerUsed": true,
+        "downloadBps": 685486933,
+        "downloadSeconds": 20.000700879,
+        "historyRunId": "run_170ed2785ec6b3af5b2581e222d9bde2",
+        "ipv6Info": "未检测到 IPv6；IPv6 准备度 0/10",
+        "jitterMs": 0.459574272,
+        "measurementConclusion": "measured_lower_bound",
+        "natType": "NAT3 (Port Restricted Cone)",
+        "pingMs": 7.7272727272727275,
+        "uploadBps": 63323691
+      },
+      "downloadMbps": 685.486933,
+      "uploadMbps": 63.323691,
+      "candidateBusy": 0,
+      "safetyFallback": 0,
+      "logCaptured": true
+    },
+    {
+      "round": 5,
+      "elapsedSeconds": 37.629907553084195,
+      "summary": {
+        "dockerBytes": 0,
+        "dockerUsed": true,
+        "downloadBps": 351811124,
+        "downloadSeconds": 20.000235847,
+        "historyRunId": "run_adb01f76ec22dc10f89e670ff1bdbe05",
+        "ipv6Info": "未检测到 IPv6；IPv6 准备度 0/10",
+        "jitterMs": 126.21548518399999,
+        "measurementConclusion": "measured_lower_bound",
+        "natError": "stun timeout",
+        "pingMs": 99.9090909090909,
+        "uploadBps": 62408273
+      },
+      "downloadMbps": 351.811124,
+      "uploadMbps": 62.408273,
+      "candidateBusy": 0,
+      "safetyFallback": 0,
+      "logCaptured": true
+    },
+    {
+      "round": 6,
+      "elapsedSeconds": 45.69954131683335,
+      "summary": {
+        "dockerBytes": 55426477,
+        "dockerUsed": true,
+        "downloadBps": 528916282,
+        "downloadSeconds": 20.000242162,
+        "historyRunId": "run_571a2836331c8c670719156548c8ac86",
+        "ipv6Info": "未检测到 IPv6；IPv6 准备度 0/10",
+        "jitterMs": 183.28211904,
+        "measurementConclusion": "measured_lower_bound",
+        "natType": "NAT3 (Port Restricted Cone)",
+        "pingMs": 101.36363636363636,
+        "uploadBps": 38250014
+      },
+      "downloadMbps": 528.916282,
+      "uploadMbps": 38.250014,
+      "candidateBusy": 0,
+      "safetyFallback": 0,
+      "logCaptured": true
+    },
+    {
+      "round": 7,
+      "elapsedSeconds": 46.69189420109615,
+      "summary": {
+        "dockerBytes": 38501805,
+        "dockerUsed": true,
+        "downloadBps": 280055732,
+        "downloadSeconds": 20.00054006,
+        "historyRunId": "run_e77a400b68628ed62943e35b2602e317",
+        "ipv6Info": "未检测到 IPv6；IPv6 准备度 0/10",
+        "jitterMs": 125.34657318400001,
+        "measurementConclusion": "measured_lower_bound",
+        "natError": "stun timeout",
+        "pingMs": 296.72727272727275,
+        "uploadBps": 63764859
+      },
+      "downloadMbps": 280.055732,
+      "uploadMbps": 63.764859,
+      "candidateBusy": 0,
+      "safetyFallback": 1,
+      "logCaptured": true
+    },
+    {
+      "round": 8,
+      "elapsedSeconds": 39.453832895029336,
+      "summary": {
+        "dockerBytes": 188463962,
+        "dockerUsed": true,
+        "downloadBps": 687033703,
+        "downloadSeconds": 20.00029586,
+        "historyRunId": "run_fd5354c54eb1c3cf5dc6a2cc8eee6236",
+        "ipv6Info": "未检测到 IPv6；IPv6 准备度 0/10",
+        "jitterMs": 0.8176235520000001,
+        "measurementConclusion": "measured_lower_bound",
+        "natType": "NAT3 (Port Restricted Cone)",
+        "pingMs": 7.2727272727272725,
+        "uploadBps": 63303013
+      },
+      "downloadMbps": 687.033703,
+      "uploadMbps": 63.303013,
+      "candidateBusy": 0,
+      "safetyFallback": 1,
+      "logCaptured": true
+    },
+    {
+      "round": 9,
+      "elapsedSeconds": 41.57373261125758,
+      "summary": {
+        "dockerBytes": 260078426,
+        "dockerUsed": true,
+        "downloadBps": 567710698,
+        "downloadSeconds": 20.000305386,
+        "historyRunId": "run_5036ab1b7378e297e4e2b1874d92cad7",
+        "ipv6Info": "未检测到 IPv6；IPv6 准备度 0/10",
+        "jitterMs": 91.77269203200001,
+        "measurementConclusion": "measured_lower_bound",
+        "natType": "NAT3 (Port Restricted Cone)",
+        "pingMs": 199.54545454545453,
+        "uploadBps": 63914861
+      },
+      "downloadMbps": 567.710698,
+      "uploadMbps": 63.914861,
+      "candidateBusy": 0,
+      "safetyFallback": 1,
+      "logCaptured": true
+    },
+    {
+      "round": 10,
+      "elapsedSeconds": 45.63589601917192,
+      "summary": {
+        "dockerBytes": 95518125,
+        "dockerUsed": true,
+        "downloadBps": 38888953,
+        "downloadSeconds": 20.000499733,
+        "historyRunId": "run_6c57f7a81cb6e2c2112e4fca086a3c2b",
+        "ipv6Info": "未检测到 IPv6；IPv6 准备度 0/10",
+        "jitterMs": 732.94104064,
+        "measurementConclusion": "measured_lower_bound",
+        "natType": "NAT3 (Port Restricted Cone)",
+        "pingMs": 568.5454545454545,
+        "uploadBps": 64679689
+      },
+      "downloadMbps": 38.888953,
+      "uploadMbps": 64.679689,
+      "candidateBusy": 0,
+      "safetyFallback": 0,
+      "logCaptured": true
+    }
+  ],
+  "binarySha256": "242d1b8ea05e4d03d8d71785080dcb152b2a3af334033004fc8d0c12bad37ba2",
+  "downloadMbps": {
+    "mean": 471.8111836,
+    "median": 499.728087,
+    "min": 38.888953,
+    "max": 755.9872,
+    "populationCVPercent": 44.368636583883855
+  },
+  "uploadMbps": {
+    "mean": 60.8224896,
+    "median": 63.544275,
+    "min": 38.250014,
+    "max": 65.35869,
+    "populationCVPercent": 12.67297625130695
+  },
+  "passed": false,
+  "finishedAt": "2026-11-10T07:39:03.248791+00:00"
+}

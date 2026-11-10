@@ -1,0 +1,10 @@
+{
+  "fastnetChangedFiles": [
+    "cmd/fastnet/quick.go",
+    "cmd/fastnet/version.go",
+    "filespeed/download_runner.go",
+    "filespeed/download_runner_test.go"
+  ],
+  "frontendOrHistoryChanged": false,
+  "coreDiffSha256": "e8459da5115d2bde0bc521be3f97d19f56f3a02c6c5fef25d7b4e379ed06e2bd"
+}

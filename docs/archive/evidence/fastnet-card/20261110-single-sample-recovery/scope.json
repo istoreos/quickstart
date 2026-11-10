@@ -1,0 +1,12 @@
+{
+  "baseCommit": "573a59df62c12b5cd083b47d1838575c818d024e",
+  "newFixProductionLinesAdded": 3,
+  "uiLanHistoryChangedThisRound": false,
+  "diffSha256": "1b5f5e454b156b85607f8d65ed66785cfc864586fe5a7e8fac50ad23fe1a092a",
+  "productionFilesChangedFromPriorCandidate": [
+    "filespeed/download_runner.go"
+  ],
+  "testFilesChangedThisRound": [
+    "filespeed/download_runner_test.go"
+  ]
+}
