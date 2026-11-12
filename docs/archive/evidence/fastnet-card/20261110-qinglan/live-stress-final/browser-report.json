@@ -1,0 +1,164 @@
+{
+  "status": "failed",
+  "checks": [
+    "retained production homepage uses native primary action and menu without external arrow",
+    "actual core version is shown and trusted gateway preserves nonlocal browser LAN capability",
+    "host theme preserves iframe form identity; Escape closes LAN settings before the host window"
+  ],
+  "errors": [],
+  "LAN": [
+    {
+      "path": "/apps/fastnet/ping",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/ping",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/ping",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/ping",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/ping",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/ping",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/download",
+      "method": "GET"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    },
+    {
+      "path": "/apps/fastnet/upload",
+      "method": "POST"
+    }
+  ],
+  "failure": "locator.evaluate: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('iframe[title*=\"FastNet\"]').contentFrame().getByRole('button', { name: '停止内网测速', exact: true })\u001b[22m\n\u001b[2m    - locator resolved to visible <button type=\"button\" class=\"start-btn\">停止内网测速</button>\u001b[22m\n"
+}

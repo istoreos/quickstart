@@ -26,13 +26,35 @@ type jsonDeviceGroupStore struct {
 	mu      sync.Mutex
 	path    string
 	persist func(string, []byte) error
+	scopes  map[string]*jsonDeviceGroupStore
 }
 
 func newJSONDeviceGroupStore(path string) *jsonDeviceGroupStore {
 	return &jsonDeviceGroupStore{path: path, persist: persistClassificationOverrides}
 }
 
-func (store *jsonDeviceGroupStore) Read(_ context.Context) (deviceGroupState, error) {
+// Each network reuses this store with a fixed path; a request never changes a
+// shared store's current path or mutates another network's document.
+func (store *jsonDeviceGroupStore) forContext(ctx context.Context) *jsonDeviceGroupStore {
+	network := selectedLAN(ctx)
+	if network == defaultLAN {
+		return store
+	}
+	store.mu.Lock()
+	defer store.mu.Unlock()
+	if store.scopes == nil {
+		store.scopes = map[string]*jsonDeviceGroupStore{}
+	}
+	if store.scopes[network] == nil {
+		store.scopes[network] = &jsonDeviceGroupStore{path: lanStatePath(store.path, network), persist: store.persist}
+	}
+	return store.scopes[network]
+}
+
+func (store *jsonDeviceGroupStore) Read(ctx context.Context) (deviceGroupState, error) {
+	if target := store.forContext(ctx); target != store {
+		return target.Read(context.Background())
+	}
 	store.mu.Lock()
 	defer store.mu.Unlock()
 	document, raw, err := store.readDocument()
@@ -42,7 +64,10 @@ func (store *jsonDeviceGroupStore) Read(_ context.Context) (deviceGroupState, er
 	return documentDeviceGroupState(document, raw), nil
 }
 
-func (store *jsonDeviceGroupStore) Mutate(_ context.Context, request *models.DeviceGroupMutationRequest, expectedVersion string) (deviceGroupState, error) {
+func (store *jsonDeviceGroupStore) Mutate(ctx context.Context, request *models.DeviceGroupMutationRequest, expectedVersion string) (deviceGroupState, error) {
+	if target := store.forContext(ctx); target != store {
+		return target.Mutate(context.Background(), request, expectedVersion)
+	}
 	store.mu.Lock()
 	defer store.mu.Unlock()
 	document, raw, err := store.readDocument()

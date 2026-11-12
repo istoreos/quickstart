@@ -24,9 +24,11 @@ import {
 import {
     CanvasRenderer
 } from 'echarts/renderers';
-import request from '/@/request';
+import baseRequest from '/@/request'
+import { useLANClient } from '../lanContext'
+const request = { ...baseRequest, DeviceMangement: useLANClient() };
 import utils from '/@/utils';
-import { isDark } from '/@/utils/theme';
+import { isDark, subscribeTheme } from '/@/utils/theme';
 import { useGettext } from '/@/plugins/i18n'
 import { requestErrorMessage } from '../requestError';
 const { $gettext } = useGettext()
@@ -130,9 +132,11 @@ const byteToSize = utils.byteToSize
 const el = ref<HTMLElement | null>()
 
 let MyChart: echarts.ECharts | null = null
+let chartTheme: 'light' | 'dark' | null = null
 // 基础面积图
 const NewBasic = (event: HTMLElement) => {
     const dark = isDark()
+    chartTheme = dark ? 'dark' : 'light'
     MyChart = echarts.init(event, dark ? 'dark' : "v5");
     MyChart.setOption({
         animation: false,
@@ -316,82 +320,22 @@ const NewBasic = (event: HTMLElement) => {
     return MyChart
 }
 
-onMounted(() => {
-    setTimeout(async () => {
-        if (el.value) {
-            await getData()
-            const myChart = NewBasic(el.value)
-            //myChart.appendData
-            const element = el.value
-            myChart.resize({
-                width: element.clientWidth,
-                height: element.clientHeight
-            })
-            window.addEventListener("resize", () => {
-                myChart.resize({
-                    width: element.clientWidth,
-                    height: element.clientHeight,
-                })
-            })
-            const tick = async () => {
-                if (MyChart == null) {
-                    return
-                }
-                if (!document.hidden) {
-                    await getData()
-                    if (MyChart == null) {
-                        return
-                    }
-                    myChart.setOption({
-                        series: [
-                            {
-
-                                name: $gettext("下载"),
-                                data: download.value,
-                                type: 'line',
-                                areaStyle: {},
-                                smooth: true,
-
-                                // label: {
-                                //     show: true,
-                                //     formatter: '{c}Mbs'
-
-                                // }
-                            },
-                            {
-                                name: $gettext("上传"),
-                                data: upload.value,
-                                type: 'line',
-                                areaStyle: {},
-                                smooth: true,
-
-                                // label: {
-                                //     show: true,
-                                //     formatter: '{c}Mbs'
-                                // },
-                            },
-                            // {
-                            //     name: "总量",
-                            //     data: stack.value,
-                            //     type: 'line',
-                            //     // stack: 'Total',
-                            //     smooth: true,
-                            //     areaStyle: {},
-                            // }
-                        ],
-                    });
-                }
-                setTimeout(tick, 5000)
-            }
-            setTimeout(tick, 5000)
-        }
-    }, 900)
+let live=false,timer:number|undefined,unsubscribeTheme=()=>{}
+const resizeChart=()=>{if(MyChart&&el.value)MyChart.resize({width:el.value.clientWidth,height:el.value.clientHeight})}
+const updateChart=()=>MyChart?.setOption({series:[
+    {name:$gettext("下载"),data:download.value,type:'line',areaStyle:{},smooth:true},
+    {name:$gettext("上传"),data:upload.value,type:'line',areaStyle:{},smooth:true},
+]})
+const rebuildChart=()=>{if(!MyChart||!el.value)return;MyChart.dispose();MyChart=null;NewBasic(el.value);updateChart();resizeChart()}
+const tick=async()=>{if(!live)return;try{if(!document.hidden)await getData();if(live)updateChart()}finally{if(live)timer=window.setTimeout(tick,5000)}}
+onMounted(()=>{
+    live=true
+    unsubscribeTheme=subscribeTheme(snapshot=>{if(MyChart&&chartTheme!==snapshot.effective)rebuildChart()})
+    timer=window.setTimeout(async()=>{await getData();if(!live||!el.value)return;NewBasic(el.value);resizeChart();window.addEventListener('resize',resizeChart);timer=window.setTimeout(tick,5000)},900)
 })
-onUnmounted(() => {
-    if (MyChart != null) {
-        MyChart.dispose()
-        MyChart = null
-    }
+onUnmounted(()=>{
+    live=false;window.clearTimeout(timer);window.removeEventListener('resize',resizeChart);unsubscribeTheme()
+    MyChart?.dispose();MyChart=null
 })
 </script>
 <style lang="scss" scoped>

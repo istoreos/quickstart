@@ -1,0 +1,33 @@
+{
+  "checkedAt": "2026-11-10T00:12:00.476950+00:00",
+  "preview": {
+    "url": "http://127.0.0.1:5180/",
+    "environment": "development container; simulated installation/business responses; production UI component"
+  },
+  "devices": {
+    "x86_64": {
+      "url": "http://192.168.30.7:10000/cgi-bin/luci/admin/quickstart",
+      "candidateCurrentlyDeployed": false,
+      "baselineRestored": true,
+      "baselineHashes": {
+        "/usr/sbin/quickstart": "0aad508a0c96119f21a71260aa5da6706ec37b1653bde10f288b320528db339d",
+        "/www/luci-static/quickstart/index.js": "9906e228351a4e0a59ba6d3bfb004520f6934935a0141366c270ccd2a59b3c55"
+      },
+      "quickstartRunning": true,
+      "FastNetRunning": false,
+      "note": "This UI patch temporarily verified here and restored"
+    },
+    "aarch64": {
+      "url": "http://192.168.30.93:80/cgi-bin/luci/admin/quickstart",
+      "candidateCurrentlyDeployed": false,
+      "baselineRestored": true,
+      "baselineHashes": {
+        "/usr/sbin/quickstart": "a6cbb775d0ee1c4c9469631668bb176992bfe8c31ccdb3c6af5c8a20ad580eb5",
+        "/www/luci-static/quickstart/index.js": "db938ff02c84e55301df582f81c09fa900f7b2421b80c70cf24214d15f693eaf"
+      },
+      "quickstartRunning": true,
+      "FastNetRunning": false,
+      "note": "Previous FN12 candidate verified here and restored; current UI patch not deployed here"
+    }
+  }
+}

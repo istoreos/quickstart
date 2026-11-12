@@ -1,0 +1,57 @@
+{
+  "policy": "每阶段最多3次失败后的修正，初次实现不计入修正次数",
+  "stages": {
+    "H01": {
+      "status": "passed",
+      "corrections": 0
+    },
+    "H02": {
+      "status": "passed",
+      "corrections": 0
+    },
+    "H03": {
+      "status": "passed",
+      "corrections": 0
+    },
+    "H04": {
+      "status": "passed",
+      "corrections": 1,
+      "initialFailure": [
+        "non-browser facade construction accessed window",
+        "old quick sequence fixture did not supply the new history endpoint"
+      ],
+      "resolution": "guard browser access; extend fixture, original LAN library unchanged; 30 node checks and Go race passed"
+    },
+    "H05": {
+      "status": "passed",
+      "corrections": 1,
+      "initialFailure": [
+        "visual review found a duplicate coming-soon fallback above HistoryPanel",
+        "mobile screenshot captured the hidden drawer during resize transition"
+      ],
+      "resolution": "history participates in the existing page branch; hidden drawer is explicitly not visible; added UI assertions"
+    },
+    "H06": {
+      "status": "passed",
+      "corrections": 3,
+      "initialFailure": [
+        "candidate builder and package fixture hardcoded the previous metadata release 10"
+      ],
+      "resolution": "read candidate versions/dependencies from recipes; FastNet/LuCI 0.8.3 and metadata release 11; package contract passes",
+      "liveInitialFailure": "Assertion sampled old card immediately after close, before async GET returned. Failure screenshot already shows the newly updated LAN values; core/LuCI summary contains the saved run.",
+      "liveResolution": "Wait for completed refresh (not only dialog removal); NAT check also waits for the new native record.",
+      "httpFailure": "crypto.randomUUID is undefined on a LAN HTTP origin; localhost and HTTPS masked the problem. No quick history was created because begin failed.",
+      "httpResolution": "Use crypto.getRandomValues (also used by the original card model), add an insecure-origin regression; 31 frontend checks pass; rebuild and retest fixed .7 candidate.",
+      "verificationHarness": "The NAT wait introduced in verification correction 2 returned a Promise, accepted immediately by this Playwright build (async()=>false returned false after15ms). Product native NAT finished successfully after browser closed. Replace with bounded Node-side reads; supplement remaining checks without changing product or remeasuring WAN/LAN.",
+      "verification": "live-pass verifies actual quick + real gateway LAN; live-complete passes remaining read-only checks; cold-restart verifies stopped snapshot/reload. No product changes beyond correction3.",
+      "environmentCase": "A standalone NAT request returned stun timeout: failed record saved, last valid NAT retained. Native NAT had also succeeded in the earlier attempt after the browser closed.",
+      "harnessNotes": [
+        "Promise-based Playwright condition returned false immediately; replaced by bounded Node-side reads.",
+        "After mobile remount the external card is lazy: scroll the registered host before waiting for its component.",
+        "NAT success is environment-dependent; verify failure retention instead of requiring every STUN attempt to succeed."
+      ]
+    }
+  },
+  "browserR1": "browser-r1/browser-report.json",
+  "note": "R1 automated assertions passed; visual findings above require a final rerun."
+}

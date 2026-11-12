@@ -52,6 +52,7 @@ type deviceProfileFile struct {
 // existing classification API; the on-disk format is Device Profile v3.
 type DeviceClassificationOverrideStore struct {
 	mu         sync.Mutex
+	networks   map[string]*DeviceClassificationOverrideStore
 	path       string
 	legacyPath string
 	limit      int
@@ -60,6 +61,24 @@ type DeviceClassificationOverrideStore struct {
 	persistent map[string]deviceProfileRecord
 	boot       map[string]deviceProfileRecord
 	persist    func(string, []byte) error
+}
+
+func (store *DeviceClassificationOverrideStore) forNetwork(network string) *DeviceClassificationOverrideStore {
+	if store == nil || network == "" || network == defaultLAN {
+		return store
+	}
+	store.mu.Lock()
+	defer store.mu.Unlock()
+	if store.networks == nil {
+		store.networks = map[string]*DeviceClassificationOverrideStore{}
+	}
+	if child := store.networks[network]; child != nil {
+		return child
+	}
+	child := newDeviceProfileStore(lanStatePath(store.path, network), "")
+	child.limit, child.persist = store.limit, store.persist
+	store.networks[network] = child
+	return child
 }
 
 func NewDeviceClassificationOverrideStore(path string) *DeviceClassificationOverrideStore {

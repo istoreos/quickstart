@@ -19,17 +19,20 @@ func toFloatGatewayModel(state FloatIPStatus) *models.LANCtrlFloatGatewayModule 
 	}
 }
 
-func toSpeedLimitModel(state SpeedLimitStatus) *models.LANCtrlSpeedLimitModule {
-	capabilityCtx, cancel := context.WithTimeout(context.Background(), 800*time.Millisecond)
+func toSpeedLimitModel(ctx context.Context, state SpeedLimitStatus) *models.LANCtrlSpeedLimitModule {
+	capabilityCtx, cancel := context.WithTimeout(ctx, 800*time.Millisecond)
 	defer cancel()
-	bandixInstalled, bandixAvailable, bandixReason := bandixProviderAvailability(capabilityCtx)
+	bandixInstalled, bandixAvailable, bandixReason := false, false, "network_unsupported"
+	if selectedLAN(ctx) == defaultLAN {
+		bandixInstalled, bandixAvailable, bandixReason = bandixProviderAvailability(capabilityCtx)
+	}
 	nativeInstalled, nativeAvailable, nativeReason := nativeProviderCapability(capabilityCtx)
-	return &models.LANCtrlSpeedLimitModule{
+	result := &models.LANCtrlSpeedLimitModule{
 		Installed:     state.Installed,
 		Enabled:       state.Enabled,
 		UploadSpeed:   state.UploadSpeed,
 		DownloadSpeed: state.DownloadSpeed,
-		Provider:      effectiveRateLimitProvider(defaultRateLimitProviderPath),
+		Provider:      scopedRateLimitProvider(ctx),
 		Providers: []*models.RateLimitProviderOption{
 			{ID: nativePolicyProviderName, Available: nativeAvailable, Installed: nativeInstalled, Reason: nativeReason},
 			{ID: "eqos", Available: state.Installed, Installed: state.Installed, Reason: func() string {
@@ -41,4 +44,8 @@ func toSpeedLimitModel(state SpeedLimitStatus) *models.LANCtrlSpeedLimitModule {
 			{ID: "bandix", Available: bandixAvailable, Installed: bandixInstalled, Reason: bandixReason},
 		},
 	}
+	if selectedLAN(ctx) != defaultLAN {
+		result.Providers = result.Providers[:1]
+	}
+	return result
 }

@@ -1,0 +1,296 @@
+{
+  "status": "failed",
+  "checks": [
+    {
+      "pref": "light",
+      "width": 320,
+      "form": "standard",
+      "size": {
+        "width": 320,
+        "page": 320,
+        "h": 345,
+        "content": 345,
+        "stage": 150.390625
+      }
+    },
+    {
+      "pref": "light",
+      "width": 320,
+      "form": "summary",
+      "size": {
+        "width": 320,
+        "page": 320,
+        "h": 145,
+        "content": 145,
+        "stage": 62.4375
+      }
+    },
+    {
+      "pref": "light",
+      "width": 390,
+      "form": "standard",
+      "size": {
+        "width": 390,
+        "page": 390,
+        "h": 345,
+        "content": 345,
+        "stage": 150.390625
+      }
+    },
+    {
+      "pref": "light",
+      "width": 390,
+      "form": "summary",
+      "size": {
+        "width": 390,
+        "page": 390,
+        "h": 145,
+        "content": 145,
+        "stage": 62.4375
+      }
+    },
+    {
+      "pref": "light",
+      "width": 1440,
+      "form": "standard",
+      "size": {
+        "width": 1440,
+        "page": 1440,
+        "h": 366,
+        "content": 366,
+        "stage": 178.953125
+      }
+    },
+    {
+      "pref": "light",
+      "width": 1440,
+      "form": "summary",
+      "size": {
+        "width": 1440,
+        "page": 1440,
+        "h": 251,
+        "content": 251,
+        "stage": 62.4375
+      }
+    },
+    {
+      "pref": "dark",
+      "width": 320,
+      "form": "standard",
+      "size": {
+        "width": 320,
+        "page": 320,
+        "h": 345,
+        "content": 345,
+        "stage": 150.390625
+      }
+    },
+    {
+      "pref": "dark",
+      "width": 320,
+      "form": "summary",
+      "size": {
+        "width": 320,
+        "page": 320,
+        "h": 145,
+        "content": 145,
+        "stage": 62.4375
+      }
+    },
+    {
+      "pref": "dark",
+      "width": 390,
+      "form": "standard",
+      "size": {
+        "width": 390,
+        "page": 390,
+        "h": 345,
+        "content": 345,
+        "stage": 150.390625
+      }
+    },
+    {
+      "pref": "dark",
+      "width": 390,
+      "form": "summary",
+      "size": {
+        "width": 390,
+        "page": 390,
+        "h": 145,
+        "content": 145,
+        "stage": 62.4375
+      }
+    },
+    {
+      "pref": "dark",
+      "width": 1440,
+      "form": "standard",
+      "size": {
+        "width": 1440,
+        "page": 1440,
+        "h": 366,
+        "content": 366,
+        "stage": 178.953125
+      }
+    },
+    {
+      "pref": "dark",
+      "width": 1440,
+      "form": "summary",
+      "size": {
+        "width": 1440,
+        "page": 1440,
+        "h": 251,
+        "content": 251,
+        "stage": 62.4375
+      }
+    },
+    {
+      "pref": "system",
+      "width": 320,
+      "form": "standard",
+      "size": {
+        "width": 320,
+        "page": 320,
+        "h": 345,
+        "content": 345,
+        "stage": 150.390625
+      }
+    },
+    {
+      "pref": "system",
+      "width": 320,
+      "form": "summary",
+      "size": {
+        "width": 320,
+        "page": 320,
+        "h": 145,
+        "content": 145,
+        "stage": 62.4375
+      }
+    },
+    {
+      "pref": "system",
+      "width": 390,
+      "form": "standard",
+      "size": {
+        "width": 390,
+        "page": 390,
+        "h": 345,
+        "content": 345,
+        "stage": 150.390625
+      }
+    },
+    {
+      "pref": "system",
+      "width": 390,
+      "form": "summary",
+      "size": {
+        "width": 390,
+        "page": 390,
+        "h": 145,
+        "content": 145,
+        "stage": 62.4375
+      }
+    },
+    {
+      "pref": "system",
+      "width": 1440,
+      "form": "standard",
+      "size": {
+        "width": 1440,
+        "page": 1440,
+        "h": 366,
+        "content": 366,
+        "stage": 178.953125
+      }
+    },
+    {
+      "pref": "system",
+      "width": 1440,
+      "form": "summary",
+      "size": {
+        "width": 1440,
+        "page": 1440,
+        "h": 251,
+        "content": 251,
+        "stage": 62.4375
+      }
+    },
+    {
+      "height": 260,
+      "scene": "empty",
+      "size": {
+        "h": 345,
+        "scroll": 345
+      }
+    },
+    {
+      "height": 260,
+      "scene": "running",
+      "size": {
+        "h": 403,
+        "scroll": 403
+      }
+    },
+    {
+      "height": 260,
+      "scene": "failed",
+      "size": {
+        "h": 387,
+        "scroll": 387
+      }
+    },
+    {
+      "height": 260,
+      "scene": "partial",
+      "size": {
+        "h": 377,
+        "scroll": 377
+      }
+    },
+    {
+      "height": 330,
+      "scene": "empty",
+      "size": {
+        "h": 345,
+        "scroll": 345
+      }
+    },
+    {
+      "height": 330,
+      "scene": "running",
+      "size": {
+        "h": 403,
+        "scroll": 403
+      }
+    },
+    {
+      "height": 330,
+      "scene": "failed",
+      "size": {
+        "h": 387,
+        "scroll": 387
+      }
+    },
+    {
+      "height": 330,
+      "scene": "partial",
+      "size": {
+        "h": 377,
+        "scroll": 377
+      }
+    },
+    {
+      "id": "lazy-real-full-app-same-job-theme-in-place-stop-iframe-escape-focus"
+    },
+    {
+      "id": "completed-child-test-synchronizes-home-card-and-removes-iframe"
+    },
+    {
+      "id": "close-active-frame-keeps-job-and-home-resumes-without-resubmit"
+    }
+  ],
+  "errors": [],
+  "failure": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:5180/?external=present&tools=0&form=standard&scene=ready\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:5180/?external=present&tools=0&form=standard&scene=ready\", waiting until \"load\"\u001b[22m\n\n    at open (/config/.agentflow-workspaces/.agentflow-workspaces/quickstart-onu/579c-multi-lan/quickstart/scripts/ops/fastnet-square-iframe-review.cjs:9:88)\n    at async /config/.agentflow-workspaces/.agentflow-workspaces/quickstart-onu/579c-multi-lan/quickstart/scripts/ops/fastnet-square-iframe-review.cjs:29:11"
+}

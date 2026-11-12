@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "scope": "removed only the task-owned empty diagnostic begin; no measurements or latest snapshots removed",
+  "historyBefore": 4,
+  "historyAfter": 4,
+  "latestUnchanged": true,
+  "privateBackup": "/root/quickstart-backups/fastnet-square-20261110T040123Z/probe-cleanup-before.json"
+}

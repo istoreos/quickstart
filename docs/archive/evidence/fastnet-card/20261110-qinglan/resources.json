@@ -1,0 +1,15 @@
+{
+  "hostInitialGzipDelta": 20442,
+  "hostBudget": 20480,
+  "cardAssetsGzip": {
+    "chunk.5e62b45e.js": 2426,
+    "card.673f7cc9.js": 8052
+  },
+  "cardBudget": 8192,
+  "fullAppGzip": {
+    ".js": 67373,
+    ".css": 11062
+  },
+  "publicReactFilesInRuntime": false,
+  "completeFrontendOnlyAfterClick": true
+}

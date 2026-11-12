@@ -15,6 +15,7 @@ import (
 
 	"github.com/istoreos/quickstart/backend/models"
 	appcore "github.com/istoreos/quickstart/backend/modules/app/core"
+	"github.com/istoreos/quickstart/backend/modules/app/installjob"
 	appmetadata "github.com/istoreos/quickstart/backend/modules/app/metadata"
 	quickstartconfig "github.com/istoreos/quickstart/backend/modules/quickstart/config"
 	"github.com/istoreos/quickstart/backend/utils"
@@ -48,18 +49,48 @@ func AppInstallValue(ctx context.Context, req models.AppInstallRequest) (*models
 
 // 检查是否已安装插件
 func CheckAppIsInstalled(name string) (bool, error) {
-	var pathTemplate string
+	if name == "app-meta-fastnet" {
+		return packageInstalled(name, os.Stat)
+	}
+	// Keep legacy package checks unchanged outside the FastNet card flow.
+	pathTemplate := "/usr/lib/opkg/info/%v.control"
 	if canAccessPath("/etc/apk/repositories.d/distfeeds.list") {
 		pathTemplate = "/lib/apk/packages/%v.list"
-	} else {
-		pathTemplate = "/usr/lib/opkg/info/%v.control"
 	}
 	return canAccessPath(fmt.Sprintf(pathTemplate, name)), nil
+}
+func packageInstalled(name string, stat func(string) (os.FileInfo, error)) (bool, error) {
+	marker, err := stat("/etc/apk/repositories.d/distfeeds.list")
+	apk := err == nil && marker.Mode().IsRegular()
+	if err != nil && !os.IsNotExist(err) {
+		return false, err
+	}
+	template := "/usr/lib/opkg/info/%v.control"
+	if apk {
+		template = "/lib/apk/packages/%v.list"
+	}
+	info, err := stat(fmt.Sprintf(template, name))
+	if os.IsNotExist(err) {
+		return false, nil
+	}
+	if err != nil {
+		return false, err
+	}
+	if !info.Mode().IsRegular() {
+		return false, errors.New("invalid package record")
+	}
+	return true, nil
 }
 
 // 安装插件
 // is-opkg install name
+var appInstallJobs = installjob.Manager{Root: "/var/run/quickstart-installs"}
+
 func InstallApp(name string) (string, error) {
+	if name == "app-meta-fastnet" {
+		return appInstallJobs.Start(name)
+	}
+	// Preserve the existing installer behavior for unrelated applications.
 	go func() {
 		cmd := exec.Command("is-opkg", "install", name)
 		var out bytes.Buffer
@@ -67,8 +98,13 @@ func InstallApp(name string) (string, error) {
 		cmd.Stderr = &out
 		cmd.Run()
 	}()
-
 	return "installing", nil
+}
+func (appStore) InstallationState(ctx context.Context, name string) (string, error) {
+	if name != "app-meta-fastnet" {
+		return "", nil
+	}
+	return appInstallJobs.State(name)
 }
 
 func CheckAppIsRunning(name string) bool {

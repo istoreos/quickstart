@@ -1,0 +1,39 @@
+{
+  "status": "passed",
+  "card": {
+    "bytes": 609,
+    "gzip": 402,
+    "sha256": "35a8c57086ab30c1a8ab1995e970c6c450bd08791c7e7eafd97b76ffcef8b963",
+    "imports": [
+      "/luci-static/quickstart/card-runtime-v1.js"
+    ],
+    "vueBundled": false,
+    "routerPiniaEChartsFullWebBundled": false
+  },
+  "host": [
+    {
+      "path": "luci-static/quickstart/card-runtime-v1.js",
+      "bytes": 4763,
+      "gzip": 2086,
+      "sha256": "ce59fb31fd60c12180b25abcf6f206f678722941eaadd7a5770b4db884f2fde1"
+    },
+    {
+      "path": "luci-static/quickstart/index.js",
+      "bytes": 773137,
+      "gzip": 233207,
+      "sha256": "4df3c97334b24da1e46e9fdff325fdfc3d934f37579febc16d6f54e6526c04d4"
+    },
+    {
+      "path": "luci-static/quickstart/style.css",
+      "bytes": 562116,
+      "gzip": 70688,
+      "sha256": "36d6a797b2107aaaceca281cf4c3768ebc1d13dfc6f331c80738374a3315d87d"
+    },
+    {
+      "path": "luci-static/quickstart/vendor.js",
+      "bytes": 789757,
+      "gzip": 276611,
+      "sha256": "aea631c24e3faa3d8804cb8a1b56f19ee591f2c68bd79420986ebe328c1a3a6f"
+    }
+  ]
+}

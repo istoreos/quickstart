@@ -1,0 +1,58 @@
+{
+  "status": "failed",
+  "checks": [
+    "actual FastNet public-port/token change preserves authenticated LuCI card access and exact measurements",
+    "actual old core with new LuCI degrades read-only without losing measurements; restoring new core recovers the private socket",
+    "actual old LuCI registration rollback preserves the saved external-card position and form; new LuCI restoration rediscovers it",
+    "actual original Quickstart backend treats layout v4 as future, rejects overwrite, and new host resumes the identical saved bytes",
+    "real HTTPS authenticated LuCI homepage loads with a private lab session"
+  ],
+  "latest": {
+    "runId": "run_1d00fea1bf3278e3dbce55e6d9b18cb1",
+    "measuredAt": "2026-11-09T17:52:05.048582148Z",
+    "download": {
+      "status": "ok",
+      "value": 843628068,
+      "measuredAt": "2026-11-09T17:51:53.04825813Z",
+      "error": null,
+      "runId": "run_1d00fea1bf3278e3dbce55e6d9b18cb1"
+    },
+    "upload": {
+      "status": "ok",
+      "value": 60554806,
+      "measuredAt": "2026-11-09T17:52:05.048582148Z",
+      "error": null,
+      "runId": "run_1d00fea1bf3278e3dbce55e6d9b18cb1"
+    },
+    "nat": {
+      "status": "ok",
+      "value": "NAT3 (Port Restricted Cone)",
+      "measuredAt": "2026-11-09T17:52:11.344374773Z",
+      "error": null,
+      "runId": "run_1d00fea1bf3278e3dbce55e6d9b18cb1"
+    },
+    "ipv6": {
+      "status": "unavailable",
+      "value": null,
+      "measuredAt": "2026-11-09T17:52:12.764166532Z",
+      "error": null,
+      "runId": "run_1d00fea1bf3278e3dbce55e6d9b18cb1"
+    },
+    "bandwidth": {
+      "runId": "run_1d00fea1bf3278e3dbce55e6d9b18cb1",
+      "measuredAt": "2026-11-09T17:52:05.048582148Z",
+      "downloadBps": 843628068,
+      "uploadBps": 60554806
+    }
+  },
+  "interruptedTaskId": "run_8d3fb2c7a6767b4f539c5d2487f8603b",
+  "installationBeforeReboot": {
+    "schemaVersion": 1,
+    "state": "done",
+    "exitCode": 0,
+    "attempt": 1
+  },
+  "bootIdBefore": "d3bb9284-a66e-4e1b-92ca-80ef85e201ac",
+  "bootIdAfter": "4df71cba-2769-4f59-a697-4e22420155f6",
+  "failure": "apiRequestContext.get: connect ECONNREFUSED 192.168.30.7:10000\nCall log:\n\u001b[2m  - → GET http://192.168.30.7:10000/cgi-bin/luci/admin/services/fastnet/card/summary\u001b[22m\n\u001b[2m    - user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/140.0.7339.16 Safari/537.36\u001b[22m\n\u001b[2m    - accept: */*\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n\u001b[2m    - cookie: sysauth_http=<redacted>\u001b[22m\n"
+}

@@ -1,0 +1,9 @@
+{
+  "cardEntry": "/luci-static/fastnet/quickstart/card.2962210c.js",
+  "cardSha256": "8daa1202bbe2f29daea78358c06b22b2cef7924becbc82d8f35847828f971809",
+  "cardRawBytes": 18312,
+  "cardGzipBytes": 5942,
+  "sdkSha256": "74adb16e5710e4206768873ef583cf8410fb2a970ab7b8df28bb177275c02d9c",
+  "previewAndProductionSDKByteIdentical": true,
+  "hostInitialGzipDeltaBytes": 19610
+}

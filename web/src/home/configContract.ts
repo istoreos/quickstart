@@ -1,10 +1,11 @@
 import type {OrderedRow} from './layout/orderedLayout'
 import type {WidgetPreferences} from './layout/widgetPresentation'
+import {externalId} from './cards/contract'
 import {widgetDefinitions} from './layout/rowLayout'
 import {preferenceIssue,resolvePresentation} from './layout/widgetPresentation'
 import {validate} from './layout/slotLayout'
 
-export type LayoutConfig={schemaVersion:3;rows:OrderedRow[];widgetPreferences:WidgetPreferences}
+export type LayoutConfig={schemaVersion:4;rows:OrderedRow[];widgetPreferences:WidgetPreferences}
 export type CustomLink={id:string;name:string;url:string;glyph:string}
 export type LauncherConfig={schemaVersion:1;favorites:string[];links:CustomLink[]}
 export type ConfigDomain='layout'|'launcher'
@@ -25,14 +26,16 @@ const linkIcons=['globe','folder','layers','network','shield','download','termin
 export function configValue(domain:ConfigDomain,input:unknown):ConfigValue{
  const raw:any=input
  if(!raw||typeof raw!=='object'||!Number.isInteger(raw.schemaVersion))fail()
- if(raw.schemaVersion>(domain==='layout'?3:1))throw new HomeConfigError('future')
+ if(raw.schemaVersion>(domain==='layout'?4:1))throw new HomeConfigError('future')
  if(new TextEncoder().encode(JSON.stringify(raw)).length>MAX_CONFIG_BYTES)fail()
  if(domain==='layout'){
   object(raw,['schemaVersion','rows','widgetPreferences'])
-  if(raw.schemaVersion!==3||!Array.isArray(raw.rows)||raw.rows.length>32)fail()
+  if(![3,4].includes(raw.schemaVersion)||!Array.isArray(raw.rows)||raw.rows.length>32)fail()
   const ids=widgetDefinitions.map(w=>w.id)
-  object(raw.widgetPreferences,ids)
-  for(const id of ids){const p=raw.widgetPreferences[id];object(p,['mode','iconRows','ruleVersion']);if(preferenceIssue(id,p)||!Number.isInteger(p.iconRows)||!Number.isInteger(p.ruleVersion))fail()}
+  const external=Object.keys(raw.widgetPreferences||{}).filter(id=>externalId.test(id))
+  if(external.length>32||raw.schemaVersion===3&&external.length)fail()
+  object(raw.widgetPreferences,[...ids,...external])
+  for(const id of [...ids,...external] as import('./layout/rowLayout').WidgetId[]){const p=raw.widgetPreferences[id];object(p,['mode','iconRows','ruleVersion']);if(preferenceIssue(id,p)||!Number.isInteger(p.iconRows)||!Number.isInteger(p.ruleVersion))fail()}
   const seen=new Set<string>()
   for(const row of raw.rows){
    object(row,['id','template','height','heightMode','minHeight','columns'],['id','template','height','heightMode','columns'])
@@ -43,7 +46,7 @@ export function configValue(domain:ConfigDomain,input:unknown):ConfigValue{
     if(!finite(column.weight,.01,100)||!finite(column.split,.01,99.99)||column.upperShare!==undefined&&!finite(column.upperShare,.01,99.99)||!Array.isArray(column.cards)||column.cards.length<1||column.cards.length>2)fail()
     for(const id of column.cards){
      if(id===null)continue
-     if(!ids.includes(id))fail()
+     if(!ids.includes(id)&&!(raw.schemaVersion===4&&external.includes(id)))fail()
      if(column.cards.length===2&&resolvePresentation(id,raw.widgetPreferences[id],{width:1000,height:100000,role:'stacked',favoriteCount:8,natural:true}).issue)fail()
     }
    }
@@ -62,5 +65,7 @@ export function configValue(domain:ConfigDomain,input:unknown):ConfigValue{
   const pins=new Set<string>()
   for(const id of raw.favorites){if(typeof id!=='string'||pins.has(id)||!(safeId.test(id)||linkId.test(id)&&seen.has(id)))fail();pins.add(id)}
  }
- return JSON.parse(JSON.stringify(raw))
+ const copy=JSON.parse(JSON.stringify(raw))
+ if(domain==='layout')copy.schemaVersion=4
+ return copy
 }

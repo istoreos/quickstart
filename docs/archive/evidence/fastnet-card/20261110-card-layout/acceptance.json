@@ -1,0 +1,19 @@
+{
+  "status": "passed",
+  "browserChecks": 18,
+  "cardModelTests": 11,
+  "packageContractTests": 3,
+  "liveHistoryCount": 32,
+  "deployed": true,
+  "host": "root@192.168.30.7",
+  "cardEntry": "/luci-static/fastnet/quickstart/card.182c88e6.js",
+  "coreRestarted": false,
+  "sourceCommitted": false,
+  "published": false,
+  "publicationFollowup": {
+    "version": "0.8.8",
+    "sourceCommitted": true,
+    "published": true,
+    "record": "../20261110-release-0.8.8/publication.json"
+  }
+}

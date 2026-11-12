@@ -60,7 +60,7 @@ func (module *DevicePolicyModule) Get(ctx context.Context, deviceID string) (*mo
 	if err != nil {
 		return devicePolicyFailure("validation_failed", err.Error()), nil
 	}
-	return devicePolicySuccess(policy, false), nil
+	return devicePolicySuccess(policy, false, ctx), nil
 }
 
 func (module *DevicePolicyModule) ListRules(ctx context.Context) (*models.DevicePolicyRulesResponse, error) {
@@ -86,7 +86,7 @@ func (module *DevicePolicyModule) Plan(ctx context.Context, request *models.Devi
 		result.Error = &models.DevicePolicyError{Code: "validation_failed", Message: err.Error()}
 		return &models.DeviceRestrictionPlanResponse{Result: result}, nil
 	}
-	result.Version = devicePolicyVersion(current)
+	result.Version = bindLANVersion(ctx, devicePolicyVersion(current))
 	result.RollbackPoint = result.Version
 	if capability := current.Capabilities[request.Kind]; capability == nil || capability.State != "available" {
 		code, reason := "validation_failed", "this policy is unavailable"
@@ -124,7 +124,7 @@ func (module *DevicePolicyModule) Plan(ctx context.Context, request *models.Devi
 		result.Error = &models.DevicePolicyError{Code: "validation_failed", Message: "address reservations are planned through DeviceNetworkPolicy"}
 		return &models.DeviceRestrictionPlanResponse{Result: result}, nil
 	}
-	if !devicePolicyNoOp(request, current) {
+	if !module.isNoOp(ctx, request, current) {
 		result.Changes = append(result.Changes, &models.PolicyPlanChange{Kind: request.Kind, Description: "change device usage restriction"})
 	}
 	result.CanApply = true
@@ -132,6 +132,13 @@ func (module *DevicePolicyModule) Plan(ctx context.Context, request *models.Devi
 }
 
 func (module *DevicePolicyModule) Apply(ctx context.Context, request *models.DevicePolicyApplyRequest) (*models.DevicePolicyResponse, error) {
+	locked, release, lockErr := lockLANWrite(ctx)
+	if lockErr != nil {
+		return nil, lockErr
+	}
+	defer release()
+	ctx = locked
+
 	if module == nil || module.store == nil {
 		return nil, errors.New("device policy module is unavailable")
 	}
@@ -148,7 +155,7 @@ func (module *DevicePolicyModule) Apply(ctx context.Context, request *models.Dev
 	if err != nil {
 		return attachDevicePolicyTransaction(devicePolicyFailure("validation_failed", err.Error()), rejectedTaskTransaction(devicePolicyTask(request), request.IdempotencyKey)), nil
 	}
-	currentVersion := devicePolicyVersion(current)
+	currentVersion := bindLANVersion(ctx, devicePolicyVersion(current))
 	if request.ExpectedVersion != "" && request.ExpectedVersion != currentVersion {
 		return attachDevicePolicyTransaction(devicePolicyFailure("conflict", "device restrictions changed; plan again"), rejectedTaskTransaction(devicePolicyTask(request), request.IdempotencyKey)), nil
 	}
@@ -188,48 +195,70 @@ func (module *DevicePolicyModule) Apply(ctx context.Context, request *models.Dev
 			return attachDevicePolicyTransaction(devicePolicyFailure("apply_failed", readErr.Error()), transaction), nil
 		}
 		if transaction.Status == "committed" || transaction.Status == "unchanged" {
-			return attachDevicePolicyTransaction(devicePolicySuccess(policy, false), transaction), nil
+			return attachDevicePolicyTransaction(devicePolicySuccess(policy, false, ctx), transaction), nil
 		}
 		return attachDevicePolicyTransaction(devicePolicyFailure(transaction.Status, "previous transaction requires review"), transaction), nil
 	}
-	if devicePolicyNoOp(request, current) {
-		_ = module.transactions.Advance(ctx, transaction, "verify", "unchanged", "")
-		return attachDevicePolicyTransaction(devicePolicySuccess(current, false), transaction), nil
+	if module.isNoOp(ctx, request, current) {
+		if txErr := advanceTaskTransaction(ctx, module.transactions, transaction, "verify", "unchanged", ""); txErr != nil {
+			return attachDevicePolicyTransaction(devicePolicyFailure(txErr.Code, txErr.Message), transaction), nil
+		}
+		return attachDevicePolicyTransaction(devicePolicySuccess(current, false, ctx), transaction), nil
 	}
 
-	_ = module.transactions.Advance(ctx, transaction, "snapshot", "in_progress", "")
+	if txErr := advanceTaskTransaction(ctx, module.transactions, transaction, "snapshot", "in_progress", ""); txErr != nil {
+		return attachDevicePolicyTransaction(devicePolicyFailure(txErr.Code, txErr.Message), transaction), nil
+	}
 	backup, err := module.store.Backup(ctx, request.Kind, current)
 	if err != nil {
-		_ = module.transactions.Advance(ctx, transaction, "snapshot", "failed", "retry")
+		if txErr := advanceTaskTransaction(ctx, module.transactions, transaction, "snapshot", "failed", "retry"); txErr != nil {
+			return attachDevicePolicyTransaction(devicePolicyFailure(txErr.Code, txErr.Message), transaction), nil
+		}
 		return attachDevicePolicyTransaction(devicePolicyFailure("apply_failed", "could not create a rollback snapshot"), transaction), nil
 	}
-	_ = module.transactions.Advance(ctx, transaction, "apply", "in_progress", "restore_task_snapshot")
+	if txErr := advanceTaskTransaction(ctx, module.transactions, transaction, "apply", "in_progress", "restore_task_snapshot"); txErr != nil {
+		return attachDevicePolicyTransaction(devicePolicyFailure(txErr.Code, txErr.Message), transaction), nil
+	}
 	if err := module.store.Apply(ctx, request, current); err != nil {
 		restoreErr := module.store.Restore(ctx, backup)
 		if restoreErr != nil {
-			_ = module.transactions.Advance(ctx, transaction, "recover", "recovery_required", "restore_task_snapshot")
+			if txErr := advanceTaskTransaction(ctx, module.transactions, transaction, "recover", "recovery_required", "restore_task_snapshot"); txErr != nil {
+				return attachDevicePolicyTransaction(devicePolicyFailure(txErr.Code, txErr.Message), transaction), nil
+			}
 			return attachDevicePolicyTransaction(devicePolicyFailure("recovery_required", "policy apply and rollback both failed"), transaction), nil
 		}
-		_ = module.transactions.Advance(ctx, transaction, "rollback", "rolled_back", "retry")
+		if txErr := advanceTaskTransaction(ctx, module.transactions, transaction, "rollback", "rolled_back", "retry"); txErr != nil {
+			return attachDevicePolicyTransaction(devicePolicyFailure(txErr.Code, txErr.Message), transaction), nil
+		}
 		return attachDevicePolicyTransaction(devicePolicyFailure("rolled_back", "policy apply failed; original configuration was restored"), transaction), nil
 	}
-	_ = module.transactions.Advance(ctx, transaction, "verify", "in_progress", "restore_task_snapshot")
+	if txErr := advanceTaskTransaction(ctx, module.transactions, transaction, "verify", "in_progress", "restore_task_snapshot"); txErr != nil {
+		return attachDevicePolicyTransaction(devicePolicyFailure(txErr.Code, txErr.Message), transaction), nil
+	}
 	updated, err := module.store.Get(ctx, request.DeviceID)
 	if err != nil {
 		restoreErr := module.store.Restore(ctx, backup)
 		if restoreErr != nil {
-			_ = module.transactions.Advance(ctx, transaction, "recover", "recovery_required", "restore_task_snapshot")
+			if txErr := advanceTaskTransaction(ctx, module.transactions, transaction, "recover", "recovery_required", "restore_task_snapshot"); txErr != nil {
+				return attachDevicePolicyTransaction(devicePolicyFailure(txErr.Code, txErr.Message), transaction), nil
+			}
 			return attachDevicePolicyTransaction(devicePolicyFailure("recovery_required", "verification and rollback both failed"), transaction), nil
 		}
-		_ = module.transactions.Advance(ctx, transaction, "rollback", "rolled_back", "retry")
+		if txErr := advanceTaskTransaction(ctx, module.transactions, transaction, "rollback", "rolled_back", "retry"); txErr != nil {
+			return attachDevicePolicyTransaction(devicePolicyFailure(txErr.Code, txErr.Message), transaction), nil
+		}
 		return attachDevicePolicyTransaction(devicePolicyFailure("rolled_back", "verification failed; original configuration was restored"), transaction), nil
 	}
-	_ = module.transactions.Advance(ctx, transaction, "verify", "committed", "")
-	return attachDevicePolicyTransaction(devicePolicySuccess(updated, true), transaction), nil
+	if txErr := advanceTaskTransaction(ctx, module.transactions, transaction, "verify", "committed", ""); txErr != nil {
+		return attachDevicePolicyTransaction(devicePolicyFailure(txErr.Code, txErr.Message), transaction), nil
+	}
+	return attachDevicePolicyTransaction(devicePolicySuccess(updated, true, ctx), transaction), nil
 }
 
 func rateLimitReasonMessage(reason string) string {
 	switch reason {
+	case "enforcement_path_unverified":
+		return "当前无法确认双向流量经过本机，请在实际执行上网的网关设置限制"
 	case "address_reservation_required":
 		return "请先为设备预留当前 IPv4 地址，再启用限速"
 	case "execution_node_unavailable":
@@ -314,9 +343,12 @@ func devicePolicyNoOp(request *models.DevicePolicyApplyRequest, current *models.
 	return false
 }
 
-func devicePolicySuccess(policy *models.DevicePolicy, changed bool) *models.DevicePolicyResponse {
+func devicePolicySuccess(policy *models.DevicePolicy, changed bool, contexts ...context.Context) *models.DevicePolicyResponse {
 	if policy != nil {
 		policy.Version = devicePolicyVersion(policy)
+		if len(contexts) > 0 {
+			policy.Version = bindLANVersion(contexts[0], policy.Version)
+		}
 	}
 	return &models.DevicePolicyResponse{Result: &models.DevicePolicyResult{Policy: policy, Changed: changed}}
 }
@@ -358,4 +390,13 @@ func devicePolicyFailure(code, message string) *models.DevicePolicyResponse {
 		JSONResponse: models.JSONResponse{Success: -1, Scope: "device_policy", Error: message},
 		Result:       &models.DevicePolicyResult{Error: &models.DevicePolicyError{Code: code, Message: message}},
 	}
+}
+
+func (module *DevicePolicyModule) isNoOp(ctx context.Context, request *models.DevicePolicyApplyRequest, current *models.DevicePolicy) bool {
+	// Effective access combines independent user and quota rules. Comparing only
+	// that combined boolean could discard a new explicit user pause.
+	if _, system := module.store.(*systemDevicePolicyStore); system && request.Kind == "access" && accessOwner(ctx) == "" {
+		return false
+	}
+	return devicePolicyNoOp(request, current)
 }

@@ -109,7 +109,7 @@ func TestClearNetworkRuleRoutePreservesAddressReservation(t *testing.T) {
 	if err := os.WriteFile(filepath.Join(directory, "dhcp"), []byte(config), 0600); err != nil {
 		t.Fatal(err)
 	}
-	if err := clearNetworkRuleRouteAt(directory, "AA:BB:CC:DD:EE:01"); err != nil {
+	if err := clearNetworkRuleRouteAt(context.Background(), directory, "AA:BB:CC:DD:EE:01"); err != nil {
 		t.Fatal(err)
 	}
 	tree := uci.NewTree(directory)
@@ -133,7 +133,7 @@ func TestClearNetworkRuleStaticPreservesInternetRoute(t *testing.T) {
 	if err := os.WriteFile(filepath.Join(directory, "dhcp"), []byte(config), 0600); err != nil {
 		t.Fatal(err)
 	}
-	if err := clearNetworkRuleStaticAt(directory, "AA:BB:CC:DD:EE:01"); err != nil {
+	if err := clearNetworkRuleStaticAt(context.Background(), directory, "AA:BB:CC:DD:EE:01"); err != nil {
 		t.Fatal(err)
 	}
 	tree := uci.NewTree(directory)

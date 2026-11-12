@@ -1,4 +1,39 @@
 definitions:
+  LANScope:
+    type: object
+    required: [networkId, displayName, device, aliases, state, ipv4Prefixes, ipv6Prefixes, firewallZones, dhcpBindings, version]
+    properties:
+      networkId: { type: string }
+      displayName: { type: string }
+      device: { type: string }
+      aliases: { type: array, items: { type: string } }
+      state: { type: string, enum: [up, down, unknown] }
+      ipv4Prefixes: { type: array, items: { type: string } }
+      ipv6Prefixes: { type: array, items: { type: string } }
+      firewallZones: { type: array, items: { type: string } }
+      dhcpBindings:
+        type: array
+        items:
+          type: object
+          required: [section, instance, leaseFile]
+          properties:
+            section: { type: string }
+            instance: { type: string }
+            runtimeInstance: { type: string }
+            leaseFile: { type: string }
+      version: { type: string }
+      readOnlyReason: { type: string }
+  LANNetworksResponse:
+    type: object
+    allOf: [{ $ref: "common.yaml#/definitions/JsonResponse" }]
+    properties:
+      result:
+        type: object
+        required: [networks, scopeVersion]
+        properties:
+          networks: { type: array, items: { $ref: "#/definitions/LANScope" } }
+          defaultNetwork: { type: string }
+          scopeVersion: { type: integer, enum: [1] }
   TaskTransaction:
     type: object
     required: [task, stage, status]
@@ -389,6 +424,8 @@ definitions:
         type: string
       primary:
         type: boolean
+      zone:
+        type: string
   DeviceInventoryAddresses:
     type: object
     properties:
@@ -447,6 +484,11 @@ definitions:
     type: object
     required: [deviceId, online, presenceState, lastSeenAt, mac, identity, addresses, connection, classification, icon]
     properties:
+      networkId:
+        type: string
+      membership:
+        type: string
+        enum: [observed, historical, manual, unconfirmed]
       deviceId:
         type: string
       displayName:

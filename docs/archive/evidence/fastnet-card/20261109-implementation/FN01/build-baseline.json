@@ -1,0 +1,234 @@
+{
+  "command": "cd web && /var/cache/build-cache/run.sh -- node node_modules/vite/bin/vite.js build --outDir \"$BUILD_CACHE_WORK_DIR/fastnet-baseline\"",
+  "status": "passed",
+  "files": [
+    {
+      "path": "index.html",
+      "bytes": 515,
+      "gzip": 304,
+      "sha256": "fceb89a756b568eb829d877190fd7df7a7138f7dc10a0394b256e77cd4928d7c"
+    },
+    {
+      "path": "luci-static/quickstart/device-icons/access-point.webp",
+      "bytes": 4230,
+      "gzip": 4253,
+      "sha256": "14b2b7ab688d6245a26db5046f3b0ca86cd44c60fdbd36d55be5feac7a79d94f"
+    },
+    {
+      "path": "luci-static/quickstart/device-icons/air-conditioner.webp",
+      "bytes": 6092,
+      "gzip": 6115,
+      "sha256": "c0e54cc7ad393c841305ef733aebc84e558ad42c2f123f66f9c0ff8e3f31f565"
+    },
+    {
+      "path": "luci-static/quickstart/device-icons/camera.webp",
+      "bytes": 6400,
+      "gzip": 6423,
+      "sha256": "672faae9d2402c13da85b48186d1e4200542ebab8e9daf68b7c0ae26fe622fc6"
+    },
+    {
+      "path": "luci-static/quickstart/device-icons/computer.webp",
+      "bytes": 2068,
+      "gzip": 2091,
+      "sha256": "82bb257156dc0dc2d457913cf3ab937d6c89509f99221864794f4c9fa7188189"
+    },
+    {
+      "path": "luci-static/quickstart/device-icons/desktop.webp",
+      "bytes": 8140,
+      "gzip": 8163,
+      "sha256": "036f4d5390606a91b53d2e12afaa2574107da672e6b31088d3acd11f70d161a5"
+    },
+    {
+      "path": "luci-static/quickstart/device-icons/door-lock.webp",
+      "bytes": 6568,
+      "gzip": 6591,
+      "sha256": "c42d86fd75aeb665f9066ade02e5cad7946c4ef2267cc13348e558fc532e4473"
+    },
+    {
+      "path": "luci-static/quickstart/device-icons/e-reader.webp",
+      "bytes": 7696,
+      "gzip": 7719,
+      "sha256": "b4e6e7f9a9a1f8add0bb36d944680e14c0b52f34cdf859178103d5a5d76329e6"
+    },
+    {
+      "path": "luci-static/quickstart/device-icons/game-console.webp",
+      "bytes": 6856,
+      "gzip": 6879,
+      "sha256": "4206a5805bf63af3fd2dd3b43f0021de658ade8d8cef89f0014a71f108cf5293"
+    },
+    {
+      "path": "luci-static/quickstart/device-icons/gaming.webp",
+      "bytes": 5996,
+      "gzip": 6019,
+      "sha256": "085dd683126431571e8040ebaf9e438c14b495bafb3388656d2fdbd4f1d76e48"
+    },
+    {
+      "path": "luci-static/quickstart/device-icons/handheld-game.webp",
+      "bytes": 6626,
+      "gzip": 6649,
+      "sha256": "e60ed0dbda76dbfd9729d881bc7c56c4003baa02da71e3860abbeb47a61d4996"
+    },
+    {
+      "path": "luci-static/quickstart/device-icons/home-server.webp",
+      "bytes": 5648,
+      "gzip": 5671,
+      "sha256": "65890c82967d579e801efdb30de338408a96ef956411a944ab74f97a06b126f9"
+    },
+    {
+      "path": "luci-static/quickstart/device-icons/laptop.webp",
+      "bytes": 6140,
+      "gzip": 6163,
+      "sha256": "b5bd95e817420998d8134a5dca82d00800284640144f48931c6e744d37a2d0fe"
+    },
+    {
+      "path": "luci-static/quickstart/device-icons/manifest.json",
+      "bytes": 3665,
+      "gzip": 899,
+      "sha256": "393f9be7ca9252a94646a8111814df2a9e07690cd5777392fab85053b36e7309"
+    },
+    {
+      "path": "luci-static/quickstart/device-icons/network-bridge.webp",
+      "bytes": 11714,
+      "gzip": 11737,
+      "sha256": "d5fd123d4e3792fd6f4cfe3b2f319022bf120092b7d577786d86e9fcd39d12a2"
+    },
+    {
+      "path": "luci-static/quickstart/device-icons/network-switch.webp",
+      "bytes": 5644,
+      "gzip": 5649,
+      "sha256": "ce53010376bd3ed847bff478c03eaf032368f430611d6a3403ae7dbd0be0c8eb"
+    },
+    {
+      "path": "luci-static/quickstart/device-icons/network.webp",
+      "bytes": 3876,
+      "gzip": 3899,
+      "sha256": "99ad870128e25713c73276064969629d0f7dd637946e0087ebabab2fc69493e1"
+    },
+    {
+      "path": "luci-static/quickstart/device-icons/phone.webp",
+      "bytes": 3924,
+      "gzip": 3947,
+      "sha256": "15639ef366a0602dc90aef6df68ce3cc7a2f403c52dde4c9d1510e15cd6842ea"
+    },
+    {
+      "path": "luci-static/quickstart/device-icons/printer.webp",
+      "bytes": 3924,
+      "gzip": 3947,
+      "sha256": "98963de59f526c38eea9861d4276e4a67a7377bc6c209de18ee248e3dcdcb1eb"
+    },
+    {
+      "path": "luci-static/quickstart/device-icons/projector.webp",
+      "bytes": 5658,
+      "gzip": 5681,
+      "sha256": "df70cb8ce47f9d3c19d9cfa71b940e2c33c723786162aa40ab5a49842ff1e212"
+    },
+    {
+      "path": "luci-static/quickstart/device-icons/robot-vacuum.webp",
+      "bytes": 8206,
+      "gzip": 8229,
+      "sha256": "818178d38f30d54923eb134e992182a4105deb39b4bf2aca0710ffde8f9adf7e"
+    },
+    {
+      "path": "luci-static/quickstart/device-icons/sensor.webp",
+      "bytes": 6900,
+      "gzip": 6923,
+      "sha256": "e222377ea4916504d49974fa87d3b2e58145d9f81edb6df07e8e93522a2fd3c3"
+    },
+    {
+      "path": "luci-static/quickstart/device-icons/set-top-box.webp",
+      "bytes": 4060,
+      "gzip": 4083,
+      "sha256": "8712b0ad0d1c6e3a371e824735854eff92f756db82e9d90ffdd88cf5edcc3da4"
+    },
+    {
+      "path": "luci-static/quickstart/device-icons/smart-bulb.webp",
+      "bytes": 5950,
+      "gzip": 5973,
+      "sha256": "82f8e187cc1a643a75f656c24cd18aa9c21290b9332ccfcdf9fb7638ce7bbf94"
+    },
+    {
+      "path": "luci-static/quickstart/device-icons/smart-home.webp",
+      "bytes": 3984,
+      "gzip": 4007,
+      "sha256": "ec1694171dfdeede9bd5d2f8f075a6a8fed00a2e877ccca25d3edf3ab4288c23"
+    },
+    {
+      "path": "luci-static/quickstart/device-icons/smart-speaker.webp",
+      "bytes": 11188,
+      "gzip": 11211,
+      "sha256": "a501cc7ea35f3660af0248b57773272c673959b8574689a9d32e3116ac8987ce"
+    },
+    {
+      "path": "luci-static/quickstart/device-icons/storage.webp",
+      "bytes": 4990,
+      "gzip": 5013,
+      "sha256": "797b4c4ebe880dfddd8c94f98ee2d13a910f9dbd6787ea690cddeec49a3a0cf5"
+    },
+    {
+      "path": "luci-static/quickstart/device-icons/tablet.webp",
+      "bytes": 1976,
+      "gzip": 1999,
+      "sha256": "557b1d381a1d02809e7e64a12f7f9aa55a5fa888539a0d2a3769b08bfba3fc06"
+    },
+    {
+      "path": "luci-static/quickstart/device-icons/thermostat.webp",
+      "bytes": 5730,
+      "gzip": 5753,
+      "sha256": "34966b0ea77c04ae05cccbe1af11bd5cf93e8ccf9aa538f120fba4d3be7df02d"
+    },
+    {
+      "path": "luci-static/quickstart/device-icons/tv.webp",
+      "bytes": 3020,
+      "gzip": 3043,
+      "sha256": "79077d3a0ff8dc84acbd90694833332b42e19f5793fb555f370bf849a201b2bd"
+    },
+    {
+      "path": "luci-static/quickstart/device-icons/unknown.webp",
+      "bytes": 5560,
+      "gzip": 5583,
+      "sha256": "586f82007312632c62a888778f24e7283430db40e86d5e60ed7595c264fb1813"
+    },
+    {
+      "path": "luci-static/quickstart/device-icons/wearable.webp",
+      "bytes": 7032,
+      "gzip": 7055,
+      "sha256": "4da8efb8ec12fd9113569a8fbfa39c78c8f2ada9beec29d783057e07878be319"
+    },
+    {
+      "path": "luci-static/quickstart/i18n/en.json",
+      "bytes": 90424,
+      "gzip": 32610,
+      "sha256": "c2ffff160210d94c07799b9c24b2e6f4be56e8336150204cae72a342395fc00f"
+    },
+    {
+      "path": "luci-static/quickstart/i18n/zh-cn.json",
+      "bytes": 12,
+      "gzip": 32,
+      "sha256": "799a23b2c098bf689311a3cb54dead69d472234861cc84c1ecb2f116f5bea1f3"
+    },
+    {
+      "path": "luci-static/quickstart/index.js",
+      "bytes": 773395,
+      "gzip": 233310,
+      "sha256": "be7c070409c060a3004c270b65d470bc1f7842cbe066bd372f7a8dc372c78cb3"
+    },
+    {
+      "path": "luci-static/quickstart/style.css",
+      "bytes": 561634,
+      "gzip": 70556,
+      "sha256": "4b3a51ac4eb1d0ed25cba2a66aab48f2817e68c369c8cc710681eaff8392c73c"
+    },
+    {
+      "path": "luci-static/quickstart/vendor.js",
+      "bytes": 765406,
+      "gzip": 267404,
+      "sha256": "a8aacd35063e93bcac90e1b1a730a29f209eeb96a7b2a51f3bedff06b91e984e"
+    },
+    {
+      "path": "mock/nas_disk.json",
+      "bytes": 17697,
+      "gzip": 1319,
+      "sha256": "51b0877c1b8acee6a1cfffc19a94ae25e97b593d1c384bce6ee6240106233721"
+    }
+  ]
+}

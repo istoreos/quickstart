@@ -1,20 +1,21 @@
+import {externalId} from '../cards/contract'
 import {widgetDefinitions,type WidgetId} from './rowLayout'
 import {clone,naturalRows,type OrderedRow} from './orderedLayout'
 import {validate,type LayoutResult} from './slotLayout'
 import {sizingIssue} from './rowSizing'
 import {defaultPreferences,preferenceIssue,presentationHeight,definition,resolvePresentation,type WidgetPreferences} from './widgetPresentation'
-export type HomeDocument={schemaVersion:3;revision:number;rows:OrderedRow[];widgetPreferences:WidgetPreferences}
+export type HomeDocument={schemaVersion:4;revision:number;rows:OrderedRow[];widgetPreferences:WidgetPreferences}
 export type LayoutContext={width:number;favoriteCount:number;favoritesKey:string}
 export type DisplayPlan={status:'ready'|'needs-confirmation'|'blocked';issue:string;baseRevision:number;baseFingerprint:string;contextKey:string;next:HomeDocument;adjustments:Array<{row:string;from:number;to:number}>;hidden:WidgetId[];changed:boolean}
-export const documentOf=(rows:OrderedRow[],prefs=defaultPreferences(),revision=0):HomeDocument=>({schemaVersion:3,revision,rows:naturalRows(rows),widgetPreferences:Object.fromEntries(Object.entries(prefs).map(([id,p])=>[id,{...clone(p),ruleVersion:p.ruleVersion??2}])) as WidgetPreferences})
+export const documentOf=(rows:OrderedRow[],prefs=defaultPreferences(),revision=0):HomeDocument=>({schemaVersion:4,revision,rows:naturalRows(rows),widgetPreferences:Object.fromEntries(Object.entries(prefs).map(([id,p])=>[id,{...clone(p),ruleVersion:p.ruleVersion??2}])) as WidgetPreferences})
 export function migrateDocument(input:unknown):{document:HomeDocument|null;issues:string[];original:unknown}{
  const original=input,issues:string[]=[]
  try{
   const raw:any=Array.isArray(input)?{rows:input}:input
-  if(!raw||raw.schemaVersion!==undefined&&![1,2,3].includes(raw.schemaVersion))throw Error('schema')
+  if(!raw||raw.schemaVersion!==undefined&&![1,2,3,4].includes(raw.schemaVersion))throw Error('schema')
   if(!Array.isArray(raw.rows)||raw.revision!==undefined&&(!Number.isSafeInteger(raw.revision)||raw.revision<0))throw Error('document')
-  const ids=widgetDefinitions.map(w=>w.id),prefs=defaultPreferences(raw.schemaVersion===3?2:raw.schemaVersion===2?1:0)
-  if(raw.widgetPreferences){if(typeof raw.widgetPreferences!=='object'||Array.isArray(raw.widgetPreferences))throw Error('preference');for(const [key,value]of Object.entries(raw.widgetPreferences)){if(!ids.includes(key as WidgetId)||preferenceIssue(key as WidgetId,value as any)||Object.keys(value as object).some(k=>!['mode','iconRows','ruleVersion'].includes(k)))throw Error('preference');prefs[key as WidgetId]={...clone(value as any),ruleVersion:raw.schemaVersion===3?((value as any).ruleVersion??2):raw.schemaVersion===2?1:0}}}
+  const ids=[...widgetDefinitions.map(w=>w.id),...Object.keys(raw.widgetPreferences||{}).filter(id=>raw.schemaVersion===4&&externalId.test(id))] as WidgetId[],prefs=defaultPreferences(raw.schemaVersion>=3?2:raw.schemaVersion===2?1:0)
+  if(raw.widgetPreferences){if(typeof raw.widgetPreferences!=='object'||Array.isArray(raw.widgetPreferences))throw Error('preference');for(const [key,value]of Object.entries(raw.widgetPreferences)){if(!ids.includes(key as WidgetId)||preferenceIssue(key as WidgetId,value as any)||Object.keys(value as object).some(k=>!['mode','iconRows','ruleVersion'].includes(k)))throw Error('preference');prefs[key as WidgetId]={...clone(value as any),ruleVersion:raw.schemaVersion>=3?((value as any).ruleVersion??2):raw.schemaVersion===2?1:0}}}
   const rowIds=new Set<string>();for(const r of raw.rows){if(!r||typeof r.id!=='string'||rowIds.has(r.id)||!Number.isFinite(r.height)||r.height<1||r.heightMode!==undefined&&!['content','chart'].includes(r.heightMode)||!Array.isArray(r.columns))throw Error('structure');rowIds.add(r.id);for(const c of r.columns){if(!c||!Array.isArray(c.cards)||!Number.isFinite(c.weight)||!Number.isFinite(c.split)||c.cards.some((id:unknown)=>id!==null&&!ids.includes(id as WidgetId)))throw Error('identity')}}
   for(const row of raw.rows){const issue=sizingIssue(row);if(issue)throw Error(issue)}
   const structural=validate(raw.rows);if(structural.issue&&!structural.issue.startsWith('height:'))throw Error(structural.issue)

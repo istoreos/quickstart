@@ -5,11 +5,16 @@
     <NetworkInterfaceCard :legacy-summary="resolved.legacy" v-else-if="id==='networkInterface'" :data="data.ports" :error="errors.ports" :summary="resolved.id==='summary'" @navigate="$emit('navigate',$event)" @retry="$emit('retry')"/>
     <HomeApplications v-else-if="id==='applications'" :collapsed="false" :fallback-entries="[]" :contained="contained" :preference="preference" :natural="natural" :network="data.network" @navigate="$emit('navigate',$event)"/>
     <BusinessCard v-else-if="['storage','sharing','docker','downloads','remote','system'].includes(id)" :id="id" :data="data" :errors="errors" :summary="resolved.id==='summary'" @retry="$emit('retry')"/>
+    <template v-else-if="id.startsWith('plugin.')"><CardShell v-if="externalManifest&&externalManifest.forms[resolved.id as 'standard'|'summary']" :key="externalManifest.entry" :manifest="externalManifest" :form="resolved.id==='summary'?'summary':'standard'" :rediscover="rediscover"/><section v-else class="qs-card-placeholder" data-missing-plugin role="status"><h2>{{externalName}}</h2><p>{{externalManifest?t('此形态暂不可用，请在显示设置中调整','This form is unavailable. Change display settings.'):registry.state.value==='unavailable'?t('无法确认插件状态，请重试读取','Plugin status unavailable; reload to retry'):needsHostUpdate(id)?t('此卡片需要升级 Quickstart，原位置已保留','Update Quickstart to display this card. Position retained.'):t('插件未安装或需要升级，原位置已保留','Plugin missing or needs updating. Position retained.')}}</p><button @click="registry.discover(true)">{{t('重新读取','Reload')}}</button></section></template>
     <DeviceWidget v-else :data="data" :errors="errors" :devices="devices" :summary="resolved.id==='summary'" :summary-limit="id==='devices'?resolved.capacity:undefined" :disk-limit="contained?4:undefined" contextual-actions @navigate="$emit('navigate',$event)" @device="$emit('device',$event)" @retry="$emit('retry')"/>
   </div>
 </template>
 <script setup lang="ts">
 import WidgetPrimaryAction from './WidgetPrimaryAction.vue'
+import {needsHostUpdate} from './cards/catalog'
+import CardShell from './cards/CardShell.vue'
+import {useCardRegistry} from './cards/useCardRegistry'
+import {widget} from './layout/rowLayout'
 import {computed,onMounted,onUnmounted,provide,ref} from 'vue'
 import type {DeviceListItem} from '../pages/device/deviceInventory'
 import type {WidgetId} from './layout/rowLayout'
@@ -24,6 +29,8 @@ import NetworkInterfaceCard from './NetworkInterfaceCard.vue'
 import BusinessCard from './BusinessCard.vue'
 import {resolvePresentation,type WidgetPreference} from './layout/widgetPresentation'
 const props=defineProps<{id:WidgetId;data:Record<string,any>;errors:Record<string,string>;devices:DeviceListItem[];theme:string;contained?:boolean;preference?:WidgetPreference;natural?:boolean;role?:'ordinary'|'stacked';chartStretch?:boolean;editing?:boolean}>()
+const registry=useCardRegistry(),externalManifest=computed(()=>registry.cards.value.find(c=>c.id===props.id)),externalName=computed(()=>window.vue_lang==='en'?widget(props.id).en:widget(props.id).zh)
+async function rediscover(){return (await registry.discover(true)).find(c=>c.id===props.id)}
 provide(widgetContext,{data:props.data,bounded:()=>true,details:()=>{},invalidate:()=>emit('retry')})
 const speedBusy=computed(()=>launcherActivation.source==='traffic'&&launcherActivation.status==='loading'),speedError=computed(()=>launcherActivation.source==='traffic'&&!['idle','loading'].includes(launcherActivation.status))
 function speedTest(){requestLauncherApp(homeApplications.find(a=>a.id==='fastnet')!,'traffic')}

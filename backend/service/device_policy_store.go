@@ -114,9 +114,20 @@ func (store *systemDevicePolicyStore) Get(ctx context.Context, deviceID string) 
 		}
 	}
 	if policy.Capabilities["access"].State == "available" {
-		access, readErr := readDeviceAccessPolicyAt(deviceRestrictionConfigDir(), device.Mac)
+		access, readErr := readDeviceAccessPolicyAt(ctx, deviceRestrictionConfigDir(), device.Mac)
+		policy.Access.NetworkAccess = access
+		var pending *PolicyError
+		if errors.As(readErr, &pending) && pending.Code == "access_binding_pending" {
+			if batch := groupBatchAccumulatorFrom(ctx); batch != nil && batch.accessBindingsPending {
+				readErr = nil // This locked batch will compile the pending binding before reload.
+			} else {
+				policy.Capabilities["access"] = &models.DevicePolicyCapability{State: "error", Reason: pending.Message, DesiredRetained: !access}
+			}
+		}
 		if readErr != nil {
-			policy.Capabilities["access"] = &models.DevicePolicyCapability{State: "error", Reason: "access_rules_unavailable"}
+			if pending == nil {
+				policy.Capabilities["access"] = &models.DevicePolicyCapability{State: "error", Reason: "access_rules_unavailable"}
+			}
 		} else {
 			policy.Access.NetworkAccess = access
 		}
@@ -137,12 +148,24 @@ func (store *systemDevicePolicyStore) Get(ctx context.Context, deviceID string) 
 				policy.Capabilities["speed"].DesiredRetained = speed != nil && speed.Enabled
 			}
 		}
-	} else if currentIPv4 != "" {
+	} else if currentIPv4 != "" && selectedLAN(ctx) == defaultLAN {
 		speed, readErr := readDeviceSpeedPolicyAt(deviceRestrictionConfigDir(), currentIPv4)
 		if readErr != nil && policy.Capabilities["speed"].State == "available" {
 			policy.Capabilities["speed"] = &models.DevicePolicyCapability{State: "error", Reason: "speed_rules_unavailable"}
 		} else if readErr == nil && speed != nil && speed.Section != "" {
 			policy.Speed = &models.DeviceSpeedPolicy{Enabled: true, UploadSpeed: speed.Upload, DownloadSpeed: speed.Download}
+		}
+	}
+	if selectedLANScope(ctx) != nil && store.rateLimit != nil && store.rateLimit.routes != nil {
+		route, err := store.rateLimit.routes.Resolve(ctx, device.Mac)
+		if err != nil {
+			policy.Capabilities["access"] = &models.DevicePolicyCapability{State: "error", Reason: "route_unavailable"}
+		} else if !route.Local {
+			reason := route.Reason
+			if reason == "" {
+				reason = "execution_node_unavailable"
+			}
+			policy.Capabilities["access"] = &models.DevicePolicyCapability{State: "unsupported", Reason: reason, DesiredRetained: !policy.Access.NetworkAccess}
 		}
 	}
 	return policy, nil
@@ -155,6 +178,9 @@ func (store *systemDevicePolicyStore) ListRules(ctx context.Context) (*models.De
 		return nil, err
 	}
 	result.Static = staticRules.Result
+	if selectedLAN(ctx) != defaultLAN {
+		return result, nil
+	}
 	speedRules, err := NewLanSpeedLimitedDeviceListService().GetListSpeedLimitedDevices(ctx)
 	if err == nil {
 		result.Speed = speedRules.Result
@@ -163,9 +189,9 @@ func (store *systemDevicePolicyStore) ListRules(ctx context.Context) (*models.De
 }
 
 func (store *systemDevicePolicyStore) Backup(ctx context.Context, kind string, policies ...*models.DevicePolicy) (devicePolicyBackup, error) {
-	paths := []string{"/etc/config/dhcp"}
+	paths := []string{filepath.Join(deviceRestrictionConfigDir(), "dhcp")}
 	if kind == "speed" {
-		paths = []string{"/etc/config/eqos"}
+		paths = []string{filepath.Join(deviceRestrictionConfigDir(), "eqos")}
 		if store.rateLimit != nil && store.rateLimit.provider(ctx) != nil && store.rateLimit.provider(ctx).Name() != "eqos" && len(policies) > 0 && policies[0] != nil {
 			current := policies[0]
 			reservedIP := ""
@@ -181,7 +207,7 @@ func (store *systemDevicePolicyStore) Backup(ctx context.Context, kind string, p
 		}
 	}
 	if kind == "access" {
-		paths = []string{"/etc/config/firewall", immediateAccessIncludePath(deviceRestrictionConfigDir())}
+		paths = []string{filepath.Join(deviceRestrictionConfigDir(), "firewall"), immediateAccessIncludePath(deviceRestrictionConfigDir())}
 	}
 	backup := &systemDevicePolicyBackup{Kind: kind, Files: make([]devicePolicyFileSnapshot, 0, len(paths))}
 	for _, path := range paths {
@@ -206,7 +232,7 @@ func (store *systemDevicePolicyStore) Apply(ctx context.Context, request *models
 	if accumulator := groupBatchAccumulatorFrom(ctx); accumulator != nil && (request.Kind == "access" || request.Kind == "speed") {
 		requestCopy := *request
 		currentCopy := *current
-		accumulator.restrictions = append(accumulator.restrictions, groupBatchRestrictionChange{request: &requestCopy, current: &currentCopy})
+		accumulator.restrictions = append(accumulator.restrictions, groupBatchRestrictionChange{request: &requestCopy, current: &currentCopy, accessOwner: accessOwner(ctx)})
 		return nil
 	}
 	switch request.Kind {
@@ -237,7 +263,7 @@ func (store *systemDevicePolicyStore) Apply(ctx context.Context, request *models
 		}
 		return deviceRestrictionApply(ctx, []string{"eqos"})
 	case "access":
-		if err := writeDeviceAccessPolicyAt(deviceRestrictionConfigDir(), current.MAC, request.Access.NetworkAccess); err != nil {
+		if err := writeDeviceAccessPolicyAt(ctx, deviceRestrictionConfigDir(), current.MAC, request.Access.NetworkAccess); err != nil {
 			return err
 		}
 		if groupBatchDefersReload(ctx) {
@@ -273,6 +299,12 @@ func (store *systemDevicePolicyStore) Restore(ctx context.Context, raw devicePol
 		if err := os.Rename(tmp, file.Path); err != nil {
 			return err
 		}
+	}
+	if backup.Kind == "provider_preference" {
+		return nil
+	}
+	if backup.Kind == "access" {
+		return deviceAccessRestrictionApply(ctx)
 	}
 	commands := []string{"uci reload_config"}
 	switch backup.Kind {

@@ -1,0 +1,742 @@
+{
+  "status": "passed",
+  "checks": [
+    {
+      "theme": "light",
+      "width": 576,
+      "height": 405,
+      "form": "standard",
+      "scene": "ready",
+      "geometry": {
+        "height": 403,
+        "scrollHeight": 403,
+        "width": 574,
+        "scrollWidth": 574,
+        "wan": {
+          "top": 451,
+          "bottom": 654,
+          "left": 241,
+          "right": 775
+        },
+        "lan": {
+          "top": 666,
+          "bottom": 728,
+          "left": 241,
+          "right": 775
+        },
+        "statuses": {
+          "top": 740,
+          "bottom": 776,
+          "left": 241,
+          "right": 775
+        },
+        "metrics": {
+          "top": 510.09375,
+          "bottom": 594.890625,
+          "left": 262,
+          "right": 754
+        },
+        "wanTime": {
+          "top": 608.890625,
+          "bottom": 623.890625,
+          "left": 262,
+          "right": 754
+        }
+      }
+    },
+    {
+      "theme": "light",
+      "width": 320,
+      "height": 330,
+      "form": "standard",
+      "scene": "ready",
+      "geometry": {
+        "height": 328,
+        "scrollHeight": 328,
+        "width": 318,
+        "scrollWidth": 318,
+        "wan": {
+          "top": 436,
+          "bottom": 627.90625,
+          "left": 235,
+          "right": 525
+        },
+        "lan": {
+          "top": 632.90625,
+          "bottom": 672,
+          "left": 235,
+          "right": 525
+        },
+        "statuses": {
+          "top": 677,
+          "bottom": 709,
+          "left": 235,
+          "right": 525
+        },
+        "metrics": {
+          "top": 496.359375,
+          "bottom": 549.546875,
+          "left": 248,
+          "right": 512
+        },
+        "wanTime": {
+          "top": 552.546875,
+          "bottom": 567.546875,
+          "left": 248,
+          "right": 512
+        }
+      }
+    },
+    {
+      "theme": "light",
+      "width": 280,
+      "height": 260,
+      "form": "standard",
+      "scene": "ready",
+      "geometry": {
+        "height": 258,
+        "scrollHeight": 258,
+        "width": 278,
+        "scrollWidth": 278,
+        "wan": {
+          "top": 436,
+          "bottom": 557.90625,
+          "left": 235,
+          "right": 485
+        },
+        "lan": {
+          "top": 562.90625,
+          "bottom": 602,
+          "left": 235,
+          "right": 485
+        },
+        "statuses": {
+          "top": 607,
+          "bottom": 639,
+          "left": 235,
+          "right": 485
+        },
+        "metrics": {
+          "top": 461.359375,
+          "bottom": 514.546875,
+          "left": 248,
+          "right": 472
+        },
+        "wanTime": {
+          "top": 517.546875,
+          "bottom": 532.546875,
+          "left": 248,
+          "right": 472
+        }
+      }
+    },
+    {
+      "theme": "light",
+      "width": 280,
+      "height": 148,
+      "form": "summary",
+      "scene": "ready",
+      "geometry": {
+        "height": 146,
+        "scrollHeight": 146,
+        "width": 278,
+        "scrollWidth": 278,
+        "wan": {
+          "top": 432,
+          "bottom": 494.4375,
+          "left": 233,
+          "right": 487
+        },
+        "lan": {
+          "top": 497.4375,
+          "bottom": 513.03125,
+          "left": 233,
+          "right": 487
+        },
+        "statuses": {
+          "top": 516.03125,
+          "bottom": 532.53125,
+          "left": 233,
+          "right": 487
+        },
+        "metrics": {
+          "top": 432,
+          "bottom": 479.4375,
+          "left": 233,
+          "right": 487
+        },
+        "wanTime": {
+          "top": 479.4375,
+          "bottom": 494.4375,
+          "left": 233,
+          "right": 487
+        }
+      }
+    },
+    {
+      "theme": "light",
+      "width": 240,
+      "height": 148,
+      "form": "summary",
+      "scene": "ready",
+      "geometry": {
+        "height": 146,
+        "scrollHeight": 146,
+        "width": 238,
+        "scrollWidth": 238,
+        "wan": {
+          "top": 432,
+          "bottom": 494.4375,
+          "left": 233,
+          "right": 447
+        },
+        "lan": {
+          "top": 497.4375,
+          "bottom": 513.03125,
+          "left": 233,
+          "right": 447
+        },
+        "statuses": {
+          "top": 516.03125,
+          "bottom": 532.53125,
+          "left": 233,
+          "right": 447
+        },
+        "metrics": {
+          "top": 432,
+          "bottom": 479.4375,
+          "left": 233,
+          "right": 447
+        },
+        "wanTime": {
+          "top": 479.4375,
+          "bottom": 494.4375,
+          "left": 233,
+          "right": 447
+        }
+      }
+    },
+    {
+      "theme": "dark",
+      "width": 576,
+      "height": 405,
+      "form": "standard",
+      "scene": "ready",
+      "geometry": {
+        "height": 403,
+        "scrollHeight": 403,
+        "width": 574,
+        "scrollWidth": 574,
+        "wan": {
+          "top": 451,
+          "bottom": 654,
+          "left": 241,
+          "right": 775
+        },
+        "lan": {
+          "top": 666,
+          "bottom": 728,
+          "left": 241,
+          "right": 775
+        },
+        "statuses": {
+          "top": 740,
+          "bottom": 776,
+          "left": 241,
+          "right": 775
+        },
+        "metrics": {
+          "top": 510.09375,
+          "bottom": 594.890625,
+          "left": 262,
+          "right": 754
+        },
+        "wanTime": {
+          "top": 608.890625,
+          "bottom": 623.890625,
+          "left": 262,
+          "right": 754
+        }
+      }
+    },
+    {
+      "theme": "dark",
+      "width": 320,
+      "height": 330,
+      "form": "standard",
+      "scene": "ready",
+      "geometry": {
+        "height": 328,
+        "scrollHeight": 328,
+        "width": 318,
+        "scrollWidth": 318,
+        "wan": {
+          "top": 436,
+          "bottom": 627.90625,
+          "left": 235,
+          "right": 525
+        },
+        "lan": {
+          "top": 632.90625,
+          "bottom": 672,
+          "left": 235,
+          "right": 525
+        },
+        "statuses": {
+          "top": 677,
+          "bottom": 709,
+          "left": 235,
+          "right": 525
+        },
+        "metrics": {
+          "top": 496.359375,
+          "bottom": 549.546875,
+          "left": 248,
+          "right": 512
+        },
+        "wanTime": {
+          "top": 552.546875,
+          "bottom": 567.546875,
+          "left": 248,
+          "right": 512
+        }
+      }
+    },
+    {
+      "theme": "dark",
+      "width": 280,
+      "height": 260,
+      "form": "standard",
+      "scene": "ready",
+      "geometry": {
+        "height": 258,
+        "scrollHeight": 258,
+        "width": 278,
+        "scrollWidth": 278,
+        "wan": {
+          "top": 436,
+          "bottom": 557.90625,
+          "left": 235,
+          "right": 485
+        },
+        "lan": {
+          "top": 562.90625,
+          "bottom": 602,
+          "left": 235,
+          "right": 485
+        },
+        "statuses": {
+          "top": 607,
+          "bottom": 639,
+          "left": 235,
+          "right": 485
+        },
+        "metrics": {
+          "top": 461.359375,
+          "bottom": 514.546875,
+          "left": 248,
+          "right": 472
+        },
+        "wanTime": {
+          "top": 517.546875,
+          "bottom": 532.546875,
+          "left": 248,
+          "right": 472
+        }
+      }
+    },
+    {
+      "theme": "dark",
+      "width": 280,
+      "height": 148,
+      "form": "summary",
+      "scene": "ready",
+      "geometry": {
+        "height": 146,
+        "scrollHeight": 146,
+        "width": 278,
+        "scrollWidth": 278,
+        "wan": {
+          "top": 432,
+          "bottom": 494.4375,
+          "left": 233,
+          "right": 487
+        },
+        "lan": {
+          "top": 497.4375,
+          "bottom": 513.03125,
+          "left": 233,
+          "right": 487
+        },
+        "statuses": {
+          "top": 516.03125,
+          "bottom": 532.53125,
+          "left": 233,
+          "right": 487
+        },
+        "metrics": {
+          "top": 432,
+          "bottom": 479.4375,
+          "left": 233,
+          "right": 487
+        },
+        "wanTime": {
+          "top": 479.4375,
+          "bottom": 494.4375,
+          "left": 233,
+          "right": 487
+        }
+      }
+    },
+    {
+      "theme": "dark",
+      "width": 240,
+      "height": 148,
+      "form": "summary",
+      "scene": "ready",
+      "geometry": {
+        "height": 146,
+        "scrollHeight": 146,
+        "width": 238,
+        "scrollWidth": 238,
+        "wan": {
+          "top": 432,
+          "bottom": 494.4375,
+          "left": 233,
+          "right": 447
+        },
+        "lan": {
+          "top": 497.4375,
+          "bottom": 513.03125,
+          "left": 233,
+          "right": 447
+        },
+        "statuses": {
+          "top": 516.03125,
+          "bottom": 532.53125,
+          "left": 233,
+          "right": 447
+        },
+        "metrics": {
+          "top": 432,
+          "bottom": 479.4375,
+          "left": 233,
+          "right": 447
+        },
+        "wanTime": {
+          "top": 479.4375,
+          "bottom": 494.4375,
+          "left": 233,
+          "right": 447
+        }
+      }
+    },
+    {
+      "theme": "light",
+      "width": 280,
+      "height": 260,
+      "form": "standard",
+      "scene": "empty",
+      "geometry": {
+        "height": 258,
+        "scrollHeight": 258,
+        "width": 278,
+        "scrollWidth": 278,
+        "wan": {
+          "top": 436,
+          "bottom": 557.90625,
+          "left": 235,
+          "right": 485
+        },
+        "lan": {
+          "top": 562.90625,
+          "bottom": 602,
+          "left": 235,
+          "right": 485
+        },
+        "statuses": {
+          "top": 607,
+          "bottom": 639,
+          "left": 235,
+          "right": 485
+        },
+        "metrics": {
+          "top": 461.359375,
+          "bottom": 514.546875,
+          "left": 248,
+          "right": 472
+        },
+        "wanTime": {
+          "top": 517.546875,
+          "bottom": 532.546875,
+          "left": 248,
+          "right": 472
+        }
+      }
+    },
+    {
+      "theme": "light",
+      "width": 280,
+      "height": 260,
+      "form": "standard",
+      "scene": "running",
+      "geometry": {
+        "height": 258,
+        "scrollHeight": 258,
+        "width": 278,
+        "scrollWidth": 278,
+        "wan": {
+          "top": 436,
+          "bottom": 526.90625,
+          "left": 235,
+          "right": 485
+        },
+        "lan": {
+          "top": 531.90625,
+          "bottom": 571,
+          "left": 235,
+          "right": 485
+        },
+        "statuses": {
+          "top": 576,
+          "bottom": 608,
+          "left": 235,
+          "right": 485
+        },
+        "metrics": {
+          "top": 445.859375,
+          "bottom": 499.046875,
+          "left": 248,
+          "right": 472
+        },
+        "wanTime": {
+          "top": 502.046875,
+          "bottom": 517.046875,
+          "left": 248,
+          "right": 472
+        }
+      }
+    },
+    {
+      "theme": "light",
+      "width": 280,
+      "height": 260,
+      "form": "standard",
+      "scene": "partial",
+      "geometry": {
+        "height": 258,
+        "scrollHeight": 258,
+        "width": 278,
+        "scrollWidth": 278,
+        "wan": {
+          "top": 436,
+          "bottom": 539.90625,
+          "left": 235,
+          "right": 485
+        },
+        "lan": {
+          "top": 544.90625,
+          "bottom": 584,
+          "left": 235,
+          "right": 485
+        },
+        "statuses": {
+          "top": 589,
+          "bottom": 639,
+          "left": 235,
+          "right": 485
+        },
+        "metrics": {
+          "top": 452.359375,
+          "bottom": 505.546875,
+          "left": 248,
+          "right": 472
+        },
+        "wanTime": {
+          "top": 508.546875,
+          "bottom": 523.546875,
+          "left": 248,
+          "right": 472
+        }
+      }
+    },
+    {
+      "theme": "light",
+      "width": 280,
+      "height": 260,
+      "form": "standard",
+      "scene": "permission",
+      "geometry": {
+        "height": 258,
+        "scrollHeight": 258,
+        "width": 278,
+        "scrollWidth": 278,
+        "wan": {
+          "top": 436,
+          "bottom": 524.90625,
+          "left": 235,
+          "right": 485
+        },
+        "lan": {
+          "top": 529.90625,
+          "bottom": 569,
+          "left": 235,
+          "right": 485
+        },
+        "statuses": {
+          "top": 574,
+          "bottom": 606,
+          "left": 235,
+          "right": 485
+        },
+        "metrics": {
+          "top": 444.859375,
+          "bottom": 498.046875,
+          "left": 248,
+          "right": 472
+        },
+        "wanTime": {
+          "top": 501.046875,
+          "bottom": 516.046875,
+          "left": 248,
+          "right": 472
+        }
+      }
+    },
+    {
+      "theme": "light",
+      "width": 280,
+      "height": 260,
+      "form": "standard",
+      "scene": "running",
+      "touch": true,
+      "geometry": {
+        "height": 258,
+        "scrollHeight": 258,
+        "width": 278,
+        "scrollWidth": 278,
+        "wan": {
+          "top": 638.59375,
+          "bottom": 724.40625,
+          "left": 35,
+          "right": 285
+        },
+        "lan": {
+          "top": 728.40625,
+          "bottom": 746.59375,
+          "left": 35,
+          "right": 285
+        },
+        "statuses": {
+          "top": 750.59375,
+          "bottom": 782.59375,
+          "left": 35,
+          "right": 285
+        },
+        "metrics": {
+          "top": 645.90625,
+          "bottom": 699.09375,
+          "left": 48,
+          "right": 272
+        },
+        "wanTime": {
+          "top": 702.09375,
+          "bottom": 717.09375,
+          "left": 48,
+          "right": 272
+        }
+      }
+    },
+    {
+      "theme": "dark",
+      "width": 240,
+      "height": 148,
+      "form": "summary",
+      "scene": "ready",
+      "touch": true,
+      "geometry": {
+        "height": 146,
+        "scrollHeight": 146,
+        "width": 238,
+        "scrollWidth": 238,
+        "wan": {
+          "top": 759.59375,
+          "bottom": 806.6875,
+          "left": 33,
+          "right": 247
+        },
+        "lan": {
+          "top": 808.6875,
+          "bottom": 824.28125,
+          "left": 33,
+          "right": 247
+        },
+        "statuses": {
+          "top": 826.28125,
+          "bottom": 842.78125,
+          "left": 33,
+          "right": 247
+        },
+        "metrics": {
+          "top": 759.59375,
+          "bottom": 794.6875,
+          "left": 33,
+          "right": 247
+        },
+        "wanTime": {
+          "top": 794.6875,
+          "bottom": 806.6875,
+          "left": 33,
+          "right": 247
+        }
+      }
+    },
+    {
+      "theme": "system",
+      "width": 390,
+      "height": 330,
+      "form": "standard",
+      "scene": "ready",
+      "geometry": {
+        "height": 328,
+        "scrollHeight": 328,
+        "width": 388,
+        "scrollWidth": 388,
+        "wan": {
+          "top": 436,
+          "bottom": 627.90625,
+          "left": 235,
+          "right": 595
+        },
+        "lan": {
+          "top": 632.90625,
+          "bottom": 672,
+          "left": 235,
+          "right": 595
+        },
+        "statuses": {
+          "top": 677,
+          "bottom": 709,
+          "left": 235,
+          "right": 595
+        },
+        "metrics": {
+          "top": 496.359375,
+          "bottom": 549.546875,
+          "left": 248,
+          "right": 582
+        },
+        "wanTime": {
+          "top": 552.546875,
+          "bottom": 567.546875,
+          "left": 248,
+          "right": 582
+        }
+      }
+    },
+    {
+      "id": "test-opens-existing-default-page-without-starting-measurement"
+    }
+  ],
+  "errors": []
+}

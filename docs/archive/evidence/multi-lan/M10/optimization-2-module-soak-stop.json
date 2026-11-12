@@ -1,0 +1,14 @@
+{
+  "status": "interrupted_not_final_acceptance",
+  "reason": "replace subsystem test with final production executable; inherited SIGINT was ignored, terminated recorded local runner and cleaned only its owned namespaces",
+  "cleanedNamespaces": [
+    "qsm10-d814e4",
+    "qsm10-d814e4-w",
+    "qsm10-d814e4-c1",
+    "qsm10-d814e4-c2",
+    "qsm10-d814e4-c3",
+    "qsm10-d814e4-c4"
+  ],
+  "rootConfigurationUnchanged": true,
+  "at": "2026-11-09T01:00:12.500641+00:00"
+}

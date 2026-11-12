@@ -1,0 +1,112 @@
+[
+  {
+    "file": "round-01.sse",
+    "catalogRevisions": [
+      4
+    ],
+    "publicReplacements": 0,
+    "safetyFallbacks": 0,
+    "firstByteTimeouts": 0,
+    "retirements": 0,
+    "maxObservedActive": 5
+  },
+  {
+    "file": "round-02.sse",
+    "catalogRevisions": [
+      4
+    ],
+    "publicReplacements": 0,
+    "safetyFallbacks": 0,
+    "firstByteTimeouts": 0,
+    "retirements": 0,
+    "maxObservedActive": 5
+  },
+  {
+    "file": "round-03.sse",
+    "catalogRevisions": [
+      4
+    ],
+    "publicReplacements": 0,
+    "safetyFallbacks": 0,
+    "firstByteTimeouts": 0,
+    "retirements": 0,
+    "maxObservedActive": 5
+  },
+  {
+    "file": "round-04.sse",
+    "catalogRevisions": [
+      4
+    ],
+    "publicReplacements": 0,
+    "safetyFallbacks": 0,
+    "firstByteTimeouts": 0,
+    "retirements": 0,
+    "maxObservedActive": 4
+  },
+  {
+    "file": "round-05.sse",
+    "catalogRevisions": [
+      4
+    ],
+    "publicReplacements": 0,
+    "safetyFallbacks": 0,
+    "firstByteTimeouts": 0,
+    "retirements": 0,
+    "maxObservedActive": 5
+  },
+  {
+    "file": "round-06.sse",
+    "catalogRevisions": [
+      4
+    ],
+    "publicReplacements": 0,
+    "safetyFallbacks": 0,
+    "firstByteTimeouts": 0,
+    "retirements": 0,
+    "maxObservedActive": 3
+  },
+  {
+    "file": "round-07.sse",
+    "catalogRevisions": [
+      4
+    ],
+    "publicReplacements": 0,
+    "safetyFallbacks": 0,
+    "firstByteTimeouts": 0,
+    "retirements": 0,
+    "maxObservedActive": 5
+  },
+  {
+    "file": "round-08.sse",
+    "catalogRevisions": [
+      4
+    ],
+    "publicReplacements": 0,
+    "safetyFallbacks": 0,
+    "firstByteTimeouts": 0,
+    "retirements": 0,
+    "maxObservedActive": 4
+  },
+  {
+    "file": "round-09.sse",
+    "catalogRevisions": [
+      4
+    ],
+    "publicReplacements": 0,
+    "safetyFallbacks": 0,
+    "firstByteTimeouts": 0,
+    "retirements": 0,
+    "maxObservedActive": 5
+  },
+  {
+    "file": "round-10.sse",
+    "catalogRevisions": [
+      4
+    ],
+    "publicReplacements": 0,
+    "safetyFallbacks": 0,
+    "firstByteTimeouts": 0,
+    "retirements": 0,
+    "maxObservedActive": 5
+  }
+]

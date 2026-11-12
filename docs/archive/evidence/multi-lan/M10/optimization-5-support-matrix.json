@@ -1,0 +1,154 @@
+{
+  "status": "failed_final_scheduled_packet_gate",
+  "cases": [
+    {
+      "id": "T01",
+      "evidence": [
+        "M05/result.json",
+        "M06/compatibility.json",
+        "M10/rollback-data-config.json",
+        "M10/optimization-5-rollback.json",
+        "M10/optimization-5-legacy-startup-arm.json",
+        "M10/optimization-5-legacy-startup-x86.json",
+        "M10/optimization-5-legacy-lifecycle-arm.json",
+        "M10/optimization-5-legacy-lifecycle-x86.json",
+        "M10/optimization-5-rollback-default-client.json"
+      ],
+      "functionalStatus": "passed_with_documented_scope_limits"
+    },
+    {
+      "id": "T02",
+      "evidence": [
+        "M02/result.json",
+        "M09/result.json",
+        "M10/browser/result.json"
+      ],
+      "functionalStatus": "passed_with_documented_scope_limits"
+    },
+    {
+      "id": "T03",
+      "evidence": [
+        "M03/result.json",
+        "M07/result.json",
+        "M08/result.json",
+        "M09/result.json"
+      ],
+      "functionalStatus": "passed_with_documented_scope_limits"
+    },
+    {
+      "id": "T04",
+      "evidence": [
+        "M02/result.json",
+        "M04/result.json",
+        "M09/result.json"
+      ],
+      "functionalStatus": "passed_with_documented_scope_limits"
+    },
+    {
+      "id": "T05",
+      "evidence": [
+        "M02/result.json",
+        "M06/result.json"
+      ],
+      "functionalStatus": "passed_with_documented_scope_limits"
+    },
+    {
+      "id": "T06",
+      "evidence": [
+        "M02/result.json",
+        "M06/result.json",
+        "M10/vlan-arm.json",
+        "M10/vlan-x86.json"
+      ],
+      "functionalStatus": "passed_with_documented_scope_limits"
+    },
+    {
+      "id": "T07",
+      "evidence": [
+        "M02/result.json",
+        "M05/result.json"
+      ],
+      "functionalStatus": "passed_with_documented_scope_limits"
+    },
+    {
+      "id": "T08",
+      "evidence": [
+        "M03/result.json",
+        "M05/result.json",
+        "M08/result.json"
+      ],
+      "functionalStatus": "passed_with_documented_scope_limits"
+    },
+    {
+      "id": "T09",
+      "evidence": [
+        "M07/result.json",
+        "M08/result.json",
+        "M10/optimization-5-legacy-missing-arm.json",
+        "M10/optimization-5-legacy-missing-x86.json",
+        "M10/optimization-5-legacy-startup-arm.json",
+        "M10/optimization-5-legacy-startup-x86.json",
+        "M10/optimization-5-legacy-lifecycle-arm.json",
+        "M10/optimization-5-legacy-lifecycle-x86.json",
+        "M10/optimization-5-rollback-default-client.json"
+      ],
+      "functionalStatus": "passed_with_documented_scope_limits"
+    },
+    {
+      "id": "T10",
+      "evidence": [
+        "M03/result.json",
+        "M07/result.json",
+        "M08/result.json",
+        "M10/browser/result.json"
+      ],
+      "functionalStatus": "passed_with_documented_scope_limits"
+    },
+    {
+      "id": "T11",
+      "evidence": [
+        "M03/result.json",
+        "M05/result.json",
+        "M07/result.json",
+        "M08/result.json"
+      ],
+      "functionalStatus": "passed_with_documented_scope_limits"
+    },
+    {
+      "id": "T12",
+      "evidence": [
+        "M02/result.json",
+        "M03/result.json",
+        "M04/result.json"
+      ],
+      "functionalStatus": "passed_with_documented_scope_limits"
+    },
+    {
+      "id": "T13",
+      "evidence": [
+        "M06/result.json",
+        "M10/reboot.json",
+        "M10/application-rebind-arm.json",
+        "M10/application-rebind-x86.json"
+      ],
+      "functionalStatus": "passed_with_documented_scope_limits"
+    },
+    {
+      "id": "T14",
+      "evidence": [
+        "M06/result.json",
+        "M07/result.json",
+        "M08/result.json"
+      ],
+      "functionalStatus": "passed_with_documented_scope_limits"
+    }
+  ],
+  "scopeLimits": [
+    "legacy providers and floating gateway retain original LAN limits",
+    "ambiguous/overlapping or unverified path returns limited/read-only capability",
+    "resource support applies only to tested 4 GiB ARM64/x86_64 and measured LAN/device counts"
+  ],
+  "remainingGate": "scheduled enforcement diagnosis, full warm resource gates and actual >=24-hour soak",
+  "updatedAt": "2026-11-09T08:49:46.596489+00:00",
+  "failedGate": "2026-11-09 05:10 UTC: x86 capacity1 scheduled WAN pause expected blocked, but IPv4 ping to 203.0.113.2 succeeded at minute 10 second 17; root cause not yet diagnosed."
+}

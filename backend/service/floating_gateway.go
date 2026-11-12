@@ -46,7 +46,7 @@ func NewDefaultFloatingGatewayModule(gateway *GatewayPolicyModule) *FloatingGate
 }
 
 func (module *FloatingGatewayModule) Get(ctx context.Context) (*models.FloatingGatewayResponse, error) {
-	state, err := module.store.Read(ctx)
+	state, err := module.readState(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -62,6 +62,13 @@ func (module *FloatingGatewayModule) Plan(ctx context.Context, request *models.F
 }
 
 func (module *FloatingGatewayModule) Apply(ctx context.Context, request *models.FloatingGatewayApplyRequest) (*models.FloatingGatewayResponse, error) {
+	locked, release, lockErr := lockLANWrite(ctx)
+	if lockErr != nil {
+		return nil, lockErr
+	}
+	defer release()
+	ctx = locked
+
 	module.mu.Lock()
 	defer module.mu.Unlock()
 	state, plan, err := module.plan(ctx, request)
@@ -80,10 +87,10 @@ func (module *FloatingGatewayModule) Apply(ctx context.Context, request *models.
 		return floatingGatewayResponse(state, plan, false), nil
 	}
 	if err := module.store.Apply(ctx, normalizedFloatingConfig(request.Config)); err != nil {
-		plan.Error = &models.DevicePolicyError{Code: "apply_failed", Message: err.Error()}
+		plan.Error = networkWriteFailure(err)
 		return floatingGatewayResponse(state, plan, false), nil
 	}
-	updated, err := module.store.Read(ctx)
+	updated, err := module.readState(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -91,7 +98,7 @@ func (module *FloatingGatewayModule) Apply(ctx context.Context, request *models.
 }
 
 func (module *FloatingGatewayModule) DrillPlan(ctx context.Context) (*models.FloatingGatewayDrillResponse, error) {
-	state, err := module.store.Read(ctx)
+	state, err := module.readState(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -110,7 +117,7 @@ func (module *FloatingGatewayModule) DrillPlan(ctx context.Context) (*models.Flo
 }
 
 func (module *FloatingGatewayModule) plan(ctx context.Context, request *models.FloatingGatewayApplyRequest) (floatingGatewaySnapshot, *models.FloatingGatewayPlan, error) {
-	state, err := module.store.Read(ctx)
+	state, err := module.readState(ctx)
 	if err != nil {
 		return state, nil, err
 	}
@@ -302,4 +309,22 @@ func floatingGatewayResponse(state floatingGatewaySnapshot, plan *models.Floatin
 	return &models.FloatingGatewayResponse{Result: &models.FloatingGatewayResult{Config: state.Config, Status: &models.FloatingGatewayStatus{
 		Capability: capability, State: status, Holder: holder, ServiceRunning: state.Running, PeerState: peerState, ExternalState: "unverifiable", Reason: reason,
 	}, Plan: plan, Changed: changed}}
+}
+
+func (module *FloatingGatewayModule) readState(ctx context.Context) (floatingGatewaySnapshot, error) {
+	if err := requireDefaultFloatingLAN(ctx); err != nil {
+		return floatingGatewaySnapshot{}, err
+	}
+	state, err := module.store.Read(ctx)
+	if err == nil {
+		state.Version = bindLANVersion(ctx, state.Version)
+	}
+	return state, err
+}
+
+func requireDefaultFloatingLAN(ctx context.Context) error {
+	if selectedLAN(ctx) != defaultLAN {
+		return &PolicyError{Code: "floating_gateway_default_lan_only", Message: "浮动网关服务目前仅支持主局域网"}
+	}
+	return nil
 }

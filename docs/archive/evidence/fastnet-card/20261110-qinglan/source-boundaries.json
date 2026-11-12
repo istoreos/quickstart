@@ -1,0 +1,18 @@
+{
+  "status": "passed",
+  "LANMeasurementImplementationUnchanged": true,
+  "LANOnlyChanges": [
+    "optional transport injection",
+    "one dispatch through injected transport"
+  ],
+  "QinglanFullClosure": 50,
+  "QinglanFilesHashVerified": true,
+  "QinglanSource": {
+    "repository": "linkease/linkease-desktop",
+    "commit": "7c8e968adf4010b861f41eebf8ff93ef00a44e1b",
+    "version": "1.1.0-preview.1",
+    "sourceHash": "c709d7e05ad53e63d421d9532b3192e94e09b4144050bc7da3e25fd6eb4e6127",
+    "manifestSha256": "61f168d654e923e01c1e96bb69c818ddf91ff7c823b94a06d968745863716841",
+    "adaptation": "Vue uses unchanged public CSS and semantic tokens; React files retained as the complete upstream closure, excluded from runtime imports"
+  }
+}

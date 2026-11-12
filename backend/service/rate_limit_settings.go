@@ -46,13 +46,17 @@ func (module *RateLimitSettingsModule) Plan(ctx context.Context, request *models
 		return &models.RateLimitSettingsResponse{Result: result}, nil
 	}
 	result.Current = &current
-	result.Version = rateLimitSettingsVersion(current)
+	result.Version = bindLANVersion(ctx, rateLimitSettingsVersion(current))
 	result.RollbackPoint = result.Version
 	if request == nil || request.Settings == nil {
 		result.Error = &models.DevicePolicyError{Code: "validation_failed", Message: "settings are required"}
 		return &models.RateLimitSettingsResponse{Result: result}, nil
 	}
 	desired := normalizeRateLimitSettings(*request.Settings)
+	if selectedLAN(ctx) != defaultLAN && desired.Provider != nativePolicyProviderName {
+		result.Error = &models.DevicePolicyError{Code: "provider_scope_unsupported", Message: "此网络需要可独立接入的策略服务"}
+		return &models.RateLimitSettingsResponse{Result: result}, nil
+	}
 	if desired.Provider == "bandix" || desired.Provider == nativePolicyProviderName {
 		result.ReloadServices = []string{}
 		installed, supported, reason := false, false, "dependency_not_installed"
@@ -96,6 +100,13 @@ func (module *RateLimitSettingsModule) Plan(ctx context.Context, request *models
 }
 
 func (module *RateLimitSettingsModule) Apply(ctx context.Context, request *models.RateLimitSettingsRequest) (*models.RateLimitSettingsResponse, error) {
+	locked, release, lockErr := lockLANWrite(ctx)
+	if lockErr != nil {
+		return nil, lockErr
+	}
+	defer release()
+	ctx = locked
+
 	module.mu.Lock()
 	defer module.mu.Unlock()
 	plan, err := module.Plan(ctx, request)
@@ -117,6 +128,10 @@ func (module *RateLimitSettingsModule) Apply(ctx context.Context, request *model
 		return plan, nil
 	}
 	if begin.Replay {
+		result.Error = failedTaskReplay(begin.Transaction)
+		if result.Error != nil {
+			result.CanApply = false
+		}
 		return plan, nil
 	}
 	snapshot, snapshotErr := module.store.Snapshot(ctx)
@@ -124,7 +139,10 @@ func (module *RateLimitSettingsModule) Apply(ctx context.Context, request *model
 		result.Error = &models.DevicePolicyError{Code: "apply_failed", Message: "could not create rollback snapshot"}
 		return plan, nil
 	}
-	_ = module.transactions.Advance(ctx, begin.Transaction, "apply", "in_progress", "restore_task_snapshot")
+	if txErr := advanceTaskTransaction(ctx, module.transactions, begin.Transaction, "apply", "in_progress", "restore_task_snapshot"); txErr != nil {
+		result.Error = txErr
+		return plan, nil
+	}
 	if applyErr := module.store.Apply(ctx, *result.Desired); applyErr != nil {
 		return module.rollback(ctx, plan, snapshot, begin.Transaction, "rate limit settings were not applied")
 	}
@@ -134,19 +152,28 @@ func (module *RateLimitSettingsModule) Apply(ctx context.Context, request *model
 	}
 	result.Current = &updated
 	result.Changed = true
-	result.Version = rateLimitSettingsVersion(updated)
-	_ = module.transactions.Advance(ctx, begin.Transaction, "verify", "committed", "")
+	result.Version = bindLANVersion(ctx, rateLimitSettingsVersion(updated))
+	if txErr := advanceTaskTransaction(ctx, module.transactions, begin.Transaction, "verify", "committed", ""); txErr != nil {
+		result.Error = txErr
+		return plan, nil
+	}
 	return plan, nil
 }
 
 func (module *RateLimitSettingsModule) rollback(ctx context.Context, response *models.RateLimitSettingsResponse, snapshot rateLimitSettingsSnapshot, transaction *models.TaskTransaction, message string) (*models.RateLimitSettingsResponse, error) {
 	if err := module.store.Restore(ctx, snapshot); err != nil {
 		response.Result.Error = &models.DevicePolicyError{Code: "recovery_required", Message: message + "; rollback failed"}
-		_ = module.transactions.Advance(ctx, transaction, "recover", "recovery_required", "restore_task_snapshot")
+		if txErr := advanceTaskTransaction(ctx, module.transactions, transaction, "recover", "recovery_required", "restore_task_snapshot"); txErr != nil {
+			response.Result.Error = txErr
+			return response, nil
+		}
 		return response, nil
 	}
 	response.Result.Error = &models.DevicePolicyError{Code: "rolled_back", Message: message + "; original settings were restored"}
-	_ = module.transactions.Advance(ctx, transaction, "rollback", "rolled_back", "retry")
+	if txErr := advanceTaskTransaction(ctx, module.transactions, transaction, "rollback", "rolled_back", "retry"); txErr != nil {
+		response.Result.Error = txErr
+		return response, nil
+	}
 	return response, nil
 }
 
@@ -190,8 +217,11 @@ func int64String(value int64) string { return fmt.Sprintf("%d", value) }
 type eqosRateLimitSettingsStore struct{ configDir string }
 
 func (store *eqosRateLimitSettingsStore) HasRules(ctx context.Context, provider string) (bool, error) {
+	if selectedLAN(ctx) != defaultLAN && provider != nativePolicyProviderName {
+		return false, errors.New("provider does not support this network")
+	}
 	if provider == nativePolicyProviderName {
-		native := NewNativeRateLimitProvider(defaultNativePolicyBaseURL(), nil).(*nativeRateLimitProvider)
+		native := newScopedNativeRateLimitProvider()
 		snapshot, err := native.snapshot(ctx)
 		if err != nil {
 			return false, err
@@ -216,6 +246,10 @@ func (store *eqosRateLimitSettingsStore) HasRules(ctx context.Context, provider 
 }
 
 func (store *eqosRateLimitSettingsStore) Read(ctx context.Context) (models.RateLimitSettings, error) {
+	if selectedLAN(ctx) != defaultLAN {
+		_, available, _ := nativeProviderCapability(ctx)
+		return normalizeRateLimitSettings(models.RateLimitSettings{Provider: scopedRateLimitProvider(ctx), Enabled: available}), nil
+	}
 	state, err := NewDefaultSpeedLimitReader().ReadSpeedLimitStatus(ctx)
 	if err != nil {
 		return models.RateLimitSettings{}, err
@@ -227,9 +261,13 @@ func (store *eqosRateLimitSettingsStore) Read(ctx context.Context) (models.RateL
 	return result, nil
 }
 
-func (store *eqosRateLimitSettingsStore) Snapshot(context.Context) (rateLimitSettingsSnapshot, error) {
+func (store *eqosRateLimitSettingsStore) Snapshot(ctx context.Context) (rateLimitSettingsSnapshot, error) {
 	result := rateLimitSettingsSnapshot{Files: make([]devicePolicyFileSnapshot, 0, 2)}
-	for _, path := range []string{filepath.Join(store.configDir, "eqos"), defaultRateLimitProviderPath} {
+	paths := []string{lanStatePath(defaultRateLimitProviderPath, selectedLAN(ctx))}
+	if selectedLAN(ctx) == defaultLAN {
+		paths = append(paths, filepath.Join(store.configDir, "eqos"))
+	}
+	for _, path := range paths {
 		info, err := os.Stat(path)
 		if errors.Is(err, os.ErrNotExist) {
 			result.Files = append(result.Files, devicePolicyFileSnapshot{Path: path})
@@ -248,15 +286,22 @@ func (store *eqosRateLimitSettingsStore) Snapshot(context.Context) (rateLimitSet
 }
 
 func (*eqosRateLimitSettingsStore) Apply(ctx context.Context, value models.RateLimitSettings) error {
+	if selectedLAN(ctx) != defaultLAN && value.Provider != nativePolicyProviderName {
+		return errors.New("provider does not support this network")
+	}
 	if value.Provider == "eqos" {
 		if err := NewDefaultLanSpeedLimitWriteService().SetSpeedLimitModule(ctx, SpeedLimitModuleInput{Enabled: value.Enabled, UploadSpeed: value.UploadSpeed, DownloadSpeed: value.DownloadSpeed}); err != nil {
 			return err
 		}
 	}
-	return writeRateLimitProviderPreference(defaultRateLimitProviderPath, value.Provider)
+	return writeRateLimitProviderPreference(lanStatePath(defaultRateLimitProviderPath, selectedLAN(ctx)), value.Provider)
 }
 
 func (store *eqosRateLimitSettingsStore) Restore(ctx context.Context, snapshot rateLimitSettingsSnapshot) error {
-	backup := &systemDevicePolicyBackup{Kind: "speed", Files: snapshot.Files}
+	kind := "speed"
+	if selectedLAN(ctx) != defaultLAN {
+		kind = "provider_preference"
+	}
+	backup := &systemDevicePolicyBackup{Kind: kind, Files: snapshot.Files}
 	return (&systemDevicePolicyStore{}).Restore(ctx, backup)
 }

@@ -1,0 +1,15 @@
+{
+  "specificCodeFixPassed": true,
+  "originalReproGreenRepetitions": 10,
+  "oldCandidateFailedPaths": 4,
+  "oldCandidateFailureRepetitions": 3,
+  "newFourPathGreenRepetitions": 20,
+  "shortAndNormalGreenRepetitionsBeforeLookupExpansion": 50,
+  "allGoTestsPassed": true,
+  "racePassed": true,
+  "vetPassed": true,
+  "protectedFunctionalChecksPassed": true,
+  "downloadStabilityPassed": false,
+  "candidateRetainedForTesting": true,
+  "binarySha256": "22af3830122363e51103979a9011fa4d72bdd3822cfc09553ac7c128b94c2ecb"
+}

@@ -40,17 +40,26 @@ var networkRulesReloadAfterRestore = func(ctx context.Context) error {
 
 var (
 	networkRulesDeleteStatic = func(ctx context.Context, rule *models.NetworkRule) error {
-		if err := clearNetworkRuleStaticAt(filepath.Dir(dhcpConfigPath), rule.MAC); err != nil {
+		if err := clearNetworkRuleStaticAt(ctx, filepath.Dir(dhcpConfigPath), rule.MAC); err != nil {
 			return err
+		}
+		if groupBatchDefersReload(ctx) {
+			return nil
 		}
 		return reloadAndVerifyDnsmasq(ctx)
 	}
 	networkRulesDeleteSpeed = func(ctx context.Context, rule *models.NetworkRule) error {
+		if groupBatchDefersReload(ctx) {
+			return writeDeviceSpeedPolicyAt(deviceRestrictionConfigDir(), rule.IP, rule.MAC, "", false, 0, 0)
+		}
 		return NewDefaultLanSpeedLimitWriteService().UpsertSpeedLimitRule(ctx, SpeedLimitWriteInput{Action: "delete", IP: rule.IP, MAC: rule.MAC})
 	}
 	networkRulesClearRoute = func(ctx context.Context, rule *models.NetworkRule) error {
-		if err := clearNetworkRuleRouteAt(filepath.Dir(dhcpConfigPath), rule.MAC); err != nil {
+		if err := clearNetworkRuleRouteAt(ctx, filepath.Dir(dhcpConfigPath), rule.MAC); err != nil {
 			return err
+		}
+		if groupBatchDefersReload(ctx) {
+			return nil
 		}
 		return reloadAndVerifyDnsmasq(ctx)
 	}
@@ -100,6 +109,11 @@ func (store *systemNetworkRulesStore) Read(ctx context.Context) (networkRulesSna
 			if device == nil {
 				device = deviceByIP[item.IP]
 			}
+			if !item.NetworkAccess {
+				if _, system := store.policy.store.(*systemDevicePolicyStore); system {
+					continue
+				}
+			}
 			kind, summary := "speed", fmt.Sprintf("上传 %d · 下载 %d Mbit/s", item.UploadSpeed, item.DownloadSpeed)
 			if !item.NetworkAccess {
 				kind, summary = "access", "禁止联网"
@@ -146,6 +160,16 @@ func (store *systemNetworkRulesStore) Read(ctx context.Context) (networkRulesSna
 			}
 		}
 	}
+	health := &models.DeviceInventoryHealth{State: "ready"}
+	extra, extraErr := store.scopedRestrictionRules(ctx, deviceByMAC)
+	rules = append(rules, extra...)
+	if extraErr != nil {
+		health.State = "partial"
+		health.Reasons = []string{"restriction_rules_unavailable"}
+	}
+	for _, rule := range rules {
+		rule.NetworkID = selectedLAN(ctx)
+	}
 	sort.Slice(rules, func(i, j int) bool {
 		if rules[i].Orphaned != rules[j].Orphaned {
 			return !rules[i].Orphaned
@@ -158,7 +182,7 @@ func (store *systemNetworkRulesStore) Read(ctx context.Context) (networkRulesSna
 		}
 		return rules[i].ID < rules[j].ID
 	})
-	return networkRulesSnapshot{Rules: rules, Version: versionNetworkRules(rules)}, nil
+	return networkRulesSnapshot{Rules: rules, Version: versionNetworkRules(rules), Health: health}, nil
 }
 
 func staticRuleSummary(item *models.LANStaticAssigned) string {
@@ -186,34 +210,84 @@ func attachNetworkRuleDevice(rule *models.NetworkRule, device *models.DeviceInve
 }
 
 func (store *systemNetworkRulesStore) Apply(ctx context.Context, rules []*models.NetworkRule) error {
-	paths := []string{"/etc/config/dhcp", "/etc/config/eqos", "/etc/config/firewall"}
+	ctx = context.WithValue(ctx, groupBatchContextKey{}, &groupBatchAccumulator{})
+	paths := []string{filepath.Join(deviceRestrictionConfigDir(), "dhcp"), filepath.Join(deviceRestrictionConfigDir(), "eqos"), filepath.Join(deviceRestrictionConfigDir(), "firewall"), immediateAccessIncludePath(deviceRestrictionConfigDir())}
 	snapshots, err := networkRulesTakeSnapshots(paths)
 	if err != nil {
 		return err
 	}
+	var nativeRestore func(context.Context) error
+	rollback := func(cause error) error {
+		if nativeRestore != nil {
+			if err := nativeRestore(ctx); err != nil {
+				return &networkRecoveryError{fmt.Errorf("native rollback failed: %w", err)}
+			}
+		}
+		if err := networkRulesRestoreSnapshots(ctx, snapshots); err != nil {
+			return &networkRecoveryError{fmt.Errorf("%v; rollback failed: %w", cause, err)}
+		}
+		return cause
+	}
+	nativeChanges := []groupBatchRestrictionChange{}
 	for _, rule := range rules {
+		if rule.Provider == nativePolicyProviderName {
+			nativeChanges = append(nativeChanges, nativeRuleRemoval(rule.MAC))
+		}
+	}
+	if len(nativeChanges) > 0 {
+		provider := store.nativeProvider()
+		if provider == nil {
+			return errors.New("native provider unavailable")
+		}
+		nativeRestore, err = applyNativeSpeedBatch(ctx, nil, provider, nativeChanges)
+		if err != nil {
+			return err
+		}
+	}
+	need := map[string]bool{}
+	for _, rule := range rules {
+		if rule.Provider == nativePolicyProviderName {
+			continue
+		}
 		switch rule.Kind {
 		case "static":
 			err = networkRulesDeleteStatic(ctx, rule)
-		case "speed", "access":
-			err = networkRulesDeleteSpeed(ctx, rule)
+			need["dhcp"] = true
 		case "route":
 			err = networkRulesClearRoute(ctx, rule)
+			need["dhcp"] = true
+		case "speed":
+			err = networkRulesDeleteSpeed(ctx, rule)
+			need["eqos"] = true
+		case "access":
+			err = writeDeviceAccessPolicyAt(ctx, deviceRestrictionConfigDir(), rule.MAC, true)
+			need["firewall"] = true
 		default:
 			err = errors.New("unsupported network rule kind")
 		}
 		if err != nil {
-			restoreErr := networkRulesRestoreSnapshots(ctx, snapshots)
-			if restoreErr != nil {
-				return fmt.Errorf("%v; rollback failed: %w", err, restoreErr)
-			}
-			return err
+			return rollback(err)
+		}
+	}
+	if need["dhcp"] {
+		if err := reloadAndVerifyDnsmasq(ctx); err != nil {
+			return rollback(err)
+		}
+	}
+	if need["eqos"] {
+		if err := deviceRestrictionApply(ctx, []string{"eqos"}); err != nil {
+			return rollback(err)
+		}
+	}
+	if need["firewall"] {
+		if err := deviceAccessRestrictionApply(ctx); err != nil {
+			return rollback(err)
 		}
 	}
 	return nil
 }
 
-func clearNetworkRuleRouteAt(configDir, mac string) error {
+func clearNetworkRuleRouteAt(ctx context.Context, configDir, mac string) error {
 	tree := uci.NewTree(configDir)
 	if err := tree.LoadConfig("dhcp", true); err != nil {
 		return err
@@ -222,7 +296,7 @@ func clearNetworkRuleRouteAt(configDir, mac string) error {
 	sections, _ := tree.GetSections("dhcp", "host")
 	for _, section := range sections {
 		value, _ := tree.GetLast("dhcp", section, "mac")
-		if normalizeInventoryMAC(value) != normalizeInventoryMAC(mac) {
+		if normalizeInventoryMAC(value) != normalizeInventoryMAC(mac) || !scopedRuleDHCPHost(ctx, tree, section) {
 			continue
 		}
 		tree.Del("dhcp", section, "tag")
@@ -232,10 +306,15 @@ func clearNetworkRuleRouteAt(configDir, mac string) error {
 	if !found {
 		return errors.New("gateway route rule no longer exists")
 	}
+	if selectedLANScope(ctx) != nil {
+		if err := compileScopedDHCPHosts(tree); err != nil {
+			return err
+		}
+	}
 	return tree.Commit()
 }
 
-func clearNetworkRuleStaticAt(configDir, mac string) error {
+func clearNetworkRuleStaticAt(ctx context.Context, configDir, mac string) error {
 	tree := uci.NewTree(configDir)
 	if err := tree.LoadConfig("dhcp", true); err != nil {
 		return err
@@ -244,7 +323,7 @@ func clearNetworkRuleStaticAt(configDir, mac string) error {
 	sections, _ := tree.GetSections("dhcp", "host")
 	for _, section := range sections {
 		value, _ := tree.GetLast("dhcp", section, "mac")
-		if normalizeInventoryMAC(value) != normalizeInventoryMAC(mac) {
+		if normalizeInventoryMAC(value) != normalizeInventoryMAC(mac) || !scopedRuleDHCPHost(ctx, tree, section) {
 			continue
 		}
 		tree.Del("dhcp", section, "ip")
@@ -254,6 +333,11 @@ func clearNetworkRuleStaticAt(configDir, mac string) error {
 	}
 	if !found {
 		return errors.New("address reservation rule no longer exists")
+	}
+	if selectedLANScope(ctx) != nil {
+		if err := compileScopedDHCPHosts(tree); err != nil {
+			return err
+		}
 	}
 	return tree.Commit()
 }

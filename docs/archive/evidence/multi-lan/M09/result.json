@@ -1,0 +1,22 @@
+{
+  "milestone": "M09",
+  "status": "passed",
+  "optimizations": 1,
+  "completedAt": "2026-11-08T19:39:57.489716+00:00",
+  "checks": {
+    "typecheck": "passed",
+    "webBusinessTests": "passed",
+    "productionBuild": "passed",
+    "browserScenarios": 11,
+    "immutableClientsAndCompositeIdentity": "passed",
+    "singleCustomLANWithoutDefault": "passed",
+    "raceAndDraftReset": "passed",
+    "explicitUnsupportedFallbackOnly": "passed",
+    "desktop390pxThemesKeyboard": "passed",
+    "productionBundleWithGoScopeAndPersistentServices": "passed"
+  },
+  "limits": [
+    "Browser backend fixture uses real scope/inventory/profile services with synthetic inventory and disposable stores; it does not change router network settings. Real firewall/DHCP/engine forwarding evidence is in M05–M08.",
+    "M10 final capacity, upgrade/rollback and actual 24-hour soak remain required."
+  ]
+}

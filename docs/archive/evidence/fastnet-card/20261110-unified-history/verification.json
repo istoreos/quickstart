@@ -1,0 +1,113 @@
+{
+  "status": "passed",
+  "version": "0.8.3",
+  "milestones": {
+    "H01": {
+      "status": "passed",
+      "corrections": 0
+    },
+    "H02": {
+      "status": "passed",
+      "corrections": 0
+    },
+    "H03": {
+      "status": "passed",
+      "corrections": 0
+    },
+    "H04": {
+      "status": "passed",
+      "corrections": 1,
+      "initialFailure": [
+        "non-browser facade construction accessed window",
+        "old quick sequence fixture did not supply the new history endpoint"
+      ],
+      "resolution": "guard browser access; extend fixture, original LAN library unchanged; 30 node checks and Go race passed"
+    },
+    "H05": {
+      "status": "passed",
+      "corrections": 1,
+      "initialFailure": [
+        "visual review found a duplicate coming-soon fallback above HistoryPanel",
+        "mobile screenshot captured the hidden drawer during resize transition"
+      ],
+      "resolution": "history participates in the existing page branch; hidden drawer is explicitly not visible; added UI assertions"
+    },
+    "H06": {
+      "status": "passed",
+      "corrections": 3,
+      "initialFailure": [
+        "candidate builder and package fixture hardcoded the previous metadata release 10"
+      ],
+      "resolution": "read candidate versions/dependencies from recipes; FastNet/LuCI 0.8.3 and metadata release 11; package contract passes",
+      "liveInitialFailure": "Assertion sampled old card immediately after close, before async GET returned. Failure screenshot already shows the newly updated LAN values; core/LuCI summary contains the saved run.",
+      "liveResolution": "Wait for completed refresh (not only dialog removal); NAT check also waits for the new native record.",
+      "httpFailure": "crypto.randomUUID is undefined on a LAN HTTP origin; localhost and HTTPS masked the problem. No quick history was created because begin failed.",
+      "httpResolution": "Use crypto.getRandomValues (also used by the original card model), add an insecure-origin regression; 31 frontend checks pass; rebuild and retest fixed .7 candidate.",
+      "verificationHarness": "The NAT wait introduced in verification correction 2 returned a Promise, accepted immediately by this Playwright build (async()=>false returned false after15ms). Product native NAT finished successfully after browser closed. Replace with bounded Node-side reads; supplement remaining checks without changing product or remeasuring WAN/LAN.",
+      "verification": "live-pass verifies actual quick + real gateway LAN; live-complete passes remaining read-only checks; cold-restart verifies stopped snapshot/reload. No product changes beyond correction3.",
+      "environmentCase": "A standalone NAT request returned stun timeout: failed record saved, last valid NAT retained. Native NAT had also succeeded in the earlier attempt after the browser closed.",
+      "harnessNotes": [
+        "Promise-based Playwright condition returned false immediately; replaced by bounded Node-side reads.",
+        "After mobile remount the external card is lazy: scroll the registered host before waiting for its component.",
+        "NAT success is environment-dependent; verify failure retention instead of requiring every STUN attempt to succeed."
+      ]
+    }
+  },
+  "checks": {
+    "quickstart": 194,
+    "quickstartSkipped": 0,
+    "vueTsc": "passed",
+    "fastnetFrontend": 31,
+    "cardModel": 11,
+    "goRace": "passed",
+    "newGoHistoryScenarios": 9,
+    "luciEmbed": 12,
+    "luciBrowserOrigin": 12,
+    "luciCardAdapter": 25,
+    "packageContract": 3,
+    "localComplete": 7,
+    "actualWANLAN": "passed; live-pass first 3 checks and real journal",
+    "remainingLive": 5,
+    "coldRestart": "passed"
+  },
+  "evidence": {
+    "local": "browser-final/browser-report.json",
+    "realMeasurements": "live-pass/browser-report.json",
+    "remainingAndFailureRetention": "live-complete/browser-report.json",
+    "cold": "cold-restart.json",
+    "scope": "protected-business.json",
+    "deployment": "deployment-final/deployment.json"
+  },
+  "resources": {
+    "status": "passed",
+    "hostInitialGzipDelta": 20442,
+    "hostBudget": 20480,
+    "hostProductionSourceChanges": false,
+    "cardAssetsGzip": {
+      "chunk.b5a86843.js": 2471,
+      "card.e5dbb4e5.js": 8126,
+      "chunk.31ac0177.js": 1365
+    },
+    "cardBudget": 8192,
+    "fullAppGzip": {
+      "index-DGHmzWbT.js": 67997,
+      "HistoryPanel-DPd-yUWS.css": 867,
+      "index-Ym-W-CSv.css": 10539,
+      "HistoryPanel-DcgcNhZr.js": 2405
+    },
+    "historyLimit": 32,
+    "stateByteLimit": 131072,
+    "actualDeviceStateBytes": 12511,
+    "historyAndFullAppLoadedOnDemand": true
+  },
+  "notes": [
+    "Process failures retained. Real quick/WAN/LAN passed in live-pass; its later verification harness failure was supplemented by live-complete.",
+    "NAT STUN timeout is a valid failed measurement: history saved and last valid NAT retained.",
+    "This iteration does not claim a full historical FN01-FN12 rerun, OS reboot or other hardware deployment."
+  ],
+  "sourceCommits": {
+    "fastnet": "03c5d66",
+    "openwrt-apps": "5af98a7",
+    "quickstart": "containing commit"
+  }
+}

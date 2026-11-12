@@ -7,6 +7,7 @@ export type InventoryAddress = {
 }
 
 export type InventoryDevice = {
+    networkId?: string
     deviceId: string
     displayName?: string
     hostname?: string

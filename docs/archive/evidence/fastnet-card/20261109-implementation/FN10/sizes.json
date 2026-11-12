@@ -1,0 +1,58 @@
+{
+  "baseline": {
+    "luci-static/quickstart/style.css": {
+      "raw": 561634,
+      "gzip": 70556,
+      "sha256": "4b3a51ac4eb1d0ed25cba2a66aab48f2817e68c369c8cc710681eaff8392c73c"
+    },
+    "luci-static/quickstart/index.js": {
+      "raw": 773395,
+      "gzip": 233310,
+      "sha256": "be7c070409c060a3004c270b65d470bc1f7842cbe066bd372f7a8dc372c78cb3"
+    },
+    "luci-static/quickstart/vendor.js": {
+      "raw": 765406,
+      "gzip": 267404,
+      "sha256": "a8aacd35063e93bcac90e1b1a730a29f209eeb96a7b2a51f3bedff06b91e984e"
+    }
+  },
+  "host": {
+    "luci-static/quickstart/app.js": {
+      "raw": 789120,
+      "gzip": 241317,
+      "sha256": "ded8166b2e4d923b41870c6568aa9b65b19790296e81a93b088cacfd21e72d5c"
+    },
+    "luci-static/quickstart/card-runtime-v1.js": {
+      "raw": 114054,
+      "gzip": 44849,
+      "sha256": "74adb16e5710e4206768873ef583cf8410fb2a970ab7b8df28bb177275c02d9c"
+    },
+    "luci-static/quickstart/installClient.js": {
+      "raw": 2948,
+      "gzip": 1497,
+      "sha256": "f53e3c5acb9c68c9c0b91327fc75c71a6d7efdd24d99590a676a7d4eefeb7f5d"
+    },
+    "luci-static/quickstart/style.css": {
+      "raw": 567725,
+      "gzip": 71627,
+      "sha256": "c5a8daae6ff7f90811d6d5775c939337b4a78a49c99e0e8a60f1eeac28015a60"
+    },
+    "luci-static/quickstart/index.js": {
+      "raw": 1438,
+      "gzip": 728,
+      "sha256": "89092b29b33d8f6586c4172987f40352276ba62db7af53b26fc518192db64e56"
+    },
+    "luci-static/quickstart/vendor.js": {
+      "raw": 673843,
+      "gzip": 232289,
+      "sha256": "14ac2626cbb8041de4f2544bc163d181dc4e863a69d37f052dac4c5a5b37a3c8"
+    }
+  },
+  "card": {
+    "entry": "card.303484f1.js",
+    "raw": 18202,
+    "gzip": 5901,
+    "sha256": "d521ac6a2dcf9dde6a9f44cde9b9fb3062eb75c05bb604f616daca3303803eff",
+    "dedicatedCSS": 0
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "milestone": "M05",
+  "status": "passed",
+  "optimizations": 2,
+  "verified": [
+    "custom DHCP section and shared instance resolution",
+    "anonymous UCI selector resolved to actual procd instance on both test routers",
+    "same MAC receives distinct scoped fixed IPv4/router/DNS on both architectures",
+    "route-only hosts preserve dynamic allocation without synthetic hostname",
+    "disabling one LAN DHCP leaves the other LAN serving clients",
+    "retained unrelated DHCP options and host sections",
+    "scoped gateway references, effect persistence and lease evidence",
+    "shared-file rollback on injected selected-instance verification failure",
+    "default floating gateway retained; additional LAN reads/writes explicitly refused",
+    "Go full suite and scoped race suite"
+  ],
+  "deviceEvidence": [
+    "arm64-dhcp.log",
+    "amd64-dhcp.log"
+  ],
+  "safety": {
+    "productionConfigAndDNSMasqUnchanged": true,
+    "testNetworkNamespacesRemoved": true,
+    "readOnlyRouterMutations": false
+  },
+  "limits": [
+    "Real client DHCP tests ran in task-owned network namespaces using each router firmware host/tag compiler; production DHCP was not reconfigured.",
+    "A shared dnsmasq lease file retains the last lease for a repeated MAC; scoped neighbor evidence remains necessary.",
+    "Router/DNS receipt is verified by the test clients; ordinary product UI continues to distinguish server apply from terminal effect."
+  ],
+  "optimizationNotes": [
+    "Use escaped newlines because go-uci cannot reload multiline option values.",
+    "Filter production process fingerprints by network namespace so isolated test daemons are excluded."
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "milestone": "FN08",
+  "status": "failed",
+  "device": "aarch64_generic",
+  "checks": [],
+  "static": {},
+  "restored": true,
+  "packages": [
+    {
+      "name": "fastnet",
+      "version": "0.8.2-1",
+      "sha256": "485f4378c23cc66e77683c7f1007b4c3c115087ef7d19a61afcfd896bd6dc401"
+    },
+    {
+      "name": "luci-app-fastnet",
+      "version": "0.8.2-r1",
+      "sha256": "490e8983b3ca66dbebd4e80cf0733a25c3e21aa9ae9c94e5a3c70b4990b13caa"
+    },
+    {
+      "name": "luci-i18n-fastnet-zh-cn",
+      "version": "git-26.313.00000-082",
+      "sha256": "7dd666aec0d71c1e1b6d35d7af682e65cd0ad3b8c5869ccdf7ca683ef5cf0d9d"
+    },
+    {
+      "name": "app-meta-fastnet",
+      "version": "0.8.2-10",
+      "sha256": "e2bec6e8d917048041dfd68bc609c5ae18c91590bc6d1f4390725da182025c90"
+    }
+  ],
+  "failure": "minimum versions must reject the old/missing installed dependencies"
+}

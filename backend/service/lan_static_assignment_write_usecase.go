@@ -36,6 +36,13 @@ func NewDefaultLanStaticAssignmentWriteService() *LanStaticAssignmentWriteServic
 }
 
 func (svc *LanStaticAssignmentWriteService) ApplyStaticAssignment(ctx context.Context, input StaticAssignmentWriteInput) error {
+	locked, release, lockErr := lockLANWrite(ctx)
+	if lockErr != nil {
+		return lockErr
+	}
+	defer release()
+	ctx = locked
+
 	if strings.TrimSpace(input.AssignedMAC) == "" {
 		return errors.New("mac address is required")
 	}

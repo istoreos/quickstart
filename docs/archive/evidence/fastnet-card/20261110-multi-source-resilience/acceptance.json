@@ -1,0 +1,19 @@
+{
+  "implementationPassed": true,
+  "functionalProtectionPassed": true,
+  "downloadStabilityPassed": true,
+  "localOptimizations": 3,
+  "liveCandidateRounds": 1,
+  "baselineCommit": "9339946",
+  "pinnedCatalogRevision": 5,
+  "liveCatalogRevisions": [
+    4
+  ],
+  "serverCatalogPublished": false,
+  "sourceUrlsAndSamplesPreserved": true,
+  "version": "0.8.7",
+  "metaRelease": 16,
+  "binarySha256": "035fa9ae47a0b1045c7b982bf22511310408cc3036857a8a272439c3fa2f4017",
+  "runtimeSha256": "54c77a32448f99885e3133ae01d3a95c0d5daf4b5933e5cb7cf6acd98a7c33a7",
+  "officialReleasePublished": false
+}

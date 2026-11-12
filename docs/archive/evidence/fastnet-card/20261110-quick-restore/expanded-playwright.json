@@ -1,0 +1,929 @@
+{
+  "config": {
+    "argv": [
+      "/config/.local/share/mise/installs/node/24.15.0/bin/node",
+      "/var/cache/build-cache/users/911/projects/fastnet-6f11a31e12f7/work/fastnet-quick-restore-web/node_modules/.bin/playwright",
+      "test",
+      "tests/ui-v2.spec.js",
+      "tests/ui-accessibility.spec.js",
+      "--project=chromium",
+      "--reporter=json"
+    ],
+    "configFile": "/var/cache/build-cache/users/911/projects/fastnet-6f11a31e12f7/work/fastnet-quick-restore-web/playwright.config.js",
+    "rootDir": "/var/cache/build-cache/users/911/projects/fastnet-6f11a31e12f7/work/fastnet-quick-restore-web/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/var/cache/build-cache/users/911/projects/fastnet-6f11a31e12f7/work/fastnet-quick-restore-web/playwright-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "/var/cache/build-cache/users/911/projects/fastnet-6f11a31e12f7/work/fastnet-quick-restore-web/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 90000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "ui-accessibility.spec.js",
+      "file": "ui-accessibility.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "keyboard users can skip navigation and identify the current diagnostic",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 11700,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeFocused\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('link', { name: '跳到主要内容' })\nExpected: focused\nReceived: inactive\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeFocused\" getByRole('link', { name: '跳到主要内容' }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('link', { name: '跳到主要内容' })\u001b[22m\n\u001b[2m    14 × locator resolved to <a class=\"skip-link\" href=\"#main-content\">跳到主要内容</a>\u001b[22m\n\u001b[2m       - unexpected value \"inactive\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeFocused\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('link', { name: '跳到主要内容' })\nExpected: focused\nReceived: inactive\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeFocused\" getByRole('link', { name: '跳到主要内容' }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('link', { name: '跳到主要内容' })\u001b[22m\n\u001b[2m    14 × locator resolved to <a class=\"skip-link\" href=\"#main-content\">跳到主要内容</a>\u001b[22m\n\u001b[2m       - unexpected value \"inactive\"\u001b[22m\n\n    at /var/cache/build-cache/users/911/projects/fastnet-6f11a31e12f7/work/fastnet-quick-restore-web/tests/ui-accessibility.spec.js:9:60",
+                    "location": {
+                      "file": "/var/cache/build-cache/users/911/projects/fastnet-6f11a31e12f7/work/fastnet-quick-restore-web/tests/ui-accessibility.spec.js",
+                      "column": 60,
+                      "line": 9
+                    },
+                    "snippet": "   7 | test('keyboard users can skip navigation and identify the current diagnostic', async ({ page }) => {\n   8 |   await page.keyboard.press('Tab');\n>  9 |   await expect(page.getByRole('link', { name: '跳到主要内容' })).toBeFocused();\n     |                                                            ^\n  10 |   await page.keyboard.press('Enter');\n  11 |   await expect(page.locator('#main-content')).toBeFocused();\n  12 |"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/var/cache/build-cache/users/911/projects/fastnet-6f11a31e12f7/work/fastnet-quick-restore-web/tests/ui-accessibility.spec.js",
+                        "column": 60,
+                        "line": 9
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeFocused\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('link', { name: '跳到主要内容' })\nExpected: focused\nReceived: inactive\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeFocused\" getByRole('link', { name: '跳到主要内容' }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('link', { name: '跳到主要内容' })\u001b[22m\n\u001b[2m    14 × locator resolved to <a class=\"skip-link\" href=\"#main-content\">跳到主要内容</a>\u001b[22m\n\u001b[2m       - unexpected value \"inactive\"\u001b[22m\n\n\n   7 | test('keyboard users can skip navigation and identify the current diagnostic', async ({ page }) => {\n   8 |   await page.keyboard.press('Tab');\n>  9 |   await expect(page.getByRole('link', { name: '跳到主要内容' })).toBeFocused();\n     |                                                            ^\n  10 |   await page.keyboard.press('Enter');\n  11 |   await expect(page.locator('#main-content')).toBeFocused();\n  12 |\n    at /var/cache/build-cache/users/911/projects/fastnet-6f11a31e12f7/work/fastnet-quick-restore-web/tests/ui-accessibility.spec.js:9:60"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-10T06:27:42.701Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/var/cache/build-cache/users/911/projects/fastnet-6f11a31e12f7/work/fastnet-quick-restore-web/playwright-results/ui-accessibility-keyboard--2f369-tify-the-current-diagnostic-chromium/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/var/cache/build-cache/users/911/projects/fastnet-6f11a31e12f7/work/fastnet-quick-restore-web/playwright-results/ui-accessibility-keyboard--2f369-tify-the-current-diagnostic-chromium/trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/var/cache/build-cache/users/911/projects/fastnet-6f11a31e12f7/work/fastnet-quick-restore-web/tests/ui-accessibility.spec.js",
+                    "column": 60,
+                    "line": 9
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "3ff15717d5220b918d78-420f86f6d164d4f9d7ec",
+          "file": "ui-accessibility.spec.js",
+          "line": 7,
+          "column": 1
+        },
+        {
+          "title": "mobile users can open the navigation drawer from any scroll position",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1973,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-10T06:28:36.213Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3ff15717d5220b918d78-0749608fc7ae34d6578e",
+          "file": "ui-accessibility.spec.js",
+          "line": 21,
+          "column": 1
+        },
+        {
+          "title": "mobile navigation drawer closes with Escape and restores focus",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1987,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-10T06:28:38.290Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3ff15717d5220b918d78-da8f5abb5f703004115c",
+          "file": "ui-accessibility.spec.js",
+          "line": 37,
+          "column": 1
+        },
+        {
+          "title": "mobile browser Back closes the navigation drawer without leaving FastNet",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1682,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-10T06:28:40.291Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3ff15717d5220b918d78-ebcdfb332d66d2367643",
+          "file": "ui-accessibility.spec.js",
+          "line": 50,
+          "column": 1
+        },
+        {
+          "title": "mobile drawer traps focus and a menu choice closes it without changing navigation semantics",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2152,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-10T06:28:41.984Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3ff15717d5220b918d78-228675dc7c6fb59a84c2",
+          "file": "ui-accessibility.spec.js",
+          "line": 64,
+          "column": 1
+        },
+        {
+          "title": "mobile drawer closes with a familiar left swipe",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1693,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-10T06:28:44.149Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3ff15717d5220b918d78-692bd8201399f9ff9daf",
+          "file": "ui-accessibility.spec.js",
+          "line": 83,
+          "column": 1
+        },
+        {
+          "title": "opening and dismissing mobile navigation is isolated from test execution",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1682,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-10T06:28:45.852Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3ff15717d5220b918d78-f369904704d8fa430e73",
+          "file": "ui-accessibility.spec.js",
+          "line": 95,
+          "column": 1
+        },
+        {
+          "title": "technical details return focus to their trigger when collapsed",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1515,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-10T06:28:47.543Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3ff15717d5220b918d78-51ef80b0f435745e0e2f",
+          "file": "ui-accessibility.spec.js",
+          "line": 110,
+          "column": 1
+        },
+        {
+          "title": "reduced motion preference disables decorative transition duration",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1589,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-10T06:28:49.067Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3ff15717d5220b918d78-e7024dc15ed35f5bb5aa",
+          "file": "ui-accessibility.spec.js",
+          "line": 119,
+          "column": 1
+        },
+        {
+          "title": "activation and LAN settings expose dialog and control names",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2094,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-10T06:28:50.663Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3ff15717d5220b918d78-5159bf317841d174c85c",
+          "file": "ui-accessibility.spec.js",
+          "line": 127,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "ui-v2.spec.js",
+      "file": "ui-v2.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "V2 quick experience is readable on desktop",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1758,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-10T06:28:52.772Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "6c5a76e3af0d5796ee87-4b573ab079117a2e1263",
+          "file": "ui-v2.spec.js",
+          "line": 12,
+          "column": 3
+        },
+        {
+          "title": "V2 quick experience is readable on mobile",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1138,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-10T06:28:54.537Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "6c5a76e3af0d5796ee87-1f612719caa02e5c2051",
+          "file": "ui-v2.spec.js",
+          "line": 12,
+          "column": 3
+        },
+        {
+          "title": "V2 is the default and classic UI remains available by compatibility URL",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1621,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-10T06:28:55.683Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "6c5a76e3af0d5796ee87-1aa6041e0032f511f77f",
+          "file": "ui-v2.spec.js",
+          "line": 30,
+          "column": 1
+        },
+        {
+          "title": "technical details mount on demand and return to a collapsed state",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1528,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-10T06:28:57.312Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "6c5a76e3af0d5796ee87-b30ae829ac3fc4731f5c",
+          "file": "ui-v2.spec.js",
+          "line": 40,
+          "column": 1
+        },
+        {
+          "title": "mobile drawer is reachable and contained at 320px",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 1221,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: <= \u001b[32m276.2\u001b[39m\nReceived:    \u001b[31m281.59375\u001b[39m",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: <= \u001b[32m276.2\u001b[39m\nReceived:    \u001b[31m281.59375\u001b[39m\n    at /var/cache/build-cache/users/911/projects/fastnet-6f11a31e12f7/work/fastnet-quick-restore-web/tests/ui-v2.spec.js:62:29",
+                    "location": {
+                      "file": "/var/cache/build-cache/users/911/projects/fastnet-6f11a31e12f7/work/fastnet-quick-restore-web/tests/ui-v2.spec.js",
+                      "column": 29,
+                      "line": 62
+                    },
+                    "snippet": "  60 |     const drawerBox = await drawer.boundingBox();\n  61 |     expect(drawerBox.width).toBeLessThanOrEqual(320);\n> 62 |     expect(drawerBox.width).toBeLessThanOrEqual(width * 0.86 + 1);\n     |                             ^\n  63 |     expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);\n  64 |     await page.getByRole('button', { name: '关闭菜单' }).last().click();\n  65 |     await expect(drawer).toBeHidden();"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/var/cache/build-cache/users/911/projects/fastnet-6f11a31e12f7/work/fastnet-quick-restore-web/tests/ui-v2.spec.js",
+                        "column": 29,
+                        "line": 62
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: <= \u001b[32m276.2\u001b[39m\nReceived:    \u001b[31m281.59375\u001b[39m\n\n  60 |     const drawerBox = await drawer.boundingBox();\n  61 |     expect(drawerBox.width).toBeLessThanOrEqual(320);\n> 62 |     expect(drawerBox.width).toBeLessThanOrEqual(width * 0.86 + 1);\n     |                             ^\n  63 |     expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);\n  64 |     await page.getByRole('button', { name: '关闭菜单' }).last().click();\n  65 |     await expect(drawer).toBeHidden();\n    at /var/cache/build-cache/users/911/projects/fastnet-6f11a31e12f7/work/fastnet-quick-restore-web/tests/ui-v2.spec.js:62:29"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-10T06:28:58.848Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/var/cache/build-cache/users/911/projects/fastnet-6f11a31e12f7/work/fastnet-quick-restore-web/playwright-results/ui-v2-mobile-drawer-is-reachable-and-contained-at-320px-chromium/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/var/cache/build-cache/users/911/projects/fastnet-6f11a31e12f7/work/fastnet-quick-restore-web/playwright-results/ui-v2-mobile-drawer-is-reachable-and-contained-at-320px-chromium/trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/var/cache/build-cache/users/911/projects/fastnet-6f11a31e12f7/work/fastnet-quick-restore-web/tests/ui-v2.spec.js",
+                    "column": 29,
+                    "line": 62
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "6c5a76e3af0d5796ee87-545bcecbc5432d3bea12",
+          "file": "ui-v2.spec.js",
+          "line": 52,
+          "column": 3
+        },
+        {
+          "title": "mobile drawer is reachable and contained at 375px",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1486,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-10T06:29:00.467Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "6c5a76e3af0d5796ee87-039af54f624c34628768",
+          "file": "ui-v2.spec.js",
+          "line": 52,
+          "column": 3
+        },
+        {
+          "title": "mobile drawer is reachable and contained at 390px",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1367,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-10T06:29:02.043Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "6c5a76e3af0d5796ee87-34603b1bddc4002b040b",
+          "file": "ui-v2.spec.js",
+          "line": 52,
+          "column": 3
+        },
+        {
+          "title": "mobile drawer is reachable and contained at 430px",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1393,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-10T06:29:03.419Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "6c5a76e3af0d5796ee87-348c81799c17bfb2f2cc",
+          "file": "ui-v2.spec.js",
+          "line": 52,
+          "column": 3
+        },
+        {
+          "title": "desktop retains the persistent sidebar without dialog behavior",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1110,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-10T06:29:04.820Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "6c5a76e3af0d5796ee87-37884418641f337585f4",
+          "file": "ui-v2.spec.js",
+          "line": 69,
+          "column": 1
+        },
+        {
+          "title": "mobile global navigation precedes the Quick Experience page introduction",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 1124,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: <= \u001b[32m64\u001b[39m\nReceived:    \u001b[31m66\u001b[39m",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: <= \u001b[32m64\u001b[39m\nReceived:    \u001b[31m66\u001b[39m\n    at /var/cache/build-cache/users/911/projects/fastnet-6f11a31e12f7/work/fastnet-quick-restore-web/tests/ui-v2.spec.js:91:28",
+                    "location": {
+                      "file": "/var/cache/build-cache/users/911/projects/fastnet-6f11a31e12f7/work/fastnet-quick-restore-web/tests/ui-v2.spec.js",
+                      "column": 28,
+                      "line": 91
+                    },
+                    "snippet": "  89 |   const headingBox = await heading.boundingBox();\n  90 |   expect(toggleBox.y).toBeLessThan(headingBox.y);\n> 91 |   expect(toggleBox.height).toBeLessThanOrEqual(64);\n     |                            ^\n  92 |   await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));\n  93 |   await expect(toggle).toBeInViewport();\n  94 | });"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/var/cache/build-cache/users/911/projects/fastnet-6f11a31e12f7/work/fastnet-quick-restore-web/tests/ui-v2.spec.js",
+                        "column": 28,
+                        "line": 91
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: <= \u001b[32m64\u001b[39m\nReceived:    \u001b[31m66\u001b[39m\n\n  89 |   const headingBox = await heading.boundingBox();\n  90 |   expect(toggleBox.y).toBeLessThan(headingBox.y);\n> 91 |   expect(toggleBox.height).toBeLessThanOrEqual(64);\n     |                            ^\n  92 |   await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));\n  93 |   await expect(toggle).toBeInViewport();\n  94 | });\n    at /var/cache/build-cache/users/911/projects/fastnet-6f11a31e12f7/work/fastnet-quick-restore-web/tests/ui-v2.spec.js:91:28"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-10T06:29:05.945Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/var/cache/build-cache/users/911/projects/fastnet-6f11a31e12f7/work/fastnet-quick-restore-web/playwright-results/ui-v2-mobile-global-naviga-4210b-xperience-page-introduction-chromium/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/var/cache/build-cache/users/911/projects/fastnet-6f11a31e12f7/work/fastnet-quick-restore-web/playwright-results/ui-v2-mobile-global-naviga-4210b-xperience-page-introduction-chromium/trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/var/cache/build-cache/users/911/projects/fastnet-6f11a31e12f7/work/fastnet-quick-restore-web/tests/ui-v2.spec.js",
+                    "column": 28,
+                    "line": 91
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "6c5a76e3af0d5796ee87-100e5d45d55be4bb97bf",
+          "file": "ui-v2.spec.js",
+          "line": 80,
+          "column": 1
+        },
+        {
+          "title": "live V2 quick experience reaches the completion moment",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [
+                {
+                  "type": "skip",
+                  "description": "live full-chain check is opt-in",
+                  "location": {
+                    "file": "/var/cache/build-cache/users/911/projects/fastnet-6f11a31e12f7/work/fastnet-quick-restore-web/tests/ui-v2.spec.js",
+                    "line": 97,
+                    "column": 8
+                  }
+                }
+              ],
+              "expectedStatus": "skipped",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "skipped",
+                  "duration": 43,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-10T06:29:07.439Z",
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "description": "live full-chain check is opt-in",
+                      "location": {
+                        "file": "/var/cache/build-cache/users/911/projects/fastnet-6f11a31e12f7/work/fastnet-quick-restore-web/tests/ui-v2.spec.js",
+                        "line": 97,
+                        "column": 8
+                      }
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "skipped"
+            }
+          ],
+          "id": "6c5a76e3af0d5796ee87-ffa21450c6b88f0bf56a",
+          "file": "ui-v2.spec.js",
+          "line": 96,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-10T06:27:42.260Z",
+    "duration": 85364.083,
+    "expected": 17,
+    "skipped": 1,
+    "unexpected": 3,
+    "flaky": 0
+  }
+}

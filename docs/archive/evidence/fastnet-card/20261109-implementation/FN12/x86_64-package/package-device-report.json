@@ -1,0 +1,53 @@
+{
+  "milestone": "FN08",
+  "status": "passed",
+  "device": "x86_64",
+  "checks": [
+    "real opkg rejects metadata minimum versions against old/missing dependencies without modifying package records",
+    "real opkg source connection failure leaves package records unchanged; subsequent exact candidate installation recovers",
+    "real opkg install/upgrade resolves minimum core/LuCI dependencies; registration appears after its asset",
+    "uhttpd serves exact hashed ESM directly with JavaScript MIME; actual headers and wire bytes captured",
+    "missing asset fails registration atomically; a repaired asset can be registered explicitly",
+    "real LuCI uninstall removes only its registration/assets and preserves the standalone core/other card",
+    "real broken-package postinst fails without registering an unavailable card; exact candidate repairs it",
+    "real reinstall restores the same hashed card; no Quickstart layout files are owned by these packages"
+  ],
+  "static": {
+    "status": 200,
+    "headers": {
+      "Connection": "close",
+      "ETag": "\"3e79-4788-0\"",
+      "Last-Modified": "Thu, 01 Jan 1970 00:00:00 GMT",
+      "Date": "Mon, 09 Nov 2026 17:56:56 GMT",
+      "Content-Type": "text/javascript",
+      "Content-Length": "18312"
+    },
+    "wireBytes": 18312,
+    "sha256": "8daa1202bbe2f29daea78358c06b22b2cef7924becbc82d8f35847828f971809",
+    "conditionalStatus": 304,
+    "contentEncoding": "identity"
+  },
+  "restored": true,
+  "packages": [
+    {
+      "name": "fastnet",
+      "version": "0.8.2-1",
+      "sha256": "a6a89757fecad40ab965578eeb288642eebf9c69256ddd97a342a7750eac4479"
+    },
+    {
+      "name": "luci-app-fastnet",
+      "version": "0.8.2-r1",
+      "sha256": "490e8983b3ca66dbebd4e80cf0733a25c3e21aa9ae9c94e5a3c70b4990b13caa"
+    },
+    {
+      "name": "luci-i18n-fastnet-zh-cn",
+      "version": "git-26.313.00000-082",
+      "sha256": "7dd666aec0d71c1e1b6d35d7af682e65cd0ad3b8c5869ccdf7ca683ef5cf0d9d"
+    },
+    {
+      "name": "app-meta-fastnet",
+      "version": "0.8.2-10",
+      "sha256": "e2bec6e8d917048041dfd68bc609c5ae18c91590bc6d1f4390725da182025c90"
+    }
+  ]
+}

@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"net/netip"
 	"os"
 	"strings"
 	"sync"
@@ -43,10 +44,10 @@ func newJSONPolicyEffectStore(path string) *jsonPolicyEffectStore {
 	return &jsonPolicyEffectStore{path: path, limit: defaultPolicyEffectLimit, persist: persistClassificationOverrides}
 }
 
-func (store *jsonPolicyEffectStore) Read(_ context.Context, deviceID string) (*models.PolicyEffect, bool, error) {
+func (store *jsonPolicyEffectStore) Read(ctx context.Context, deviceID string) (*models.PolicyEffect, bool, error) {
 	store.mu.Lock()
 	defer store.mu.Unlock()
-	document, err := store.read()
+	document, err := store.read(lanStatePath(store.path, selectedLAN(ctx)))
 	if err != nil {
 		return nil, false, err
 	}
@@ -54,10 +55,10 @@ func (store *jsonPolicyEffectStore) Read(_ context.Context, deviceID string) (*m
 	return clonePolicyEffect(record.Effect), ok, nil
 }
 
-func (store *jsonPolicyEffectStore) Write(_ context.Context, deviceID string, effect *models.PolicyEffect) error {
+func (store *jsonPolicyEffectStore) Write(ctx context.Context, deviceID string, effect *models.PolicyEffect) error {
 	store.mu.Lock()
 	defer store.mu.Unlock()
-	document, err := store.read()
+	document, err := store.read(lanStatePath(store.path, selectedLAN(ctx)))
 	if err != nil {
 		return err
 	}
@@ -69,11 +70,15 @@ func (store *jsonPolicyEffectStore) Write(_ context.Context, deviceID string, ef
 	if err != nil {
 		return err
 	}
-	return store.persist(store.path, raw)
+	return store.persist(lanStatePath(store.path, selectedLAN(ctx)), raw)
 }
 
-func (store *jsonPolicyEffectStore) read() (policyEffectDocument, error) {
-	raw, err := os.ReadFile(store.path)
+func (store *jsonPolicyEffectStore) read(paths ...string) (policyEffectDocument, error) {
+	path := store.path
+	if len(paths) > 0 {
+		path = paths[0]
+	}
+	raw, err := os.ReadFile(path)
 	if errors.Is(err, os.ErrNotExist) {
 		return policyEffectDocument{SchemaVersion: 1, Records: map[string]policyEffectRecord{}}, nil
 	}
@@ -96,17 +101,17 @@ func newMemoryPolicyEffectStore() *memoryPolicyEffectStore {
 	return &memoryPolicyEffectStore{records: map[string]*models.PolicyEffect{}}
 }
 
-func (store *memoryPolicyEffectStore) Read(_ context.Context, deviceID string) (*models.PolicyEffect, bool, error) {
+func (store *memoryPolicyEffectStore) Read(ctx context.Context, deviceID string) (*models.PolicyEffect, bool, error) {
 	store.mu.Lock()
 	defer store.mu.Unlock()
-	effect, ok := store.records[deviceID]
+	effect, ok := store.records[inventoryLANKey(selectedLAN(ctx), deviceID)]
 	return clonePolicyEffect(effect), ok, nil
 }
 
-func (store *memoryPolicyEffectStore) Write(_ context.Context, deviceID string, effect *models.PolicyEffect) error {
+func (store *memoryPolicyEffectStore) Write(ctx context.Context, deviceID string, effect *models.PolicyEffect) error {
 	store.mu.Lock()
 	defer store.mu.Unlock()
-	store.records[deviceID] = clonePolicyEffect(effect)
+	store.records[inventoryLANKey(selectedLAN(ctx), deviceID)] = clonePolicyEffect(effect)
 	return nil
 }
 
@@ -122,15 +127,23 @@ type policyLeaseObserver interface {
 
 type dnsmasqLeaseObserver struct{ path string }
 
-func (observer *dnsmasqLeaseObserver) Observe(_ context.Context, mac string, since time.Time) (leaseObservation, error) {
-	info, err := os.Stat(observer.path)
+func (observer *dnsmasqLeaseObserver) Observe(ctx context.Context, mac string, since time.Time) (leaseObservation, error) {
+	path := observer.path
+	scope := selectedLANScope(ctx)
+	if scope != nil {
+		if len(scope.DHCPBindings) != 1 {
+			return leaseObservation{}, nil
+		}
+		path = scope.DHCPBindings[0].LeaseFile
+	}
+	info, err := os.Stat(path)
 	if errors.Is(err, os.ErrNotExist) {
 		return leaseObservation{}, nil
 	}
 	if err != nil {
 		return leaseObservation{}, err
 	}
-	file, err := os.Open(observer.path)
+	file, err := os.Open(path)
 	if err != nil {
 		return leaseObservation{}, err
 	}
@@ -139,6 +152,15 @@ func (observer *dnsmasqLeaseObserver) Observe(_ context.Context, mac string, sin
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		fields := strings.Fields(scanner.Text())
+		if scope != nil {
+			if len(fields) < 3 {
+				continue
+			}
+			address, err := netip.ParseAddr(fields[2])
+			if err != nil || !addressInPrefixes(address, scopeLANPrefixes(scope)) {
+				continue
+			}
+		}
 		if len(fields) >= 2 && normalizeInventoryMAC(fields[1]) == normalizeInventoryMAC(mac) && !info.ModTime().Before(since) {
 			result.Observed = true
 			result.ObservedAt = info.ModTime().UTC()

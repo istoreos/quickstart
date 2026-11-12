@@ -1,0 +1,62 @@
+[
+  {
+    "round": "round-01",
+    "inheritedReferenceMbps": 644.36,
+    "safetyFallbacks": 0,
+    "candidateLookupFailures": 0
+  },
+  {
+    "round": "round-02",
+    "inheritedReferenceMbps": 900.75,
+    "safetyFallbacks": 1,
+    "candidateLookupFailures": 0
+  },
+  {
+    "round": "round-03",
+    "inheritedReferenceMbps": 932.25,
+    "safetyFallbacks": 1,
+    "candidateLookupFailures": 0
+  },
+  {
+    "round": "round-04",
+    "inheritedReferenceMbps": 876.48,
+    "safetyFallbacks": 0,
+    "candidateLookupFailures": 0
+  },
+  {
+    "round": "round-05",
+    "inheritedReferenceMbps": 899.74,
+    "safetyFallbacks": 0,
+    "candidateLookupFailures": 0
+  },
+  {
+    "round": "round-06",
+    "inheritedReferenceMbps": 526.06,
+    "safetyFallbacks": 1,
+    "candidateLookupFailures": 0
+  },
+  {
+    "round": "round-07",
+    "inheritedReferenceMbps": 617.8,
+    "safetyFallbacks": 0,
+    "candidateLookupFailures": 0
+  },
+  {
+    "round": "round-08",
+    "inheritedReferenceMbps": 424.25,
+    "safetyFallbacks": 0,
+    "candidateLookupFailures": 0
+  },
+  {
+    "round": "round-09",
+    "inheritedReferenceMbps": 846.73,
+    "safetyFallbacks": 0,
+    "candidateLookupFailures": 2
+  },
+  {
+    "round": "round-10",
+    "inheritedReferenceMbps": 373.27,
+    "safetyFallbacks": 0,
+    "candidateLookupFailures": 0
+  }
+]

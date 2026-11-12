@@ -1,0 +1,49 @@
+{
+  "status": "failed",
+  "checks": [
+    "actual FastNet public-port/token change preserves authenticated LuCI card access and exact measurements",
+    "actual old core with new LuCI degrades read-only without losing measurements; restoring new core recovers the private socket",
+    "actual old LuCI registration rollback preserves the saved external-card position and form; new LuCI restoration rediscovers it",
+    "actual original Quickstart backend treats layout v4 as future, rejects overwrite, and new host resumes the identical saved bytes",
+    "real HTTPS authenticated LuCI homepage loads with a private lab session"
+  ],
+  "latest": {
+    "runId": "run_b44f2782cddbc0e6723c3ad2522a1907",
+    "measuredAt": "2026-11-09T17:55:29.005496047Z",
+    "download": {
+      "status": "ok",
+      "value": 809884976,
+      "measuredAt": "2026-11-09T17:55:17.003104994Z",
+      "error": null,
+      "runId": "run_b44f2782cddbc0e6723c3ad2522a1907"
+    },
+    "upload": {
+      "status": "ok",
+      "value": 55678813,
+      "measuredAt": "2026-11-09T17:55:29.005496047Z",
+      "error": null,
+      "runId": "run_b44f2782cddbc0e6723c3ad2522a1907"
+    },
+    "nat": {
+      "status": "ok",
+      "value": "NAT3 (Port Restricted Cone)",
+      "measuredAt": "2026-11-09T17:55:35.208258912Z",
+      "error": null,
+      "runId": "run_b44f2782cddbc0e6723c3ad2522a1907"
+    },
+    "ipv6": {
+      "status": "unavailable",
+      "value": null,
+      "measuredAt": "2026-11-09T17:55:35.494887358Z",
+      "error": null,
+      "runId": "run_b44f2782cddbc0e6723c3ad2522a1907"
+    },
+    "bandwidth": {
+      "runId": "run_b44f2782cddbc0e6723c3ad2522a1907",
+      "measuredAt": "2026-11-09T17:55:29.005496047Z",
+      "downloadBps": 809884976,
+      "uploadBps": 55678813
+    }
+  },
+  "failure": "locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-fastnet-test]:not(:disabled)') to be visible\u001b[22m\n"
+}

@@ -1,0 +1,36 @@
+{
+  "milestone": "M08",
+  "status": "passed",
+  "optimizations": 1,
+  "completedAt": "2026-11-08T19:26:35.483428+00:00",
+  "checks": {
+    "goFull": "passed",
+    "scopedRace": "passed",
+    "productionInitContract": "passed",
+    "allCurrentBusinessRoutesClassified": 67,
+    "crossNetworkGroupMembershipAndRuntime": "passed",
+    "freshBackgroundBinding": "passed",
+    "nativeOwnerAtomicBatchAndRollback": "passed",
+    "sameMACScopedRuleCleanup": "passed",
+    "quotaAndFirewallImportFailureRecovery": "passed",
+    "oldReaderRejectsAdditionalLANBundle": "passed",
+    "versionedComponentConnectionAndRollback": "passed",
+    "localHTTPWebhookScopeIdentityRestartDedup": "passed",
+    "realSourceBoundIPv4IPv6LinkLocalProbe": "passed_on_both_hosts",
+    "realSelectedConnectionOtherEngineUnchanged": "passed_on_both_hosts",
+    "realNoBrowserBackgroundScheduleBlockAndRestore": "passed_on_both_hosts",
+    "quotaPacketRegressionAfterRefactor": "passed_on_both_hosts"
+  },
+  "deviceEvidence": [
+    "final-auxiliary-arm.json",
+    "final-auxiliary-x86.json",
+    "quota-regression-arm.json",
+    "quota-regression-x86.json"
+  ],
+  "scopeLimits": [
+    "Old single-instance service scripts require upgrade for additional LAN activation.",
+    "Floating gateway, eQoS/Bandix compatibility migration and old unadapted LAN endpoints remain explicitly default-LAN-only.",
+    "Diagnostics report shared process counters and label the legacy default-LAN sampler; they do not attribute shared memory to the selected LAN.",
+    "M09 production UI and M10 candidate deployment, upgrade/rollback, capacity and real 24-hour soak remain required."
+  ]
+}

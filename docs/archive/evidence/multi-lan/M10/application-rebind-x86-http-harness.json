@@ -1,0 +1,124 @@
+{
+  "milestone": "M10",
+  "host": "192.168.30.7",
+  "status": "failed",
+  "startedAt": "2026-11-09T00:54:34.934435+00:00",
+  "preflightOnly": true,
+  "cases": [
+    {
+      "lanCount": 2,
+      "base": "/tmp/quickstart-multi-lan/m10-5d3a98",
+      "router": "qsm10-5d3a98",
+      "namespaces": [
+        "qsm10-5d3a98",
+        "qsm10-5d3a98-w",
+        "qsm10-5d3a98-c1",
+        "qsm10-5d3a98-c2"
+      ],
+      "last": {
+        "api": [
+          {
+            "activeDevices": 0,
+            "devices": 256,
+            "downloadBytes": 0,
+            "endpoint": "devices",
+            "maxSampleAgeSeconds": 0,
+            "networkId": "capacity1",
+            "p95Ms": 4.03,
+            "samples": 1,
+            "state": "ready",
+            "uploadBytes": 0
+          },
+          {
+            "activeDevices": 256,
+            "devices": 256,
+            "downloadBytes": 17784,
+            "endpoint": "device-traffic",
+            "maxSampleAgeSeconds": 0.557898864,
+            "networkId": "capacity1",
+            "p95Ms": 8.542,
+            "samples": 1,
+            "state": "ready",
+            "uploadBytes": 190768
+          },
+          {
+            "activeDevices": 0,
+            "devices": 256,
+            "downloadBytes": 0,
+            "endpoint": "devices",
+            "maxSampleAgeSeconds": 0,
+            "networkId": "capacity2",
+            "p95Ms": 2.148,
+            "samples": 1,
+            "state": "ready",
+            "uploadBytes": 0
+          },
+          {
+            "activeDevices": 256,
+            "devices": 256,
+            "downloadBytes": 36208,
+            "endpoint": "device-traffic",
+            "maxSampleAgeSeconds": 0.576142857,
+            "networkId": "capacity2",
+            "p95Ms": 13.258,
+            "samples": 1,
+            "state": "ready",
+            "uploadBytes": 169016
+          }
+        ],
+        "at": "2026-11-09T00:54:43.576584711Z",
+        "cpuIncludesChildren": true,
+        "cpuSampleMonotonicSeconds": 17589.847752376,
+        "metrics": {
+          "application": "production executable",
+          "at": "2026-11-09T00:54:43.576444695Z",
+          "writes": {
+            "capacity1": 1,
+            "capacity2": 1
+          },
+          "writesLastHour": {
+            "capacity1": 1,
+            "capacity2": 1
+          }
+        },
+        "processes": {
+          "backend.pid": {
+            "pid": 4515,
+            "rssKiB": 29312,
+            "ticks": 12,
+            "fds": 6,
+            "bpfBytes": 0,
+            "bpfMaps": 0
+          },
+          "engine-1.pid": {
+            "pid": 3287,
+            "rssKiB": 8388,
+            "ticks": 31,
+            "fds": 26,
+            "bpfBytes": 792640,
+            "bpfMaps": 9
+          },
+          "engine-2.pid": {
+            "pid": 4449,
+            "rssKiB": 8740,
+            "ticks": 267,
+            "fds": 26,
+            "bpfBytes": 792640,
+            "bpfMaps": 9
+          }
+        },
+        "wallMonotonic": 2329094.399947048,
+        "lanCount": 2,
+        "loadProbe": false
+      },
+      "cleaned": true
+    }
+  ],
+  "artifactSha256": {
+    "engine": "a04ae95641cf7371dbc77cccdb0846f44401e4e82b3de5d24f7cdf757b55c1dc",
+    "goTest": "ab9e66a3fa256750fd849b97d765d12378764c30cc3cb91c862184c4ac9b6c31"
+  },
+  "error": "RuntimeError('[\\'ip\\', \\'netns\\', \\'exec\\', \\'qsm10-5d3a98\\', \\'curl\\', \\'-fsS\\', \\'--max-time\\', \\'10\\', \\'-H\\', \\'X-Forwarded-Sid: 11111111111111111111111111111111\\', \\'-H\\', \\'X-Forwarded-Token: m10-isolated\\', \\'-H\\', \\'Content-Type: application/json\\', \\'--data-binary\\', \\'{\"request\": {\"expectedRevision\": 1, \"idempotencyKey\": \"rebind-stale\", \"owner\": {\"product\": \"quickstart\", \"instance\": \"m10-rebind\"}, \"policies\": [{\"device\": {\"kind\": \"mac\", \"value\": \"02:00:00:00:00:01\"}, \"rateLimit\": {\"enabled\": true, \"uploadBitsPerSecond\": 3000000, \"downloadBitsPerSecond\": 6000000}}]}, \"plan\": {\"id\": \"10e495bc-2ca5-44ea-aea6-cc0786c00064\", \"baseRevision\": 1, \"nextRevision\": 2, \"changes\": [{\"kind\": \"update\", \"device\": {\"kind\": \"mac\", \"value\": \"02:00:00:00:00:01\"}}], \"warnings\": []}}\\', \\'http://127.0.0.1:19501/api/v1/policies/apply\\']:  curl: (22) The requested URL returned error: 503\\n')",
+  "rootConfigurationUnchanged": true,
+  "finishedAt": "2026-11-09T00:54:47.798842+00:00"
+}

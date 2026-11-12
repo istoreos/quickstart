@@ -1,0 +1,64 @@
+{
+  "status": "failed",
+  "layer": "formal LuCI host and installed external module; deterministic business view states",
+  "checks": [
+    {
+      "id": "TH12-system-320-standard-empty",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 320,
+        "height": 268,
+        "content": 268,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-320-standard-stale",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 320,
+        "height": 268,
+        "content": 268,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-320-standard-running",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 320,
+        "height": 324,
+        "content": 324,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-320-standard-failed",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 320,
+        "height": 326,
+        "content": 326,
+        "shell": "rgb(44, 44, 44)"
+      }
+    }
+  ],
+  "errors": [],
+  "failure": "The input did not match the regular expression /本次失败|Failed this time/. Input:\n\n'Internet speed\\n' +\n  'Test\\n' +\n  '⋮\\n' +\n  '↓ Last download\\n' +\n  '950\\n' +\n  'Mbps\\n' +\n  '↑ Last upload\\n' +\n  '48\\n' +\n  'Mbps\\n' +\n  '\\n' +\n  'Last tested\\n' +\n  '09/11/2026, 00:00\\n' +\n  '\\n' +\n  'NAT\\n' +\n  'Full Cone\\n' +\n  'IPv6\\n' +\n  'Probe failed\\n' +\n  '\\n' +\n  'Some probes failed; valid results retained\\n' +\n  '\\n' +\n  'Default WAN route\\n' +\n  'FastNet'\n"
+}

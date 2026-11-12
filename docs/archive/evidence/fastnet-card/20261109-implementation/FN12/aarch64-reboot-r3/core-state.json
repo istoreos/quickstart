@@ -1,0 +1,123 @@
+{
+  "schemaVersion": 1,
+  "jobs": [
+    {
+      "task": {
+        "id": "run_b61823f9faa58d1a6fc44473b188fa95",
+        "instanceId": "service_25b25d6c8bf1b5335fa8dc959e6c3632",
+        "state": "succeeded",
+        "stage": "ipv6",
+        "startedAt": "2026-11-09T17:57:57.727098431Z",
+        "finishedAt": "2026-11-09T17:58:38.795635928Z",
+        "deadlineAt": "2026-11-09T17:59:57.727098431Z",
+        "error": null
+      },
+      "key": "0a2eb06d9db80f0d7a8c6076c347119c",
+      "engine": {
+        "summary": {
+          "dockerUsed": true,
+          "dockerBytes": 562183597,
+          "downloadSeconds": 20.001037604,
+          "measurementConclusion": "measured_lower_bound",
+          "pingMs": 102.36363636363636,
+          "jitterMs": 12.792357835999995,
+          "downloadBps": 863207280,
+          "uploadBps": 62997408,
+          "natType": "NAT3 (Port Restricted Cone)",
+          "ipv6Info": "未检测到 IPv6；IPv6 准备度 0/10"
+        },
+        "times": {
+          "download": "2026-11-09T17:58:20.121986847Z",
+          "ipv6": "2026-11-09T17:58:38.7921158Z",
+          "nat": "2026-11-09T17:58:38.408653517Z",
+          "ping": "2026-11-09T17:58:00.120518707Z",
+          "upload": "2026-11-09T17:58:32.123889002Z"
+        },
+        "status": {
+          "download": "ok",
+          "ipv6": "ok",
+          "nat": "ok",
+          "ping": "ok",
+          "upload": "ok"
+        }
+      }
+    },
+    {
+      "task": {
+        "id": "run_2c122ccf0285ce16f0db848690f128eb",
+        "instanceId": "service_25b25d6c8bf1b5335fa8dc959e6c3632",
+        "state": "cancelled",
+        "stage": "ping",
+        "startedAt": "2026-11-09T17:58:40.984048367Z",
+        "finishedAt": "2026-11-09T17:58:41.265019214Z",
+        "deadlineAt": "2026-11-09T18:00:40.984048367Z",
+        "error": null
+      },
+      "key": "ace198606a298fee406817f63c968b05"
+    },
+    {
+      "task": {
+        "id": "run_a1d7c412416130b1ef8e52b5df2c7e85",
+        "instanceId": "service_25b25d6c8bf1b5335fa8dc959e6c3632",
+        "state": "interrupted",
+        "stage": "preparing",
+        "startedAt": "2026-11-09T17:58:49.868064514Z",
+        "finishedAt": "2026-11-09T17:58:50.236384616Z",
+        "deadlineAt": "2026-11-09T18:00:49.868064514Z",
+        "error": "service_restarted"
+      },
+      "key": "e83c1656dcc721a0dbeac3f28c07ef3e"
+    },
+    {
+      "task": {
+        "id": "run_8620776b7d3f88aeb901c7237e156605",
+        "instanceId": "service_7f8785e011fac7b91b13f5422e0d5b8b",
+        "state": "interrupted",
+        "stage": "preparing",
+        "startedAt": "2026-11-09T17:59:11.901245348Z",
+        "finishedAt": "2026-11-09T18:00:09.10816593Z",
+        "deadlineAt": "2026-11-09T18:01:11.901245348Z",
+        "error": "service_restarted"
+      },
+      "key": "1b01ec1e21e969f67273e64676df29ff"
+    }
+  ],
+  "latest": {
+    "runId": "run_b61823f9faa58d1a6fc44473b188fa95",
+    "measuredAt": "2026-11-09T17:58:32.123889002Z",
+    "download": {
+      "status": "ok",
+      "value": 863207280,
+      "measuredAt": "2026-11-09T17:58:20.121986847Z",
+      "error": null,
+      "runId": "run_b61823f9faa58d1a6fc44473b188fa95"
+    },
+    "upload": {
+      "status": "ok",
+      "value": 62997408,
+      "measuredAt": "2026-11-09T17:58:32.123889002Z",
+      "error": null,
+      "runId": "run_b61823f9faa58d1a6fc44473b188fa95"
+    },
+    "nat": {
+      "status": "ok",
+      "value": "NAT3 (Port Restricted Cone)",
+      "measuredAt": "2026-11-09T17:58:38.408653517Z",
+      "error": null,
+      "runId": "run_b61823f9faa58d1a6fc44473b188fa95"
+    },
+    "ipv6": {
+      "status": "unavailable",
+      "value": null,
+      "measuredAt": "2026-11-09T17:58:38.7921158Z",
+      "error": null,
+      "runId": "run_b61823f9faa58d1a6fc44473b188fa95"
+    },
+    "bandwidth": {
+      "runId": "run_b61823f9faa58d1a6fc44473b188fa95",
+      "measuredAt": "2026-11-09T17:58:32.123889002Z",
+      "downloadBps": 863207280,
+      "uploadBps": 62997408
+    }
+  }
+}

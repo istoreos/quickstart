@@ -1,0 +1,14 @@
+{
+  "beforeRevision": 4,
+  "afterRevision": 5,
+  "sources": 72,
+  "urlsFlagsSamplesPreserved": true,
+  "primaryIds": [
+    "candidate-008",
+    "huawei",
+    "candidate-001",
+    "chrome"
+  ],
+  "unmeasuredAndFailedOrderPreserved": true,
+  "wechatReferencesPreserved": true
+}

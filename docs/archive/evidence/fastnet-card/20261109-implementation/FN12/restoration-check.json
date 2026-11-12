@@ -1,0 +1,33 @@
+{
+  "x86_64": {
+    "status": "passed",
+    "baselineFileHashes": {
+      "/usr/sbin/quickstart": "0aad508a0c96119f21a71260aa5da6706ec37b1653bde10f288b320528db339d",
+      "/usr/sbin/FastNet": "ea3cb1c2945392c79cd6fea848b3265aaa47372c712583c2a148798a34846fe4",
+      "/www/luci-static/quickstart/index.js": "9906e228351a4e0a59ba6d3bfb004520f6934935a0141366c270ccd2a59b3c55",
+      "/www/luci-static/quickstart/vendor.js": "a8aacd35063e93bcac90e1b1a730a29f209eeb96a7b2a51f3bedff06b91e984e"
+    },
+    "quickstartRunning": true,
+    "fastnetRunning": false,
+    "originalPackageVersions": [],
+    "privateRecoveryStagesRemoved": true
+  },
+  "aarch64": {
+    "status": "passed",
+    "baselineFileHashes": {
+      "/usr/sbin/quickstart": "a6cbb775d0ee1c4c9469631668bb176992bfe8c31ccdb3c6af5c8a20ad580eb5",
+      "/usr/sbin/FastNet": "f9860a376bd0f43e1fb4e6a9abb6d9848083f998c3ba57f149f856f484db4119",
+      "/www/luci-static/quickstart/index.js": "db938ff02c84e55301df582f81c09fa900f7b2421b80c70cf24214d15f693eaf",
+      "/www/luci-static/quickstart/vendor.js": "a8aacd35063e93bcac90e1b1a730a29f209eeb96a7b2a51f3bedff06b91e984e"
+    },
+    "quickstartRunning": true,
+    "fastnetRunning": false,
+    "originalPackageVersions": [
+      "app-meta-fastnet - 0.7.7-r1",
+      "fastnet - 0.7.7-1",
+      "luci-app-fastnet - 0.7.7-r1",
+      "luci-i18n-fastnet-zh-cn - git-26.254.32558-ff56597"
+    ],
+    "privateRecoveryStagesRemoved": true
+  }
+}

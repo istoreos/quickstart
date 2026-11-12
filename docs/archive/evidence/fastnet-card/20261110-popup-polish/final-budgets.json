@@ -1,0 +1,399 @@
+{
+  "results": {
+    "B01": {
+      "status": "passed",
+      "evidence": [
+        "resource-check.json"
+      ],
+      "hostInitialGzipDeltaBytes": 20265
+    },
+    "B02": {
+      "status": "passed",
+      "evidence": [
+        "FN11/artifact-check.json",
+        "FN10/budgets.json"
+      ],
+      "dedicatedCSSBytes": 0,
+      "fonts": 0,
+      "bitmaps": 0,
+      "charts": 0
+    },
+    "B03": {
+      "status": "passed",
+      "evidence": [
+        "FN11/performance-x86_64/performance-browser-report.json",
+        "FN11/performance-aarch64/performance-browser-report.json"
+      ]
+    },
+    "B04": {
+      "status": "passed",
+      "evidence": [
+        "FN11/performance-x86_64/performance-browser-report.json",
+        "FN11/performance-aarch64/performance-browser-report.json",
+        "FN12/x86_64-reboot-r2/core-state.json",
+        "FN12/aarch64-reboot-r3/core-state.json"
+      ]
+    },
+    "B05": {
+      "status": "passed",
+      "evidence": [
+        "FN11/performance-x86_64/performance-browser-report.json",
+        "FN11/performance-aarch64/performance-browser-report.json"
+      ]
+    },
+    "B06": {
+      "status": "passed",
+      "evidence": [
+        "FN11/preview-faults/fault-browser-report.json",
+        "FN10/core-tests.json"
+      ]
+    },
+    "B07": {
+      "status": "passed",
+      "evidence": [
+        "FN11/performance-x86_64/performance-browser-report.json",
+        "FN11/performance-aarch64/performance-browser-report.json",
+        "FN11/formal-themes-final-pass/checks-browser-report.json"
+      ]
+    },
+    "B08": {
+      "status": "passed",
+      "evidence": [
+        "FN11/performance-x86_64/performance-browser-report.json",
+        "FN11/performance-aarch64/performance-browser-report.json"
+      ]
+    },
+    "B09": {
+      "status": "passed",
+      "evidence": [
+        "FN11/performance-x86_64/performance-browser-report.json",
+        "FN11/performance-aarch64/performance-browser-report.json"
+      ]
+    },
+    "B10": {
+      "status": "passed",
+      "evidence": [
+        "FN11/performance-x86_64/performance-browser-report.json",
+        "FN11/performance-aarch64/performance-browser-report.json",
+        "FN10/concurrency/checks-browser-report.json",
+        "FN10/core-tests.json",
+        "FN12/x86_64-reboot-r2/core-state.json",
+        "FN12/aarch64-reboot-r3/core-state.json"
+      ]
+    }
+  },
+  "devices": {
+    "x86_64": {
+      "B03": {
+        "summaryP95ms": 69.29195100000015,
+        "runP95ms": 83.84375600000021,
+        "warmup": 5,
+        "samples": 30,
+        "summarySamplesMs": [
+          64.05101399999967,
+          63.97548300000017,
+          65.71640100000059,
+          67.50421800000004,
+          66.46000399999957,
+          64.22013700000025,
+          65.25662999999986,
+          66.66981399999986,
+          65.43348100000003,
+          67.77285599999959,
+          67.00549799999953,
+          63.41223100000025,
+          64.0798279999999,
+          63.77510700000039,
+          64.02487999999994,
+          65.63988900000004,
+          66.49248799999987,
+          69.29195100000015,
+          68.0287530000005,
+          68.40004200000021,
+          70.97035400000004,
+          67.12661300000036,
+          64.13703800000076,
+          64.40122899999915,
+          68.82300600000053,
+          62.775110999999924,
+          64.55179300000054,
+          63.38827399999991,
+          64.64819799999987,
+          68.06457299999965
+        ],
+        "runSamplesMs": [
+          80.06782100000055,
+          81.36397600000055,
+          79.57276300000012,
+          79.80717299999924,
+          79.0858559999997,
+          80.16022499999963,
+          78.92333700000017,
+          80.98432300000059,
+          76.67443400000047,
+          80.27582799999982,
+          80.54077200000029,
+          77.5100450000009,
+          79.84912900000018,
+          83.79314599999998,
+          79.69661900000028,
+          77.21780299999955,
+          76.5279129999999,
+          81.50219599999946,
+          83.84375600000021,
+          91.19345000000067,
+          83.04916899999989,
+          83.6860570000008,
+          76.47027799999887,
+          76.05269999999837,
+          80.66807099999824,
+          80.34055100000114,
+          80.0647910000007,
+          80.820416999999,
+          79.79936300000008,
+          83.46908699999949
+        ]
+      },
+      "B04": {
+        "maximumSummaryBytes": 130,
+        "maximumTaskBytes": 287,
+        "registryBytes": 405
+      },
+      "B10": {
+        "realStarts": 35,
+        "maximumStopMs": 164.81668700000046
+      },
+      "B08": {
+        "mountCycles": 50,
+        "scope": {
+          "timers": 0,
+          "observers": 1,
+          "listeners": 0,
+          "pending": 0,
+          "queries": 1
+        },
+        "end": {
+          "timers": 0,
+          "observers": 1,
+          "listeners": 0,
+          "pending": 0,
+          "queries": 51
+        },
+        "heapGrowthBytes": 404616
+      },
+      "B07": {
+        "successfulImports": 1,
+        "modules": [
+          {
+            "path": "/luci-static/fastnet/quickstart/card.2962210c.js",
+            "wire": 18612,
+            "encoded": 18312
+          }
+        ]
+      },
+      "B05": {
+        "idleSecondsPerVisibleInterval": 60,
+        "intervals": 3,
+        "periodicRequests": 0
+      },
+      "B09": {
+        "warmupSeconds": 30,
+        "pairs": 3,
+        "secondsEach": 60,
+        "cpuDeltasPercentagePoints": [
+          0.06845070223834782,
+          -1.465212272175604,
+          -0.30629371937943706
+        ],
+        "meanCpuDelta": -0.5676850964388978,
+        "rssDeltasKiB": [
+          -438,
+          816,
+          -1388
+        ],
+        "meanRSSDeltaKiB": -336.6666666666667,
+        "newPersistentProcesses": 0,
+        "measurement": "whole-device /proc/stat CPU; RSS of same FastNet + Quickstart + uhttpd PIDs; isolated production CardShell fixture"
+      }
+    },
+    "aarch64": {
+      "B03": {
+        "summaryP95ms": 159.97237000000132,
+        "runP95ms": 158.71557100000064,
+        "warmup": 5,
+        "samples": 30,
+        "summarySamplesMs": [
+          141.66364199999953,
+          159.97237000000132,
+          143.90582699999868,
+          144.33308800000123,
+          139.00551600000108,
+          138.7187529999992,
+          136.68191699999988,
+          137.22797700000046,
+          139.8267420000011,
+          642.2736509999995,
+          139.89630699999907,
+          148.7960099999982,
+          136.89758800000345,
+          151.75249500000064,
+          138.45008600000074,
+          137.29759199999899,
+          140.86226100000204,
+          147.5090510000009,
+          140.3995670000004,
+          141.7437890000001,
+          141.58955300000162,
+          140.00764699999854,
+          139.55162299999938,
+          151.78369400000156,
+          140.570716000002,
+          138.2107419999993,
+          138.30109100000118,
+          143.30963699999847,
+          140.640287000002,
+          135.32147899999836
+        ],
+        "runSamplesMs": [
+          152.92369699999836,
+          157.75029600000198,
+          162.99328199999945,
+          157.02845199999865,
+          149.2191160000002,
+          158.41222600000037,
+          151.9794019999972,
+          151.67797599999903,
+          151.21650099999897,
+          153.50206199999957,
+          155.56688600000052,
+          155.17639899999995,
+          148.65441799999826,
+          143.81192100000044,
+          147.90941799999928,
+          147.1606610000017,
+          151.80289999999877,
+          148.81399500000043,
+          148.11314200000197,
+          147.61895500000537,
+          144.00491100000363,
+          154.9925529999964,
+          147.6263240000044,
+          155.81271099999867,
+          155.79560199999833,
+          151.92963900000177,
+          152.17925300000206,
+          151.16511000000173,
+          158.71557100000064,
+          147.09949300000153
+        ]
+      },
+      "B04": {
+        "maximumSummaryBytes": 130,
+        "maximumTaskBytes": 287,
+        "registryBytes": 405
+      },
+      "B10": {
+        "realStarts": 35,
+        "maximumStopMs": 911.2180029999981
+      },
+      "B08": {
+        "mountCycles": 50,
+        "scope": {
+          "timers": 0,
+          "observers": 1,
+          "listeners": 0,
+          "pending": 0,
+          "queries": 1
+        },
+        "end": {
+          "timers": 0,
+          "observers": 1,
+          "listeners": 0,
+          "pending": 0,
+          "queries": 51
+        },
+        "heapGrowthBytes": 396952
+      },
+      "B07": {
+        "successfulImports": 1,
+        "modules": [
+          {
+            "path": "/luci-static/fastnet/quickstart/card.2962210c.js",
+            "wire": 18612,
+            "encoded": 18312
+          }
+        ]
+      },
+      "B05": {
+        "idleSecondsPerVisibleInterval": 60,
+        "intervals": 3,
+        "periodicRequests": 0
+      },
+      "B09": {
+        "warmupSeconds": 30,
+        "pairs": 3,
+        "secondsEach": 60,
+        "cpuDeltasPercentagePoints": [
+          0.007697100602932494,
+          -0.021275994691072775,
+          0.06611834230681524
+        ],
+        "meanCpuDelta": 0.017513149406224986,
+        "rssDeltasKiB": [
+          1172,
+          1728,
+          -1054
+        ],
+        "meanRSSDeltaKiB": 615.3333333333334,
+        "newPersistentProcesses": 0,
+        "measurement": "whole-device /proc/stat CPU; RSS of same FastNet + Quickstart + uhttpd PIDs; isolated production CardShell fixture"
+      }
+    }
+  },
+  "artifacts": {
+    "manifest": {
+      "schemaVersion": 1,
+      "id": "plugin.fastnet",
+      "title": "外网测速",
+      "glyph": "activity",
+      "abi": "quickstart-card-v1",
+      "version": "0.8.2-1",
+      "apiBase": "/cgi-bin/luci/admin/services/fastnet/card",
+      "forms": {
+        "standard": {
+          "minWidth": 280,
+          "minHeight": 260
+        },
+        "summary": {
+          "minWidth": 240,
+          "minHeight": 148
+        }
+      },
+      "stacked": [
+        "summary"
+      ],
+      "entry": "/luci-static/fastnet/quickstart/card.2962210c.js"
+    },
+    "cardSha256": "8daa1202bbe2f29daea78358c06b22b2cef7924becbc82d8f35847828f971809"
+  },
+  "hostGzip": {
+    "baseline": {
+      "luci-static/quickstart/style.css": 70556,
+      "luci-static/quickstart/index.js": 233310,
+      "luci-static/quickstart/vendor.js": 267404
+    },
+    "final": {
+      "luci-static/quickstart/app.js": 241378,
+      "luci-static/quickstart/card-runtime-v1.js": 44849,
+      "luci-static/quickstart/style.css": 71629,
+      "luci-static/quickstart/index.js": 735,
+      "luci-static/quickstart/vendor.js": 232289
+    },
+    "excludedLazyChunk": "installClient.js"
+  },
+  "realCompletedSummarySerializedBytes": {
+    "x86_64": 1294,
+    "aarch64": 1296
+  },
+  "currentChangeNote": "Only affected initial bytes remeasured; unchanged engine/lifecycle budgets retain explicit historical FN11/FN12 evidence."
+}

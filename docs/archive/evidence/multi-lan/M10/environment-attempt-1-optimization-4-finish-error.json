@@ -1,0 +1,5 @@
+{
+  "status": "failed",
+  "error": "RuntimeError({'x86': \"AssertionError(('sample or inventory health', {'activeDevices': 256, 'devices': 256, 'downloadBytes': 9580788, 'endpoint': 'device-traffic', 'maxSampleAgeSeconds': 1.6925360569999999, 'networkId': 'capacity1', 'p95Ms': 10.917, 'samples': 1, 'state': 'partial', 'uploadBytes': 39684412}))\"})",
+  "at": "2026-11-09T02:11:21.717083+00:00"
+}

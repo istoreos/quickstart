@@ -1,4 +1,5 @@
 import {computed,onMounted,onUnmounted,reactive,watch,type Ref} from 'vue'
+import {discoverLANs, LANDiscoveryError} from '../pages/device/lanDiscovery'
 import {buildDeviceListItems} from '../pages/device/deviceInventory'
 import {useNetworkStore,useSystemStore} from '../plugins/store'
 import type {WidgetId} from './layout/rowLayout'
@@ -28,6 +29,8 @@ export function useHomeData(visible:Ref<WidgetId[]>){
  const data=reactive<HomeData>({}),errors=reactive<Record<string,string>>({}),updated=reactive<Record<string,number>>({})
  const pending=new Map<string,AbortController>(),timers=new Map<string,number>()
  const network=useNetworkStore(),system=useSystemStore();let active=false
+ let discovery:ReturnType<typeof discoverLANs>|undefined
+ let discoveredAt=0
  const wanted=(c:Channel)=>!c.widgets.length||c.widgets.some(id=>visible.value.includes(id))
  function clear(id:string){window.clearTimeout(timers.get(id));timers.delete(id);pending.get(id)?.abort();pending.delete(id)}
  async function load(c:Channel){
@@ -35,7 +38,16 @@ export function useHomeData(visible:Ref<WidgetId[]>){
   window.clearTimeout(timers.get(c.id));timers.delete(c.id)
   const controller=new AbortController();pending.set(c.id,controller);const deadline=window.setTimeout(()=>controller.abort(),8000)
   try{
-   const response=await fetch('/cgi-bin/luci/istore'+c.path,{credentials:'same-origin',cache:'no-store',signal:controller.signal})
+   let path=c.path
+   if(c.id==='inventory'||c.id==='routerContext'){
+    if(Date.now()-discoveredAt>=30000){discovery=undefined;discoveredAt=Date.now()}
+    const found=await (discovery ||= discoverLANs().catch(reason=>{discovery=undefined;throw reason}))
+    data.lanNetworks=found.networks;data.lanLegacy=found.legacy
+    const selected=found.networks.length===1?found.networks[0].networkId:'all'
+    if(c.id==='routerContext'&&selected==='all'){if(active){data.routerContext={multiLAN:true};errors[c.id]='';updated[c.id]=Date.now()}return}
+    if(!found.legacy)path+='?network='+encodeURIComponent(selected)
+   }
+   const response=await fetch('/cgi-bin/luci/istore'+path,{credentials:'same-origin',cache:'no-store',signal:controller.signal})
    if(!response.ok)throw new Error(response.status===401||response.status===403?'permission':'unavailable')
    const text=await response.text();if(text.length>2*1024*1024)throw new Error('invalid')
    const envelope=JSON.parse(text);if(envelope.error||envelope.success!==undefined&&envelope.success!==0||!c.validate(envelope.result))throw new Error(envelope.success===-1001?'permission':'invalid')
@@ -45,7 +57,7 @@ export function useHomeData(visible:Ref<WidgetId[]>){
    if(c.id==='network')network.updateNetworkStatus({...data.network!})
    if(c.id==='system')system.updateSystemStatus({...data.system!})
    if(c.id==='version')system.version={...data.version!}
-  }catch(error){if(active&&pending.get(c.id)===controller)errors[c.id]=error instanceof Error&&error.message==='permission'?'permission':'unavailable'}
+  }catch(error){if(active&&pending.get(c.id)===controller)errors[c.id]=error instanceof LANDiscoveryError&&error.code==='permission'||error instanceof Error&&error.message==='permission'?'permission':'unavailable'}
   finally{window.clearTimeout(deadline);if(pending.get(c.id)===controller){pending.delete(c.id);if(active&&!document.hidden&&wanted(c)&&c.seconds)timers.set(c.id,window.setTimeout(()=>void load(c),c.seconds*1000))}}
  }
  function refresh(force=false){for(const c of channels){if(!wanted(c))clear(c.id);else if(force||!timers.has(c.id)&&!pending.has(c.id)&&(c.seconds>0||!updated[c.id]&&!errors[c.id]))void load(c)}}

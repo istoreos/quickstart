@@ -8,7 +8,7 @@ export const componentDefinitions = [
 export type ComponentId=typeof componentDefinitions[number]['id']
 export type FeatureComponent={id:ComponentId;capabilityKey:string;package:string;provider?:string;selected:boolean;status:{state:CapabilityState;reason?:string;actions?:{kind:string}[]};operation?:'running'|'pending'}
 export type ComponentCatalog={schemaVersion:1;currentProvider:string;components:FeatureComponent[]}
-export type ComponentPlan={capabilityKey:string;action:'install'|'enable';current:{state:CapabilityState};target:string;canApply:boolean;requiresConfirmation:boolean;requiredFreeBytes?:number;availableFreeBytes?:number;draftToken?:string;error?:{code:string;message?:string}}
+export type ComponentPlan={capabilityKey:string;action:'install'|'enable';current:{state:CapabilityState};target:string;canApply:boolean;requiresConfirmation:boolean;requiredFreeBytes?:number;availableFreeBytes?:number;draftToken?:string;version?:string;networkId?:string;operationScope?:string;affectedNetworks?:string[];error?:{code:string;message?:string}}
 export class ComponentError extends Error{constructor(public code:string){super(code)}}
 const object=(v:any)=>v&&typeof v==='object'&&!Array.isArray(v)
 const states=['available','disabled','not_installed','unsupported','error']
@@ -26,12 +26,12 @@ export function componentAction(item:FeatureComponent):'install'|'enable'|undefi
  const kind=item.status.state==='not_installed'?'install':item.id==='quickstart-native'&&item.status.state==='disabled'?'enable':undefined
  return kind&&item.status.actions?.some(action=>action.kind===kind)?kind:undefined
 }
-export function createComponentClient(transport:typeof fetch=fetch){
+export function createComponentClient(transport:typeof fetch=fetch, networkId?:string){
  async function exchange(path:string,body?:unknown,write=false,signal?:AbortSignal){
   const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),write?45000:10000)
   const abort=()=>controller.abort();if(signal?.aborted)abort();signal?.addEventListener('abort',abort,{once:true})
   try{
-   const response=await transport('/cgi-bin/luci/istore/lanctrl/v2/'+path,{method:body?'POST':'GET',credentials:'same-origin',cache:'no-store',signal:controller.signal,headers:body?{'Content-Type':'application/json'}:undefined,body:body?JSON.stringify(body):undefined})
+   const response=await transport('/cgi-bin/luci/istore/lanctrl/v2/'+path+(networkId?'?network='+encodeURIComponent(networkId):''),{method:body?'POST':'GET',credentials:'same-origin',cache:'no-store',signal:controller.signal,headers:body?{'Content-Type':'application/json'}:undefined,body:body?JSON.stringify(body):undefined})
    if(!response.ok)throw new ComponentError(response.status===401||response.status===403?'forbidden':response.status===404?'unsupported':'unavailable')
    const text=await response.text();if(text.length>65536)throw new ComponentError('invalid')
    let envelope:any;try{envelope=JSON.parse(text)}catch{throw new ComponentError('invalid')}
@@ -52,7 +52,7 @@ export function createComponentClient(transport:typeof fetch=fetch){
    return plan as ComponentPlan
   },
   async apply(plan:ComponentPlan){
-   const result=await exchange('capability-action/apply/',{capabilityKey:plan.capabilityKey,action:plan.action,draftToken:plan.draftToken,expectedState:plan.current.state,confirm:true},true)
+   const result=await exchange('capability-action/apply/',{capabilityKey:plan.capabilityKey,action:plan.action,draftToken:plan.draftToken,expectedState:plan.current.state,expectedVersion:plan.version,confirm:true},true)
    if(result.error)throw new ComponentError(result.error.code||'uncertain')
    if(typeof result.changed!=='boolean'||result.changed!==true||!object(result.current)||!states.includes(result.current.state))throw new ComponentError('uncertain')
    return result

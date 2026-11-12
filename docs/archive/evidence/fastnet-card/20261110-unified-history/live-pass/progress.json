@@ -1,0 +1,7 @@
+{
+  "checks": [
+    "same production page/default quick experience/navigation in HTTPS Quickstart iframe and direct FastNet; no automatic test",
+    "real HTTPS gateway LAN saves exactly one LAN-only record; only LAN snapshot updates; live host theme and immediate card refresh work",
+    "direct FastNet quick experience archives one shared native-and-browser operation; actual WAN and LAN succeed; card reads the same categorized snapshots"
+  ]
+}

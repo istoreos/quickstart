@@ -1,0 +1,54 @@
+{
+  "milestone": "FN10",
+  "status": "failed",
+  "checks": [
+    {
+      "id": "read-403",
+      "status": "failed",
+      "failure": "read retry unexpectedly starts a speed test\n\n1 !== 0\n"
+    },
+    {
+      "id": "read-404",
+      "status": "failed",
+      "failure": "read retry unexpectedly starts a speed test\n\n1 !== 0\n"
+    },
+    {
+      "id": "read-503",
+      "status": "failed",
+      "failure": "read retry unexpectedly starts a speed test\n\n1 !== 0\n"
+    },
+    {
+      "id": "read-json",
+      "status": "failed",
+      "failure": "read retry unexpectedly starts a speed test\n\n1 !== 0\n"
+    },
+    {
+      "id": "read-slow",
+      "status": "failed",
+      "failure": "read retry unexpectedly starts a speed test\n\n1 !== 0\n"
+    },
+    {
+      "id": "read-bandwidth",
+      "status": "failed",
+      "failure": "locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-fastnet-card] [role=alert]') to be visible\u001b[22m\n"
+    },
+    {
+      "id": "write-503-retains-idempotency",
+      "status": "failed",
+      "failure": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '449d78a1e3ca1e97a77ad2f70e25e4f6'\n- 'b641ee566595acc420794219f431a347'\n"
+    },
+    {
+      "id": "three-failures-pause-sequential-poll",
+      "status": "passed"
+    },
+    {
+      "id": "hide-resume-same-task",
+      "status": "failed",
+      "failure": "page.waitForFunction: Timeout 30000ms exceeded."
+    },
+    {
+      "id": "restart-retains-results-no-auto-run",
+      "status": "passed"
+    }
+  ]
+}

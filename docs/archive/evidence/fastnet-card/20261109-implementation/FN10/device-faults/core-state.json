@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "jobs": [
+    {
+      "task": {
+        "id": "run_4f54c51764a183645547c6d9f04e88dc",
+        "instanceId": "service_bab2f945974408adc580c0c4609f65eb",
+        "state": "partial",
+        "stage": "ipv6",
+        "startedAt": "2026-11-09T16:57:29.974891864Z",
+        "finishedAt": "2026-11-09T16:58:06.783595341Z",
+        "deadlineAt": "2026-11-09T16:59:29.974891864Z",
+        "error": null,
+        "issues": {
+          "nat": "probe_failed"
+        }
+      },
+      "key": "bb5456739113408c204bddcb4efa648e",
+      "engine": {
+        "summary": {
+          "dockerUsed": true,
+          "dockerBytes": 401718701,
+          "downloadSeconds": 20.000297706,
+          "measurementConclusion": "measured_lower_bound",
+          "pingMs": 8.909090909090908,
+          "jitterMs": 5.1115315200000015,
+          "downloadBps": 889003099,
+          "uploadBps": 43646259,
+          "natError": "stun timeout",
+          "ipv6Info": "未检测到 IPv6；IPv6 准备度 0/10"
+        },
+        "times": {
+          "download": "2026-11-09T16:57:51.311090957Z",
+          "ipv6": "2026-11-09T16:58:06.782511222Z",
+          "nat": "2026-11-09T16:58:06.425775152Z",
+          "ping": "2026-11-09T16:57:31.310719695Z",
+          "upload": "2026-11-09T16:58:03.311724356Z"
+        },
+        "status": {
+          "download": "ok",
+          "ipv6": "ok",
+          "nat": "fail",
+          "ping": "ok",
+          "upload": "ok"
+        }
+      }
+    },
+    {
+      "task": {
+        "id": "run_839c002f3f3230b73b907e7b4f0b708f",
+        "instanceId": "service_bab2f945974408adc580c0c4609f65eb",
+        "state": "cancelled",
+        "stage": "ping",
+        "startedAt": "2026-11-09T16:58:08.700066588Z",
+        "finishedAt": "2026-11-09T16:58:08.994133426Z",
+        "deadlineAt": "2026-11-09T17:00:08.700066588Z",
+        "error": null
+      },
+      "key": "6739544d80951a8b369564f3ccbe122c"
+    },
+    {
+      "task": {
+        "id": "run_a2891380aa64f4aec7914aeb54fbcdf0",
+        "instanceId": "service_bab2f945974408adc580c0c4609f65eb",
+        "state": "interrupted",
+        "stage": "preparing",
+        "startedAt": "2026-11-09T16:58:15.947580703Z",
+        "finishedAt": "2026-11-09T16:58:16.201611125Z",
+        "deadlineAt": "2026-11-09T17:00:15.947580703Z",
+        "error": "service_restarted"
+      },
+      "key": "f8ea743a3d31ba94d17bbc9125dd238a"
+    }
+  ],
+  "latest": {
+    "runId": "run_4f54c51764a183645547c6d9f04e88dc",
+    "measuredAt": "2026-11-09T16:58:03.311724356Z",
+    "download": {
+      "status": "ok",
+      "value": 889003099,
+      "measuredAt": "2026-11-09T16:57:51.311090957Z",
+      "error": null,
+      "runId": "run_4f54c51764a183645547c6d9f04e88dc"
+    },
+    "upload": {
+      "status": "ok",
+      "value": 43646259,
+      "measuredAt": "2026-11-09T16:58:03.311724356Z",
+      "error": null,
+      "runId": "run_4f54c51764a183645547c6d9f04e88dc"
+    },
+    "nat": {
+      "status": "error",
+      "value": null,
+      "measuredAt": null,
+      "error": "probe_failed"
+    },
+    "ipv6": {
+      "status": "unavailable",
+      "value": null,
+      "measuredAt": "2026-11-09T16:58:06.782511222Z",
+      "error": null,
+      "runId": "run_4f54c51764a183645547c6d9f04e88dc"
+    },
+    "bandwidth": {
+      "runId": "run_4f54c51764a183645547c6d9f04e88dc",
+      "measuredAt": "2026-11-09T16:58:03.311724356Z",
+      "downloadBps": 889003099,
+      "uploadBps": 43646259
+    }
+  }
+}

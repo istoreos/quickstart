@@ -1,0 +1,30 @@
+{
+  "milestone": "M10",
+  "host": "192.168.30.93",
+  "status": "failed",
+  "startedAt": "2026-11-08T19:51:00.971006+00:00",
+  "preflightOnly": true,
+  "cases": [
+    {
+      "lanCount": 4,
+      "base": "/tmp/quickstart-multi-lan/m10-5676e9",
+      "router": "qsm10-5676e9",
+      "namespaces": [
+        "qsm10-5676e9",
+        "qsm10-5676e9-w",
+        "qsm10-5676e9-c1",
+        "qsm10-5676e9-c2",
+        "qsm10-5676e9-c3",
+        "qsm10-5676e9-c4"
+      ],
+      "cleaned": true
+    }
+  ],
+  "artifactSha256": {
+    "engine": "f3d2a125a9b53e6090344d39f4c71b21d5136383ce9266cb6681fd29bab163d9",
+    "goTest": "9fd5aec9709e6daaf14d5a4575d4ebf318eb4f152ac92665f7d23edb16ed8e46"
+  },
+  "error": "AssertionError(('sample or inventory health', {'devices': 256, 'endpoint': 'device-traffic', 'maxSampleAgeSeconds': 1.068743503, 'networkId': 'capacity1', 'p95Ms': 157.396, 'samples': 1, 'state': 'warming_up'}))",
+  "rootConfigurationUnchanged": true,
+  "finishedAt": "2026-11-08T19:52:25.308445+00:00"
+}

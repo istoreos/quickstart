@@ -1,6 +1,7 @@
 export type DeviceTelemetryState = 'warming_up' | 'ready' | 'stale' | 'partial'
 
 export type DeviceTelemetryItem = {
+    networkId?: string
     deviceId: string
     uploadSpeed: number
     downloadSpeed: number
@@ -32,5 +33,5 @@ export const telemetrySpeedLabel = (item: DeviceTelemetryItem | undefined, direc
 
 export const telemetryBackoff = (failures: number): number => Math.min(30000, 3000 * (2 ** Math.max(0, failures - 1)))
 
-export const telemetryByDevice = (items: DeviceTelemetryItem[]): Map<string, DeviceTelemetryItem> =>
-    new Map(items.map(item => [item.deviceId, item]))
+export const telemetryByDevice = (items: DeviceTelemetryItem[], key: (item: DeviceTelemetryItem) => string = item => item.deviceId): Map<string, DeviceTelemetryItem> =>
+    new Map(items.map(item => [key(item), item]))

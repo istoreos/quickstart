@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "checks": [
+    "403: full quick flow finishes; no global history alert; history page degrades locally",
+    "503: full quick flow finishes; no global history alert; history page degrades locally",
+    "card footer and terminal retry note removed; light/dark render correctly"
+  ],
+  "origins": [],
+  "errors": []
+}

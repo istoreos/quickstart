@@ -1,0 +1,204 @@
+{
+  "status": "failed",
+  "layer": "formal LuCI host and installed external module; deterministic business view states",
+  "checks": [
+    {
+      "id": "TH12-system-320-standard-empty",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 320,
+        "height": 268,
+        "content": 268,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-320-standard-stale",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 320,
+        "height": 268,
+        "content": 268,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-320-standard-running",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 320,
+        "height": 324,
+        "content": 324,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-320-standard-failed",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 320,
+        "height": 326,
+        "content": 326,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-320-standard-partial",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 320,
+        "height": 298,
+        "content": 298,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-320-summary-empty",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 320,
+        "height": 150,
+        "content": 150,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-320-summary-stale",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 320,
+        "height": 150,
+        "content": 150,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-320-summary-running",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 320,
+        "height": 170,
+        "content": 170,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-320-summary-failed",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 320,
+        "height": 175,
+        "content": 175,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-320-summary-partial",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 320,
+        "height": 167,
+        "content": 167,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-390-standard-empty",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 390,
+        "height": 268,
+        "content": 268,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-390-standard-stale",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 390,
+        "height": 268,
+        "content": 268,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-390-standard-running",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 390,
+        "height": 324,
+        "content": 324,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-390-standard-failed",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 390,
+        "height": 308,
+        "content": 308,
+        "shell": "rgb(44, 44, 44)"
+      }
+    }
+  ],
+  "errors": [],
+  "failure": "locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-fastnet-card]') to be visible\u001b[22m\n"
+}

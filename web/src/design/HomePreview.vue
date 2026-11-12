@@ -1,5 +1,6 @@
 <template>
-  <OrderedHome v-if="!legacy&&!previous&&!oldCanvas&&route.query.stage!=='compare'&&!['grid','free'].includes(String(route.query.variant||''))"/>
+  <IndexPage v-if="!legacy&&route.query.variant!=='ordered'&&!previous&&!oldCanvas&&route.query.stage!=='compare'&&!['grid','free'].includes(String(route.query.variant||''))"/>
+  <OrderedHome v-else-if="!legacy&&!previous&&!oldCanvas&&route.query.stage!=='compare'&&!['grid','free'].includes(String(route.query.variant||''))"/>
   <LayoutDesignHome v-else-if="!legacy&&!previous&&!oldCanvas"/>
   <CanvasHome v-else-if="!legacy&&!previous"/>
   <StudioHome v-else-if="previous" />

@@ -1,6 +1,6 @@
 package service
 
-import "testing"
+import ("testing"; "context")
 
 func TestBuildFloatIPStatusMainRoleIncludesCheckURLFields(t *testing.T) {
 	state := buildFloatIPStatus(true, "1", "main", "192.168.1.2", "1.1.1.1", "https://example.com/check", "30")
@@ -100,7 +100,7 @@ func TestToSpeedLimitModel(t *testing.T) {
 		DownloadSpeed: 8192,
 	}
 
-	model := toSpeedLimitModel(state)
+	model := toSpeedLimitModel(context.Background(), state)
 
 	if model.Installed != state.Installed {
 		t.Fatalf("Installed = %v, want %v", model.Installed, state.Installed)

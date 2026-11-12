@@ -1,0 +1,1714 @@
+{
+  "status": "failed",
+  "checks": [
+    {
+      "id": "page-light-1440-quick",
+      "size": {
+        "width": 1440,
+        "scroll": 1440,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-1440-multi",
+      "size": {
+        "width": 1440,
+        "scroll": 1440,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-1440-nat",
+      "size": {
+        "width": 1440,
+        "scroll": 1440,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-1440-ipv6",
+      "size": {
+        "width": 1440,
+        "scroll": 1440,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-1440-homebox",
+      "size": {
+        "width": 1440,
+        "scroll": 1440,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-1440-speedtest",
+      "size": {
+        "width": 1440,
+        "scroll": 1440,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-1440-browser-lan",
+      "size": {
+        "width": 1440,
+        "scroll": 1440,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-1440-browser-ipv6",
+      "size": {
+        "width": 1440,
+        "scroll": 1440,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-1440-browser-nat",
+      "size": {
+        "width": 1440,
+        "scroll": 1440,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-1440-external-tools",
+      "size": {
+        "width": 1440,
+        "scroll": 1440,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-1024-quick",
+      "size": {
+        "width": 1024,
+        "scroll": 1024,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-1024-multi",
+      "size": {
+        "width": 1024,
+        "scroll": 1024,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-1024-nat",
+      "size": {
+        "width": 1024,
+        "scroll": 1024,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-1024-ipv6",
+      "size": {
+        "width": 1024,
+        "scroll": 1024,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-1024-homebox",
+      "size": {
+        "width": 1024,
+        "scroll": 1024,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-1024-speedtest",
+      "size": {
+        "width": 1024,
+        "scroll": 1024,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-1024-browser-lan",
+      "size": {
+        "width": 1024,
+        "scroll": 1024,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-1024-browser-ipv6",
+      "size": {
+        "width": 1024,
+        "scroll": 1024,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-1024-browser-nat",
+      "size": {
+        "width": 1024,
+        "scroll": 1024,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-1024-external-tools",
+      "size": {
+        "width": 1024,
+        "scroll": 1024,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-390-quick",
+      "size": {
+        "width": 390,
+        "scroll": 390,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-390-multi",
+      "size": {
+        "width": 390,
+        "scroll": 390,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-390-nat",
+      "size": {
+        "width": 390,
+        "scroll": 390,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-390-ipv6",
+      "size": {
+        "width": 390,
+        "scroll": 390,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-390-homebox",
+      "size": {
+        "width": 390,
+        "scroll": 390,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-390-speedtest",
+      "size": {
+        "width": 390,
+        "scroll": 390,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-390-browser-lan",
+      "size": {
+        "width": 390,
+        "scroll": 390,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-390-browser-ipv6",
+      "size": {
+        "width": 390,
+        "scroll": 390,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-390-browser-nat",
+      "size": {
+        "width": 390,
+        "scroll": 390,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-390-external-tools",
+      "size": {
+        "width": 390,
+        "scroll": 390,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-320-quick",
+      "size": {
+        "width": 320,
+        "scroll": 320,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-320-multi",
+      "size": {
+        "width": 320,
+        "scroll": 320,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-320-nat",
+      "size": {
+        "width": 320,
+        "scroll": 320,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-320-ipv6",
+      "size": {
+        "width": 320,
+        "scroll": 320,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-320-homebox",
+      "size": {
+        "width": 320,
+        "scroll": 320,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-320-speedtest",
+      "size": {
+        "width": 320,
+        "scroll": 320,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-320-browser-lan",
+      "size": {
+        "width": 320,
+        "scroll": 320,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-320-browser-ipv6",
+      "size": {
+        "width": 320,
+        "scroll": 320,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-320-browser-nat",
+      "size": {
+        "width": 320,
+        "scroll": 320,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-light-320-external-tools",
+      "size": {
+        "width": 320,
+        "scroll": 320,
+        "bg": "rgb(243, 246, 250)",
+        "appearance": "light"
+      }
+    },
+    {
+      "id": "page-dark-1440-quick",
+      "size": {
+        "width": 1440,
+        "scroll": 1440,
+        "bg": "rgb(16, 24, 32)",
+        "appearance": "dark"
+      }
+    },
+    {
+      "id": "page-dark-1440-multi",
+      "size": {
+        "width": 1440,
+        "scroll": 1440,
+        "bg": "rgb(16, 24, 32)",
+        "appearance": "dark"
+      }
+    },
+    {
+      "id": "page-dark-1440-nat",
+      "size": {
+        "width": 1440,
+        "scroll": 1440,
+        "bg": "rgb(16, 24, 32)",
+        "appearance": "dark"
+      }
+    },
+    {
+      "id": "page-dark-1440-ipv6",
+      "size": {
+        "width": 1440,
+        "scroll": 1440,
+        "bg": "rgb(16, 24, 32)",
+        "appearance": "dark"
+      }
+    },
+    {
+      "id": "page-dark-1440-homebox",
+      "size": {
+        "width": 1440,
+        "scroll": 1440,
+        "bg": "rgb(16, 24, 32)",
+        "appearance": "dark"
+      }
+    },
+    {
+      "id": "page-dark-1440-speedtest",
+      "size": {
+        "width": 1440,
+        "scroll": 1440,
+        "bg": "rgb(16, 24, 32)",
+        "appearance": "dark"
+      }
+    },
+    {
+      "id": "page-dark-1440-browser-lan",
+      "size": {
+        "width": 1440,
+        "scroll": 1440,
+        "bg": "rgb(16, 24, 32)",
+        "appearance": "dark"
+      }
+    },
+    {
+      "id": "page-dark-1440-browser-ipv6",
+      "size": {
+        "width": 1440,
+        "scroll": 1440,
+        "bg": "rgb(16, 24, 32)",
+        "appearance": "dark"
+      }
+    },
+    {
+      "id": "page-dark-1440-browser-nat",
+      "size": {
+        "width": 1440,
+        "scroll": 1440,
+        "bg": "rgb(16, 24, 32)",
+        "appearance": "dark"
+      }
+    },
+    {
+      "id": "page-dark-1440-external-tools",
+      "size": {
+        "width": 1440,
+        "scroll": 1440,
+        "bg": "rgb(16, 24, 32)",
+        "appearance": "dark"
+      }
+    },
+    {
+      "id": "page-dark-1024-quick",
+      "size": {
+        "width": 1024,
+        "scroll": 1024,
+        "bg": "rgb(16, 24, 32)",
+        "appearance": "dark"
+      }
+    },
+    {
+      "id": "page-dark-1024-multi",
+      "size": {
+        "width": 1024,
+        "scroll": 1024,
+        "bg": "rgb(16, 24, 32)",
+        "appearance": "dark"
+      }
+    },
+    {
+      "id": "page-dark-1024-nat",
+      "size": {
+        "width": 1024,
+        "scroll": 1024,
+        "bg": "rgb(16, 24, 32)",
+        "appearance": "dark"
+      }
+    },
+    {
+      "id": "page-dark-1024-ipv6",
+      "size": {
+        "width": 1024,
+        "scroll": 1024,
+        "bg": "rgb(16, 24, 32)",
+        "appearance": "dark"
+      }
+    },
+    {
+      "id": "page-dark-1024-homebox",
+      "size": {
+        "width": 1024,
+        "scroll": 1024,
+        "bg": "rgb(16, 24, 32)",
+        "appearance": "dark"
+      }
+    },
+    {
+      "id": "page-dark-1024-speedtest",
+      "size": {
+        "width": 1024,
+        "scroll": 1024,
+        "bg": "rgb(16, 24, 32)",
+        "appearance": "dark"
+      }
+    },
+    {
+      "id": "page-dark-1024-browser-lan",
+      "size": {
+        "width": 1024,
+        "scroll": 1024,
+        "bg": "rgb(16, 24, 32)",
+        "appearance": "dark"
+      }
+    },
+    {
+      "id": "page-dark-1024-browser-ipv6",
+      "size": {
+        "width": 1024,
+        "scroll": 1024,
+        "bg": "rgb(16, 24, 32)",
+        "appearance": "dark"
+      }
+    },
+    {
+      "id": "page-dark-1024-browser-nat",
+      "size": {
+        "width": 1024,
+        "scroll": 1024,
+        "bg": "rgb(16, 24, 32)",
+        "appearance": "dark"
+      }
+    },
+    {
+      "id": "page-dark-1024-external-tools",
+      "size": {
+        "width": 1024,
+        "scroll": 1024,
+        "bg": "rgb(16, 24, 32)",
+        "appearance": "dark"
+      }
+    },
+    {
+      "id": "page-dark-390-quick",
+      "size": {
+        "width": 390,
+        "scroll": 390,
+        "bg": "rgb(16, 24, 32)",
+        "appearance": "dark"
+      }
+    },
+    {
+      "id": "page-dark-390-multi",
+      "size": {
+        "width": 390,
+        "scroll": 390,
+        "bg": "rgb(16, 24, 32)",
+        "appearance": "dark"
+      }
+    },
+    {
+      "id": "page-dark-390-nat",
+      "size": {
+        "width": 390,
+        "scroll": 390,
+        "bg": "rgb(16, 24, 32)",
+        "appearance": "dark"
+      }
+    },
+    {
+      "id": "page-dark-390-ipv6",
+      "size": {
+        "width": 390,
+        "scroll": 390,
+        "bg": "rgb(16, 24, 32)",
+        "appearance": "dark"
+      }
+    },
+    {
+      "id": "page-dark-390-homebox",
+      "size": {
+        "width": 390,
+        "scroll": 390,
+        "bg": "rgb(16, 24, 32)",
+        "appearance": "dark"
+      }
+    },
+    {
+      "id": "page-dark-390-speedtest",
+      "size": {
+        "width": 390,
+        "scroll": 390,
+        "bg": "rgb(16, 24, 32)",
+        "appearance": "dark"
+      }
+    },
+    {
+      "id": "page-dark-390-browser-lan",
+      "size": {
+        "width": 390,
+        "scroll": 390,
+        "bg": "rgb(16, 24, 32)",
+        "appearance": "dark"
+      }
+    },
+    {
+      "id": "page-dark-390-browser-ipv6",
+      "size": {
+        "width": 390,
+        "scroll": 390,
+        "bg": "rgb(16, 24, 32)",
+        "appearance": "dark"
+      }
+    },
+    {
+      "id": "page-dark-390-browser-nat",
+      "size": {
+        "width": 390,
+        "scroll": 390,
+        "bg": "rgb(16, 24, 32)",
+        "appearance": "dark"
+      }
+    },
+    {
+      "id": "page-dark-390-external-tools",
+      "size": {
+        "width": 390,
+        "scroll": 390,
+        "bg": "rgb(16, 24, 32)",
+        "appearance": "dark"
+      }
+    },
+    {
+      "id": "page-dark-320-quick",
+      "size": {
+        "width": 320,
+        "scroll": 320,
+        "bg": "rgb(16, 24, 32)",
+        "appearance": "dark"
+      }
+    },
+    {
+      "id": "page-dark-320-multi",
+      "size": {
+        "width": 320,
+        "scroll": 320,
+        "bg": "rgb(16, 24, 32)",
+        "appearance": "dark"
+      }
+    },
+    {
+      "id": "page-dark-320-nat",
+      "size": {
+        "width": 320,
+        "scroll": 320,
+        "bg": "rgb(16, 24, 32)",
+        "appearance": "dark"
+      }
+    },
+    {
+      "id": "page-dark-320-ipv6",
+      "size": {
+        "width": 320,
+        "scroll": 320,
+        "bg": "rgb(16, 24, 32)",
+        "appearance": "dark"
+      }
+    },
+    {
+      "id": "page-dark-320-homebox",
+      "size": {
+        "width": 320,
+        "scroll": 320,
+        "bg": "rgb(16, 24, 32)",
+        "appearance": "dark"
+      }
+    },
+    {
+      "id": "page-dark-320-speedtest",
+      "size": {
+        "width": 320,
+        "scroll": 320,
+        "bg": "rgb(16, 24, 32)",
+        "appearance": "dark"
+      }
+    },
+    {
+      "id": "page-dark-320-browser-lan",
+      "size": {
+        "width": 320,
+        "scroll": 320,
+        "bg": "rgb(16, 24, 32)",
+        "appearance": "dark"
+      }
+    },
+    {
+      "id": "page-dark-320-browser-ipv6",
+      "size": {
+        "width": 320,
+        "scroll": 320,
+        "bg": "rgb(16, 24, 32)",
+        "appearance": "dark"
+      }
+    },
+    {
+      "id": "page-dark-320-browser-nat",
+      "size": {
+        "width": 320,
+        "scroll": 320,
+        "bg": "rgb(16, 24, 32)",
+        "appearance": "dark"
+      }
+    },
+    {
+      "id": "page-dark-320-external-tools",
+      "size": {
+        "width": 320,
+        "scroll": 320,
+        "bg": "rgb(16, 24, 32)",
+        "appearance": "dark"
+      }
+    },
+    {
+      "id": "theme-switch-keeps-draft-and-node-no-business-requests"
+    },
+    {
+      "id": "LAN-settings-live-theme-keeps-parameters-Escape-restores-focus"
+    },
+    {
+      "id": "WAN-and-IPv6-failures-remain-truthful-and-use-Qinglan-warning"
+    },
+    {
+      "id": "appearance-works-with-unavailable-storage"
+    },
+    {
+      "id": "native-LAN-six-pings-download-stream-upload-stream-theme-in-flight",
+      "trace": [
+        {
+          "method": "GET",
+          "path": "/ping"
+        },
+        {
+          "method": "GET",
+          "path": "/ping"
+        },
+        {
+          "method": "GET",
+          "path": "/ping"
+        },
+        {
+          "method": "GET",
+          "path": "/ping"
+        },
+        {
+          "method": "GET",
+          "path": "/ping"
+        },
+        {
+          "method": "GET",
+          "path": "/ping"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "POST",
+          "path": "/upload"
+        },
+        {
+          "method": "POST",
+          "path": "/upload"
+        },
+        {
+          "method": "POST",
+          "path": "/upload"
+        },
+        {
+          "method": "POST",
+          "path": "/upload"
+        },
+        {
+          "method": "POST",
+          "path": "/upload"
+        },
+        {
+          "method": "POST",
+          "path": "/upload"
+        },
+        {
+          "method": "GET",
+          "path": "/ping"
+        },
+        {
+          "method": "GET",
+          "path": "/ping"
+        },
+        {
+          "method": "GET",
+          "path": "/ping"
+        },
+        {
+          "method": "GET",
+          "path": "/ping"
+        },
+        {
+          "method": "GET",
+          "path": "/ping"
+        },
+        {
+          "method": "GET",
+          "path": "/ping"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "POST",
+          "path": "/upload"
+        },
+        {
+          "method": "POST",
+          "path": "/upload"
+        },
+        {
+          "method": "POST",
+          "path": "/upload"
+        },
+        {
+          "method": "POST",
+          "path": "/upload"
+        },
+        {
+          "method": "POST",
+          "path": "/upload"
+        },
+        {
+          "method": "POST",
+          "path": "/upload"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "GET",
+          "path": "/download"
+        },
+        {
+          "method": "POST",
+          "path": "/upload"
+        },
+        {
+          "method": "POST",
+          "path": "/upload"
+        }
+      ],
+      "result": "链路延迟\n3.2 ms\n3.20 ms\n内网下载\n11.2 Gbps\n11.2 Gbps\n内网上传\n18.9 Gbps\n18.9 Gbps"
+    }
+  ],
+  "errors": [],
+  "layer": "production frontend; native local Go version and LAN endpoints; WAN streams and third-party pages are explicit fixtures",
+  "failure": "locator.innerText: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.diagnostic-completion')\u001b[22m\n\n    at /projects/workspace-linkease-ubuntu/linkease-github/fastnet/cmd/fastnet/webui-src/scripts/check-qinglan-ui.cjs:14:1435"
+}

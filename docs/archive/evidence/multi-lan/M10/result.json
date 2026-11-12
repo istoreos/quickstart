@@ -1,0 +1,48 @@
+{
+  "milestone": "M10",
+  "status": "failed",
+  "optimizations": 5,
+  "updatedAt": "2026-11-09T08:49:46.596489+00:00",
+  "passedChecks": [
+    "168 frontend tests and typecheck",
+    "network-owned engine directory guard",
+    "pinned old data export/new read/old read round trip",
+    "candidate engine whole-machine reboot and recovery",
+    "both-host VLAN IPv4/IPv6 real forwarding/rate/access/quota/restart tests",
+    "Go full regression and service/routes race tests",
+    "54 Rust tests and procd contract checks",
+    "production frontend build and 12 browser scenarios",
+    "256 physical quota rules: one enforcement reload and one cancellation reload",
+    "both-host legacy quota real IPv4/IPv6 packets: cancel/reset preserve; explicit unpause only; other LAN unaffected",
+    "positive renamed-uplink role and inactive-LAN inventory regression tests",
+    "both-host full production application link deletion/recreation: stale plans/version rejected; target policies restored; other instance unchanged",
+    "pinned old reader/new reader/backup restore/old reader: data and firewall config hashes restored; full binary rollback remains pending",
+    "optimization 4: 9 legacy unit scenarios and cancel/period/group reload-failure rollback",
+    "optimization 4: both-host normal/missing-runtime legacy cancel/reset/notify/group packets; explicit restore only; one reload",
+    "optimization 4: Go full regression and full race rerun passed without changing timing threshold",
+    "optimization 4: actual old/new Quickstart and NetPolicy binaries upgrade and paired backup rollback; original profile/group/native revision and exact binary/config/data hashes restored",
+    "optimization 5: Go full regression and service race; actual old/new executable paired rollback and original default-client policy read",
+    "optimization 5: both hosts normal/missing-runtime cancel/reset/notify/group packets; active-period enforcement and plain manual startup/rebind; retained owners/generations and one reload per actual binding change"
+  ],
+  "runningGates": [],
+  "remainingRequired": [
+    "diagnose and resolve scheduled packet enforcement acceptance failure",
+    "repeat 30-minute warmup, latency/resource gates and actual >=24-hour full-application soak",
+    "verify unchanged final candidate and all acceptance evidence before release"
+  ],
+  "note": "Capacity sub-gate success alone must not mark M10 passed.",
+  "resolvedProductDecision": "User selected option 1: preserve legacy unowned access restrictions through quota cancellation and reset; explicit manual recovery only.",
+  "failedChecks": [
+    "2026-11-09 05:10 UTC: x86 capacity1 scheduled WAN pause expected blocked, but IPv4 ping to 203.0.113.2 succeeded at minute 10 second 17; root cause not yet diagnosed."
+  ],
+  "evidenceManifest": "optimization-5-candidate-manifest.json",
+  "additionalRoundAuthorized": true,
+  "resolvedChecks": [
+    "legacy quota missing-runtime cancellation cross-LAN block, reproduced on both hosts before fix, now passed with real IPv4/IPv6 packets",
+    "round 5: both-host active-period quota startup and plain manual startup/actual periodic interface rebinding; IPv4/IPv6 isolation and explicit recovery passed"
+  ],
+  "environmentRetries": 1,
+  "environmentFailureEvidence": "optimization-4-environment-diagnosis.json",
+  "stopReason": "authorized optimization round did not pass final acceptance",
+  "finalizationError": "RuntimeError({'x86': \"AssertionError(('unexpected scheduled packet result', 1, 4, False, 10, 17, 10, 17, 'PING 203.0.113.2 (203.0.113.2): 56 data bytes\\\\n64 bytes from 203.0.113.2: seq=0 ttl=63 time=0.062 ms\\\\n\\\\n--- 203.0.113.2 ping statistics ---\\\\n1 packets transmitted, 1 packets received, 0% packet loss\\\\nround-trip min/avg/max = 0.062/0.062/0.062 ms\\\\n', ''))\"})"
+}

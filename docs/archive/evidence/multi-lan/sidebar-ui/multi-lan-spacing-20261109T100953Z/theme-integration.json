@@ -1,0 +1,68 @@
+[
+  {
+    "file": "web/src/home/HomeLayout.vue",
+    "conflicts": 0
+  },
+  {
+    "file": "web/src/home/canvas.css",
+    "conflicts": 0
+  },
+  {
+    "file": "web/src/home/homeApplications.css",
+    "conflicts": 0
+  },
+  {
+    "file": "web/src/home/homeSemanticColors.css",
+    "conflicts": 0
+  },
+  {
+    "file": "web/src/home/homeVisualTokens.css",
+    "conflicts": 0
+  },
+  {
+    "file": "web/src/main.ts",
+    "conflicts": 0
+  },
+  {
+    "file": "web/src/pages/device/components/flow.vue",
+    "conflicts": 0
+  },
+  {
+    "file": "web/src/pages/device/deviceVisualTokens.css",
+    "conflicts": 0
+  },
+  {
+    "file": "web/src/pages/device/index.vue",
+    "conflicts": 0
+  },
+  {
+    "file": "web/src/pages/index/components/PieChart.vue",
+    "conflicts": 0
+  },
+  {
+    "file": "web/src/pages/index/index.vue",
+    "conflicts": 0
+  },
+  {
+    "file": "web/src/pages/index/network/NetworkFlow.vue",
+    "conflicts": 0
+  },
+  {
+    "file": "web/src/style/root.scss",
+    "conflicts": 0
+  },
+  {
+    "file": "web/src/utils/theme.ts",
+    "conflicts": 0
+  },
+  {
+    "file": "web/src/home/ThemeSelector.vue",
+    "new": true,
+    "conflicts": 0
+  },
+  {
+    "file": "web/test/theme.test.mjs",
+    "new": true,
+    "conflicts": 0
+  }
+]

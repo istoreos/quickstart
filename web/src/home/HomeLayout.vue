@@ -1,7 +1,7 @@
 <template>
   <main class="canvas-home layout-design-home ordered-home natural-home home-semantic-colors" :class="{'ordered-editing':editing,'slot-overview-active':overview}" data-ordered-home @pointerdown.capture="sizeClickPending=false" @click.capture="eatSizeClick" @click="blankClick">
     <div class="home-top" data-home-top>
-      <div class="home-top-actions"><a href="https://www.istoreos.com/" target="_blank" rel="noopener noreferrer">{{t('iStoreOS官网','iStoreOS website')}}</a><button ref="editButton" class="home-module-settings" @click="editing?cancel():begin()" :disabled="startupLoading||!canEdit||externalBusy||saving" :aria-pressed="editing" :aria-label="t('自定义首页','Customize home')" :title="t('模块设置','Module settings')" data-home-settings><ModuleIcon color="#fff"/></button></div>
+      <div class="home-top-actions"><a href="https://www.istoreos.com/" target="_blank" rel="noopener noreferrer">{{t('iStoreOS官网','iStoreOS website')}}</a><ThemeSelector/><button ref="editButton" class="home-module-settings" @click="editing?cancel():begin()" :disabled="startupLoading||!canEdit||externalBusy||saving" :aria-pressed="editing" :aria-label="t('自定义首页','Customize home')" :title="t('模块设置','Module settings')" data-home-settings><ModuleIcon color="#fff"/></button></div>
     </div>
     <slot name="status"/>
 
@@ -115,10 +115,11 @@
       <button v-if="moving" class="direct-last-target" data-placement="edge:end" @click="place({kind:'edge',before:null})">＋ {{t('放到最后，独占新行 / 整行移到最后','New row at end / move row to end')}}</button>
       <section v-if="!startupLoading&&!actualRows.length" class="ordered-empty"><StudioGlyph name="grid"/><h2>{{t('首页，由你安排','A home of your own')}}</h2><p>{{t('添加常看的模块，也可以随时恢复推荐布局。','Add the things you check most, or restore the recommended layout.')}}</p><button @click="editing?openSlot(null):begin()">{{t('添加模块','Add modules')}}</button></section>
     </div></div>
+    <FastnetInstallDialog v-if="installTarget" :state="installState" :installing="installing" :error="installError" @close="closeInstall" @install="confirmInstall" @recheck="inspectInstall"/>
     <slot name="launcher"/>
-    <DirectEditPanel v-if="panel==='slot'" :title="pendingSlot?t('选择槽位模块','Choose module'):t('添加一行模块','Add module in a new row')" @close="closePanel">
+    <DirectEditPanel v-if="panel==='slot'&&!installTarget" :title="pendingSlot?t('选择槽位模块','Choose module'):t('添加一行模块','Add module in a new row')" @close="closePanel">
       <p class="direct-panel-note">{{t('选择后先预览；已有模块会移到这里，原位置留空。','Preview before confirming. Existing modules move here and leave their old slot empty.')}}</p>
-      <div class="slot-module-list"><button v-for="item in widgetDefinitions" :key="item.id" @click="choice=item.id;choiceSummary=false" :disabled="!choiceAvailable(item.id)" :aria-pressed="choice===item.id" :data-choice="item.id" :data-fit="choiceStatus(item.id)"><StudioGlyph :name="item.glyph"/><span>{{name(item.id)}}<small>{{choiceStatus(item.id)==='blocked'?issueText(choicePlan(item.id).issue):choiceStatus(item.id)==='needs-confirmation'?t('调整后可放入 · ','Adjust to fit · ')+sourceLabel(item.id):sourceLabel(item.id)}}</small></span><span>{{originOf(draft,item.id)?'↗':'＋'}}</span></button></div>
+      <div class="slot-module-list"><button v-for="item in libraryDefinitions" :key="item.id" @click="chooseLibrary(item.id)" :disabled="needsHostUpdate(item.id)||unavailableCard(item.id)?needsHostUpdate(item.id)||!installer||registry.state.value!=='ready':!choiceAvailable(item.id)" :aria-pressed="choice===item.id" :data-choice="item.id" :data-fit="choiceStatus(item.id)"><StudioGlyph :name="item.glyph"/><span>{{name(item.id)}}<small>{{choiceStatus(item.id)==='blocked'?issueText(choicePlan(item.id).issue):choiceStatus(item.id)==='needs-confirmation'?t('调整后可放入 · ','Adjust to fit · ')+sourceLabel(item.id):sourceLabel(item.id)}}</small></span><span>{{originOf(draft,item.id)?'↗':'＋'}}</span></button></div>
       <template #actions><section v-if="choice" class="slot-change-preview" data-choice-preview>
         <h3>{{name(choice)}} → {{pendingSlot?slotLabel(pendingSlot):t('页面末尾新行','New row at end')}}</h3>
         <p v-if="originOf(draft,choice)">{{t('将从原位置移到这里，不创建副本。','Moves from its current position; no duplicate.')}}</p>
@@ -131,7 +132,8 @@
   </main>
 </template>
 <script setup lang="ts">
-import {computed,nextTick,onMounted,onUnmounted,ref,watch} from 'vue'
+import {needsHostUpdate} from './cards/catalog'
+import {defineAsyncComponent,h,inject,computed,nextTick,onMounted,onUnmounted,ref,watch} from 'vue'
 import LayoutNotice from './LayoutNotice.vue'
 import {useLayoutNotice} from './useLayoutNotice'
 import HomeBootstrap from './HomeBootstrap.vue'
@@ -140,6 +142,7 @@ import {useNaturalSizing} from './useNaturalSizing'
 import {onBeforeRouteLeave} from 'vue-router'
 import StudioGlyph from './HomeGlyph.vue'
 import ModuleIcon from '../components/svg/module.vue'
+import ThemeSelector from './ThemeSelector.vue'
 import DirectEditPanel from './DirectEditPanel.vue'
 import PresentationSettings from './PresentationSettings.vue'
 import {documentOf,planDocument,applyPlan,validateDisplayRows,fingerprint,summaryAlternative,type HomeDocument,type LayoutContext,type DisplayPlan} from './layout/homeDocument'
@@ -147,12 +150,28 @@ import {defaultPreferences,placementMinimum,resolvePresentation,columnWidths,pre
 import {placement,targets,targetKey,type MoveSource,type MoveTarget} from './layout/overviewPlacement'
 import {assignSlot,at,originOf,reshape,changeSize,moveToNewRow,moveRowTo,validate,normalize,type Normalized,type Slot,type LayoutResult} from './layout/slotLayout'
 import {useRowSorting} from './useRowSorting'
+import NetworkWidgetDialog from './NetworkWidgetDialog.vue'
+const FastnetInstallDialog=defineAsyncComponent({loader:()=>import('./cards/FastnetInstallDialog.vue'),timeout:8000,errorComponent:{inheritAttrs:false,setup:()=>()=>h(NetworkWidgetDialog,{title:'FastNet',onClose:closeInstall},()=>[h('p',{role:'alert'},t('安装窗口加载失败，请刷新页面后重试。','The installation window could not load. Refresh and retry.')),h('button',{type:'button',onClick:closeInstall,style:{padding:'8px 16px',border:'1px solid var(--qs-card-line)',borderRadius:'8px',background:'var(--qs-card-soft)',color:'inherit'}},t('返回','Back'))])}})
+import {cardInstallerKey} from './cards/installContext'
+import {installableCards} from './cards/catalog'
+import {useCardRegistry} from './cards/useCardRegistry'
 import {widgetDefinitions,widget,type WidgetId} from './layout/rowLayout'
 import {templates,clone,naturalRows,compactIds,recommended,makeRow,visibleIds,layoutIssue,rowMinimum,changeTemplate,renderRows,type Template,type OrderedRow,type ActualRow,type ActualColumn} from './layout/orderedLayout'
 import type {LayoutConfig} from './configContract'
 const props=defineProps<{config:LayoutConfig;data:Record<string,any>;errors:Record<string,string>;theme:string;favoriteIds:string[];canEdit:boolean;externalBusy?:boolean;bootstrapping?:boolean;persist:(value:LayoutConfig)=>Promise<void>}>()
 const emit=defineEmits<{(e:'navigate',path:string):void;(e:'device',id:string):void;(e:'editing',value:boolean):void;(e:'visible',ids:WidgetId[]):void}>()
 const english=window.vue_lang==='en',t=(zh:string,en:string)=>english?en:zh,name=(id:WidgetId)=>t(widget(id).zh,widget(id).en)
+const registry=useCardRegistry(),installer=inject(cardInstallerKey,null),installTarget=ref<WidgetId|null>(null),installing=ref(false),installError=ref('')
+const installState=ref<'checking'|import('./cards/installContext').CardInstallState>('checking')
+let installGeneration=0,installObserver:AbortController|undefined
+async function closeInstall(){const id=installTarget.value;installGeneration++;installObserver?.abort();installTarget.value=null;installError.value='';installing.value=false;if(id){await nextTick();await nextTick();document.querySelector<HTMLElement>('[data-choice="'+id+'"]')?.focus({preventScroll:true})}}
+function preparedChoice(id:WidgetId){installTarget.value=null;choiceBase.value=homeDraft();choiceContext.value=layoutContext();choice.value=id;choiceSummary.value=false}
+async function inspectInstall(){if(!installer||!installTarget.value)return;const generation=++installGeneration,id=installTarget.value;installObserver?.abort();installObserver=new AbortController();installState.value='checking';installError.value='';try{const observed=await installer.inspect(id,installObserver.signal);if(generation!==installGeneration)return;if(observed==='ready'){await registry.discover(true);if(generation!==installGeneration)return;if(!unavailableCard(id)){preparedChoice(id);return}installState.value='unknown'}else installState.value=observed}catch(e){if(generation===installGeneration){installState.value='unknown';installError.value=e instanceof Error?e.message:String(e)}}}
+function chooseLibrary(id:WidgetId){if(needsHostUpdate(id))return;if(unavailableCard(id)){installTarget.value=id;void inspectInstall();return}choice.value=id;choiceSummary.value=false}
+async function confirmInstall(){if(!installer||!installTarget.value||installing.value||!['uninstalled','update_required','failed','installing'].includes(installState.value))return;const id=installTarget.value,generation=installGeneration;installing.value=true;installError.value='';installObserver?.abort();installObserver=new AbortController();try{await installer.install(id,installObserver.signal);await registry.discover(true);if(generation!==installGeneration)return;if(unavailableCard(id))throw Error(t('插件安装后仍未注册卡片，请升级或修复插件。','Plugin did not register a card; update or repair it.'));preparedChoice(id)}catch(e){if(generation===installGeneration){installState.value='unknown';installError.value=e instanceof Error?e.message:String(e)}}finally{if(generation===installGeneration)installing.value=false}}
+
+const libraryDefinitions=computed(()=>[...widgetDefinitions,...Array.from(new Set([...installableCards.map(c=>c.id),...registry.cards.value.map(c=>c.id),...Object.keys(props.config.widgetPreferences).filter(id=>id.startsWith('plugin.'))])).map(id=>widget(id as WidgetId))])
+const unavailableCard=(id:WidgetId)=>id.startsWith('plugin.')&&!registry.cards.value.some(c=>c.id===id)
 const orderedSession=computed(()=>props.config.rows),preferenceSession=computed(()=>props.config.widgetPreferences),theme=computed(()=>props.theme),data=props.data,errors=props.errors,saving=ref(false)
 const homeApplicationSession={get favorites(){return props.favoriteIds}}
 const {noticeState,notice,showNotice,dismissNotice}=useLayoutNotice()
@@ -196,7 +215,7 @@ function openModuleMenu(id:WidgetId,target:Slot){pendingSlot.value={kind:'slot',
 function adoptDocument(next:HomeDocument){if(saving.value)return false;const before=homeDraft();if(fingerprint(before)===fingerprint(next))return false;history.value=[...history.value.slice(-29),before];draft.value=clone(next.rows);preferences.value=clone(next.widgetPreferences);revision.value++;if(!next.rows.some(r=>r.id===selected.value))selected.value=next.rows[0]?.id||'';notice.value='';return true}
 function adoptSettings(){if(!settingsPlan.value)return;const result=applyPlan(homeDraft(),settingsPlan.value,layoutContext());if(result.issue){warn(result.issue);return}adoptDocument(result.document);closePanel()}
 const formLabel=(form:string)=>({auto:t('自动推荐','Automatic'),standard:t('标准','Standard'),summary:t('摘要','Summary'),grid:t('图标网格','Icon grid'),strip:t('启动条','Launch strip')}[form]||form)
-function changedPreferences(plan:DisplayPlan){return widgetDefinitions.map(w=>w.id).filter(id=>JSON.stringify(preferences.value[id])!==JSON.stringify(plan.next.widgetPreferences[id]))}
+function changedPreferences(plan:DisplayPlan){return (Object.keys(plan.next.widgetPreferences) as WidgetId[]).filter(id=>JSON.stringify(preferences.value[id])!==JSON.stringify(plan.next.widgetPreferences[id]))}
 function choosePlan(raw:LayoutResult,id?:WidgetId){const direct=planDocument(homeDraft(),raw,layoutContext()),alternative=summaryAlternative(homeDraft(),raw,layoutContext(),id);return {direct,alternative}}
 function requestResult(raw:LayoutResult,id?:WidgetId){const {direct,alternative}=choosePlan(raw,id);if(direct.status==='blocked'&&(!alternative||alternative.status==='blocked')){warn(direct.issue);return false}if(direct.status==='ready')return adoptDocument(direct.next);const plan=direct.status==='blocked'?alternative!:direct;openPanel('adapt');pendingPlan.value=plan;pendingAlternative.value=direct.status==='blocked'?null:alternative;return false}
 function confirmAdaptation(){if(!pendingPlan.value)return;const result=applyPlan(homeDraft(),pendingPlan.value,layoutContext());if(result.issue){warn(result.issue);return}adoptDocument(result.document);closePanel()}
@@ -223,10 +242,10 @@ const structureResult=computed(()=>{
  return {...raw,rows,candidateRows:undefined,issue:'',requiredHeight:undefined,changed:JSON.stringify(rows)!==JSON.stringify(draft.value)}
 })
 function slotLabel(s:Slot){const index=draft.value.findIndex(r=>r.id===s.row);return t('第','Row ')+(index+1)+t('行 · 第',' · Column ')+(s.column+1)+(draft.value[index]?.columns[s.column].cards.length===2?(s.slot===0?t('列上方',' top'):t('列下方',' bottom')):t('列',''))}
-function sourceLabel(id:WidgetId){const source=originOf(draft.value,id);return source?t('已在首页 · 移到这里 · ','On home · Move here · ')+slotLabel(source):t('未展示 · 添加','Hidden · Add')}
+function sourceLabel(id:WidgetId){if(needsHostUpdate(id))return t('需要升级 Quickstart','Update Quickstart');if(unavailableCard(id))return registry.state.value!=='ready'?t('正在确认插件状态，暂不可添加','Plugin status unknown; adding unavailable'):t('需要先安装或升级插件','Install or update the plugin first');const source=originOf(draft.value,id);return source?t('已在首页 · 移到这里 · ','On home · Move here · ')+slotLabel(source):t('未展示 · 添加','Hidden · Add')}
 function choiceResult(id:WidgetId){const rows=choiceBase.value?.rows||draft.value;return pendingSlot.value?.kind==='slot'?assignSlot(rows,pendingSlot.value,id):moveToNewRow(rows,id,null)}
-function choicePlan(id:WidgetId){return planDocument(choiceBase.value||homeDraft(),choiceResult(id),choiceContext.value||layoutContext())}
-function choiceAlternative(id:WidgetId){return summaryAlternative(choiceBase.value||homeDraft(),choiceResult(id),choiceContext.value||layoutContext(),id)}
+function choicePlan(id:WidgetId){const base=choiceBase.value||homeDraft(),prefs={...base.widgetPreferences};if(!prefs[id])prefs[id]={mode:'auto',iconRows:0,ruleVersion:2};return planDocument(base,choiceResult(id),choiceContext.value||layoutContext(),prefs)}
+function choiceAlternative(id:WidgetId){const base=choiceBase.value||homeDraft();if(id.startsWith('plugin.')&&!base.widgetPreferences[id])return planDocument(base,choiceResult(id),choiceContext.value||layoutContext(),{...base.widgetPreferences,[id]:{mode:'summary',iconRows:0,ruleVersion:2}});return summaryAlternative(base,choiceResult(id),choiceContext.value||layoutContext(),id)}
 function choiceAvailable(id:WidgetId){return choicePlan(id).status!=='blocked'||!!choiceAlternative(id)&&choiceAlternative(id)!.status!=='blocked'}
 function choiceStatus(id:WidgetId){const p=choicePlan(id);return p.status==='blocked'&&choiceAvailable(id)?'needs-confirmation':p.status}
 const selectedChoicePlan=computed(()=>!choice.value?null:choiceSummary.value||choicePlan(choice.value).status==='blocked'?choiceAlternative(choice.value):choicePlan(choice.value))
@@ -251,7 +270,7 @@ function apply(){if(saving.value)return;interruptMove();const result=normalizeRo
 async function finishApply(rows:OrderedRow[]){
  const problem=validateDisplayRows(rows,preferences.value,layoutContext());if(problem.issue){warn(problem.issue);return}
  if(saving.value)return;saving.value=true;showNotice(t('正在保存…','Saving…'),'progress')
- try{await props.persist({schemaVersion:3,rows:clone(rows),widgetPreferences:clone(preferences.value)});draft.value=clone(rows);closePanel();library.value=false;editing.value=false;overview.value=false;emit('editing',false);notice.value=t('首页布局已保存。','Homepage layout saved.');editButton.value?.focus()}
+ try{await props.persist({schemaVersion:4,rows:clone(rows),widgetPreferences:clone(preferences.value)});draft.value=clone(rows);closePanel();library.value=false;editing.value=false;overview.value=false;emit('editing',false);notice.value=t('首页布局已保存。','Homepage layout saved.');editButton.value?.focus()}
  catch(error){showNotice((error as Error).message||t('保存失败，草稿仍保留。','Save failed. Your draft is kept.'),'error')}
  finally{saving.value=false}
 }
@@ -346,7 +365,7 @@ let libraryOpener:HTMLElement|null=null
 watch(library,async open=>{if(open){interruptMove();panel.value='';selectedCard.value=null;libraryOpener=document.activeElement as HTMLElement;await nextTick();libraryElement.value?.querySelector<HTMLButtonElement>('button')?.focus()}else libraryOpener?.focus({preventScroll:true})})
 function closeLibrary(){library.value=false;pendingSlot.value=null}
 function libraryKeyboard(event:KeyboardEvent){if(event.key==='Escape'){event.stopPropagation();closeLibrary()}if(event.key==='Tab'){const controls=Array.from(libraryElement.value?.querySelectorAll<HTMLElement>('button,input')||[]),first=controls[0],last=controls[controls.length-1];if(event.shiftKey&&document.activeElement===first){event.preventDefault();last?.focus()}else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first?.focus()}}}
-function escapeMove(event:KeyboardEvent){if(event.key==='Escape'&&(rowSorting.busy.value||moving.value||cancelMoveGesture||finishGesture)){event.preventDefault();event.stopImmediatePropagation();const source=moving.value;interruptMove();if(source)void nextTick(()=>overviewElement.value?.querySelector<HTMLElement>(`[data-drag-card="${source.id}"]`)?.focus({preventScroll:true}));notice.value=t('已取消操作，布局未改变。','Action cancelled. Layout unchanged.')}else if(event.key==='Escape'&&(library.value||panel.value)){event.preventDefault();event.stopImmediatePropagation();if(library.value)closeLibrary();else closePanel()}}
+function escapeMove(event:KeyboardEvent){if(event.key==='Escape'&&installTarget.value){event.preventDefault();event.stopImmediatePropagation();void closeInstall();return}if(event.key==='Escape'&&(rowSorting.busy.value||moving.value||cancelMoveGesture||finishGesture)){event.preventDefault();event.stopImmediatePropagation();const source=moving.value;interruptMove();if(source)void nextTick(()=>overviewElement.value?.querySelector<HTMLElement>(`[data-drag-card="${source.id}"]`)?.focus({preventScroll:true}));notice.value=t('已取消操作，布局未改变。','Action cancelled. Layout unchanged.')}else if(event.key==='Escape'&&(library.value||panel.value)){event.preventDefault();event.stopImmediatePropagation();if(library.value)closeLibrary();else closePanel()}}
 function interruptMove(){rowSorting.cancel();cancelMoveGesture?.();finishGesture?.();stopMoving()}
 function environmentChanged(){interruptMove();if(['display','adapt','slot'].includes(panel.value)){closePanel();notice.value=t('预览条件已变化，请重新选择。','Preview conditions changed. Choose again.')}}
 watch(()=>props.config,()=>{if(editing.value)notice.value=t('已读取当前保存版本，编辑草稿仍保留。','Saved version reloaded. Your editing draft is retained.')})
@@ -356,7 +375,7 @@ const dirty=computed(()=>editing.value&&fingerprint(homeDraft())!==fingerprint(d
 function beforeUnload(event:BeforeUnloadEvent){if(dirty.value||saving.value){event.preventDefault();event.returnValue=''}}
 onBeforeRouteLeave(()=>!dirty.value&&!saving.value||window.confirm(t('尚有未保存的首页修改，确定离开？','Leave without saving homepage changes?')))
 onMounted(()=>{window.addEventListener('beforeunload',beforeUnload);window.addEventListener('keydown',escapeMove,true);window.addEventListener('resize',environmentChanged);observer=new ResizeObserver(entries=>{for(const e of entries){if(e.target===availableElement.value)availableWidth.value=e.contentRect.width;if(e.target===contentElement.value)contentWidth.value=e.contentRect.width}naturalSizing.schedule()});if(availableElement.value)observer.observe(availableElement.value);if(contentElement.value)observer.observe(contentElement.value)})
-onUnmounted(()=>{observer?.disconnect();interruptMove();window.removeEventListener('beforeunload',beforeUnload);window.removeEventListener('keydown',escapeMove,true);window.removeEventListener('resize',environmentChanged);finishGesture?.()})
+onUnmounted(()=>{installGeneration++;installObserver?.abort();observer?.disconnect();interruptMove();window.removeEventListener('beforeunload',beforeUnload);window.removeEventListener('keydown',escapeMove,true);window.removeEventListener('resize',environmentChanged);finishGesture?.()})
 
 </script>
 <style src="./canvas.css" scoped></style>

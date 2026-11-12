@@ -1,0 +1,332 @@
+[
+  {
+    "method": "GET",
+    "path": "/cgi-bin/luci/istore/lanctrl/speedsForDevices/",
+    "owner": "M07"
+  },
+  {
+    "method": "POST",
+    "path": "/cgi-bin/luci/istore/lanctrl/speedsForOneDevice/",
+    "owner": "M07"
+  },
+  {
+    "method": "POST",
+    "path": "/cgi-bin/luci/istore/lanctrl/dhcpTagsConfig/",
+    "owner": "M05"
+  },
+  {
+    "method": "POST",
+    "path": "/cgi-bin/luci/istore/lanctrl/dhcpGatewayConfig/",
+    "owner": "M05"
+  },
+  {
+    "method": "POST",
+    "path": "/cgi-bin/luci/istore/lanctrl/speedLimitConfig/",
+    "owner": "M07"
+  },
+  {
+    "method": "POST",
+    "path": "/cgi-bin/luci/istore/lanctrl/enableSpeedLimit/",
+    "owner": "M07"
+  },
+  {
+    "method": "POST",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/rate-limit-settings/plan/",
+    "owner": "M07"
+  },
+  {
+    "method": "POST",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/rate-limit-settings/apply/",
+    "owner": "M07"
+  },
+  {
+    "method": "POST",
+    "path": "/cgi-bin/luci/istore/lanctrl/enableFloatGateway/",
+    "owner": "M08"
+  },
+  {
+    "method": "POST",
+    "path": "/cgi-bin/luci/istore/lanctrl/staticDeviceConfig/",
+    "owner": "M05"
+  },
+  {
+    "method": "GET",
+    "path": "/cgi-bin/luci/istore/lanctrl/globalConfigs/",
+    "owner": "M08"
+  },
+  {
+    "method": "GET",
+    "path": "/cgi-bin/luci/istore/lanctrl/listDevices/",
+    "owner": "M03"
+  },
+  {
+    "method": "GET",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/devices/",
+    "owner": "M03"
+  },
+  {
+    "method": "POST",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/devices/",
+    "owner": "M03"
+  },
+  {
+    "method": "GET",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/device-classification/",
+    "owner": "M03"
+  },
+  {
+    "method": "POST",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/device-classification/",
+    "owner": "M03"
+  },
+  {
+    "method": "GET",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/device-profile/",
+    "owner": "M03"
+  },
+  {
+    "method": "POST",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/device-profile/",
+    "owner": "M03"
+  },
+  {
+    "method": "GET",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/device-traffic/",
+    "owner": "M07"
+  },
+  {
+    "method": "GET",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/device-diagnostics/",
+    "owner": "M08"
+  },
+  {
+    "method": "GET",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/gateway-targets/",
+    "owner": "M05"
+  },
+  {
+    "method": "POST",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/gateway-assignment/plan/",
+    "owner": "M05"
+  },
+  {
+    "method": "POST",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/gateway-assignment/apply/",
+    "owner": "M05"
+  },
+  {
+    "method": "GET",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/gateway-target-references/",
+    "owner": "M05"
+  },
+  {
+    "method": "POST",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/gateway-target/plan/",
+    "owner": "M05"
+  },
+  {
+    "method": "POST",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/gateway-target/apply/",
+    "owner": "M05"
+  },
+  {
+    "method": "GET",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/device-network-policy/",
+    "owner": "M05"
+  },
+  {
+    "method": "POST",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/device-network-policy/",
+    "owner": "M05"
+  },
+  {
+    "method": "POST",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/device-network-policy/plan/",
+    "owner": "M05"
+  },
+  {
+    "method": "POST",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/device-network-policy/apply/",
+    "owner": "M05"
+  },
+  {
+    "method": "POST",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/device-restrictions/plan/",
+    "owner": "M07"
+  },
+  {
+    "method": "POST",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/device-restrictions/apply/",
+    "owner": "M07"
+  },
+  {
+    "method": "GET",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/floating-gateway/",
+    "owner": "M05"
+  },
+  {
+    "method": "POST",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/floating-gateway/plan/",
+    "owner": "M05"
+  },
+  {
+    "method": "POST",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/floating-gateway/apply/",
+    "owner": "M05"
+  },
+  {
+    "method": "GET",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/floating-gateway/drill-plan/",
+    "owner": "M05"
+  },
+  {
+    "method": "GET",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/network-rules/",
+    "owner": "M08"
+  },
+  {
+    "method": "POST",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/network-rules/plan/",
+    "owner": "M08"
+  },
+  {
+    "method": "POST",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/network-rules/apply/",
+    "owner": "M08"
+  },
+  {
+    "method": "GET",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/migration/plan/",
+    "owner": "M08"
+  },
+  {
+    "method": "POST",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/migration/apply/",
+    "owner": "M08"
+  },
+  {
+    "method": "GET",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/rate-limit-migration/plan/",
+    "owner": "M07"
+  },
+  {
+    "method": "POST",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/rate-limit-migration/apply/",
+    "owner": "M07"
+  },
+  {
+    "method": "POST",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/rate-limit-migration/rollback/",
+    "owner": "M07"
+  },
+  {
+    "method": "GET",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/feature-components/",
+    "owner": "M08"
+  },
+  {
+    "method": "POST",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/capability-action/plan/",
+    "owner": "M08"
+  },
+  {
+    "method": "POST",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/capability-action/apply/",
+    "owner": "M08"
+  },
+  {
+    "method": "GET",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/router-context/",
+    "owner": "M02"
+  },
+  {
+    "method": "GET",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/lan-dhcp-settings/",
+    "owner": "M05"
+  },
+  {
+    "method": "POST",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/lan-dhcp-settings/plan/",
+    "owner": "M05"
+  },
+  {
+    "method": "POST",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/lan-dhcp-settings/apply/",
+    "owner": "M05"
+  },
+  {
+    "method": "GET",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/device-groups/",
+    "owner": "M08"
+  },
+  {
+    "method": "POST",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/device-groups/",
+    "owner": "M08"
+  },
+  {
+    "method": "GET",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/traffic-insights/",
+    "owner": "M07"
+  },
+  {
+    "method": "POST",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/traffic-quota/",
+    "owner": "M07"
+  },
+  {
+    "method": "GET",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/advanced-network/",
+    "owner": "M08"
+  },
+  {
+    "method": "POST",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/management-probe/",
+    "owner": "M08"
+  },
+  {
+    "method": "POST",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/network-webhook/",
+    "owner": "M08"
+  },
+  {
+    "method": "GET",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/policy-bundle/",
+    "owner": "M08"
+  },
+  {
+    "method": "POST",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/policy-import/plan/",
+    "owner": "M08"
+  },
+  {
+    "method": "POST",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/policy-import/apply/",
+    "owner": "M08"
+  },
+  {
+    "method": "GET",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/device-policy/",
+    "owner": "M07"
+  },
+  {
+    "method": "POST",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/device-policy/",
+    "owner": "M07"
+  },
+  {
+    "method": "GET",
+    "path": "/cgi-bin/luci/istore/lanctrl/v2/device-policy/rules/",
+    "owner": "M07"
+  },
+  {
+    "method": "GET",
+    "path": "/cgi-bin/luci/istore/lanctrl/listStaticDevices/",
+    "owner": "M05"
+  },
+  {
+    "method": "GET",
+    "path": "/cgi-bin/luci/istore/lanctrl/listSpeedLimitedDevices/",
+    "owner": "M07"
+  }
+]

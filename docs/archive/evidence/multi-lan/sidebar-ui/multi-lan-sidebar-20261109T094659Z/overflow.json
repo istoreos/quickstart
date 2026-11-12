@@ -1,0 +1,19 @@
+{
+  "viewport": 390,
+  "scroll": 406,
+  "items": [
+    {
+      "tag": "BUTTON",
+      "text": "局域网设置",
+      "cls": "",
+      "parent": "primary-tabs",
+      "parentWidth": 130.71875,
+      "flexWrap": "nowrap",
+      "x": 346.25,
+      "width": 60,
+      "minWidth": "auto",
+      "grid": "none",
+      "container": "normal"
+    }
+  ]
+}

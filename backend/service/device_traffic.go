@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/istoreos/quickstart/backend/models"
+	uuid "github.com/satori/go.uuid"
 )
 
 const (
@@ -93,23 +94,27 @@ type DeviceTrafficModule struct {
 	addressExpiry deviceTrafficStateHeap
 	totalExpiry   deviceTrafficStateHeap
 	generation    uint64
+	epoch         string
 }
 
 func NewDeviceTrafficModule(inventory deviceInventorySnapshotter, stats *LanStats) *DeviceTrafficModule {
 	return &DeviceTrafficModule{
-		inventory: inventory, sampler: lanStatsDeviceTrafficSampler{stats: stats}, now: time.Now,
-		addresses: map[string]*deviceTrafficAddressState{}, totals: map[string]*deviceTrafficTotals{},
+		inventory: inventory, sampler: scopedDeviceTrafficSampler{legacy: lanStatsDeviceTrafficSampler{stats: stats}, native: newScopedNativeRateLimitProvider()}, now: time.Now,
+		addresses: map[string]*deviceTrafficAddressState{}, totals: map[string]*deviceTrafficTotals{}, epoch: uuid.NewV4().String(),
 	}
 }
 
 func newDeviceTrafficModuleForTest(inventory deviceInventorySnapshotter, sampler deviceTrafficSampler, now func() time.Time) *DeviceTrafficModule {
 	return &DeviceTrafficModule{
 		inventory: inventory, sampler: sampler, now: now,
-		addresses: map[string]*deviceTrafficAddressState{}, totals: map[string]*deviceTrafficTotals{},
+		addresses: map[string]*deviceTrafficAddressState{}, totals: map[string]*deviceTrafficTotals{}, epoch: uuid.NewV4().String(),
 	}
 }
 
 func (module *DeviceTrafficModule) Snapshot(ctx context.Context) (*models.DeviceTrafficResponse, error) {
+	if selectedLAN(ctx) == "all" {
+		return module.snapshotAll(ctx)
+	}
 	if module == nil || module.inventory == nil || module.sampler == nil {
 		return nil, errors.New("device traffic module is unavailable")
 	}
@@ -139,12 +144,24 @@ func (module *DeviceTrafficModule) Snapshot(ctx context.Context) (*models.Device
 		if device == nil {
 			continue
 		}
-		total := module.totals[device.DeviceID]
+		if sample.native != nil {
+			counter, exists := sample.native[normalizeInventoryMAC(device.Mac)]
+			itemState := state
+			if device.Mac == "" {
+				itemState = "unavailable"
+			} else if !exists && state == "ready" {
+				itemState = "warming_up"
+			}
+			items = append(items, &models.DeviceTrafficItem{NetworkID: device.NetworkID, DeviceID: device.DeviceID, CounterEpoch: sample.epoch, UploadSpeed: counter.UploadSpeed, DownloadSpeed: counter.DownloadSpeed, UploadBytes: counter.UploadBytes, DownloadBytes: counter.DownloadBytes, State: itemState, SampledAt: formatTrafficSampleTime(sample.sampledAt)})
+			continue
+		}
+		identity := inventoryLANKey(selectedLAN(ctx), device.DeviceID)
+		total := module.totals[identity]
 		if total == nil {
 			total = &deviceTrafficTotals{}
-			module.totals[device.DeviceID] = total
+			module.totals[identity] = total
 		}
-		module.touchTotal(device.DeviceID, total, now)
+		module.touchTotal(identity, total, now)
 		var uploadSpeed, downloadSpeed, connections int64
 		for _, address := range device.Addresses.Current {
 			if address == nil {
@@ -155,7 +172,7 @@ func (module *DeviceTrafficModule) Snapshot(ctx context.Context) (*models.Device
 				continue
 			}
 			host := hosts[value]
-			module.updateAddressOwner(value, device.DeviceID, host, total, now)
+			module.updateAddressOwner(inventoryLANKey(selectedLAN(ctx), value), identity, host, total, now)
 			if host == nil {
 				continue
 			}
@@ -168,7 +185,7 @@ func (module *DeviceTrafficModule) Snapshot(ctx context.Context) (*models.Device
 		}
 		itemState := state
 		items = append(items, &models.DeviceTrafficItem{
-			DeviceID: device.DeviceID, UploadSpeed: uploadSpeed, DownloadSpeed: downloadSpeed,
+			NetworkID: device.NetworkID, CounterEpoch: module.epoch, DeviceID: device.DeviceID, UploadSpeed: uploadSpeed, DownloadSpeed: downloadSpeed,
 			UploadBytes: total.UploadBytes, DownloadBytes: total.DownloadBytes,
 			ConnectionCount: connections, State: itemState, SampledAt: formatTrafficSampleTime(sample.sampledAt),
 		})
@@ -208,6 +225,9 @@ func (module *DeviceTrafficModule) updateAddressOwner(address, owner string, hos
 
 func deviceTrafficHealth(sample lanStatsSnapshot, now time.Time) (string, []string) {
 	if sample.err != nil {
+		if len(sample.reasons) > 0 {
+			return "partial", sample.reasons
+		}
 		return "partial", []string{"conntrack_unavailable"}
 	}
 	if sample.samples < 2 || sample.sampledAt.IsZero() {

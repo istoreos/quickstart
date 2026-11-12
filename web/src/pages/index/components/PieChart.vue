@@ -25,6 +25,7 @@ import { TooltipComponent } from 'echarts/components'
 import ChipIcon from '/@/components/svg/chip.vue'
 import TemperatureIcon from '/@/components/svg/temperature.vue'
 import LightningIcon from '/@/components/svg/lightning.vue'
+import {isDark,subscribeTheme} from '/@/utils/theme'
 
 echarts.use([PieChart, CanvasRenderer, TooltipComponent])
 
@@ -40,6 +41,7 @@ interface Props {
 const props = defineProps<Props>()
 const chartDom = ref<HTMLElement | null>(null)
 let chartInstance: echarts.ECharts | null = null
+let chartTheme: 'light' | 'dark' | null = null
 
 function getOption(value: number, color?: string): echarts.EChartsCoreOption {
   return {
@@ -55,7 +57,7 @@ function getOption(value: number, color?: string): echarts.EChartsCoreOption {
         zlevel: 0,
         data: [
           { value: value, itemStyle: { color: color || '#409EFF' } },
-          { value: Math.max(0, 100 - value), itemStyle: { color: '#f0f0f0' } },
+          { value: Math.max(0, 100 - value), itemStyle: { color: isDark() ? '#414b59' : '#f0f0f0' } },
         ],
       },
     ],
@@ -64,14 +66,17 @@ function getOption(value: number, color?: string): echarts.EChartsCoreOption {
 
 const initChart = () => {
   if (!chartDom.value) return
-  // 复用实例：如果已存在就不再 new 一个
-  chartInstance = chartInstance ?? echarts.init(chartDom.value, 'v5')
+  chartTheme = isDark() ? 'dark' : 'light'
+  chartInstance = chartInstance ?? echarts.init(chartDom.value, chartTheme === 'dark' ? 'dark' : 'v5')
   chartInstance.setOption(getOption(props.value, props.color))
 }
 
 onMounted(async () => {
   await nextTick()
   initChart()
+  unsubscribeTheme=subscribeTheme(snapshot=>{
+    if(chartInstance&&chartTheme!==snapshot.effective){chartInstance.dispose();chartInstance=null;initChart()}
+  })
   window.addEventListener('resize', handleResize)
 })
 
@@ -91,7 +96,7 @@ watch(
             zlevel: 0,
             data: [
               { value: props.value, itemStyle: { color: props.color || '#409EFF' } },
-              { value: Math.max(0, 100 - props.value), itemStyle: { color: '#f0f0f0' } },
+              { value: Math.max(0, 100 - props.value), itemStyle: { color: isDark() ? '#414b59' : '#f0f0f0' } },
             ],
           },
         ],
@@ -103,8 +108,10 @@ watch(
   { immediate: true }
 )
 
+let unsubscribeTheme=()=>{}
 onBeforeUnmount(() => {
   window.removeEventListener('resize', handleResize)
+  unsubscribeTheme()
   chartInstance?.dispose()
   chartInstance = null
 })

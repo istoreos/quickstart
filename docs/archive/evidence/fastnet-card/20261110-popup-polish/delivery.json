@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "archive": "/config/.agentflow-workspaces/.agentflow-workspaces/quickstart-onu/579c-multi-lan/quickstart/bin/fastnet-card-candidate-0.8.2-20261110-ui.tar.gz",
+  "sha256": "3ec1d3ff47679563319aba74ddb88cf15a06e37201119908478bb9306ab3ec30",
+  "bytes": 35340608,
+  "scope": "UI polish and narrowed shared changes; final Q backend/web with unchanged tested FastNet packages; no publication"
+}

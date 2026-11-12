@@ -1,0 +1,58 @@
+{
+  "status": "passed",
+  "checks": [
+    "iframe: one fixed button starts exactly one run, reruns after completion, preserves results position/theme and real errors; logs/JSON and NAT/IPv6 expand work",
+    "iframe 1440px: result-first layout, one entry, light/dark, no removed UI or overflow",
+    "standalone: one fixed button starts exactly one run, reruns after completion, preserves results position/theme and real errors; logs/JSON and NAT/IPv6 expand work",
+    "standalone 1440px: result-first layout, one entry, light/dark, no removed UI or overflow",
+    "iframe 390px: result-first layout, one entry, light/dark, no removed UI or overflow",
+    "standalone 390px: result-first layout, one entry, light/dark, no removed UI or overflow",
+    "iframe 320px: result-first layout, one entry, light/dark, no removed UI or overflow",
+    "standalone 320px: result-first layout, one entry, light/dark, no removed UI or overflow"
+  ],
+  "layouts": [
+    {
+      "surface": "iframe",
+      "width": 1178,
+      "resultsGap": 16,
+      "resultsTop": 302.390625,
+      "overflow": false
+    },
+    {
+      "surface": "standalone",
+      "width": 1440,
+      "resultsGap": 16,
+      "resultsTop": 330.390625,
+      "overflow": false
+    },
+    {
+      "surface": "iframe",
+      "width": 356,
+      "resultsGap": 16,
+      "resultsTop": 529.390625,
+      "overflow": false
+    },
+    {
+      "surface": "standalone",
+      "width": 390,
+      "resultsGap": 16,
+      "resultsTop": 523.390625,
+      "overflow": false
+    },
+    {
+      "surface": "iframe",
+      "width": 286,
+      "resultsGap": 16,
+      "resultsTop": 551.78125,
+      "overflow": false
+    },
+    {
+      "surface": "standalone",
+      "width": 320,
+      "resultsGap": 16,
+      "resultsTop": 545.390625,
+      "overflow": false
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,5 @@
+{
+  "status": "failed",
+  "error": "RuntimeError({'x86': \"AssertionError(('unexpected scheduled packet result', 1, 4, False, 10, 17, 10, 17, 'PING 203.0.113.2 (203.0.113.2): 56 data bytes\\\\n64 bytes from 203.0.113.2: seq=0 ttl=63 time=0.062 ms\\\\n\\\\n--- 203.0.113.2 ping statistics ---\\\\n1 packets transmitted, 1 packets received, 0% packet loss\\\\nround-trip min/avg/max = 0.062/0.062/0.062 ms\\\\n', ''))\"})",
+  "at": "2026-11-09T05:10:53.880296+00:00"
+}

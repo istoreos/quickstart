@@ -224,7 +224,7 @@ func (backend *ServiceBackend) GetDeviceInventoryV2(ctx context.Context) (*model
 	backend.mu.Unlock()
 	response, err := inventory.Snapshot(ctx)
 	if err == nil {
-		backend.auditModule().ObserveInventory(response)
+		backend.auditModule().observeScopedInventory(ctx, response)
 	}
 	return response, err
 }
@@ -310,11 +310,21 @@ func (backend *ServiceBackend) GetDeviceTrafficV2(ctx context.Context) (*models.
 			if backend.deviceGroups != nil {
 				backend.deviceGroups.AttachTrafficInsights(backend.trafficInsights)
 			}
+			if backend.lanScopes == nil {
+				backend.lanScopes = NewLANScopeModule()
+			}
+			if backend.deviceGroups != nil {
+				backend.deviceGroups.AttachLANScopes(backend.lanScopes)
+			}
+			backend.trafficInsights.AttachLANScopes(backend.lanScopes)
 			backend.trafficInsights.AttachCollector(traffic.Snapshot)
 		}
 		insights := backend.trafficInsights
 		backend.mu.Unlock()
-		_ = insights.Record(ctx, response)
+		if recordErr := insights.recordScopedResponse(ctx, response); recordErr != nil {
+			response.Result.Health.State = "partial"
+			response.Result.Health.Reasons = append(response.Result.Health.Reasons, "traffic_history_unavailable")
+		}
 	}
 	return response, err
 }
@@ -330,7 +340,7 @@ func (backend *ServiceBackend) PostTrafficQuotaV2(ctx context.Context, r *http.R
 	}
 	response, err := backend.trafficInsightsModule().SetQuota(ctx, &request)
 	if err == nil && response != nil && response.Result != nil && response.Result.Error == nil {
-		backend.auditModule().Record(request.DeviceID, "traffic_quota", "policy_changed", "success", "")
+		backend.auditModule().forContext(ctx).Record(request.DeviceID, "traffic_quota", "policy_changed", "success", "")
 	}
 	return response, err
 }
@@ -356,10 +366,17 @@ func (backend *ServiceBackend) trafficInsightsModule() *TrafficInsightsModule {
 		}
 	}
 	if backend.deviceTraffic != nil {
+		if backend.lanScopes == nil {
+			backend.lanScopes = NewLANScopeModule()
+		}
+		if backend.deviceGroups != nil {
+			backend.deviceGroups.AttachLANScopes(backend.lanScopes)
+		}
+		backend.trafficInsights.AttachLANScopes(backend.lanScopes)
 		backend.trafficInsights.AttachCollector(backend.deviceTraffic.Snapshot)
 	}
 	if backend.networkAudit != nil {
-		backend.trafficInsights.audit = backend.networkAudit
+		backend.trafficInsights.AttachAudit(backend.networkAudit)
 	}
 	return backend.trafficInsights
 }
@@ -368,7 +385,7 @@ func (backend *ServiceBackend) GetAdvancedNetworkV2(ctx context.Context, r *http
 	if err := ctx.Err(); err != nil {
 		return nil, err
 	}
-	return backend.advancedNetworkModule().Status(r.URL.Query().Get("deviceId"))
+	return backend.advancedNetworkModule().Status(ctx, r.URL.Query().Get("deviceId"))
 }
 
 func (backend *ServiceBackend) PostManagementProbeV2(ctx context.Context, r *http.Request) (*models.ManagementProbeResponse, error) {
@@ -387,7 +404,7 @@ func (backend *ServiceBackend) PostNetworkWebhookV2(ctx context.Context, r *http
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		return advancedNetworkFailure("validation_failed", "invalid webhook config"), nil
 	}
-	return backend.auditModule().SetWebhook(&request)
+	return backend.auditModule().forContext(ctx).SetWebhook(&request)
 }
 
 func (backend *ServiceBackend) GetPolicyBundleV2(ctx context.Context) (*models.PolicyBundleResponse, error) {
@@ -432,7 +449,7 @@ func (backend *ServiceBackend) auditModule() *NetworkAuditModule {
 		backend.networkAudit = NewDefaultNetworkAuditModule()
 	}
 	if backend.trafficInsights != nil {
-		backend.trafficInsights.audit = backend.networkAudit
+		backend.trafficInsights.AttachAudit(backend.networkAudit)
 	}
 	return backend.networkAudit
 }
@@ -468,7 +485,7 @@ func (backend *ServiceBackend) GetDeviceRuntimeDiagnosticsV2(ctx context.Context
 	inventory, traffic, sampler := backend.deviceInventory, backend.deviceTraffic, backend.lstats
 	backend.mu.Unlock()
 	oui := GomanufDiagnostics()
-	return &models.DeviceRuntimeDiagnosticsResponse{Result: &models.DeviceRuntimeDiagnostics{
+	return &models.DeviceRuntimeDiagnosticsResponse{Result: &models.DeviceRuntimeDiagnostics{ResourceScope:"process",SamplerScope:"legacy_default_lan",
 		Inventory: inventory.diagnostics(),
 		Traffic:   traffic.diagnostics(),
 		Sampler:   sampler.diagnostics(),
@@ -502,7 +519,7 @@ func (backend *ServiceBackend) PostGatewayAssignmentApplyV2(ctx context.Context,
 	}
 	response, err := backend.gatewayPolicyModule().ApplyAssignment(ctx, &request)
 	if err == nil && response != nil && response.Result != nil && response.Result.Error == nil {
-		backend.auditModule().Record(request.DeviceID, "gateway_assignment", "policy_changed", "success", request.Action)
+		backend.auditModule().forContext(ctx).Record(request.DeviceID, "gateway_assignment", "policy_changed", "success", request.Action)
 	}
 	return response, err
 }
@@ -531,7 +548,7 @@ func (backend *ServiceBackend) PostGatewayTargetApplyV2(ctx context.Context, r *
 	}
 	response, err := backend.gatewayPolicyModule().ApplyTargetMutation(ctx, &request)
 	if err == nil && response != nil && response.Result != nil && response.Result.Error == nil && response.Result.Changed {
-		backend.auditModule().Record("", "gateway_target", "policy_changed", "success", request.Action)
+		backend.auditModule().forContext(ctx).Record("", "gateway_target", "policy_changed", "success", request.Action)
 	}
 	return response, err
 }
@@ -562,9 +579,9 @@ func (backend *ServiceBackend) PostDeviceNetworkPolicyApplyV2(ctx context.Contex
 	}
 	response, err := backend.deviceNetworkPolicyModule().Apply(ctx, &request)
 	if err == nil && response != nil && response.Result != nil && response.Result.Error == nil && response.Result.Changed {
-		backend.auditModule().Record(request.DeviceID, "device_network_policy", "policy_changed", "success", "")
+		backend.auditModule().forContext(ctx).Record(request.DeviceID, "device_network_policy", "policy_changed", "success", "")
 	} else if err == nil && response != nil && response.Result != nil && isAddressConflict(response.Result.Error) {
-		backend.auditModule().Record(request.DeviceID, "address_reservation", "address_conflict", "rejected", "")
+		backend.auditModule().forContext(ctx).Record(request.DeviceID, "address_reservation", "address_conflict", "rejected", "")
 	}
 	return response, err
 }
@@ -587,7 +604,7 @@ func (backend *ServiceBackend) PostDeviceRestrictionsApplyV2(ctx context.Context
 	}
 	response, err := backend.devicePolicyModule().Apply(ctx, &request)
 	if err == nil && response != nil && response.Result != nil && response.Result.Error == nil && response.Result.Changed {
-		backend.auditModule().Record(request.DeviceID, "device_restrictions", "policy_changed", "success", request.Kind)
+		backend.auditModule().forContext(ctx).Record(request.DeviceID, "device_restrictions", "policy_changed", "success", request.Kind)
 	}
 	return response, err
 }
@@ -626,7 +643,7 @@ func (backend *ServiceBackend) PostFloatingGatewayApplyV2(ctx context.Context, r
 	}
 	response, err := backend.floatingGatewayModule().Apply(ctx, &request)
 	if err == nil && response != nil && response.Result != nil && response.Result.Error == nil && response.Result.Changed {
-		backend.auditModule().Record("", "floating_gateway", "policy_changed", "success", "")
+		backend.auditModule().forContext(ctx).Record("", "floating_gateway", "policy_changed", "success", "")
 		backend.auditModule().ObserveFloatingGateway(response)
 	}
 	return response, err
@@ -670,7 +687,7 @@ func (backend *ServiceBackend) PostNetworkRulesApplyV2(ctx context.Context, r *h
 	}
 	response, err := backend.networkRulesModule().Apply(ctx, &request)
 	if err == nil && response != nil && response.Result != nil && response.Result.Error == nil {
-		backend.auditModule().Record("", "network_rules", "policy_changed", "success", "")
+		backend.auditModule().forContext(ctx).Record("", "network_rules", "policy_changed", "success", "")
 	}
 	return response, err
 }
@@ -765,7 +782,7 @@ func (backend *ServiceBackend) GetFeatureComponentsV2(ctx context.Context, r *ht
 	if _, err := homeconfig.RootAuthorizer(homeconfig.LocalSession)(r); err != nil {
 		return &models.FeatureComponentsResponse{JSONResponse: models.JSONResponse{Success: -1001, Error: "valid root session required"}}, nil
 	}
-	return backend.capabilityActionModule().Components(ctx, effectiveRateLimitProvider(defaultRateLimitProviderPath)), nil
+	return backend.capabilityActionModule().Components(ctx, scopedRateLimitProvider(ctx)), nil
 }
 
 func (backend *ServiceBackend) capabilityActionModule() *CapabilityActionModule {
@@ -788,7 +805,7 @@ func (backend *ServiceBackend) PostDeviceGroupsV2(ctx context.Context, r *http.R
 	}
 	response, err := backend.deviceGroupsModule().Mutate(ctx, &request)
 	if err == nil && response != nil && response.Result != nil && response.Result.Error == nil {
-		backend.auditModule().Record(request.DeviceID, "device_groups", "policy_changed", "success", request.Action)
+		backend.auditModule().forContext(ctx).Record(request.DeviceID, "device_groups", "policy_changed", "success", request.Action)
 	}
 	return response, err
 }
@@ -830,9 +847,9 @@ func (backend *ServiceBackend) PostDevicePolicyV2(ctx context.Context, r *http.R
 	}
 	response, err := backend.devicePolicyModule().Apply(ctx, &request)
 	if err == nil && response != nil && response.Result != nil && response.Result.Error == nil && response.Result.Changed {
-		backend.auditModule().Record(request.DeviceID, "device_policy", "policy_changed", "success", request.Kind)
+		backend.auditModule().forContext(ctx).Record(request.DeviceID, "device_policy", "policy_changed", "success", request.Kind)
 	} else if err == nil && response != nil && response.Result != nil && isAddressConflict(response.Result.Error) {
-		backend.auditModule().Record(request.DeviceID, "address_reservation", "address_conflict", "rejected", "")
+		backend.auditModule().forContext(ctx).Record(request.DeviceID, "address_reservation", "address_conflict", "rejected", "")
 	}
 	return response, err
 }

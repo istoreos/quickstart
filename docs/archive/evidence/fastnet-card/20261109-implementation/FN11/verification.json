@@ -1,0 +1,22 @@
+{
+  "commands": [
+    {
+      "command": "/var/cache/build-cache/run.sh -- sh -c \"cd web && npx vue-tsc --noEmit && npm test\"",
+      "exitCode": 0,
+      "cjsTests": 21
+    },
+    {
+      "command": "/var/cache/build-cache/run.sh -- sh -c \"cd web && CARD_HOST_BUILD=.../fastnet-host-FN11 node --test test/*.test.mjs\"",
+      "exitCode": 0,
+      "esmTests": 172,
+      "log": "web-tests.log"
+    },
+    {
+      "command": "/var/cache/build-cache/run.sh -- go -C backend test ./modules/homeconfig ./modules/homecards ./modules/app/... ./service ./server",
+      "exitCode": 0,
+      "log": "backend-tests.log"
+    }
+  ],
+  "totalFrontendTests": 193,
+  "typecheck": "passed"
+}

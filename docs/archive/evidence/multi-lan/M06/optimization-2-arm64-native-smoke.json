@@ -1,0 +1,125 @@
+{
+  "host": "192.168.30.93",
+  "service": "qsnp-test-1d2c2",
+  "backend": "auto",
+  "checks": [
+    "same MAC independent policy and foreign plan rejection",
+    "owner replacement retains other owner",
+    "unchanged procd reload preserves both processes",
+    "interface, parent/child, directory and port conflicts do not change healthy BPF objects",
+    "hard crash restart reclaims own hooks and restores independent policies",
+    "single named instance stop/start preserves other process and data",
+    "interface recreation replaces only the affected runtime"
+  ],
+  "initial": [
+    {
+      "context": {
+        "networkId": "test_a",
+        "instanceId": "a",
+        "epoch": "a119936c-4937-4fe6-a48c-bd6cb3946196",
+        "interfaceIndex": 237
+      },
+      "interface": "qsn1d2c2a",
+      "state": "healthy",
+      "pid": 12964,
+      "uptimeSeconds": 0,
+      "residentMemoryKib": 4144,
+      "dataPlane": "ready",
+      "policyInterfaceVersion": "1",
+      "maxDevicePolicies": 1024,
+      "maxHttpConnections": 32,
+      "dnsStorageDefault": false,
+      "trafficStorageDefault": false,
+      "reasons": []
+    },
+    {
+      "context": {
+        "networkId": "test_b",
+        "instanceId": "b",
+        "epoch": "192a6995-0eee-4a04-bc07-0b61fb32f13c",
+        "interfaceIndex": 238
+      },
+      "interface": "qsn1d2c2b",
+      "state": "healthy",
+      "pid": 12948,
+      "uptimeSeconds": 0,
+      "residentMemoryKib": 4164,
+      "dataPlane": "ready",
+      "policyInterfaceVersion": "1",
+      "maxDevicePolicies": 1024,
+      "maxHttpConnections": 32,
+      "dnsStorageDefault": false,
+      "trafficStorageDefault": false,
+      "reasons": []
+    }
+  ],
+  "bpfObjects": [
+    [
+      "map_id:321",
+      "map_id:322",
+      "map_id:323",
+      "map_id:325",
+      "map_id:326",
+      "map_id:327",
+      "map_id:328",
+      "map_id:329",
+      "prog_id:377",
+      "prog_id:379"
+    ],
+    [
+      "map_id:307",
+      "map_id:308",
+      "map_id:309",
+      "map_id:310",
+      "map_id:312",
+      "map_id:313",
+      "map_id:315",
+      "map_id:316",
+      "prog_id:376",
+      "prog_id:378"
+    ]
+  ],
+  "final": [
+    {
+      "context": {
+        "networkId": "test_a",
+        "instanceId": "a",
+        "epoch": "08392a4c-9a0c-4322-afd4-39714a342d26",
+        "interfaceIndex": 241
+      },
+      "interface": "qsn1d2c2a",
+      "state": "healthy",
+      "pid": 13446,
+      "uptimeSeconds": 0,
+      "residentMemoryKib": 4256,
+      "dataPlane": "ready",
+      "policyInterfaceVersion": "1",
+      "maxDevicePolicies": 1024,
+      "maxHttpConnections": 32,
+      "dnsStorageDefault": false,
+      "trafficStorageDefault": false,
+      "reasons": []
+    },
+    {
+      "context": {
+        "networkId": "test_b",
+        "instanceId": "b",
+        "epoch": "192a6995-0eee-4a04-bc07-0b61fb32f13c",
+        "interfaceIndex": 238
+      },
+      "interface": "qsn1d2c2b",
+      "state": "healthy",
+      "pid": 12948,
+      "uptimeSeconds": 13,
+      "residentMemoryKib": 4296,
+      "dataPlane": "ready",
+      "policyInterfaceVersion": "1",
+      "maxDevicePolicies": 1024,
+      "maxHttpConnections": 32,
+      "dnsStorageDefault": false,
+      "trafficStorageDefault": false,
+      "reasons": []
+    }
+  ],
+  "productionConfigUnchanged": true
+}

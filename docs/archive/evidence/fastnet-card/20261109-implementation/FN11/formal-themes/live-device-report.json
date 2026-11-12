@@ -1,0 +1,17 @@
+{
+  "milestone": "FN11",
+  "status": "failed",
+  "device": "x86_64",
+  "restored": true,
+  "checks": [],
+  "artifacts": {
+    "backend": "c327e870abb0ff5a4582a3fb79da353ece1fafaea64dfa999b61d3ff8829eec3",
+    "packages": [
+      "a6a89757fecad40ab965578eeb288642eebf9c69256ddd97a342a7750eac4479",
+      "490e8983b3ca66dbebd4e80cf0733a25c3e21aa9ae9c94e5a3c70b4990b13caa",
+      "7dd666aec0d71c1e1b6d35d7af682e65cd0ad3b8c5869ccdf7ca683ef5cf0d9d",
+      "e2bec6e8d917048041dfd68bc609c5ae18c91590bc6d1f4390725da182025c90"
+    ]
+  },
+  "failure": "The input did not match the regular expression /本次失败|Failed this time/. Input:\n\n'Internet speed\\n' +\n  'Test\\n' +\n  '⋮\\n' +\n  '↓ Last download\\n' +\n  '950\\n' +\n  'Mbps\\n' +\n  '↑ Last upload\\n' +\n  '48\\n' +\n  'Mbps\\n' +\n  '\\n' +\n  'Last tested\\n' +\n  '09/11/2026, 00:00\\n' +\n  '\\n' +\n  'NAT\\n' +\n  'Full Cone\\n' +\n  'IPv6\\n' +\n  'Probe failed\\n' +\n  '\\n' +\n  'Some probes failed; valid results retained\\n' +\n  '\\n' +\n  'Default WAN route\\n' +\n  'FastNet'\n\n"
+}

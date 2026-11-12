@@ -2,6 +2,7 @@ package models
 
 // swagger:model deviceInventoryAddress
 type DeviceInventoryAddress struct {
+	Zone    string `json:"zone,omitempty"`
 	Family  int64  `json:"family"`
 	Address string `json:"address"`
 	Primary bool   `json:"primary,omitempty"`
@@ -41,6 +42,8 @@ type DeviceInventoryHealth struct {
 
 // swagger:model deviceInventoryItem
 type DeviceInventoryItem struct {
+	NetworkID      string                     `json:"networkId"`
+	Membership     string                     `json:"membership,omitempty"`
 	DeviceID       string                     `json:"deviceId"`
 	DisplayName    string                     `json:"displayName,omitempty"`
 	Hostname       string                     `json:"hostname,omitempty"`
@@ -63,8 +66,9 @@ type DeviceInventoryAddRequest struct {
 
 // swagger:model deviceInventoryResult
 type DeviceInventoryResult struct {
-	Devices []*DeviceInventoryItem `json:"devices"`
-	Health  *DeviceInventoryHealth `json:"health"`
+	NetworkHealth map[string]*DeviceInventoryHealth `json:"-"`
+	Devices       []*DeviceInventoryItem            `json:"devices"`
+	Health        *DeviceInventoryHealth            `json:"health"`
 }
 
 // swagger:model deviceInventoryResponse

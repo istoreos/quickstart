@@ -1,0 +1,22 @@
+{
+  "status": "passed",
+  "checks": [
+    "kept production homepage module library contains Internet speed / plugin.fastnet",
+    "selecting the module opens the new installation prompt without installing, measuring or downloading business JS",
+    "cancel leaves the existing saved homepage intact"
+  ],
+  "requests": [
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/layout/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/launcher/",
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/istore/home/v1/cards/",
+      "method": "GET"
+    }
+  ]
+}

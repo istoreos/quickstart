@@ -127,7 +127,9 @@ import DialogVue from "./components/dialog.vue";
 import appUtils from "/@/utils/app";
 import Toast from "/@/components/toast";
 import SwitchVue from "./components/switch.vue";
-import request from '/@/request';
+import baseRequest from '/@/request'
+import { useLANClient } from './lanContext'
+const request = { ...baseRequest, DeviceMangement: useLANClient() };
 import CustomTable from "./components/CustomTable.vue";
 import LoadError from "./components/loadError.vue";
 import PageState from "./components/pageState.vue";

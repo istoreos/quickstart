@@ -1,0 +1,6 @@
+{
+  "playwright": "1.55.0",
+  "chromium": "140.0.7339.16",
+  "node": "v24.15.0",
+  "environment": "Linux headless Chromium; OS theme via emulateMedia; device pages through same browser"
+}

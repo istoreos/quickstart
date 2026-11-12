@@ -1,0 +1,79 @@
+{
+  "status": "passed",
+  "date": "2026-11-10",
+  "deployment": "deployment-final/deployment.json",
+  "browserChecks": {
+    "full-ui-final": {
+      "passed": 84,
+      "report": "full-ui-final/browser-report.json"
+    },
+    "interactions-final": {
+      "passed": 5,
+      "report": "interactions-final/browser-report.json"
+    },
+    "card-preview": {
+      "passed": 31,
+      "report": "card-preview/browser-report.json"
+    },
+    "live-complete": {
+      "passed": 5,
+      "report": "live-complete/browser-report.json"
+    },
+    "live-stress-mouse": {
+      "passed": 4,
+      "report": "live-stress-mouse/browser-report.json"
+    },
+    "live-stress-keyboard": {
+      "passed": 4,
+      "report": "live-stress-keyboard/browser-report.json"
+    },
+    "live-https": {
+      "passed": 4,
+      "report": "live-https/browser-report.json"
+    },
+    "standard-header.json": {
+      "status": "passed",
+      "report": "standard-header.json"
+    },
+    "quick-failure.json": {
+      "status": "passed",
+      "report": "quick-failure.json"
+    }
+  },
+  "localChecks": {
+    "quickstart": 193,
+    "quickstartSkipped": 0,
+    "vueTsc": "passed",
+    "fastnetNode": 27,
+    "LANBoundaries": 9,
+    "goCore": "passed",
+    "luciBrowserOrigin": 12,
+    "luciEmbed": 10,
+    "packageContract": 3
+  },
+  "resources": {
+    "hostInitialGzipDelta": 20442,
+    "hostBudget": 20480,
+    "cardAssetsGzip": {
+      "chunk.5e62b45e.js": 2426,
+      "card.673f7cc9.js": 8052
+    },
+    "cardBudget": 8192,
+    "fullAppGzip": {
+      ".js": 67373,
+      ".css": 11062
+    },
+    "publicReactFilesInRuntime": false,
+    "completeFrontendOnlyAfterClick": true
+  },
+  "scope": "This iteration only; historical FN01-FN12 not rerun",
+  "candidateDirectory": "bin/fastnet-qinglan-candidate-20261110/",
+  "sourceCommits": {
+    "previousQuickstart": "655602c",
+    "previousFastNet": "e8f0480",
+    "previousPlugin": "37ab170",
+    "FastNet": "2206ce1",
+    "Plugin": "b81a2e7",
+    "Quickstart": "containing commit"
+  }
+}

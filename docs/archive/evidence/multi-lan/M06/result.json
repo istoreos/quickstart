@@ -1,0 +1,34 @@
+{
+  "milestone": "M06",
+  "status": "passed",
+  "optimizations": 3,
+  "checks": [
+    "local registry and network/instance/interface/index health verification",
+    "same MAC independent real kernel policy instances on ARM64 and x86",
+    "TCX and netlink backends",
+    "foreign plan and changed-request rejection; persisted replay and runtime epochs",
+    "distinct BPF objects, data directories, policy revisions and owner sets",
+    "device, bridge-child, port and data-directory collision rejection",
+    "unchanged procd reload and single-instance stop/start/crash/interface recreation preserve other process and BPF objects",
+    "actual Quickstart registry/provider apply/verify/remove against extra LAN",
+    "pinned original Quickstart provider with new engine; new client with pinned original main engine; new/new; old engine rejects extra LAN scope",
+    "production init and netifd logical bindings; whole x86 VM reboot restores two independent policies",
+    "original network/DHCP/firewall restored after test bootstrap; watchdog recovery verified",
+    "Go full suite, scoped race suite, Rust 48 tests and production init function checks"
+  ],
+  "optimizationNotes": [
+    "Preserve required revision/source fields; strictly support original v1 verify omissions.",
+    "Declare one-request TCP connection closure on both sides; preserve literals in test-only original-provider overlay.",
+    "Keep OpenWrt config_foreach space splitting separate from internal newline record splitting."
+  ],
+  "deviceEvidence": [
+    "arm64-native-smoke.json",
+    "amd64-netlink-smoke.json",
+    "compatibility.json",
+    "reboot.json"
+  ],
+  "scopeLimits": [
+    "Packet-level rate, quota and accounting verification remains M07; a control-plane health response does not prove those behaviors.",
+    "No release was published; installed test bootstrap was restored and temporary services removed."
+  ]
+}

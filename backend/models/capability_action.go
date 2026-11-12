@@ -1,14 +1,19 @@
 package models
 
 type CapabilityActionRequest struct {
-	CapabilityKey string `json:"capabilityKey"`
-	Action        string `json:"action"`
-	DraftToken    string `json:"draftToken,omitempty"`
-	Confirm       bool   `json:"confirm,omitempty"`
-	ExpectedState string `json:"expectedState,omitempty"`
+	ExpectedVersion string `json:"expectedVersion,omitempty"`
+	CapabilityKey   string `json:"capabilityKey"`
+	Action          string `json:"action"`
+	DraftToken      string `json:"draftToken,omitempty"`
+	Confirm         bool   `json:"confirm,omitempty"`
+	ExpectedState   string `json:"expectedState,omitempty"`
 }
 
 type CapabilityActionPlan struct {
+	NetworkID            string             `json:"networkId,omitempty"`
+	Version              string             `json:"version,omitempty"`
+	OperationScope       string             `json:"operationScope,omitempty"`
+	AffectedNetworks     []string           `json:"affectedNetworks,omitempty"`
 	CapabilityKey        string             `json:"capabilityKey"`
 	Action               string             `json:"action"`
 	Current              *Capability        `json:"current,omitempty"`

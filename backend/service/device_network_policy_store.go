@@ -31,6 +31,10 @@ var (
 )
 
 func (writer *defaultDeviceNetworkPolicyWriter) Apply(ctx context.Context, input StaticAssignmentWriteInput, route gatewayPolicyExecutionPlan) error {
+	input.Scope = selectedLANScope(ctx)
+	if err := verifyScopedDHCPHostSupport(input.Scope); err != nil {
+		return err
+	}
 	if route.Target == nil {
 		return &networkPolicyApplyError{Stage: "validate", Status: "failed", Err: errors.New("internet path target is unavailable")}
 	}
@@ -75,6 +79,9 @@ func mutateDeviceNetworkPolicyConfigAt(configDir string, input StaticAssignmentW
 	if err := mutateDeviceNetworkPolicyTree(tree, input, route); err != nil {
 		return err
 	}
+	if err := compileScopedDHCPHosts(tree); err != nil {
+		return err
+	}
 	return tree.Commit()
 }
 
@@ -88,6 +95,9 @@ func mutateDeviceNetworkPoliciesConfigAt(configDir string, changes []groupBatchN
 			return err
 		}
 	}
+	if err := compileScopedDHCPHosts(tree); err != nil {
+		return err
+	}
 	return tree.Commit()
 }
 
@@ -97,6 +107,9 @@ func mutateDeviceNetworkPolicyTree(tree uci.Tree, input StaticAssignmentWriteInp
 			if err := tree.AddSection("dhcp", route.Target.TagName, "tag"); err != nil {
 				return err
 			}
+		}
+		if input.Scope != nil && !tree.Set("dhcp", route.Target.TagName, "quickstart_network", input.Scope.NetworkID) {
+			return errors.New("set gateway target network")
 		}
 		if route.Target.TagTitle != "" && !tree.Set("dhcp", route.Target.TagName, "tag_title", route.Target.TagTitle) {
 			return errors.New("set gateway target title")
@@ -112,7 +125,7 @@ func mutateDeviceNetworkPolicyTree(tree uci.Tree, input StaticAssignmentWriteInp
 	sections, _ := tree.GetSections("dhcp", "host")
 	for _, section := range sections {
 		mac, _ := tree.GetLast("dhcp", section, "mac")
-		if normalizeInventoryMAC(mac) == normalizeInventoryMAC(input.AssignedMAC) {
+		if dhcpHostInScope(tree, section, input.Scope) && normalizeInventoryMAC(mac) == normalizeInventoryMAC(input.AssignedMAC) {
 			hostSections = append(hostSections, section)
 		}
 	}
@@ -131,16 +144,19 @@ func mutateDeviceNetworkPolicyTree(tree uci.Tree, input StaticAssignmentWriteInp
 		return nil
 	}
 	if section == "" {
-		section = "quickstart_" + strings.ToLower(strings.ReplaceAll(input.AssignedMAC, ":", ""))
+		section = scopedDHCPSectionName(input.Scope, "quickstart_"+strings.ToLower(strings.ReplaceAll(input.AssignedMAC, ":", "")))
 		tree.DelSection("dhcp", section)
 		if err := tree.AddSection("dhcp", section, "host"); err != nil {
 			return err
 		}
 	}
-	for _, option := range []string{"enabled", "mac", "ip", "name", "tag", "tag_title"} {
+	if err := bindDHCPHost(tree, section, input.Scope); err != nil {
+		return err
+	}
+	for _, option := range []string{"enable", "enabled", "mac", "ip", "name", "tag", "tag_title"} {
 		tree.Del("dhcp", section, option)
 	}
-	if !tree.Set("dhcp", section, "enabled", "1") || !tree.Set("dhcp", section, "mac", strings.ToUpper(input.AssignedMAC)) {
+	if !tree.Set("dhcp", section, "enable", "1") || !tree.Set("dhcp", section, "mac", strings.ToUpper(input.AssignedMAC)) {
 		return errors.New("set device identity")
 	}
 	if input.BindIP && !tree.Set("dhcp", section, "ip", input.AssignedIP) {

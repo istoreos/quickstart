@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "jobs": [
+    {
+      "task": {
+        "id": "run_748c7e8fffc5976fa02766c68320c515",
+        "instanceId": "service_213bb14bc428889b8b5ee78221aca27b",
+        "state": "cancelled",
+        "stage": "ping",
+        "startedAt": "2026-11-09T17:08:59.357614463Z",
+        "finishedAt": "2026-11-09T17:08:59.815384473Z",
+        "deadlineAt": "2026-11-09T17:10:59.357614463Z",
+        "error": null
+      },
+      "key": "ac373f3075952d1d2b75fddf651c8d7e"
+    }
+  ],
+  "latest": null
+}

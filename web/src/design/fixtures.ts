@@ -1,3 +1,4 @@
+import {cardFixture} from './cardFixture'
 // Synthetic fixtures, used exclusively by the independently loaded design entry.
 import { reactive } from 'vue'
 import { inventory } from './devices'
@@ -7,6 +8,11 @@ import { businessFixture } from './businessFixtures'
 import { launcherFixture } from './launcherFixtures'
 const params=new URLSearchParams(location.search)
 export const demo = reactive({ scenario: params.get('scenario') || 'normal', authority: params.get('authority') || 'external', recovered: false, layout: params.get('layout') || 'baseline' })
+const demoNetworks = () => params.get('lans') === '2' ? ['lan1', 'lan2'] : [params.get('lans') === 'custom' ? 'home' : 'lan']
+const scopedInventory = (network: string | null) => {
+  const ids = demoNetworks()
+  return (network === 'all' ? ids : [network || ids[0]]).filter(id => ids.includes(id)).flatMap((networkId) => inventory().map(device => ({ ...device, networkId, displayName: ids.length > 1 ? `${networkId} · ${device.displayName}` : device.displayName, addresses: { ...device.addresses, current: device.addresses.current.map(address => ({ ...address, address: address.family === 4 ? address.address.replace('192.168.30.', `192.168.${networkId === 'lan2' ? 32 : 31}.`) : address.address })) } })))
+}
 export const requests: Array<{ path: string; method: string; status: number }> = []
 export const fixturePaths = new Set<string>()
 let hiddenModules: string[] = []
@@ -43,6 +49,7 @@ export function installFixtures() {
     if (!url.pathname.startsWith('/cgi-bin/') && url.origin === location.origin) return realFetch(input, init)
     let status = 200, data: unknown
     const key = url.pathname.startsWith(base) ? url.pathname.slice(base.length) : url.pathname
+    const cardReply=url.origin===location.origin?cardFixture(key,method,JSON.parse(String(init?.body||'{}'))):undefined
     const networkReply=url.origin===location.origin&&(demo.layout==='ordered'||!params.has('layout'))?networkFixture(key,method,JSON.parse(String(init?.body||'{}')),demo.scenario,demo.recovered):undefined
     if(method==='GET'&&key==='/u/network/status/'&&demo.scenario==='network-loading'&&!demo.recovered)await new Promise(resolve=>setTimeout(resolve,1800))
     if(method==='GET'&&key==='/network/port/list/'&&demo.scenario==='ports-loading'&&!demo.recovered)await new Promise(resolve=>setTimeout(resolve,1800))
@@ -50,6 +57,7 @@ export function installFixtures() {
     const businessReply=url.origin===location.origin&&(demo.layout==='ordered'||!params.has('layout'))?businessFixture(key,method,JSON.parse(String(init?.body||'{}')),demo.scenario,demo.recovered):undefined
     const launcherReply=url.origin===location.origin?launcherFixture(key,method,JSON.parse(String(init?.body||'{}')),url.searchParams.has('launcher-retry')?'normal':demo.scenario):undefined
     if (url.origin !== location.origin) { status=403; data={error:'External requests are disabled in design mode'} }
+    else if(cardReply){status=cardReply.status;data=cardReply.data}
     else if(launcherReply){status=launcherReply.status;data=launcherReply.data}
     else if(networkReply){status=networkReply.status;data=networkReply.data}
     else if(businessReply&&!(method==='GET'&&!demo.recovered&&demo.scenario==='system-error'&&key==='/system/status/')){status=businessReply.status;data=businessReply.data}
@@ -57,12 +65,17 @@ export function installFixtures() {
     else if (key === '/system/module-settings/' && method === 'GET') data={result:{diableDisplay:hiddenModules}}
     else if (key === '/system/module-settings/' && method === 'POST') { hiddenModules=JSON.parse(String(init?.body || '{}')).diableDisplay || []; data={result:{diableDisplay:hiddenModules},previewOnly:true} }
     else if(deviceReply){status=deviceReply.status;data=deviceReply.data}
+    else if (key==='/lanctrl/v2/networks/' && method==='GET') {
+      const scenario=params.get('discovery')
+      if (['404','401','403','500'].includes(scenario||'')) { status=Number(scenario);data={error:'Synthetic discovery failure'} }
+      else data={result:{scopeVersion:1,networks:demoNetworks().map(networkId=>({networkId,displayName:networkId,device:networkId==='home'?'br-home':`br-${networkId}`,state:'up',ipv4Prefixes:[`192.168.${networkId==='lan2'?32:31}.0/24`]}))}}
+    }
     else if (key==='/lanctrl/v2/devices/' && method==='GET') {
       if(!demo.recovered && ['error','stale','old','permission'].includes(demo.scenario)){status=demo.scenario==='old'?404:demo.scenario==='permission'?403:503;data={error:demo.scenario==='old'?'API v2 not supported':demo.scenario==='permission'?'Device read access denied':'Inventory read failed'}}
-      else data={result:{devices:inventory(),health:{state:'ready',reasons:[]}}}
+      else data={result:{devices:scopedInventory(url.searchParams.get('network')),health:{state:'ready',reasons:[]}}}
     }
     else if (key==='/lanctrl/v2/network-rules/' && method==='GET') data={result:{rules:[{kind:'access',deviceId:'mac:02:00:00:00:00:06'}]}}
-    else if (key==='/lanctrl/v2/device-traffic/' && method==='GET') {const available=!['no-speed','disabled','speed-error','unsupported'].includes(demo.scenario);data={result:{health:{state:available?'ready':'partial'},items:inventory().map((d,i)=>({deviceId:d.deviceId,uploadSpeed:available?(i===5?0:82000):-1,downloadSpeed:available?(i===5?0:2400000):-1,uploadBytes:available?1000000:-1,downloadBytes:available?10000000:-1,connectionCount:available?4:0,state:available?'ready':'partial',sampledAt:'2026-10-14T04:00:00Z'}))}}}
+    else if (key==='/lanctrl/v2/device-traffic/' && method==='GET') {const available=!['no-speed','disabled','speed-error','unsupported'].includes(demo.scenario);data={result:{health:{state:available?'ready':'partial'},items:scopedInventory(url.searchParams.get('network')).map((d,i)=>({networkId:d.networkId,deviceId:d.deviceId,uploadSpeed:available?(i===5?0:82000):-1,downloadSpeed:available?(i===5?0:2400000):-1,uploadBytes:available?1000000:-1,downloadBytes:available?10000000:-1,connectionCount:available?4:0,state:available?'ready':'partial',sampledAt:'2026-10-14T04:00:00Z'}))}}}
     else if (key==='/network/device/list/' && method==='GET' && demo.layout!=='baseline') data={result:{devices:!demo.recovered&&['loading','error','old','permission'].includes(demo.scenario)?[]:inventory().filter(d=>d.online).map(d=>({name:d.displayName,ipv4addr:d.addresses.current[0]?.address,mac:d.mac}))}}
     else if(method==='GET'&&((demo.scenario==='network-error'&&['/u/network/status/','/u/network/statistics/','/network/port/list/'].includes(key))||(demo.scenario==='storage-error'&&key==='/nas/disk/status/')||(demo.scenario==='services-error'&&['/u/nas/service/status/','/guide/docker/status/','/guide/download-service/status/','/u/guide/ddns/'].includes(key)))){status=503;data={error:'Synthetic module failure'}}
     else if(method==='GET'&&!demo.recovered&&demo.scenario==='system-error'&&['/system/status/','/u/system/version/'].includes(key)){status=503;data={error:'Synthetic system read failure'}}
@@ -70,7 +83,7 @@ export function installFixtures() {
     else if (method === 'GET' && key in simple) data={result:simple[key]}
     else { status=method==='GET'?501:403; data={error:`Preview fixture is not defined for ${method} ${key}`,previewOnly:true} }
     fixturePaths.add(`${method} ${key}`)
-    requests.push({path:key,method,status}); if(requests.length>120) requests.shift()
+    requests.push({path:key+url.search,method,status}); if(requests.length>120) requests.shift()
     return new Response(JSON.stringify(data),{status,headers:{'Content-Type':'application/json','X-Quickstart-Design':'fixture'}})
   }
 }

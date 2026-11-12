@@ -1,0 +1,204 @@
+{
+  "status": "failed",
+  "layer": "formal LuCI host and installed external module; deterministic business view states",
+  "checks": [
+    {
+      "id": "TH12-system-320-standard-empty",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 320,
+        "height": 268,
+        "content": 268,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-320-standard-stale",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 320,
+        "height": 268,
+        "content": 268,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-320-standard-running",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 320,
+        "height": 324,
+        "content": 324,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-320-standard-failed",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 320,
+        "height": 326,
+        "content": 326,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-320-standard-partial",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 320,
+        "height": 298,
+        "content": 298,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-320-summary-empty",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 320,
+        "height": 150,
+        "content": 150,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-320-summary-stale",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 320,
+        "height": 150,
+        "content": 150,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-320-summary-running",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 320,
+        "height": 170,
+        "content": 170,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-320-summary-failed",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 320,
+        "height": 175,
+        "content": 175,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-320-summary-partial",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 320,
+        "height": 167,
+        "content": 167,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-390-standard-empty",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 390,
+        "height": 268,
+        "content": 268,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-390-standard-stale",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 390,
+        "height": 268,
+        "content": 268,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-390-standard-running",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 390,
+        "height": 324,
+        "content": 324,
+        "shell": "rgb(44, 44, 44)"
+      }
+    },
+    {
+      "id": "TH12-system-390-standard-failed",
+      "style": {
+        "fg": "rgb(230, 235, 243)",
+        "panel": "#2c2c2c",
+        "line": "#414b59",
+        "focus": "#a7c7ff",
+        "disabled": "#9ba8b9",
+        "width": 390,
+        "height": 308,
+        "content": 308,
+        "shell": "rgb(44, 44, 44)"
+      }
+    }
+  ],
+  "errors": [],
+  "failure": "The input did not match the regular expression /本次失败|Some probes failed/. Input:\n\n'外网测速\\n' +\n  '测速\\n' +\n  '⋮\\n' +\n  '↓ 上次下载\\n' +\n  '950\\n' +\n  'Mbps\\n' +\n  '↑ 上次上传\\n' +\n  '48\\n' +\n  'Mbps\\n' +\n  '\\n' +\n  '上次测速\\n' +\n  '2026/11/09 00:00\\n' +\n  '\\n' +\n  'NAT\\n' +\n  '全锥形\\n' +\n  'IPv6\\n' +\n  '检测失败\\n' +\n  '\\n' +\n  '部分检测未完成，已保留各项有效结果\\n' +\n  '\\n' +\n  '默认外网出口\\n' +\n  'FastNet'\n"
+}

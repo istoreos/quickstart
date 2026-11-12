@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"net/netip"
+	"os"
 	"strings"
 	"time"
 
@@ -41,6 +42,7 @@ type rateLimitTarget struct {
 }
 
 type rateLimitRoute struct {
+	Reason   string
 	TargetID string
 	Kind     string
 	Gateway  string
@@ -80,8 +82,8 @@ func NewRateLimitModule(provider rateLimitProvider, routes rateLimitRouteResolve
 func NewDefaultRateLimitModule(gateway *GatewayPolicyModule) *RateLimitModule {
 	module := NewRateLimitModule(newEqosRateLimitProvider(deviceRestrictionConfigDir(), &systemRateLimitRuntimeInspector{}), &gatewayRateLimitRouteResolver{gateway: gateway})
 	module.providers["bandix"] = NewBandixRateLimitProvider(defaultBandixBaseURL(), nil)
-	module.providers[nativePolicyProviderName] = NewNativeRateLimitProvider(defaultNativePolicyBaseURL(), nil)
-	module.selected = func(context.Context) string { return effectiveRateLimitProvider(defaultRateLimitProviderPath) }
+	module.providers[nativePolicyProviderName] = newScopedNativeRateLimitProvider()
+	module.selected = scopedRateLimitProvider
 	return module
 }
 
@@ -121,7 +123,11 @@ func (module *RateLimitModule) Apply(ctx context.Context, target rateLimitTarget
 	}
 	if desired.Enabled {
 		if !target.Route.Local {
-			return &PolicyError{Code: "execution_node_unavailable", Message: "设备当前不通过本机上网，请在实际执行上网的网关上设置限速"}
+			code := target.Route.Reason
+			if code == "" {
+				code = "execution_node_unavailable"
+			}
+			return &PolicyError{Code: code, Message: rateLimitReasonMessage(code)}
 		}
 		if provider.IdentityKind() == "ipv4" && stableRateLimitIPv4(target) == "" {
 			return &PolicyError{Code: "address_reservation_required", Message: "请先为设备预留当前 IPv4 地址，再启用限速"}
@@ -140,6 +146,9 @@ func (module *RateLimitModule) provider(ctx context.Context) rateLimitProvider {
 		if selected != "" {
 			name = selected
 		}
+	}
+	if selectedLAN(ctx) != defaultLAN && name != nativePolicyProviderName {
+		return nil
 	}
 	return module.providers[name]
 }
@@ -162,6 +171,7 @@ func (module *RateLimitModule) enforcement(provider rateLimitProvider, target ra
 		ObservedAt: module.now().UTC().Format(time.RFC3339),
 	}
 	addressReady := addressState == "stable" || addressState == "stable_identity"
+	result.Verified = observation.Verified && target.Route.Local && addressReady
 	if target.Route.Local {
 		result.ExecutionNode = "local"
 	}
@@ -192,6 +202,9 @@ func (module *RateLimitModule) enforcement(provider rateLimitProvider, target ra
 	default:
 		result.State = "ready"
 	}
+	if !target.Route.Local && target.Route.Reason != "" {
+		result.Reason = target.Route.Reason
+	}
 	return result
 }
 
@@ -214,7 +227,7 @@ func (resolver *gatewayRateLimitRouteResolver) Resolve(ctx context.Context, mac 
 	if resolver == nil || resolver.gateway == nil || resolver.gateway.store == nil {
 		return rateLimitRoute{}, errors.New("gateway policy is unavailable")
 	}
-	state, err := resolver.gateway.store.ReadState(ctx)
+	state, err := resolver.gateway.readState(ctx)
 	if err != nil {
 		return rateLimitRoute{}, err
 	}
@@ -231,5 +244,50 @@ func (resolver *gatewayRateLimitRouteResolver) Resolve(ctx context.Context, mac 
 	if target := index.targets[targetID]; target != nil {
 		kind = target.Public.Kind
 	}
-	return rateLimitRoute{TargetID: targetID, Kind: kind, Gateway: gateway, Local: gateway != "" && gateway == state.LAN.LanAddr}, nil
+	result := rateLimitRoute{TargetID: targetID, Kind: kind, Gateway: gateway, Local: gateway != "" && gateway == state.LAN.LanAddr}
+	if result.Local && selectedLANScope(ctx) != nil {
+		uplinks, err := outboundInterfacesContext(ctx)
+		if err != nil {
+			return rateLimitRoute{}, err
+		}
+		result.Local = distinctForwardingPath(selectedLANScope(ctx).Device, uplinks)
+		if !result.Local {
+			result.Reason = "enforcement_path_unverified"
+		}
+	}
+	return result, nil
+}
+
+func scopedRateLimitProvider(ctx context.Context) string {
+	path := lanStatePath(defaultRateLimitProviderPath, selectedLAN(ctx))
+	if selectedLAN(ctx) != defaultLAN {
+		if _, err := os.Stat(path); errors.Is(err, os.ErrNotExist) {
+			return nativePolicyProviderName
+		}
+	}
+	return effectiveRateLimitProvider(path)
+}
+
+// A one-arm or pure bridge path may bypass both the forwarding firewall and
+// the return-direction attachment. Do not infer enforcement from a DHCP gateway
+// value alone. Default routes are runtime facts, not guessed WAN device names.
+func distinctForwardingPath(lanDevice string, uplinks *DefaultInterfaces) bool {
+	if lanDevice == "" || uplinks == nil {
+		return false
+	}
+	found := false
+	for _, uplink := range []*DefaultInterface{uplinks.ipv4, uplinks.ipv6} {
+		if uplink == nil || uplink.ip == "" {
+			continue
+		}
+		device := uplink.l3Device
+		if device == "" {
+			device = uplink.deviceName
+		}
+		if device == "" || device == lanDevice {
+			return false
+		}
+		found = true
+	}
+	return found
 }

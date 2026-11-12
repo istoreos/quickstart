@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "currentDialog": "preview-r1/dialog-browser-report.json",
+  "formalDialog": "formal-x86_64-r1/checks-browser-report.json",
+  "liveOSAndCardFocus": "focus-theme-check.json",
+  "baselineMatrix": "docs/archive/evidence/fastnet-card/20261109-implementation/FN12/theme-coverage.json"
+}

@@ -1,0 +1,11 @@
+{
+  "milestone": "FN04",
+  "status": "passed",
+  "checks": [
+    "uninstalled FastNet stays visible in lightweight catalog; no executable resource requests",
+    "missing plugin summary edit saves v4 without losing identity or storing entry URL",
+    "formal HomeWidget loads registered external module at saved layout position",
+    "discovery failure preserves saved placeholder and existing traffic card"
+  ],
+  "errors": []
+}

@@ -7,13 +7,14 @@ type AdvancedCapability struct {
 }
 
 type NetworkAuditEvent struct {
-	ID       string `json:"id"`
-	At       string `json:"at"`
-	DeviceID string `json:"deviceId,omitempty"`
-	Resource string `json:"resource"`
-	Action   string `json:"action"`
-	State    string `json:"state"`
-	Reason   string `json:"reason,omitempty"`
+	NetworkID string `json:"networkId,omitempty"`
+	ID        string `json:"id"`
+	At        string `json:"at"`
+	DeviceID  string `json:"deviceId,omitempty"`
+	Resource  string `json:"resource"`
+	Action    string `json:"action"`
+	State     string `json:"state"`
+	Reason    string `json:"reason,omitempty"`
 }
 
 type AdvancedNetworkResult struct {
@@ -56,6 +57,7 @@ type WebhookConfig struct {
 }
 
 type PolicyBundle struct {
+	NetworkID      string                   `json:"networkId,omitempty"`
 	SchemaVersion  int                      `json:"schemaVersion"`
 	Scope          string                   `json:"scope"`
 	ExportedAt     string                   `json:"exportedAt"`
@@ -85,6 +87,7 @@ type PolicyImportRequest struct {
 }
 
 type PolicyImportPlan struct {
+	NetworkID         string   `json:"networkId,omitempty"`
 	CanApply          bool     `json:"canApply"`
 	GroupVersion      string   `json:"groupVersion"`
 	GroupCount        int      `json:"groupCount"`

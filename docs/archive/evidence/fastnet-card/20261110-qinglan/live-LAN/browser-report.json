@@ -1,0 +1,9 @@
+{
+  "status": "failed",
+  "checks": [
+    "retained production homepage uses native primary action and menu without external arrow"
+  ],
+  "errors": [],
+  "LAN": [],
+  "failure": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   isLocal: true,\n+   isLoopback: true\n-   isLocal: false,\n-   isLoopback: false\n  }\n"
+}

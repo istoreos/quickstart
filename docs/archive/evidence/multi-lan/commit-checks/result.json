@@ -1,0 +1,19 @@
+{
+  "checkedAt": "2026-11-09T11:51:50.566232+00:00",
+  "checkedTreeBeforeAddingThisRecord": "c5c7cbbe81832e1beaa72b0833a8bf86b5906efd",
+  "status": "source_checks_passed",
+  "quickstartBase": "66589b22f140615db97851b6c3b1eec7aad975d5",
+  "netpolicyCommit": "fba0e69a5e4083fe409b334b7bf3bfc1cc2f460a",
+  "checks": {
+    "goTestAll": "passed",
+    "frontendTests": {
+      "passed": 171,
+      "failed": 0
+    },
+    "productionBuild": "passed",
+    "designPreviewBuild": "passed",
+    "stagedWhitespace": "passed"
+  },
+  "m10Acceptance": "failed; scheduled IPv4 WAN pause allowed packets; actual full-candidate 24-hour soak not completed",
+  "excluded": "unrelated FastNet work and raw test-backup archives"
+}

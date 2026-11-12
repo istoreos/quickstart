@@ -85,3 +85,7 @@ bin/
 
 .agentflow
 
+
+# Local FastNet package and SDK test artifacts follow the evidence policy.
+/docs/archive/evidence/**/*.ipk
+/docs/archive/evidence/**/build-tools/po2lmo

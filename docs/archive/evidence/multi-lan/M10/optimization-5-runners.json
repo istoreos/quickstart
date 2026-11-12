@@ -1,0 +1,57 @@
+{
+  "startedAt": "2026-11-09T04:45:17.600792+00:00",
+  "status": "stopped_at_authorized_round_limit",
+  "application": "full production executable",
+  "optimization": 5,
+  "runners": [
+    {
+      "host": "192.168.30.7",
+      "pid": 24583,
+      "args": [
+        "/var/cache/build-cache/run.sh",
+        "--",
+        "python3",
+        "scripts/ops/multi-lan-capacity-probe.py",
+        "192.168.30.7",
+        "--application",
+        "/var/cache/build-cache/users/911/projects/quickstart-f0ca7c908f5f/work/multi-lan/M10-optimization-5/quickstart.amd64",
+        "--binary",
+        "/var/cache/build-cache/users/911/projects/quickstart-netpolicy-15189b090927/cargo-target/x86_64-unknown-linux-musl/release/quickstart-netpolicy",
+        "--go-test",
+        "/var/cache/build-cache/users/911/projects/quickstart-f0ca7c908f5f/work/multi-lan/M10-optimization-5/service.amd64.test",
+        "--legacy-test",
+        "/var/cache/build-cache/users/911/projects/quickstart-f0ca7c908f5f/work/multi-lan/M10/legacy.amd64.test",
+        "--output",
+        "/config/.agentflow-workspaces/.agentflow-workspaces/quickstart-onu/579c-multi-lan/quickstart/docs/archive/evidence/multi-lan/M10/optimization-5-capacity-x86.json"
+      ],
+      "log": "/var/cache/build-cache/users/911/projects/quickstart-f0ca7c908f5f/work/multi-lan/M10-optimization-5/capacity-x86.log",
+      "output": "/config/.agentflow-workspaces/.agentflow-workspaces/quickstart-onu/579c-multi-lan/quickstart/docs/archive/evidence/multi-lan/M10/optimization-5-capacity-x86.json"
+    },
+    {
+      "host": "192.168.30.93",
+      "pid": 24584,
+      "args": [
+        "/var/cache/build-cache/run.sh",
+        "--",
+        "python3",
+        "scripts/ops/multi-lan-capacity-probe.py",
+        "192.168.30.93",
+        "--application",
+        "/var/cache/build-cache/users/911/projects/quickstart-f0ca7c908f5f/work/multi-lan/M10-optimization-5/quickstart.arm64",
+        "--binary",
+        "/var/cache/build-cache/users/911/projects/quickstart-netpolicy-15189b090927/cargo-target/aarch64-unknown-linux-musl/release/quickstart-netpolicy",
+        "--go-test",
+        "/var/cache/build-cache/users/911/projects/quickstart-f0ca7c908f5f/work/multi-lan/M10-optimization-5/service.arm64.test",
+        "--legacy-test",
+        "/var/cache/build-cache/users/911/projects/quickstart-f0ca7c908f5f/work/multi-lan/M10/legacy.arm64.test",
+        "--output",
+        "/config/.agentflow-workspaces/.agentflow-workspaces/quickstart-onu/579c-multi-lan/quickstart/docs/archive/evidence/multi-lan/M10/optimization-5-capacity-arm.json"
+      ],
+      "log": "/var/cache/build-cache/users/911/projects/quickstart-f0ca7c908f5f/work/multi-lan/M10-optimization-5/capacity-arm.log",
+      "output": "/config/.agentflow-workspaces/.agentflow-workspaces/quickstart-onu/579c-multi-lan/quickstart/docs/archive/evidence/multi-lan/M10/optimization-5-capacity-arm.json"
+    }
+  ],
+  "failedAt": "2026-11-09T05:10:53.880296+00:00",
+  "rootConfigurationUnchanged": true,
+  "ownedNamespacesCleaned": true
+}

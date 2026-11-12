@@ -15,7 +15,7 @@ for(const item of fixture.cases)test('shared home contract: '+item.name,()=>{
  assert.equal(JSON.stringify(value),before,'validation changed user input')
 })
 test('published default matches approved pure model, without browser globals',()=>{
- assert.deepEqual({schemaVersion:3,rows:naturalRows(recommended()),widgetPreferences:defaultPreferences()},fixture.layout)
+ assert.deepEqual({schemaVersion:4,rows:naturalRows(recommended()),widgetPreferences:defaultPreferences()},fixture.layout)
 })
 test('server and frontend bounds cover row, pin and link maximums',()=>{
  const pins=structuredClone(fixture.launcher);pins.favorites=Array.from({length:24},(_,i)=>'app-'+i)

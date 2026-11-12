@@ -1,0 +1,7 @@
+{
+  "web/src/home/HomeLayout.vue": "e29cf8f19391bce6377fb09bdbb32b71a5df1e5d936b9992a944ddc9a311f9b2",
+  "web/src/App.vue": "4a80687252d98c21e4821db132be9f1de081d0ffbf8dc2f8e684c12e06deb80b",
+  "web/src/home/cards/card.css": "bedcdb96e4fc227a036b48689b0f2497c38797244eb9183e89cbbab7aecbebf9",
+  "backend/service/app.go": "2b1984b22212fe6fa1647853cb3b3c2314c933eb7f9a8626cc11728433ff8ae3",
+  "web/vite.config.ts": "50fbd53fce361889bf28e9e0f9668f62527144740a9f3e97977d96fbb3ab9b67"
+}

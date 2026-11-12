@@ -31,14 +31,14 @@ export const recommended=():OrderedRow[]=>[
   makeRow(['system'],'single',280,'system'),
 ]
 export const visibleIds=(rows:OrderedRow[])=>rows.flatMap(r=>r.columns.flatMap(c=>c.cards.filter((id):id is WidgetId=>Boolean(id))))
-export function cardMinimum(id:WidgetId,stacked:boolean){return stacked&&compactIds.includes(id)?capability(id).compactHeight:capability(id).minHeight}
+export function cardMinimum(id:WidgetId,stacked:boolean){return stacked&&(compactIds.includes(id)||id.startsWith('plugin.'))?capability(id).compactHeight:capability(id).minHeight}
 export function rowMinimum(row:OrderedRow){return Math.max(0,...row.columns.map(c=>{
   const cards=c.cards.filter((id):id is WidgetId=>Boolean(id));return cards.reduce((sum,id)=>sum+cardMinimum(id,c.cards.length>1),0)+Math.max(0,cards.length-1)*18
 }))}
 export function layoutIssue(rows:OrderedRow[]){
   const ids=visibleIds(rows)
   if(new Set(ids).size!==ids.length)return 'duplicate'
-  if(rows.some(row=>row.columns.some(c=>c.cards.length===2&&c.cards.some(id=>id&&!compactIds.includes(id)))))return 'compact'
+  if(rows.some(row=>row.columns.some(c=>c.cards.length===2&&c.cards.some(id=>id&&!compactIds.includes(id)&&!id.startsWith('plugin.')))))return 'compact'
   for(const row of rows){const required=Math.ceil(Math.max(rowMinimum(row),...row.columns.flatMap(c=>c.cards.length===2?c.cards.map((id,i)=>id?cardMinimum(id,true)/((i===0?c.split:100-c.split)/100)+18:0):[0])));if(required>row.height)return String(required)}
   return ''
 }

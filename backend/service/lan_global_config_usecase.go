@@ -41,7 +41,7 @@ func (svc *LanGlobalConfigService) GetGlobalConfigs(ctx context.Context) (*model
 	floatState, floatErr := svc.FloatIPReader.ReadFloatIPStatus(ctx)
 
 	speedState, speedErr := svc.SpeedLimitReader.ReadSpeedLimitStatus(ctx)
-	selectedProvider := effectiveRateLimitProvider(defaultRateLimitProviderPath)
+	selectedProvider := scopedRateLimitProvider(ctx)
 	if selectedProvider == nativePolicyProviderName {
 		installed, available, reason := nativeProviderCapability(ctx)
 		speedState.Installed = installed
@@ -59,9 +59,14 @@ func (svc *LanGlobalConfigService) GetGlobalConfigs(ctx context.Context) (*model
 	}
 
 	plan := BuildAutoDhcpPlan(lanStatus, dhcpState)
-	speedModel := toSpeedLimitModel(speedState)
+	speedModel := toSpeedLimitModel(ctx, speedState)
 	capabilities := buildDeviceManagementCapabilities(floatState, floatErr, speedState, speedErr)
 	clarifySpeedPreparation(capabilities.SpeedLimit, speedModel)
+	if selectedLAN(ctx) != defaultLAN {
+		capabilities.FloatGateway.State = "unsupported"
+		capabilities.FloatGateway.Reason = "floating_gateway_scope_unsupported"
+		capabilities.FloatGateway.Actions = nil
+	}
 
 	return &models.LANCtrlGlobalConfigResponse{
 		Result: &models.LANCtrlGlobalConfig{

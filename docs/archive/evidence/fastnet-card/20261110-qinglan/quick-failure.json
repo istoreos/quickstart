@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "checks": [
+    "failed Quick Experience has warning title, warning kicker and exclamation, with retained results; no false success badge"
+  ]
+}

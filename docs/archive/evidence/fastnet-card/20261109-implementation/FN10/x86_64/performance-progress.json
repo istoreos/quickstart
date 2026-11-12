@@ -1,0 +1,432 @@
+{
+  "completed": 6,
+  "total": 6,
+  "samples": [
+    {
+      "pair": 1,
+      "state": "hidden",
+      "before": {
+        "cpu": [
+          1528855,
+          674,
+          511811,
+          26882027,
+          21105,
+          0,
+          357285,
+          28519,
+          0,
+          0
+        ],
+        "processes": [
+          {
+            "comm": "quickstart",
+            "pid": "9118",
+            "rssKiB": 25984
+          },
+          {
+            "comm": "FastNet",
+            "pid": "10095",
+            "rssKiB": 16768
+          },
+          {
+            "comm": "uhttpd",
+            "pid": "12086",
+            "rssKiB": 1796
+          }
+        ],
+        "count": 3
+      },
+      "after": {
+        "cpu": [
+          1530007,
+          674,
+          512198,
+          26904196,
+          21114,
+          0,
+          357595,
+          28545,
+          0,
+          0
+        ],
+        "processes": [
+          {
+            "comm": "quickstart",
+            "pid": "9118",
+            "rssKiB": 25984
+          },
+          {
+            "comm": "FastNet",
+            "pid": "10095",
+            "rssKiB": 16768
+          },
+          {
+            "comm": "uhttpd",
+            "pid": "12086",
+            "rssKiB": 1796
+          }
+        ],
+        "count": 3
+      },
+      "elapsedMs": 60114.245510999994,
+      "cpuPercent": 7.795285411383196,
+      "rssKiB": 44548
+    },
+    {
+      "pair": 1,
+      "state": "visible",
+      "before": {
+        "cpu": [
+          1530012,
+          674,
+          512202,
+          26904257,
+          21114,
+          0,
+          357596,
+          28545,
+          0,
+          0
+        ],
+        "processes": [
+          {
+            "comm": "quickstart",
+            "pid": "9118",
+            "rssKiB": 25984
+          },
+          {
+            "comm": "FastNet",
+            "pid": "10095",
+            "rssKiB": 16768
+          },
+          {
+            "comm": "uhttpd",
+            "pid": "12086",
+            "rssKiB": 1796
+          }
+        ],
+        "count": 3
+      },
+      "after": {
+        "cpu": [
+          1531021,
+          674,
+          512565,
+          26926640,
+          21123,
+          0,
+          357849,
+          28562,
+          0,
+          0
+        ],
+        "processes": [
+          {
+            "comm": "quickstart",
+            "pid": "9118",
+            "rssKiB": 25984
+          },
+          {
+            "comm": "FastNet",
+            "pid": "10095",
+            "rssKiB": 16896
+          },
+          {
+            "comm": "uhttpd",
+            "pid": "12086",
+            "rssKiB": 1796
+          }
+        ],
+        "count": 3
+      },
+      "elapsedMs": 60083.49081000002,
+      "cpuPercent": 6.83198801697595,
+      "rssKiB": 44612
+    },
+    {
+      "pair": 2,
+      "state": "visible",
+      "before": {
+        "cpu": [
+          1531022,
+          674,
+          512565,
+          26926683,
+          21123,
+          0,
+          357849,
+          28562,
+          0,
+          0
+        ],
+        "processes": [
+          {
+            "comm": "quickstart",
+            "pid": "9118",
+            "rssKiB": 25984
+          },
+          {
+            "comm": "FastNet",
+            "pid": "10095",
+            "rssKiB": 16896
+          },
+          {
+            "comm": "uhttpd",
+            "pid": "12086",
+            "rssKiB": 1796
+          }
+        ],
+        "count": 3
+      },
+      "after": {
+        "cpu": [
+          1532187,
+          675,
+          512937,
+          26948887,
+          21131,
+          0,
+          358114,
+          28584,
+          0,
+          0
+        ],
+        "processes": [
+          {
+            "comm": "quickstart",
+            "pid": "9118",
+            "rssKiB": 23976
+          },
+          {
+            "comm": "FastNet",
+            "pid": "10095",
+            "rssKiB": 16492
+          },
+          {
+            "comm": "uhttpd",
+            "pid": "12086",
+            "rssKiB": 1796
+          }
+        ],
+        "count": 3
+      },
+      "elapsedMs": 60097.42827999999,
+      "cpuPercent": 7.592461621666597,
+      "rssKiB": 43470
+    },
+    {
+      "pair": 2,
+      "state": "hidden",
+      "before": {
+        "cpu": [
+          1532189,
+          675,
+          512938,
+          26948935,
+          21131,
+          0,
+          358116,
+          28584,
+          0,
+          0
+        ],
+        "processes": [
+          {
+            "comm": "quickstart",
+            "pid": "9118",
+            "rssKiB": 23976
+          },
+          {
+            "comm": "FastNet",
+            "pid": "10095",
+            "rssKiB": 16492
+          },
+          {
+            "comm": "uhttpd",
+            "pid": "12086",
+            "rssKiB": 1796
+          }
+        ],
+        "count": 3
+      },
+      "after": {
+        "cpu": [
+          1533369,
+          675,
+          513311,
+          26971125,
+          21140,
+          0,
+          358405,
+          28606,
+          0,
+          0
+        ],
+        "processes": [
+          {
+            "comm": "quickstart",
+            "pid": "9118",
+            "rssKiB": 23976
+          },
+          {
+            "comm": "FastNet",
+            "pid": "10095",
+            "rssKiB": 16492
+          },
+          {
+            "comm": "uhttpd",
+            "pid": "12086",
+            "rssKiB": 1796
+          }
+        ],
+        "count": 3
+      },
+      "elapsedMs": 60089.75208700003,
+      "cpuPercent": 7.746332543739351,
+      "rssKiB": 42264
+    },
+    {
+      "pair": 3,
+      "state": "hidden",
+      "before": {
+        "cpu": [
+          1533380,
+          675,
+          513315,
+          26971151,
+          21140,
+          0,
+          358405,
+          28606,
+          0,
+          0
+        ],
+        "processes": [
+          {
+            "comm": "quickstart",
+            "pid": "9118",
+            "rssKiB": 23976
+          },
+          {
+            "comm": "FastNet",
+            "pid": "10095",
+            "rssKiB": 16492
+          },
+          {
+            "comm": "uhttpd",
+            "pid": "12086",
+            "rssKiB": 1796
+          }
+        ],
+        "count": 3
+      },
+      "after": {
+        "cpu": [
+          1534571,
+          676,
+          513724,
+          26993290,
+          21148,
+          0,
+          358704,
+          28627,
+          0,
+          0
+        ],
+        "processes": [
+          {
+            "comm": "quickstart",
+            "pid": "9118",
+            "rssKiB": 23564
+          },
+          {
+            "comm": "FastNet",
+            "pid": "10095",
+            "rssKiB": 16492
+          },
+          {
+            "comm": "uhttpd",
+            "pid": "12086",
+            "rssKiB": 1796
+          }
+        ],
+        "count": 3
+      },
+      "elapsedMs": 60091.478105999995,
+      "cpuPercent": 7.981552268572378,
+      "rssKiB": 42058
+    },
+    {
+      "pair": 3,
+      "state": "visible",
+      "before": {
+        "cpu": [
+          1534579,
+          676,
+          513727,
+          26993356,
+          21148,
+          0,
+          358706,
+          28627,
+          0,
+          0
+        ],
+        "processes": [
+          {
+            "comm": "quickstart",
+            "pid": "9118",
+            "rssKiB": 23564
+          },
+          {
+            "comm": "FastNet",
+            "pid": "10095",
+            "rssKiB": 15212
+          },
+          {
+            "comm": "uhttpd",
+            "pid": "12086",
+            "rssKiB": 1796
+          }
+        ],
+        "count": 3
+      },
+      "after": {
+        "cpu": [
+          1535804,
+          676,
+          514139,
+          27015346,
+          21156,
+          0,
+          359059,
+          28659,
+          0,
+          0
+        ],
+        "processes": [
+          {
+            "comm": "quickstart",
+            "pid": "9118",
+            "rssKiB": 23564
+          },
+          {
+            "comm": "FastNet",
+            "pid": "10095",
+            "rssKiB": 15212
+          },
+          {
+            "comm": "uhttpd",
+            "pid": "12086",
+            "rssKiB": 1796
+          }
+        ],
+        "count": 3
+      },
+      "elapsedMs": 60093.130506000016,
+      "cpuPercent": 8.417985012489591,
+      "rssKiB": 40572
+    }
+  ]
+}

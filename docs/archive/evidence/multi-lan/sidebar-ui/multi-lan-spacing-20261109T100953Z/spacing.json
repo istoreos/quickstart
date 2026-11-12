@@ -1,0 +1,34 @@
+{
+  "status": "passed",
+  "gap": 20,
+  "buttons": [
+    {
+      "network": "all",
+      "left": 12,
+      "right": 12,
+      "marginLeft": "0px",
+      "marginRight": "0px"
+    },
+    {
+      "network": "lan",
+      "left": 12,
+      "right": 12,
+      "marginLeft": "0px",
+      "marginRight": "0px"
+    },
+    {
+      "network": "lan1",
+      "left": 12,
+      "right": 12,
+      "marginLeft": "0px",
+      "marginRight": "0px"
+    },
+    {
+      "network": "lan2",
+      "left": 12,
+      "right": 12,
+      "marginLeft": "0px",
+      "marginRight": "0px"
+    }
+  ]
+}

@@ -1,0 +1,499 @@
+{
+  "status": "passed",
+  "layer": "ui-design with production host and simulated service",
+  "checks": [
+    {
+      "pref": "light",
+      "width": 320,
+      "english": false,
+      "metrics": {
+        "left": 16,
+        "right": 304,
+        "width": 320,
+        "scroll": 320,
+        "panel": "rgb(255, 255, 255)",
+        "primary": "rgb(21, 93, 252)",
+        "radius": "8px",
+        "buttons": [
+          {
+            "x": 35,
+            "right": 156,
+            "h": 44
+          },
+          {
+            "x": 164,
+            "right": 285,
+            "h": 44
+          }
+        ]
+      }
+    },
+    {
+      "pref": "light",
+      "width": 320,
+      "english": true,
+      "metrics": {
+        "left": 16,
+        "right": 304,
+        "width": 320,
+        "scroll": 320,
+        "panel": "rgb(255, 255, 255)",
+        "primary": "rgb(21, 93, 252)",
+        "radius": "8px",
+        "buttons": [
+          {
+            "x": 35,
+            "right": 156,
+            "h": 44
+          },
+          {
+            "x": 164,
+            "right": 285,
+            "h": 44
+          }
+        ]
+      }
+    },
+    {
+      "pref": "light",
+      "width": 390,
+      "english": false,
+      "metrics": {
+        "left": 16,
+        "right": 374,
+        "width": 390,
+        "scroll": 390,
+        "panel": "rgb(255, 255, 255)",
+        "primary": "rgb(21, 93, 252)",
+        "radius": "8px",
+        "buttons": [
+          {
+            "x": 35,
+            "right": 191,
+            "h": 44
+          },
+          {
+            "x": 199,
+            "right": 355,
+            "h": 44
+          }
+        ]
+      }
+    },
+    {
+      "pref": "light",
+      "width": 390,
+      "english": true,
+      "metrics": {
+        "left": 16,
+        "right": 374,
+        "width": 390,
+        "scroll": 390,
+        "panel": "rgb(255, 255, 255)",
+        "primary": "rgb(21, 93, 252)",
+        "radius": "8px",
+        "buttons": [
+          {
+            "x": 35,
+            "right": 191,
+            "h": 44
+          },
+          {
+            "x": 199,
+            "right": 355,
+            "h": 44
+          }
+        ]
+      }
+    },
+    {
+      "pref": "light",
+      "width": 1440,
+      "english": false,
+      "metrics": {
+        "left": 440,
+        "right": 1000,
+        "width": 1440,
+        "scroll": 1440,
+        "panel": "rgb(255, 255, 255)",
+        "primary": "rgb(21, 93, 252)",
+        "radius": "8px",
+        "buttons": [
+          {
+            "x": 821,
+            "right": 881,
+            "h": 40
+          },
+          {
+            "x": 889,
+            "right": 975,
+            "h": 40
+          }
+        ]
+      }
+    },
+    {
+      "pref": "light",
+      "width": 1440,
+      "english": true,
+      "metrics": {
+        "left": 440,
+        "right": 1000,
+        "width": 1440,
+        "scroll": 1440,
+        "panel": "rgb(255, 255, 255)",
+        "primary": "rgb(21, 93, 252)",
+        "radius": "8px",
+        "buttons": [
+          {
+            "x": 787.796875,
+            "right": 851.4375,
+            "h": 40
+          },
+          {
+            "x": 859.4375,
+            "right": 975,
+            "h": 40
+          }
+        ]
+      }
+    },
+    {
+      "pref": "dark",
+      "width": 320,
+      "english": false,
+      "metrics": {
+        "left": 16,
+        "right": 304,
+        "width": 320,
+        "scroll": 320,
+        "panel": "rgb(44, 44, 44)",
+        "primary": "rgb(145, 185, 255)",
+        "radius": "8px",
+        "buttons": [
+          {
+            "x": 35,
+            "right": 156,
+            "h": 44
+          },
+          {
+            "x": 164,
+            "right": 285,
+            "h": 44
+          }
+        ]
+      }
+    },
+    {
+      "pref": "dark",
+      "width": 320,
+      "english": true,
+      "metrics": {
+        "left": 16,
+        "right": 304,
+        "width": 320,
+        "scroll": 320,
+        "panel": "rgb(44, 44, 44)",
+        "primary": "rgb(145, 185, 255)",
+        "radius": "8px",
+        "buttons": [
+          {
+            "x": 35,
+            "right": 156,
+            "h": 44
+          },
+          {
+            "x": 164,
+            "right": 285,
+            "h": 44
+          }
+        ]
+      }
+    },
+    {
+      "pref": "dark",
+      "width": 390,
+      "english": false,
+      "metrics": {
+        "left": 16,
+        "right": 374,
+        "width": 390,
+        "scroll": 390,
+        "panel": "rgb(44, 44, 44)",
+        "primary": "rgb(145, 185, 255)",
+        "radius": "8px",
+        "buttons": [
+          {
+            "x": 35,
+            "right": 191,
+            "h": 44
+          },
+          {
+            "x": 199,
+            "right": 355,
+            "h": 44
+          }
+        ]
+      }
+    },
+    {
+      "pref": "dark",
+      "width": 390,
+      "english": true,
+      "metrics": {
+        "left": 16,
+        "right": 374,
+        "width": 390,
+        "scroll": 390,
+        "panel": "rgb(44, 44, 44)",
+        "primary": "rgb(145, 185, 255)",
+        "radius": "8px",
+        "buttons": [
+          {
+            "x": 35,
+            "right": 191,
+            "h": 44
+          },
+          {
+            "x": 199,
+            "right": 355,
+            "h": 44
+          }
+        ]
+      }
+    },
+    {
+      "pref": "dark",
+      "width": 1440,
+      "english": false,
+      "metrics": {
+        "left": 440,
+        "right": 1000,
+        "width": 1440,
+        "scroll": 1440,
+        "panel": "rgb(44, 44, 44)",
+        "primary": "rgb(145, 185, 255)",
+        "radius": "8px",
+        "buttons": [
+          {
+            "x": 821,
+            "right": 881,
+            "h": 40
+          },
+          {
+            "x": 889,
+            "right": 975,
+            "h": 40
+          }
+        ]
+      }
+    },
+    {
+      "pref": "dark",
+      "width": 1440,
+      "english": true,
+      "metrics": {
+        "left": 440,
+        "right": 1000,
+        "width": 1440,
+        "scroll": 1440,
+        "panel": "rgb(44, 44, 44)",
+        "primary": "rgb(145, 185, 255)",
+        "radius": "8px",
+        "buttons": [
+          {
+            "x": 787.796875,
+            "right": 851.4375,
+            "h": 40
+          },
+          {
+            "x": 859.4375,
+            "right": 975,
+            "h": 40
+          }
+        ]
+      }
+    },
+    {
+      "pref": "system",
+      "width": 320,
+      "english": false,
+      "metrics": {
+        "left": 16,
+        "right": 304,
+        "width": 320,
+        "scroll": 320,
+        "panel": "rgb(44, 44, 44)",
+        "primary": "rgb(145, 185, 255)",
+        "radius": "8px",
+        "buttons": [
+          {
+            "x": 35,
+            "right": 156,
+            "h": 44
+          },
+          {
+            "x": 164,
+            "right": 285,
+            "h": 44
+          }
+        ]
+      }
+    },
+    {
+      "pref": "system",
+      "width": 320,
+      "english": true,
+      "metrics": {
+        "left": 16,
+        "right": 304,
+        "width": 320,
+        "scroll": 320,
+        "panel": "rgb(44, 44, 44)",
+        "primary": "rgb(145, 185, 255)",
+        "radius": "8px",
+        "buttons": [
+          {
+            "x": 35,
+            "right": 156,
+            "h": 44
+          },
+          {
+            "x": 164,
+            "right": 285,
+            "h": 44
+          }
+        ]
+      }
+    },
+    {
+      "pref": "system",
+      "width": 390,
+      "english": false,
+      "metrics": {
+        "left": 16,
+        "right": 374,
+        "width": 390,
+        "scroll": 390,
+        "panel": "rgb(44, 44, 44)",
+        "primary": "rgb(145, 185, 255)",
+        "radius": "8px",
+        "buttons": [
+          {
+            "x": 35,
+            "right": 191,
+            "h": 44
+          },
+          {
+            "x": 199,
+            "right": 355,
+            "h": 44
+          }
+        ]
+      }
+    },
+    {
+      "pref": "system",
+      "width": 390,
+      "english": true,
+      "metrics": {
+        "left": 16,
+        "right": 374,
+        "width": 390,
+        "scroll": 390,
+        "panel": "rgb(44, 44, 44)",
+        "primary": "rgb(145, 185, 255)",
+        "radius": "8px",
+        "buttons": [
+          {
+            "x": 35,
+            "right": 191,
+            "h": 44
+          },
+          {
+            "x": 199,
+            "right": 355,
+            "h": 44
+          }
+        ]
+      }
+    },
+    {
+      "pref": "system",
+      "width": 1440,
+      "english": false,
+      "metrics": {
+        "left": 440,
+        "right": 1000,
+        "width": 1440,
+        "scroll": 1440,
+        "panel": "rgb(44, 44, 44)",
+        "primary": "rgb(145, 185, 255)",
+        "radius": "8px",
+        "buttons": [
+          {
+            "x": 821,
+            "right": 881,
+            "h": 40
+          },
+          {
+            "x": 889,
+            "right": 975,
+            "h": 40
+          }
+        ]
+      }
+    },
+    {
+      "pref": "system",
+      "width": 1440,
+      "english": true,
+      "metrics": {
+        "left": 440,
+        "right": 1000,
+        "width": 1440,
+        "scroll": 1440,
+        "panel": "rgb(44, 44, 44)",
+        "primary": "rgb(145, 185, 255)",
+        "radius": "8px",
+        "buttons": [
+          {
+            "x": 787.796875,
+            "right": 851.4375,
+            "h": 40
+          },
+          {
+            "x": 859.4375,
+            "right": 975,
+            "h": 40
+          }
+        ]
+      }
+    },
+    {
+      "mode": "checking"
+    },
+    {
+      "mode": "installing"
+    },
+    {
+      "mode": "unknown"
+    },
+    {
+      "mode": "failed"
+    },
+    {
+      "mode": "update_required"
+    },
+    {
+      "mode": "failed-install-retry-without-layout-write-or-test"
+    },
+    {
+      "mode": "host-dialog-chunk-failure-has-recovery"
+    },
+    {
+      "mode": "successful-install-still-requires-placement-and-never-tests"
+    }
+  ],
+  "errors": []
+}

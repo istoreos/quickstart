@@ -1,0 +1,16 @@
+{
+  "host": "root@192.168.30.7",
+  "legacyQuickstartCommit": "66589b22f140615db97851b6c3b1eec7aad975d5",
+  "legacyEngineCommit": "54b5338ad8e03f46ba04387eb232aeb676ff68d2",
+  "checks": [
+    "new Quickstart registry/provider works with original main v1 engine",
+    "original Quickstart provider works with new v1 engine",
+    "new client and new additional-LAN engine work together",
+    "old engine cannot masquerade as an additional-LAN instance"
+  ],
+  "newClientOldEngine": "=== RUN   TestMultiLANNativeLiveBinding\n    native_engine_registry_test.go:173: verified real registry/provider read, apply, verify and remove for lan on qscdce83a\n--- PASS: TestMultiLANNativeLiveBinding (0.01s)\nPASS\n",
+  "oldClientNewEngine": "=== RUN   TestMultiLANLegacyClientLiveBinding\n    zz_multi_lan_legacy_provider_test.go:378: original provider from 66589b22 read/apply/verify/remove passed\n--- PASS: TestMultiLANLegacyClientLiveBinding (0.01s)\nPASS\n",
+  "newClientNewEngine": "=== RUN   TestMultiLANNativeLiveBinding\n    native_engine_registry_test.go:173: verified real registry/provider read, apply, verify and remove for office on qscdce83b\n--- PASS: TestMultiLANNativeLiveBinding (0.01s)\nPASS\n",
+  "legacyAdditionalLAN": "=== RUN   TestMultiLANNativeLiveBinding\n--- PASS: TestMultiLANNativeLiveBinding (0.00s)\nPASS\n",
+  "productionConfigUnchanged": true
+}

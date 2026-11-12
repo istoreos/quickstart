@@ -1,0 +1,20 @@
+{
+  "milestone": "FN11",
+  "status": "passed",
+  "device": "aarch64_generic",
+  "restored": true,
+  "checks": [
+    "two live browser tabs produce one real is-opkg installation; durable child journal confirms one attempt",
+    "browser observations match the same installed core and bounded persisted job history"
+  ],
+  "artifacts": {
+    "backend": "a10a4f1adaa7feb279a33489415998c68c7eecf3afe8e047805c6a69588bff51",
+    "packages": [
+      "485f4378c23cc66e77683c7f1007b4c3c115087ef7d19a61afcfd896bd6dc401",
+      "490e8983b3ca66dbebd4e80cf0733a25c3e21aa9ae9c94e5a3c70b4990b13caa",
+      "7dd666aec0d71c1e1b6d35d7af682e65cd0ad3b8c5869ccdf7ca683ef5cf0d9d",
+      "e2bec6e8d917048041dfd68bc609c5ae18c91590bc6d1f4390725da182025c90"
+    ]
+  },
+  "stateFileAbsent": false
+}

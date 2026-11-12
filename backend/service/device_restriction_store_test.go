@@ -1,6 +1,7 @@
 package service
 
 import (
+ "context"
 	"os"
 	"path/filepath"
 	"strings"
@@ -22,7 +23,7 @@ func TestAccessPolicyDoesNotDependOnOrModifyEqos(t *testing.T) {
 	writeRestrictionFixture(t, dir)
 	eqosBefore, _ := os.ReadFile(filepath.Join(dir, "eqos"))
 	mac := "AA:BB:CC:DD:EE:25"
-	if err := writeDeviceAccessPolicyAt(dir, mac, false); err != nil {
+	if err := writeDeviceAccessPolicyAt(context.Background(), dir, mac, false); err != nil {
 		t.Fatal(err)
 	}
 	include, err := os.ReadFile(filepath.Join(dir, "quickstart-access.nft"))
@@ -33,7 +34,7 @@ func TestAccessPolicyDoesNotDependOnOrModifyEqos(t *testing.T) {
 	if err != nil || !strings.Contains(string(firewall), "option position 'chain-prepend'") || !strings.Contains(string(firewall), "option chain 'forward'") {
 		t.Fatalf("firewall include registration = %q, %v", firewall, err)
 	}
-	allowed, err := readDeviceAccessPolicyAt(dir, mac)
+	allowed, err := readDeviceAccessPolicyAt(context.Background(), dir, mac)
 	if err != nil || allowed {
 		t.Fatalf("blocked policy = %v, %v", allowed, err)
 	}
@@ -41,14 +42,14 @@ func TestAccessPolicyDoesNotDependOnOrModifyEqos(t *testing.T) {
 	if string(eqosAfter) != string(eqosBefore) {
 		t.Fatal("access policy modified eqos")
 	}
-	if err := writeDeviceAccessPolicyAt(dir, mac, true); err != nil {
+	if err := writeDeviceAccessPolicyAt(context.Background(), dir, mac, true); err != nil {
 		t.Fatal(err)
 	}
 	include, err = os.ReadFile(filepath.Join(dir, "quickstart-access.nft"))
 	if err != nil || len(include) != 0 {
 		t.Fatalf("cleared immediate access include = %q, %v", include, err)
 	}
-	allowed, err = readDeviceAccessPolicyAt(dir, mac)
+	allowed, err = readDeviceAccessPolicyAt(context.Background(), dir, mac)
 	if err != nil || !allowed {
 		t.Fatalf("restored policy = %v, %v", allowed, err)
 	}

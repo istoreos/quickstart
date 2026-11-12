@@ -1,0 +1,841 @@
+{
+  "milestone": "FN10",
+  "status": "passed",
+  "checks": [
+    "uninstalled and installed-but-unadded request no FastNet JS/API",
+    "50 production shell/component mount cycles release timers/observers/listeners/requests; GC heap within 2 MiB"
+  ],
+  "requests": [
+    {
+      "path": "/luci-static/fastnet/quickstart/card.303484f1.js",
+      "time": 1794241458851,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241458873,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241459360,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241459614,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241459900,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241460177,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241460414,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241460696,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241460977,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241461231,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241461481,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241461744,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241462014,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241462297,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241462578,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241462813,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241463083,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241463347,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241463595,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241463864,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241464147,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241464430,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241464724,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241465030,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241465264,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241465547,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241465809,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241466063,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241466344,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241466609,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241466880,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241467159,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241467396,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241467679,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241467960,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241468197,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241468480,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241468759,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241469009,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241469246,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241469513,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241469809,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241470046,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241470327,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241470579,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241470812,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241471062,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241471346,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241471630,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241471913,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241472192,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241472429,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241563010,
+      "method": "GET"
+    },
+    {
+      "path": "/cgi-bin/luci/admin/services/fastnet/card/summary",
+      "time": 1794241804229,
+      "method": "GET"
+    }
+  ],
+  "samples": [
+    {
+      "pair": 1,
+      "state": "hidden",
+      "before": {
+        "cpu": [
+          42660072,
+          302534,
+          13534416,
+          1049537920,
+          128051,
+          2972693,
+          2650564,
+          0,
+          0,
+          0
+        ],
+        "processes": [
+          {
+            "comm": "quickstart",
+            "pid": "4011",
+            "rssKiB": 30084
+          },
+          {
+            "comm": "FastNet",
+            "pid": "5348",
+            "rssKiB": 16920
+          },
+          {
+            "comm": "uhttpd",
+            "pid": "13406",
+            "rssKiB": 2000
+          }
+        ],
+        "count": 3
+      },
+      "after": {
+        "cpu": [
+          42660284,
+          302542,
+          13534696,
+          1049560963,
+          128053,
+          2972799,
+          2650642,
+          0,
+          0,
+          0
+        ],
+        "processes": [
+          {
+            "comm": "quickstart",
+            "pid": "4011",
+            "rssKiB": 30084
+          },
+          {
+            "comm": "FastNet",
+            "pid": "5348",
+            "rssKiB": 16920
+          },
+          {
+            "comm": "uhttpd",
+            "pid": "13406",
+            "rssKiB": 2000
+          }
+        ],
+        "count": 3
+      },
+      "elapsedMs": 60172.826676,
+      "cpuPercent": 2.8825487799738716,
+      "rssKiB": 49004
+    },
+    {
+      "pair": 1,
+      "state": "visible",
+      "before": {
+        "cpu": [
+          42660308,
+          302542,
+          13534708,
+          1049561133,
+          128054,
+          2972800,
+          2650643,
+          0,
+          0,
+          0
+        ],
+        "processes": [
+          {
+            "comm": "quickstart",
+            "pid": "4011",
+            "rssKiB": 30084
+          },
+          {
+            "comm": "FastNet",
+            "pid": "5348",
+            "rssKiB": 16920
+          },
+          {
+            "comm": "uhttpd",
+            "pid": "13406",
+            "rssKiB": 2012
+          }
+        ],
+        "count": 3
+      },
+      "after": {
+        "cpu": [
+          42660526,
+          302555,
+          13534980,
+          1049584166,
+          128056,
+          2972907,
+          2650722,
+          0,
+          0,
+          0
+        ],
+        "processes": [
+          {
+            "comm": "quickstart",
+            "pid": "4011",
+            "rssKiB": 31348
+          },
+          {
+            "comm": "FastNet",
+            "pid": "5348",
+            "rssKiB": 18868
+          },
+          {
+            "comm": "uhttpd",
+            "pid": "13406",
+            "rssKiB": 2000
+          }
+        ],
+        "count": 3
+      },
+      "elapsedMs": 60198.37014300001,
+      "cpuPercent": 2.904232001348845,
+      "rssKiB": 50616
+    },
+    {
+      "pair": 2,
+      "state": "visible",
+      "before": {
+        "cpu": [
+          42660533,
+          302555,
+          13534984,
+          1049584235,
+          128056,
+          2972907,
+          2650722,
+          0,
+          0,
+          0
+        ],
+        "processes": [
+          {
+            "comm": "quickstart",
+            "pid": "4011",
+            "rssKiB": 31348
+          },
+          {
+            "comm": "FastNet",
+            "pid": "5348",
+            "rssKiB": 18868
+          },
+          {
+            "comm": "uhttpd",
+            "pid": "13406",
+            "rssKiB": 2000
+          }
+        ],
+        "count": 3
+      },
+      "after": {
+        "cpu": [
+          42660743,
+          302568,
+          13535243,
+          1049607301,
+          128058,
+          2973012,
+          2650799,
+          0,
+          0,
+          0
+        ],
+        "processes": [
+          {
+            "comm": "quickstart",
+            "pid": "4011",
+            "rssKiB": 31348
+          },
+          {
+            "comm": "FastNet",
+            "pid": "5348",
+            "rssKiB": 18356
+          },
+          {
+            "comm": "uhttpd",
+            "pid": "13406",
+            "rssKiB": 2000
+          }
+        ],
+        "count": 3
+      },
+      "elapsedMs": 60220.294255999994,
+      "cpuPercent": 2.797909994943536,
+      "rssKiB": 51960
+    },
+    {
+      "pair": 2,
+      "state": "hidden",
+      "before": {
+        "cpu": [
+          42660751,
+          302568,
+          13535245,
+          1049607396,
+          128058,
+          2973012,
+          2650800,
+          0,
+          0,
+          0
+        ],
+        "processes": [
+          {
+            "comm": "quickstart",
+            "pid": "4011",
+            "rssKiB": 31348
+          },
+          {
+            "comm": "FastNet",
+            "pid": "5348",
+            "rssKiB": 18356
+          },
+          {
+            "comm": "uhttpd",
+            "pid": "13406",
+            "rssKiB": 2000
+          }
+        ],
+        "count": 3
+      },
+      "after": {
+        "cpu": [
+          42660976,
+          302579,
+          13535511,
+          1049630445,
+          128061,
+          2973118,
+          2650877,
+          0,
+          0,
+          0
+        ],
+        "processes": [
+          {
+            "comm": "quickstart",
+            "pid": "4011",
+            "rssKiB": 28788
+          },
+          {
+            "comm": "FastNet",
+            "pid": "5348",
+            "rssKiB": 18356
+          },
+          {
+            "comm": "uhttpd",
+            "pid": "13406",
+            "rssKiB": 2000
+          }
+        ],
+        "count": 3
+      },
+      "elapsedMs": 60223.96872399998,
+      "cpuPercent": 2.8857901166954543,
+      "rssKiB": 50424
+    },
+    {
+      "pair": 3,
+      "state": "hidden",
+      "before": {
+        "cpu": [
+          42660981,
+          302579,
+          13535517,
+          1049630499,
+          128061,
+          2973118,
+          2650877,
+          0,
+          0,
+          0
+        ],
+        "processes": [
+          {
+            "comm": "quickstart",
+            "pid": "4011",
+            "rssKiB": 28788
+          },
+          {
+            "comm": "FastNet",
+            "pid": "5348",
+            "rssKiB": 18356
+          },
+          {
+            "comm": "uhttpd",
+            "pid": "13406",
+            "rssKiB": 2000
+          }
+        ],
+        "count": 3
+      },
+      "after": {
+        "cpu": [
+          42661194,
+          302587,
+          13535803,
+          1049653541,
+          128063,
+          2973225,
+          2650956,
+          0,
+          0,
+          0
+        ],
+        "processes": [
+          {
+            "comm": "quickstart",
+            "pid": "4011",
+            "rssKiB": 28788
+          },
+          {
+            "comm": "FastNet",
+            "pid": "5348",
+            "rssKiB": 18356
+          },
+          {
+            "comm": "uhttpd",
+            "pid": "13406",
+            "rssKiB": 2000
+          }
+        ],
+        "count": 3
+      },
+      "elapsedMs": 60180.51218999998,
+      "cpuPercent": 2.9194927749926274,
+      "rssKiB": 49144
+    },
+    {
+      "pair": 3,
+      "state": "visible",
+      "before": {
+        "cpu": [
+          42661218,
+          302587,
+          13535815,
+          1049653705,
+          128063,
+          2973226,
+          2650957,
+          0,
+          0,
+          0
+        ],
+        "processes": [
+          {
+            "comm": "quickstart",
+            "pid": "4011",
+            "rssKiB": 28788
+          },
+          {
+            "comm": "FastNet",
+            "pid": "5348",
+            "rssKiB": 16884
+          },
+          {
+            "comm": "uhttpd",
+            "pid": "13406",
+            "rssKiB": 2012
+          }
+        ],
+        "count": 3
+      },
+      "after": {
+        "cpu": [
+          42661431,
+          302604,
+          13536068,
+          1049676774,
+          128066,
+          2973330,
+          2651032,
+          0,
+          0,
+          0
+        ],
+        "processes": [
+          {
+            "comm": "quickstart",
+            "pid": "4011",
+            "rssKiB": 28788
+          },
+          {
+            "comm": "FastNet",
+            "pid": "5348",
+            "rssKiB": 16884
+          },
+          {
+            "comm": "uhttpd",
+            "pid": "13406",
+            "rssKiB": 2000
+          }
+        ],
+        "count": 3
+      },
+      "elapsedMs": 60197.989356000035,
+      "cpuPercent": 2.7892474930479483,
+      "rssKiB": 47678
+    }
+  ],
+  "budgets": {
+    "B03": {
+      "summaryP95ms": 155.9244039999976,
+      "runP95ms": 641.4611800000021,
+      "warmup": 5,
+      "samples": 30,
+      "summarySamplesMs": [
+        140.0268359999991,
+        139.20987500000047,
+        146.7598739999994,
+        153.65443799999957,
+        142.41518499999984,
+        137.40597199999866,
+        143.67126700000154,
+        142.80618400000094,
+        643.5639159999992,
+        140.5018749999981,
+        136.9501249999994,
+        140.96932899999956,
+        155.25754000000234,
+        144.1781039999987,
+        145.0269640000006,
+        137.85987500000192,
+        143.75703399999838,
+        137.61431099999754,
+        155.9244039999976,
+        143.3849020000016,
+        138.9944660000001,
+        150.6721409999991,
+        142.6453900000015,
+        138.9717210000017,
+        137.09245300000111,
+        143.13916900000186,
+        135.75516799999968,
+        141.33596000000034,
+        148.53757100000075,
+        142.78723499999978
+      ],
+      "runSamplesMs": [
+        152.41010800000004,
+        152.12643300000127,
+        641.4611800000021,
+        148.78360899999825,
+        150.62742300000173,
+        152.09789300000193,
+        149.37558299999728,
+        149.6430419999997,
+        149.6708010000002,
+        699.1985559999994,
+        160.83769199999733,
+        151.58874300000025,
+        148.70630899999742,
+        149.0643659999987,
+        152.42295000000013,
+        151.81762399999934,
+        635.0848170000027,
+        147.9471620000004,
+        153.56279899999936,
+        151.49703099999897,
+        143.85396800000308,
+        149.24913899999956,
+        149.88166200000705,
+        156.13962500000343,
+        155.4305000000022,
+        148.28161900000123,
+        147.79512499999691,
+        158.17070899999817,
+        150.1548330000005,
+        241.18027399999846
+      ]
+    },
+    "B04": {
+      "maximumSummaryBytes": 130,
+      "maximumTaskBytes": 287,
+      "registryBytes": 405
+    },
+    "B10": {
+      "realStarts": 35,
+      "maximumStopMs": 796.2421190000023
+    },
+    "B08": {
+      "mountCycles": 50,
+      "scope": {
+        "timers": 0,
+        "observers": 1,
+        "listeners": 0,
+        "pending": 0,
+        "queries": 1
+      },
+      "end": {
+        "timers": 0,
+        "observers": 1,
+        "listeners": 0,
+        "pending": 0,
+        "queries": 51
+      },
+      "heapGrowthBytes": 397520
+    },
+    "B07": {
+      "successfulImports": 1,
+      "modules": [
+        {
+          "path": "/luci-static/fastnet/quickstart/card.303484f1.js",
+          "wire": 18502,
+          "encoded": 18202
+        }
+      ]
+    },
+    "B05": {
+      "idleSecondsPerVisibleInterval": 60,
+      "intervals": 3,
+      "periodicRequests": 0
+    },
+    "B09": {
+      "warmupSeconds": 30,
+      "pairs": 3,
+      "secondsEach": 60,
+      "cpuDeltasPercentagePoints": [
+        0.02168322137497336,
+        -0.08788012175191806,
+        -0.1302452819446791
+      ],
+      "meanCpuDelta": -0.06548072744054127,
+      "rssDeltasKiB": [
+        1612,
+        1536,
+        -1466
+      ],
+      "meanRSSDeltaKiB": 560.6666666666666,
+      "newPersistentProcesses": 0,
+      "measurement": "whole-device /proc/stat CPU; RSS of same FastNet + Quickstart + uhttpd PIDs; isolated production CardShell fixture"
+    }
+  }
+}

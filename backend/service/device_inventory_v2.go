@@ -25,23 +25,28 @@ const (
 )
 
 type deviceInventoryObservation struct {
-	MAC      string
-	IPv4     string
-	IPv6     string
-	DUID     string
-	IAID     string
-	Hostname string
-	Online   bool
+	NetworkID string
+	MAC       string
+	IPv4      string
+	IPv6      string
+	DUID      string
+	IAID      string
+	Hostname  string
+	Online    bool
 }
 
 type deviceInventorySourceSnapshot struct {
-	ARP       []deviceInventoryObservation
-	DHCPv4    []deviceInventoryObservation
-	NDP       []deviceInventoryObservation
-	DHCPv6    []deviceInventoryObservation
-	HostHints map[string]HostHintSnapshot
-	WifiMACs  map[string]struct{}
-	Reasons   []string
+	NetworkDevices map[string]string
+	NetworkReasons map[string][]string
+	NetworkHints   map[string]map[string]HostHintSnapshot
+	NetworkWifi    map[string]map[string]struct{}
+	ARP            []deviceInventoryObservation
+	DHCPv4         []deviceInventoryObservation
+	NDP            []deviceInventoryObservation
+	DHCPv6         []deviceInventoryObservation
+	HostHints      map[string]HostHintSnapshot
+	WifiMACs       map[string]struct{}
+	Reasons        []string
 }
 
 type deviceInventorySource interface {
@@ -54,6 +59,7 @@ type deviceInventoryHistory struct {
 }
 
 type deviceInventoryHistoryItem struct {
+	NetworkID     string   `json:"networkId,omitempty"`
 	DeviceID      string   `json:"deviceId"`
 	MAC           string   `json:"mac"`
 	Hostname      string   `json:"hostname,omitempty"`
@@ -69,11 +75,13 @@ type manualDeviceDocument struct {
 }
 
 type manualDeviceRecord struct {
+	NetworkID string `json:"networkId,omitempty"`
 	MAC       string `json:"mac"`
 	CreatedAt string `json:"createdAt"`
 }
 
 type deviceInventoryAggregate struct {
+	NetworkID     string
 	DeviceID      string
 	MAC           string
 	Hostname      string
@@ -100,6 +108,7 @@ type DeviceInventoryModule struct {
 	loaded                  bool
 	history                 deviceInventoryHistory
 	cacheTTL                time.Duration
+	cacheEpoch              uint64
 	cached                  *models.DeviceInventoryResponse
 	cachedAt                time.Time
 	refreshing              chan struct{}
@@ -110,7 +119,7 @@ type DeviceInventoryModule struct {
 
 func NewDeviceInventoryModule() *DeviceInventoryModule {
 	return &DeviceInventoryModule{
-		source:                  systemDeviceInventorySource{},
+		source:                  systemDeviceInventorySource{scopes: NewLANScopeModule()},
 		classifier:              NewDeviceClassifier(),
 		classificationOverrides: NewDeviceProfileStore(defaultDeviceProfilePath, defaultDeviceClassificationPath),
 		historyPath:             defaultDeviceInventoryHistoryPath,
@@ -127,6 +136,14 @@ func newDeviceInventoryModuleForTest(source deviceInventorySource, historyPath, 
 }
 
 func (module *DeviceInventoryModule) Snapshot(ctx context.Context) (*models.DeviceInventoryResponse, error) {
+	response, err := module.snapshotAll(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return filterLANInventory(response, selectedLAN(ctx)), nil
+}
+
+func (module *DeviceInventoryModule) snapshotAll(ctx context.Context) (*models.DeviceInventoryResponse, error) {
 	if module == nil || module.source == nil {
 		return nil, errors.New("device inventory source is unavailable")
 	}
@@ -147,15 +164,19 @@ func (module *DeviceInventoryModule) Snapshot(ctx context.Context) (*models.Devi
 		module.cacheMu.Lock()
 		cached, err := module.cached, module.refreshErr
 		module.cacheMu.Unlock()
+		if cached == nil && err == nil {
+			return module.snapshotAll(ctx)
+		}
 		return cached, err
 	}
 	refresh := make(chan struct{})
 	module.refreshing = refresh
+	epoch := module.cacheEpoch
 	module.cacheMu.Unlock()
 
 	response, err := module.refreshSnapshot(ctx)
 	module.cacheMu.Lock()
-	if err == nil {
+	if err == nil && epoch == module.cacheEpoch {
 		module.cached = response
 		module.cachedAt = module.currentTime()
 	}
@@ -171,6 +192,7 @@ func (module *DeviceInventoryModule) Invalidate() {
 		return
 	}
 	module.cacheMu.Lock()
+	module.cacheEpoch++
 	module.cached = nil
 	module.cachedAt = time.Time{}
 	module.cacheMu.Unlock()
@@ -214,16 +236,21 @@ func (module *DeviceInventoryModule) refreshSnapshot(ctx context.Context) (*mode
 	current := mergeDeviceInventoryObservations(source)
 	items := make(map[string]*models.DeviceInventoryItem, len(current)+len(module.history.Devices))
 
-	for deviceID, observation := range current {
+	for key, observation := range current {
+		deviceID := observation.DeviceID
 		hostname := strings.TrimSpace(observation.Hostname)
 		connection := "lan"
-		if _, ok := source.WifiMACs[observation.MAC]; ok {
+		wifi := source.NetworkWifi[observation.NetworkID]
+		if wifi == nil && observation.NetworkID == defaultLAN {
+			wifi = source.WifiMACs
+		}
+		if _, ok := wifi[observation.MAC]; ok {
 			connection = "wifi"
 		}
 
 		lastSeen := now
 		if !observation.Online {
-			if previous := module.history.Devices[deviceID]; previous != nil {
+			if previous := module.history.Devices[key]; previous != nil {
 				if parsed, err := time.Parse(time.RFC3339, previous.LastSeenAt); err == nil {
 					lastSeen = parsed
 				}
@@ -231,15 +258,17 @@ func (module *DeviceInventoryModule) refreshSnapshot(ctx context.Context) (*mode
 		}
 
 		currentAddresses := inventoryAddresses(observation.Addresses, true)
-		historicalAddresses := historicalInventoryAddresses(module.history.Devices[deviceID], observation.Addresses)
+		historicalAddresses := historicalInventoryAddresses(module.history.Devices[key], observation.Addresses)
+		markLANAddressZones(currentAddresses, source.NetworkDevices[observation.NetworkID])
+		markLANAddressZones(historicalAddresses, source.NetworkDevices[observation.NetworkID])
 		manufacturer := GomanufSearch(observation.MAC)
 		classification := module.classifier.Classify(DeviceClassificationInput{DisplayName: hostname, Hostname: hostname, Manufacturer: manufacturer})
 		displayName := hostname
 		profile := deviceProfileRecord{}
 		if module.classificationOverrides != nil {
-			storedProfile, ok, err := module.classificationOverrides.GetProfile(deviceID, observation.IdentityScope)
+			storedProfile, ok, err := module.classificationOverrides.forNetwork(observation.NetworkID).GetProfile(deviceID, observation.IdentityScope)
 			if err != nil {
-				source.Reasons = append(source.Reasons, "device_profile_store_invalid")
+				addInventoryNetworkReason(&source, observation.NetworkID, "device_profile_store_invalid")
 			} else if ok {
 				profile = storedProfile
 				if profile.Alias != "" {
@@ -261,7 +290,8 @@ func (module *DeviceInventoryModule) refreshSnapshot(ctx context.Context) (*mode
 		if observation.Online {
 			presenceState = "online"
 		}
-		items[deviceID] = &models.DeviceInventoryItem{
+		items[key] = &models.DeviceInventoryItem{
+			NetworkID: wireLANID(observation.NetworkID), Membership: inventoryLANMembership(observation.NetworkID, observation.Online),
 			DeviceID:       deviceID,
 			DisplayName:    displayName,
 			Hostname:       hostname,
@@ -285,9 +315,9 @@ func (module *DeviceInventoryModule) refreshSnapshot(ctx context.Context) (*mode
 		if _, ok := items[deviceID]; ok || previous == nil {
 			continue
 		}
-		item, overrideErr := historyItemToOfflineDevice(previous, module.classifier, module.classificationOverrides)
+		item, overrideErr := historyItemToOfflineDevice(previous, module.classifier, module.classificationOverrides.forNetwork(inventoryLANID(previous.NetworkID)))
 		if overrideErr != nil {
-			source.Reasons = append(source.Reasons, "device_profile_store_invalid")
+			addInventoryNetworkReason(&source, inventoryLANID(previous.NetworkID), "device_profile_store_invalid")
 		}
 		items[deviceID] = item
 	}
@@ -299,9 +329,9 @@ func (module *DeviceInventoryModule) refreshSnapshot(ctx context.Context) (*mode
 		displayName := ""
 		profile := deviceProfileRecord{}
 		if module.classificationOverrides != nil {
-			stored, ok, profileErr := module.classificationOverrides.GetProfile(deviceID, "persistent")
+			stored, ok, profileErr := module.classificationOverrides.forNetwork(inventoryLANID(manual.NetworkID)).GetProfile("mac:"+strings.ToLower(manual.MAC), "persistent")
 			if profileErr != nil {
-				source.Reasons = append(source.Reasons, "device_profile_store_invalid")
+				addInventoryNetworkReason(&source, inventoryLANID(manual.NetworkID), "device_profile_store_invalid")
 			} else if ok {
 				profile = stored
 				displayName = stored.Alias
@@ -314,7 +344,7 @@ func (module *DeviceInventoryModule) refreshSnapshot(ctx context.Context) (*mode
 			}
 		}
 		items[deviceID] = &models.DeviceInventoryItem{
-			DeviceID: deviceID, DisplayName: displayName, Online: false, PresenceState: "never_seen", LastSeenAt: manual.CreatedAt,
+			DeviceID: "mac:" + strings.ToLower(manual.MAC), NetworkID: wireLANID(inventoryLANID(manual.NetworkID)), Membership: "manual", DisplayName: displayName, Online: false, PresenceState: "never_seen", LastSeenAt: manual.CreatedAt,
 			Mac: manual.MAC, Classification: classification, Icon: deviceIconForProfile(classification, profile),
 			Identity:   &models.DeviceInventoryIdentity{Kind: "mac", Scope: "persistent"},
 			Addresses:  &models.DeviceInventoryAddresses{Current: []*models.DeviceInventoryAddress{}, Historical: []*models.DeviceInventoryAddress{}},
@@ -323,13 +353,20 @@ func (module *DeviceInventoryModule) refreshSnapshot(ctx context.Context) (*mode
 	}
 
 	devices := sortedDeviceInventoryItems(items)
+	if source.NetworkDevices != nil {
+		for _, device := range devices {
+			if _, exists := source.NetworkDevices[device.NetworkID]; !exists {
+				device.Membership = "unconfirmed"
+			}
+		}
+	}
 	if limit := module.deviceLimit(); len(devices) > limit {
 		devices = devices[:limit]
-		source.Reasons = append(source.Reasons, "inventory_capacity_reached")
+		addInventoryGlobalReason(&source, "inventory_capacity_reached")
 	}
 	module.replaceHistory(devices)
 	if err := module.persistHistory(now); err != nil {
-		source.Reasons = append(source.Reasons, "history_persist_failed")
+		addInventoryGlobalReason(&source, "history_persist_failed")
 	}
 
 	reasons := uniqueSortedStrings(source.Reasons)
@@ -338,25 +375,26 @@ func (module *DeviceInventoryModule) refreshSnapshot(ctx context.Context) (*mode
 		healthState = "partial"
 	}
 	return &models.DeviceInventoryResponse{Result: &models.DeviceInventoryResult{
-		Devices: devices,
-		Health:  &models.DeviceInventoryHealth{State: healthState, Reasons: reasons},
+		NetworkHealth: inventoryNetworkHealth(source),
+		Devices:       devices,
+		Health:        &models.DeviceInventoryHealth{State: healthState, Reasons: reasons},
 	}}, nil
 }
 
 func mergeDeviceInventoryObservations(source deviceInventorySourceSnapshot) map[string]*deviceInventoryAggregate {
 	merged := make(map[string]*deviceInventoryAggregate)
-	addMACObservation := func(observation deviceInventoryObservation) {
+	addMACObservation := func(observation deviceInventoryObservation) *deviceInventoryAggregate {
 		mac := normalizeInventoryMAC(observation.MAC)
 		if mac == "" {
-			return
+			return nil
 		}
+		network := inventoryLANID(observation.NetworkID)
 		deviceID := "mac:" + strings.ToLower(mac)
-		item := merged[deviceID]
+		key := inventoryLANKey(network, deviceID)
+		item := merged[key]
 		if item == nil {
-			item = &deviceInventoryAggregate{
-				DeviceID: deviceID, MAC: mac, IdentityKind: "mac", IdentityScope: "persistent", Addresses: map[string]struct{}{},
-			}
-			merged[deviceID] = item
+			item = &deviceInventoryAggregate{NetworkID: network, DeviceID: deviceID, MAC: mac, IdentityKind: "mac", IdentityScope: "persistent", Addresses: map[string]struct{}{}}
+			merged[key] = item
 		}
 		if item.Hostname == "" {
 			item.Hostname = strings.TrimSpace(observation.Hostname)
@@ -364,36 +402,37 @@ func mergeDeviceInventoryObservations(source deviceInventorySourceSnapshot) map[
 		item.Online = item.Online || observation.Online
 		addInventoryAddress(item.Addresses, observation.IPv4)
 		addInventoryAddress(item.Addresses, observation.IPv6)
+		return item
 	}
-	for _, observation := range source.DHCPv4 {
-		addMACObservation(observation)
-	}
-	for _, observation := range source.ARP {
-		addMACObservation(observation)
-	}
-	for _, observation := range source.NDP {
-		addMACObservation(observation)
-	}
-	for mac, hint := range source.HostHints {
-		observation := deviceInventoryObservation{MAC: mac, Hostname: hint.Hostname}
-		addMACObservation(observation)
-		deviceID := "mac:" + strings.ToLower(normalizeInventoryMAC(mac))
-		item := merged[deviceID]
-		if item == nil {
-			continue
-		}
-		for _, address := range hint.IPAddrs {
-			addInventoryAddress(item.Addresses, address)
-		}
-		for _, address := range hint.IPv6Addrs {
-			addInventoryAddress(item.Addresses, address)
+	for _, observations := range [][]deviceInventoryObservation{source.DHCPv4, source.ARP, source.NDP} {
+		for _, observation := range observations {
+			addMACObservation(observation)
 		}
 	}
-
-	addressOwners := make(map[string]*deviceInventoryAggregate)
+	addHints := func(network string, hints map[string]HostHintSnapshot) {
+		for mac, hint := range hints {
+			item := addMACObservation(deviceInventoryObservation{NetworkID: network, MAC: mac, Hostname: hint.Hostname})
+			if item == nil {
+				continue
+			}
+			for _, address := range append(append([]string{}, hint.IPAddrs...), hint.IPv6Addrs...) {
+				addInventoryAddress(item.Addresses, address)
+			}
+		}
+	}
+	addHints(defaultLAN, source.HostHints)
+	for network, hints := range source.NetworkHints {
+		addHints(network, hints)
+	}
+	owners := map[string]*deviceInventoryAggregate{}
+	ambiguous := map[string]bool{}
 	for _, item := range merged {
 		for address := range item.Addresses {
-			addressOwners[address] = item
+			key := inventoryLANKey(item.NetworkID, address)
+			if owners[key] != nil {
+				ambiguous[key] = true
+			}
+			owners[key] = item
 		}
 	}
 	for _, observation := range source.DHCPv6 {
@@ -401,24 +440,24 @@ func mergeDeviceInventoryObservations(source deviceInventorySourceSnapshot) map[
 		if address == "" {
 			continue
 		}
-		if owner := addressOwners[address]; owner != nil {
+		network := inventoryLANID(observation.NetworkID)
+		key := inventoryLANKey(network, address)
+		if owner := owners[key]; owner != nil && !ambiguous[key] {
 			if owner.Hostname == "" {
 				owner.Hostname = strings.TrimSpace(observation.Hostname)
 			}
 			continue
 		}
-		duid := normalizeInventoryHexID(observation.DUID)
-		iaid := normalizeInventoryHexID(observation.IAID)
+		duid, iaid := normalizeInventoryHexID(observation.DUID), normalizeInventoryHexID(observation.IAID)
 		if duid == "" || iaid == "" {
 			continue
 		}
 		deviceID := "duid:" + duid + ":" + iaid
-		item := merged[deviceID]
+		key = inventoryLANKey(network, deviceID)
+		item := merged[key]
 		if item == nil {
-			item = &deviceInventoryAggregate{
-				DeviceID: deviceID, IdentityKind: "duid_iaid", IdentityScope: "boot", Addresses: map[string]struct{}{},
-			}
-			merged[deviceID] = item
+			item = &deviceInventoryAggregate{NetworkID: network, DeviceID: deviceID, IdentityKind: "duid_iaid", IdentityScope: "boot", Addresses: map[string]struct{}{}}
+			merged[key] = item
 		}
 		if item.Hostname == "" {
 			item.Hostname = strings.TrimSpace(observation.Hostname)
@@ -480,6 +519,7 @@ func historyItemToOfflineDevice(item *deviceInventoryHistoryItem, classifier dev
 		}
 	}
 	return &models.DeviceInventoryItem{
+		NetworkID: wireLANID(inventoryLANID(item.NetworkID)), Membership: inventoryLANMembership(inventoryLANID(item.NetworkID), false),
 		DeviceID:       item.DeviceID,
 		DisplayName:    displayName,
 		Hostname:       item.Hostname,
@@ -508,6 +548,9 @@ func sortedDeviceInventoryItems(items map[string]*models.DeviceInventoryItem) []
 		if result[i].LastSeenAt != result[j].LastSeenAt {
 			return result[i].LastSeenAt > result[j].LastSeenAt
 		}
+		if result[i].NetworkID != result[j].NetworkID {
+			return result[i].NetworkID < result[j].NetworkID
+		}
 		return result[i].DeviceID < result[j].DeviceID
 	})
 	return result
@@ -526,8 +569,9 @@ func (module *DeviceInventoryModule) replaceHistory(devices []*models.DeviceInve
 		for _, address := range device.Addresses.Historical {
 			addresses = append(addresses, address.Address)
 		}
-		next[device.DeviceID] = &deviceInventoryHistoryItem{
-			DeviceID: device.DeviceID, MAC: device.Mac, Hostname: device.Hostname,
+		next[inventoryLANKey(device.NetworkID, device.DeviceID)] = &deviceInventoryHistoryItem{
+			NetworkID: storedLANID(device.NetworkID),
+			DeviceID:  device.DeviceID, MAC: device.Mac, Hostname: device.Hostname,
 			IdentityKind: device.Identity.Kind, IdentityScope: device.Identity.Scope,
 			LastSeenAt: device.LastSeenAt, Addresses: uniqueSortedStrings(addresses),
 		}
@@ -536,6 +580,9 @@ func (module *DeviceInventoryModule) replaceHistory(devices []*models.DeviceInve
 }
 
 func (module *DeviceInventoryModule) AddManual(ctx context.Context, request *models.DeviceInventoryAddRequest) (*models.DeviceInventoryResponse, error) {
+	if network := selectedLAN(ctx); network == "all" || network == unassignedLAN {
+		return nil, errors.New("a confirmed LAN is required for a manual device")
+	}
 	if request == nil {
 		return nil, errors.New("manual device request is required")
 	}
@@ -550,22 +597,23 @@ func (module *DeviceInventoryModule) AddManual(ctx context.Context, request *mod
 	}
 	deviceID := "mac:" + strings.ToLower(mac)
 	module.mu.Lock()
-	document := module.readManualDeviceDocument()
+	network := selectedLAN(ctx)
+	document := module.readManualDeviceDocument(network)
 	if _, exists := document.Devices[deviceID]; !exists && len(document.Devices) >= module.deviceLimit() {
 		module.mu.Unlock()
 		return nil, errors.New("manual device limit reached")
 	}
-	document.Devices[deviceID] = manualDeviceRecord{MAC: mac, CreatedAt: module.currentTime().UTC().Format(time.RFC3339)}
+	document.Devices[deviceID] = manualDeviceRecord{NetworkID: network, MAC: mac, CreatedAt: module.currentTime().UTC().Format(time.RFC3339)}
 	raw, err := json.Marshal(document)
 	if err == nil {
-		err = persistClassificationOverrides(module.manualPath, raw)
+		err = persistClassificationOverrides(lanStatePath(module.manualPath, network), raw)
 	}
 	module.mu.Unlock()
 	if err != nil {
 		return nil, err
 	}
 	if module.classificationOverrides != nil && alias != "" {
-		if _, err := module.classificationOverrides.PatchProfileFields(deviceID, "persistent", deviceProfilePatch{Alias: &alias}); err != nil {
+		if _, err := module.classificationOverrides.forNetwork(network).PatchProfileFields(deviceID, "persistent", deviceProfilePatch{Alias: &alias}); err != nil {
 			return nil, err
 		}
 	}
@@ -574,12 +622,23 @@ func (module *DeviceInventoryModule) AddManual(ctx context.Context, request *mod
 }
 
 func (module *DeviceInventoryModule) readManualDevices() map[string]manualDeviceRecord {
-	return module.readManualDeviceDocument().Devices
+	devices := map[string]manualDeviceRecord{}
+	for network := range lanStateFiles(module.manualPath) {
+		for id, record := range module.readManualDeviceDocument(network).Devices {
+			record.NetworkID = network
+			devices[inventoryLANKey(network, id)] = record
+		}
+	}
+	return devices
 }
 
-func (module *DeviceInventoryModule) readManualDeviceDocument() manualDeviceDocument {
+func (module *DeviceInventoryModule) readManualDeviceDocument(networks ...string) manualDeviceDocument {
 	document := manualDeviceDocument{SchemaVersion: 1, Devices: map[string]manualDeviceRecord{}}
-	raw, err := os.ReadFile(module.manualPath)
+	network := defaultLAN
+	if len(networks) > 0 {
+		network = networks[0]
+	}
+	raw, err := os.ReadFile(lanStatePath(module.manualPath, network))
 	if err != nil {
 		return document
 	}
@@ -596,19 +655,27 @@ func (module *DeviceInventoryModule) loadHistory() {
 	}
 	module.loaded = true
 	module.history = deviceInventoryHistory{BootID: module.bootID, Devices: map[string]*deviceInventoryHistoryItem{}}
-	data, err := os.ReadFile(module.historyPath)
-	if err != nil {
-		return
+	for network, path := range lanStateFiles(module.historyPath) {
+		data, err := os.ReadFile(path)
+		if err != nil {
+			continue
+		}
+		var history deviceInventoryHistory
+		if json.Unmarshal(data, &history) != nil || history.BootID != module.bootID || history.Devices == nil {
+			continue
+		}
+		for id, item := range history.Devices {
+			if item == nil {
+				continue
+			}
+			item.NetworkID = network
+			module.history.Devices[inventoryLANKey(network, id)] = item
+		}
+		if info, err := os.Stat(path); err == nil && info.ModTime().After(module.lastPersistAt) {
+			module.lastPersistAt = info.ModTime()
+		}
 	}
-	var history deviceInventoryHistory
-	if json.Unmarshal(data, &history) != nil || history.BootID != module.bootID || history.Devices == nil {
-		return
-	}
-	module.history = history
-	module.lastPersisted, _ = json.Marshal(history)
-	if info, statErr := os.Stat(module.historyPath); statErr == nil {
-		module.lastPersistAt = info.ModTime()
-	}
+	module.lastPersisted, _ = json.Marshal(module.history)
 }
 
 func (module *DeviceInventoryModule) persistHistory(now time.Time) error {
@@ -622,12 +689,27 @@ func (module *DeviceInventoryModule) persistHistory(now time.Time) error {
 	if !module.lastPersistAt.IsZero() && now.Sub(module.lastPersistAt) < deviceInventoryPersistDebounce {
 		return nil
 	}
-	tmp := module.historyPath + ".tmp"
-	if err := os.WriteFile(tmp, data, 0600); err != nil {
-		return err
+	partitions := map[string]deviceInventoryHistory{}
+	for network := range lanStateFiles(module.historyPath) {
+		partitions[network] = deviceInventoryHistory{BootID: module.bootID, Devices: map[string]*deviceInventoryHistoryItem{}}
 	}
-	if err := os.Rename(tmp, module.historyPath); err != nil {
-		return err
+	for _, item := range module.history.Devices {
+		network := inventoryLANID(item.NetworkID)
+		part, ok := partitions[network]
+		if !ok {
+			part = deviceInventoryHistory{BootID: module.bootID, Devices: map[string]*deviceInventoryHistoryItem{}}
+		}
+		part.Devices[item.DeviceID] = item
+		partitions[network] = part
+	}
+	for network, part := range partitions {
+		raw, err := json.Marshal(part)
+		if err != nil {
+			return err
+		}
+		if err := persistClassificationOverrides(lanStatePath(module.historyPath, network), raw); err != nil {
+			return err
+		}
 	}
 	module.lastPersisted = append(module.lastPersisted[:0], data...)
 	module.lastPersistAt = now

@@ -42,7 +42,9 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { useGettext } from '/@/plugins/i18n'
-import request from '/@/request'
+import baseRequest from '/@/request'
+import { useLANClient } from '../lanContext'
+const request = { ...baseRequest, DeviceMangement: useLANClient() }
 import PageState from './pageState.vue'
 import DeviceSceneIcon from './deviceSceneIcon.vue'
 import type { DeviceClassification, DeviceListItem } from '../deviceInventory'

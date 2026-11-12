@@ -1,0 +1,57 @@
+{
+  "functionalChecks": {
+    "idleAndHealthy": true,
+    "binaryMatchesTestedPackage": true,
+    "version": true,
+    "oneServiceProcess": true,
+    "protectedFiles": {
+      "/etc/config/network": true,
+      "/etc/config/dhcp": true,
+      "/etc/config/firewall": true,
+      "/etc/config/fastnet": true,
+      "/etc/quickstart/home-layout.json": true,
+      "/etc/quickstart/home-launcher.json": true,
+      "/usr/lib/opkg/status": true,
+      "/usr/sbin/quickstart": true,
+      "/usr/lib/lua/luci/controller/fastnet.lua": true,
+      "/usr/lib/lua/luci/model/fastnet/card.lua": true,
+      "/usr/lib/lua/luci/view/quickstart/main.htm": true
+    },
+    "lanResultsPreserved": {
+      "lanDownload": true,
+      "lanPing": true,
+      "lanUpload": true
+    },
+    "historyBounded": true,
+    "tenQuickRunsArchived": true,
+    "cardShowsLastWan": true,
+    "frontendAssetsUnchanged": {
+      "assets/HistoryPanel-4f0VU79l.js": true,
+      "assets/HistoryPanel-txqtCJui.css": true,
+      "assets/index-BgjqtMjd.css": true,
+      "assets/index-D2OovwnB.js": true,
+      "index.html": true
+    }
+  },
+  "functionalPassed": true,
+  "historyCountBefore": 13,
+  "historyCountAfter": 32,
+  "downloadStabilityPassed": false,
+  "download": {
+    "mean": 471.8111836,
+    "median": 499.728087,
+    "min": 38.888953,
+    "max": 755.9872,
+    "populationCVPercent": 44.368636583883855
+  },
+  "upload": {
+    "mean": 60.8224896,
+    "median": 63.544275,
+    "min": 38.250014,
+    "max": 65.35869,
+    "populationCVPercent": 12.67297625130695
+  },
+  "deviceVersion": "0.8.6",
+  "binarySha256": "242d1b8ea05e4d03d8d71785080dcb152b2a3af334033004fc8d0c12bad37ba2",
+  "overallPassed": false
+}

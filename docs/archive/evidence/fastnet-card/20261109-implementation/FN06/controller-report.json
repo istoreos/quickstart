@@ -1,0 +1,297 @@
+{
+  "milestone": "FN06",
+  "status": "passed",
+  "device": "x86_64",
+  "checks": [
+    "real LuCI login, method, CSRF, duplicate-key, size and task-id rejection; no core token disclosure",
+    "LuCI task/result exactly matches same Go runId and persisted snapshot; reads and rejected writes create no other jobs",
+    "controller works when configured public port differs from actual candidate port; private socket is independent",
+    "real cancel completes within two seconds; stopped service summary preserves values and nulls without starting it",
+    "legacy status/open/management routes remain available with their existing response modes"
+  ],
+  "transactions": [
+    {
+      "path": "/card/summary",
+      "method": "GET",
+      "status": 200,
+      "json": true,
+      "bytes": 130
+    },
+    {
+      "path": "/card/summary",
+      "method": "GET",
+      "status": 403,
+      "json": false,
+      "bytes": 4385
+    },
+    {
+      "path": "/card/run",
+      "method": "GET",
+      "status": 405,
+      "json": true,
+      "bytes": 18,
+      "error": "method"
+    },
+    {
+      "path": "/card/run",
+      "method": "POST",
+      "status": 403,
+      "json": true,
+      "bytes": 16,
+      "error": "csrf"
+    },
+    {
+      "path": "/card/run",
+      "method": "POST",
+      "status": 422,
+      "json": true,
+      "bytes": 27,
+      "error": "invalid_request"
+    },
+    {
+      "path": "/card/run",
+      "method": "POST",
+      "status": 422,
+      "json": true,
+      "bytes": 27,
+      "error": "invalid_request"
+    },
+    {
+      "path": "/card/run",
+      "method": "POST",
+      "status": 413,
+      "json": true,
+      "bytes": 26,
+      "error": "body_too_large"
+    },
+    {
+      "path": "/card/task?id=../bad",
+      "method": "GET",
+      "status": 422,
+      "json": true,
+      "bytes": 22,
+      "error": "invalid_id"
+    },
+    {
+      "path": "/card/run",
+      "method": "POST",
+      "status": 202,
+      "json": true,
+      "bytes": 262
+    },
+    {
+      "path": "/card/run",
+      "method": "POST",
+      "status": 202,
+      "json": true,
+      "bytes": 257
+    },
+    {
+      "path": "/card/task?id=run_beddf8baf56ecc9b4d8390d7d8a3c5a8",
+      "method": "GET",
+      "status": 200,
+      "json": true,
+      "bytes": 257
+    },
+    {
+      "path": "/card/task?id=run_beddf8baf56ecc9b4d8390d7d8a3c5a8",
+      "method": "GET",
+      "status": 200,
+      "json": true,
+      "bytes": 261
+    },
+    {
+      "path": "/card/task?id=run_beddf8baf56ecc9b4d8390d7d8a3c5a8",
+      "method": "GET",
+      "status": 200,
+      "json": true,
+      "bytes": 261
+    },
+    {
+      "path": "/card/task?id=run_beddf8baf56ecc9b4d8390d7d8a3c5a8",
+      "method": "GET",
+      "status": 200,
+      "json": true,
+      "bytes": 261
+    },
+    {
+      "path": "/card/task?id=run_beddf8baf56ecc9b4d8390d7d8a3c5a8",
+      "method": "GET",
+      "status": 200,
+      "json": true,
+      "bytes": 261
+    },
+    {
+      "path": "/card/task?id=run_beddf8baf56ecc9b4d8390d7d8a3c5a8",
+      "method": "GET",
+      "status": 200,
+      "json": true,
+      "bytes": 261
+    },
+    {
+      "path": "/card/task?id=run_beddf8baf56ecc9b4d8390d7d8a3c5a8",
+      "method": "GET",
+      "status": 200,
+      "json": true,
+      "bytes": 261
+    },
+    {
+      "path": "/card/task?id=run_beddf8baf56ecc9b4d8390d7d8a3c5a8",
+      "method": "GET",
+      "status": 200,
+      "json": true,
+      "bytes": 261
+    },
+    {
+      "path": "/card/task?id=run_beddf8baf56ecc9b4d8390d7d8a3c5a8",
+      "method": "GET",
+      "status": 200,
+      "json": true,
+      "bytes": 261
+    },
+    {
+      "path": "/card/task?id=run_beddf8baf56ecc9b4d8390d7d8a3c5a8",
+      "method": "GET",
+      "status": 200,
+      "json": true,
+      "bytes": 261
+    },
+    {
+      "path": "/card/task?id=run_beddf8baf56ecc9b4d8390d7d8a3c5a8",
+      "method": "GET",
+      "status": 200,
+      "json": true,
+      "bytes": 261
+    },
+    {
+      "path": "/card/task?id=run_beddf8baf56ecc9b4d8390d7d8a3c5a8",
+      "method": "GET",
+      "status": 200,
+      "json": true,
+      "bytes": 259
+    },
+    {
+      "path": "/card/task?id=run_beddf8baf56ecc9b4d8390d7d8a3c5a8",
+      "method": "GET",
+      "status": 200,
+      "json": true,
+      "bytes": 259
+    },
+    {
+      "path": "/card/task?id=run_beddf8baf56ecc9b4d8390d7d8a3c5a8",
+      "method": "GET",
+      "status": 200,
+      "json": true,
+      "bytes": 259
+    },
+    {
+      "path": "/card/task?id=run_beddf8baf56ecc9b4d8390d7d8a3c5a8",
+      "method": "GET",
+      "status": 200,
+      "json": true,
+      "bytes": 259
+    },
+    {
+      "path": "/card/task?id=run_beddf8baf56ecc9b4d8390d7d8a3c5a8",
+      "method": "GET",
+      "status": 200,
+      "json": true,
+      "bytes": 259
+    },
+    {
+      "path": "/card/task?id=run_beddf8baf56ecc9b4d8390d7d8a3c5a8",
+      "method": "GET",
+      "status": 200,
+      "json": true,
+      "bytes": 259
+    },
+    {
+      "path": "/card/task?id=run_beddf8baf56ecc9b4d8390d7d8a3c5a8",
+      "method": "GET",
+      "status": 200,
+      "json": true,
+      "bytes": 256
+    },
+    {
+      "path": "/card/task?id=run_beddf8baf56ecc9b4d8390d7d8a3c5a8",
+      "method": "GET",
+      "status": 200,
+      "json": true,
+      "bytes": 256
+    },
+    {
+      "path": "/card/task?id=run_beddf8baf56ecc9b4d8390d7d8a3c5a8",
+      "method": "GET",
+      "status": 200,
+      "json": true,
+      "bytes": 256
+    },
+    {
+      "path": "/card/task?id=run_beddf8baf56ecc9b4d8390d7d8a3c5a8",
+      "method": "GET",
+      "status": 200,
+      "json": true,
+      "bytes": 287
+    },
+    {
+      "path": "/card/summary",
+      "method": "GET",
+      "status": 200,
+      "json": true,
+      "bytes": 1285
+    },
+    {
+      "path": "/card/run",
+      "method": "POST",
+      "status": 202,
+      "json": true,
+      "bytes": 262
+    },
+    {
+      "path": "/card/cancel",
+      "method": "POST",
+      "status": 200,
+      "json": true,
+      "bytes": 266
+    },
+    {
+      "path": "/card/task?id=run_ff8f07f3fb04143b96056bb84267e7d9",
+      "method": "GET",
+      "status": 200,
+      "json": true,
+      "bytes": 287
+    },
+    {
+      "path": "/card/summary",
+      "method": "GET",
+      "status": 200,
+      "json": true,
+      "bytes": 983
+    },
+    {
+      "path": "/status",
+      "method": "GET",
+      "status": 200,
+      "json": true,
+      "bytes": 391
+    },
+    {
+      "path": "/open",
+      "method": "GET",
+      "status": 302,
+      "json": false,
+      "bytes": 0
+    },
+    {
+      "path": "",
+      "method": "GET",
+      "status": 200,
+      "json": false,
+      "bytes": 11274
+    }
+  ],
+  "restored": true,
+  "submitSeconds": 0.033579358365386724,
+  "cancelSeconds": 0.05530484626069665,
+  "coreSha256": "102c624bf986969dc58309022d8549bc3df7db12028f088c6603fbd4498d32ae"
+}

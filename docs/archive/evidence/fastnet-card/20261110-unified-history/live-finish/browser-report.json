@@ -1,0 +1,191 @@
+{
+  "status": "failed",
+  "checks": [
+    "same production page/default quick experience/navigation in HTTPS Quickstart iframe and direct FastNet; no automatic test",
+    "continuation reads the already verified real quick result; WAN/LAN are not repeated"
+  ],
+  "errors": [],
+  "network": [],
+  "observedNAT": [
+    "run_6fb09c83e15c34d27ad2a4a514b95aa6",
+    "run_6fb09c83e15c34d27ad2a4a514b95aa6",
+    "run_6fb09c83e15c34d27ad2a4a514b95aa6"
+  ],
+  "before": {
+    "activeRuns": [],
+    "historyCount": 7,
+    "latestResults": {
+      "browserIpv6": {
+        "status": "ok",
+        "value": "IPv6 0/10 需要改进",
+        "measuredAt": "2026-11-10T04:20:39.015707213Z",
+        "runId": "run_18f80b294f618def213a980d731d7aa4",
+        "source": "browser"
+      },
+      "browserNat": {
+        "status": "ok",
+        "value": "NAT3 · 端口受限",
+        "measuredAt": "2026-11-10T04:20:38.986156243Z",
+        "runId": "run_18f80b294f618def213a980d731d7aa4",
+        "source": "browser"
+      },
+      "download": {
+        "status": "ok",
+        "value": 738275093,
+        "measuredAt": "2026-11-10T04:19:38.010989172Z",
+        "runId": "run_18f80b294f618def213a980d731d7aa4",
+        "source": "router"
+      },
+      "ipv6": {
+        "status": "unavailable",
+        "value": null,
+        "measuredAt": "2026-11-10T04:20:09.197042371Z",
+        "runId": "run_18f80b294f618def213a980d731d7aa4",
+        "source": "router"
+      },
+      "lanDownload": {
+        "status": "ok",
+        "value": 939008876.6228606,
+        "measuredAt": "2026-11-10T04:20:34.133268804Z",
+        "runId": "run_18f80b294f618def213a980d731d7aa4",
+        "source": "browser"
+      },
+      "lanPing": {
+        "status": "ok",
+        "value": 1.4199999809265136,
+        "measuredAt": "2026-11-10T04:20:34.133268013Z",
+        "runId": "run_18f80b294f618def213a980d731d7aa4",
+        "source": "browser"
+      },
+      "lanUpload": {
+        "status": "ok",
+        "value": 2769755349.957008,
+        "measuredAt": "2026-11-10T04:20:34.133266559Z",
+        "runId": "run_18f80b294f618def213a980d731d7aa4",
+        "source": "browser"
+      },
+      "nat": {
+        "status": "ok",
+        "value": "NAT3 (Port Restricted Cone)",
+        "measuredAt": "2026-11-10T04:20:48.222207792Z",
+        "runId": "run_6fb09c83e15c34d27ad2a4a514b95aa6",
+        "source": "router"
+      },
+      "ping": {
+        "status": "ok",
+        "value": 7.2727272727272725,
+        "measuredAt": "2026-11-10T04:19:18.01075133Z",
+        "runId": "run_18f80b294f618def213a980d731d7aa4",
+        "source": "router"
+      },
+      "upload": {
+        "status": "ok",
+        "value": 60618027,
+        "measuredAt": "2026-11-10T04:19:50.011756161Z",
+        "runId": "run_18f80b294f618def213a980d731d7aa4",
+        "source": "router"
+      }
+    },
+    "persistenceError": "",
+    "revision": "service_f5e132801e7b477e59a243726b0f21b1-19",
+    "schemaVersion": 1
+  },
+  "quick": {
+    "id": "run_18f80b294f618def213a980d731d7aa4",
+    "key": "",
+    "kind": "quick",
+    "state": "succeeded",
+    "startedAt": "2026-11-10T04:19:16.626977318Z",
+    "finishedAt": "2026-11-10T04:20:39.031297136Z",
+    "deadlineAt": "2026-11-10T04:24:16.626977318Z",
+    "expected": [
+      "ping",
+      "download",
+      "upload",
+      "nat",
+      "ipv6",
+      "lanPing",
+      "lanDownload",
+      "lanUpload",
+      "browserNat",
+      "browserIpv6"
+    ],
+    "results": {
+      "browserIpv6": {
+        "status": "ok",
+        "value": "IPv6 0/10 需要改进",
+        "measuredAt": "2026-11-10T04:20:39.015707213Z",
+        "runId": "run_18f80b294f618def213a980d731d7aa4",
+        "source": "browser"
+      },
+      "browserNat": {
+        "status": "ok",
+        "value": "NAT3 · 端口受限",
+        "measuredAt": "2026-11-10T04:20:38.986156243Z",
+        "runId": "run_18f80b294f618def213a980d731d7aa4",
+        "source": "browser"
+      },
+      "download": {
+        "status": "ok",
+        "value": 738275093,
+        "measuredAt": "2026-11-10T04:19:38.010989172Z",
+        "runId": "run_18f80b294f618def213a980d731d7aa4",
+        "source": "router"
+      },
+      "ipv6": {
+        "status": "unavailable",
+        "value": null,
+        "measuredAt": "2026-11-10T04:20:09.197042371Z",
+        "runId": "run_18f80b294f618def213a980d731d7aa4",
+        "source": "router"
+      },
+      "lanDownload": {
+        "status": "ok",
+        "value": 939008876.6228606,
+        "measuredAt": "2026-11-10T04:20:34.133268804Z",
+        "runId": "run_18f80b294f618def213a980d731d7aa4",
+        "source": "browser"
+      },
+      "lanPing": {
+        "status": "ok",
+        "value": 1.4199999809265136,
+        "measuredAt": "2026-11-10T04:20:34.133268013Z",
+        "runId": "run_18f80b294f618def213a980d731d7aa4",
+        "source": "browser"
+      },
+      "lanUpload": {
+        "status": "ok",
+        "value": 2769755349.957008,
+        "measuredAt": "2026-11-10T04:20:34.133266559Z",
+        "runId": "run_18f80b294f618def213a980d731d7aa4",
+        "source": "browser"
+      },
+      "nat": {
+        "status": "ok",
+        "value": "NAT3 (Port Restricted Cone)",
+        "measuredAt": "2026-11-10T04:20:01.195859815Z",
+        "runId": "run_18f80b294f618def213a980d731d7aa4",
+        "source": "router"
+      },
+      "ping": {
+        "status": "ok",
+        "value": 7.2727272727272725,
+        "measuredAt": "2026-11-10T04:19:18.01075133Z",
+        "runId": "run_18f80b294f618def213a980d731d7aa4",
+        "source": "router"
+      },
+      "upload": {
+        "status": "ok",
+        "value": 60618027,
+        "measuredAt": "2026-11-10T04:19:50.011756161Z",
+        "runId": "run_18f80b294f618def213a980d731d7aa4",
+        "source": "router"
+      }
+    },
+    "parameters": {
+      "browser": "true"
+    },
+    "managed": true
+  },
+  "failure": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'failed'\n- 'succeeded'\n\n    at /config/.agentflow-workspaces/.agentflow-workspaces/quickstart-onu/579c-multi-lan/quickstart/scripts/ops/fastnet-unified-history-live.cjs:30:505"
+}

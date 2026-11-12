@@ -28,7 +28,9 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useGettext } from '/@/plugins/i18n'
-import request from '/@/request'
+import baseRequest from '/@/request'
+import { useLANClient } from './lanContext'
+const request = { ...baseRequest, DeviceMangement: useLANClient() }
 import PageState from './components/pageState.vue'
 const { $gettext } = useGettext()
 const loading = ref(true), applying = ref(false), loadError = ref(''), query = ref(''), kind = ref(''), status = ref(''), version = ref(''), feedback = ref(''), feedbackKind = ref<'success'|'error'>('success')

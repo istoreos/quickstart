@@ -87,7 +87,10 @@ type ubusNetworkInterfaceDump struct {
 }
 
 func outboundInterfaces() (*DefaultInterfaces, error) {
-	ctx := context.Background()
+	return outboundInterfacesContext(context.Background())
+}
+
+func outboundInterfacesContext(ctx context.Context) (*DefaultInterfaces, error) {
 
 	var blk ubusNetworkInterfaceDump
 	err := UbusCallWithObject(ctx, "network.interface dump", &blk)
@@ -180,7 +183,7 @@ type ubusLanStatus struct {
 
 func ubusGetLanStatus(ctx context.Context) (*ubusLanStatus, error) {
 	var lanStatus ubusLanStatus
-	err := UbusCallWithObject(ctx, "network.interface.lan status", &lanStatus.network)
+	err := UbusCallWithObject(ctx, "network.interface."+selectedLAN(ctx)+" status", &lanStatus.network)
 	if err != nil {
 		return nil, err
 	}

@@ -1,0 +1,8 @@
+{
+  "originalCommit": "31b2424",
+  "originalRunnerSha256": "99a1b805e6cb3b6dfe0640c3be9b646e24fc3a19791f73371dcb66604617d8ee",
+  "matches085Runner": true,
+  "sameShortExplorationReproFailsOnOriginal": true,
+  "failures": 3,
+  "newCandidateFailureLog": "unresolved-handoff.log"
+}

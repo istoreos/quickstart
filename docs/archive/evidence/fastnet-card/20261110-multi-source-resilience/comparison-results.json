@@ -1,0 +1,639 @@
+{
+  "kind": "same pinned catalog and resolution code; old/new runner interleaved",
+  "catalogRevision": 5,
+  "catalogSha256": "025d4ac40acccd5a3f67bb5d9854006558c4d8338a3fe618a4ae36ca17e5f906",
+  "samples": [
+    {
+      "catalogRevision": 5,
+      "label": "old",
+      "report": {
+        "bps": 891124568,
+        "totalBytes": 2160704897,
+        "stableBytes": 1336611296,
+        "stableSeconds": 11.999321689,
+        "elapsedSeconds": 20.000150155,
+        "dockerBytes": 15367597,
+        "dockerUsed": true,
+        "conclusion": "measured_lower_bound",
+        "sources": [
+          {
+            "id": "wechat",
+            "bytes": 798727768,
+            "paid": false
+          },
+          {
+            "id": "candidate-008",
+            "bytes": 673233134,
+            "paid": false
+          },
+          {
+            "id": "wechat",
+            "bytes": 665135504,
+            "paid": false
+          },
+          {
+            "id": "huawei",
+            "bytes": 8240894,
+            "paid": false
+          },
+          {
+            "id": "docker",
+            "bytes": 15367597,
+            "paid": true
+          }
+        ]
+      },
+      "sourceIds": [
+        "wechat",
+        "docker",
+        "candidate-008",
+        "huawei",
+        "candidate-001",
+        "chrome",
+        "nvidia",
+        "candidate-060",
+        "baidu",
+        "candidate-062",
+        "candidate-061",
+        "candidate-056",
+        "candidate-058",
+        "candidate-057"
+      ],
+      "pair": 1,
+      "downloadMbps": 891.124568
+    },
+    {
+      "catalogRevision": 5,
+      "label": "new",
+      "report": {
+        "bps": 923715438,
+        "totalBytes": 2261087557,
+        "stableBytes": 1385513428,
+        "stableSeconds": 11.999482703,
+        "elapsedSeconds": 20.000388334,
+        "dockerBytes": 263896493,
+        "dockerUsed": true,
+        "conclusion": "measured_lower_bound",
+        "sources": [
+          {
+            "id": "wechat",
+            "bytes": 500708552,
+            "paid": false
+          },
+          {
+            "id": "candidate-008",
+            "bytes": 434566546,
+            "paid": false
+          },
+          {
+            "id": "huawei",
+            "bytes": 342523646,
+            "paid": false
+          },
+          {
+            "id": "candidate-001",
+            "bytes": 322940880,
+            "paid": false
+          },
+          {
+            "id": "chrome",
+            "bytes": 396451440,
+            "paid": false
+          },
+          {
+            "id": "docker",
+            "bytes": 263896493,
+            "paid": true
+          }
+        ]
+      },
+      "sourceIds": [
+        "wechat",
+        "docker",
+        "candidate-008",
+        "huawei",
+        "candidate-001",
+        "chrome",
+        "nvidia",
+        "candidate-060",
+        "baidu",
+        "candidate-062",
+        "candidate-061",
+        "candidate-056",
+        "candidate-058",
+        "candidate-057"
+      ],
+      "pair": 1,
+      "downloadMbps": 923.715438
+    },
+    {
+      "catalogRevision": 5,
+      "label": "new",
+      "report": {
+        "bps": 887319672,
+        "totalBytes": 2219543185,
+        "stableBytes": 1330951168,
+        "stableSeconds": 11.999744482,
+        "elapsedSeconds": 20.000746318,
+        "dockerBytes": 371228077,
+        "dockerUsed": true,
+        "conclusion": "measured_lower_bound",
+        "sources": [
+          {
+            "id": "wechat",
+            "bytes": 582658448,
+            "paid": false
+          },
+          {
+            "id": "candidate-008",
+            "bytes": 437483526,
+            "paid": false
+          },
+          {
+            "id": "huawei",
+            "bytes": 366952190,
+            "paid": false
+          },
+          {
+            "id": "candidate-001",
+            "bytes": 163577856,
+            "paid": false
+          },
+          {
+            "id": "chrome",
+            "bytes": 297643088,
+            "paid": false
+          },
+          {
+            "id": "docker",
+            "bytes": 371228077,
+            "paid": true
+          }
+        ]
+      },
+      "sourceIds": [
+        "wechat",
+        "docker",
+        "candidate-008",
+        "huawei",
+        "candidate-001",
+        "chrome",
+        "nvidia",
+        "candidate-060",
+        "baidu",
+        "candidate-062",
+        "candidate-061",
+        "candidate-056",
+        "candidate-058",
+        "candidate-057"
+      ],
+      "pair": 2,
+      "downloadMbps": 887.319672
+    },
+    {
+      "catalogRevision": 5,
+      "label": "old",
+      "report": {
+        "bps": 869550531,
+        "totalBytes": 2098570894,
+        "stableBytes": 1304346803,
+        "stableSeconds": 12.000193262,
+        "elapsedSeconds": 20.001317598,
+        "dockerBytes": 315080109,
+        "dockerUsed": true,
+        "conclusion": "measured_lower_bound",
+        "sources": [
+          {
+            "id": "wechat",
+            "bytes": 813981272,
+            "paid": false
+          },
+          {
+            "id": "candidate-008",
+            "bytes": 144502067,
+            "paid": false
+          },
+          {
+            "id": "wechat",
+            "bytes": 821763672,
+            "paid": false
+          },
+          {
+            "id": "huawei",
+            "bytes": 3243774,
+            "paid": false
+          },
+          {
+            "id": "docker",
+            "bytes": 315080109,
+            "paid": true
+          }
+        ]
+      },
+      "sourceIds": [
+        "wechat",
+        "docker",
+        "candidate-008",
+        "huawei",
+        "candidate-001",
+        "chrome",
+        "nvidia",
+        "candidate-060",
+        "baidu",
+        "candidate-062",
+        "candidate-061",
+        "candidate-056",
+        "candidate-058",
+        "candidate-057"
+      ],
+      "pair": 2,
+      "downloadMbps": 869.550531
+    },
+    {
+      "catalogRevision": 5,
+      "label": "old",
+      "report": {
+        "bps": 834195966,
+        "totalBytes": 2045365726,
+        "stableBytes": 1251273932,
+        "stableSeconds": 11.999808035000001,
+        "elapsedSeconds": 20.001062504,
+        "dockerBytes": 384499117,
+        "dockerUsed": true,
+        "conclusion": "measured_lower_bound",
+        "sources": [
+          {
+            "id": "wechat",
+            "bytes": 664365456,
+            "paid": false
+          },
+          {
+            "id": "candidate-008",
+            "bytes": 168937803,
+            "paid": false
+          },
+          {
+            "id": "wechat",
+            "bytes": 824434264,
+            "paid": false
+          },
+          {
+            "id": "huawei",
+            "bytes": 3129086,
+            "paid": false
+          },
+          {
+            "id": "docker",
+            "bytes": 384499117,
+            "paid": true
+          }
+        ]
+      },
+      "sourceIds": [
+        "wechat",
+        "docker",
+        "candidate-008",
+        "huawei",
+        "candidate-001",
+        "chrome",
+        "nvidia",
+        "candidate-060",
+        "baidu",
+        "candidate-062",
+        "candidate-061",
+        "candidate-056",
+        "candidate-058",
+        "candidate-057"
+      ],
+      "pair": 3,
+      "downloadMbps": 834.195966
+    },
+    {
+      "catalogRevision": 5,
+      "label": "new",
+      "report": {
+        "bps": 877818251,
+        "totalBytes": 2154573966,
+        "stableBytes": 1316632236,
+        "stableSeconds": 11.999132925,
+        "elapsedSeconds": 20.000207694,
+        "dockerBytes": 405208493,
+        "dockerUsed": true,
+        "conclusion": "measured_lower_bound",
+        "sources": [
+          {
+            "id": "wechat",
+            "bytes": 810655320,
+            "paid": false
+          },
+          {
+            "id": "candidate-008",
+            "bytes": 143170595,
+            "paid": false
+          },
+          {
+            "id": "huawei",
+            "bytes": 109657854,
+            "paid": false
+          },
+          {
+            "id": "candidate-001",
+            "bytes": 328767944,
+            "paid": false
+          },
+          {
+            "id": "chrome",
+            "bytes": 357113760,
+            "paid": false
+          },
+          {
+            "id": "docker",
+            "bytes": 405208493,
+            "paid": true
+          }
+        ]
+      },
+      "sourceIds": [
+        "wechat",
+        "docker",
+        "candidate-008",
+        "huawei",
+        "candidate-001",
+        "chrome",
+        "nvidia",
+        "candidate-060",
+        "baidu",
+        "candidate-062",
+        "candidate-061",
+        "candidate-056",
+        "candidate-058",
+        "candidate-057"
+      ],
+      "pair": 3,
+      "downloadMbps": 877.818251
+    },
+    {
+      "catalogRevision": 5,
+      "label": "new",
+      "report": {
+        "bps": 872696131,
+        "totalBytes": 2108714491,
+        "stableBytes": 1308963540,
+        "stableSeconds": 11.99926061,
+        "elapsedSeconds": 20.000313918,
+        "dockerBytes": 408288685,
+        "dockerUsed": true,
+        "conclusion": "measured_lower_bound",
+        "sources": [
+          {
+            "id": "wechat",
+            "bytes": 783720024,
+            "paid": false
+          },
+          {
+            "id": "candidate-008",
+            "bytes": 148620616,
+            "paid": false
+          },
+          {
+            "id": "huawei",
+            "bytes": 173129470,
+            "paid": false
+          },
+          {
+            "id": "candidate-001",
+            "bytes": 0,
+            "paid": false
+          },
+          {
+            "id": "chrome",
+            "bytes": 594955696,
+            "paid": false
+          },
+          {
+            "id": "docker",
+            "bytes": 408288685,
+            "paid": true
+          }
+        ]
+      },
+      "sourceIds": [
+        "wechat",
+        "docker",
+        "candidate-008",
+        "huawei",
+        "candidate-001",
+        "chrome",
+        "nvidia",
+        "candidate-060",
+        "baidu",
+        "candidate-062",
+        "candidate-061",
+        "candidate-056",
+        "candidate-058",
+        "candidate-057"
+      ],
+      "pair": 4,
+      "downloadMbps": 872.696131
+    },
+    {
+      "catalogRevision": 5,
+      "label": "old",
+      "report": {
+        "bps": 868005583,
+        "totalBytes": 2146552158,
+        "stableBytes": 1301912966,
+        "stableSeconds": 11.999120662,
+        "elapsedSeconds": 20.000162985,
+        "dockerBytes": 18775469,
+        "dockerUsed": true,
+        "conclusion": "measured_lower_bound",
+        "sources": [
+          {
+            "id": "wechat",
+            "bytes": 605612432,
+            "paid": false
+          },
+          {
+            "id": "candidate-008",
+            "bytes": 328880131,
+            "paid": false
+          },
+          {
+            "id": "wechat",
+            "bytes": 1190040352,
+            "paid": false
+          },
+          {
+            "id": "huawei",
+            "bytes": 3243774,
+            "paid": false
+          },
+          {
+            "id": "docker",
+            "bytes": 18775469,
+            "paid": true
+          }
+        ]
+      },
+      "sourceIds": [
+        "wechat",
+        "docker",
+        "candidate-008",
+        "huawei",
+        "candidate-001",
+        "chrome",
+        "nvidia",
+        "candidate-060",
+        "baidu",
+        "candidate-062",
+        "candidate-061",
+        "candidate-056",
+        "candidate-058",
+        "candidate-057"
+      ],
+      "pair": 4,
+      "downloadMbps": 868.005583
+    },
+    {
+      "catalogRevision": 5,
+      "label": "old",
+      "report": {
+        "bps": 905995444,
+        "totalBytes": 2216784816,
+        "stableBytes": 1358953520,
+        "stableSeconds": 11.999649921,
+        "elapsedSeconds": 20.0005616,
+        "dockerBytes": 23772589,
+        "dockerUsed": true,
+        "conclusion": "measured_lower_bound",
+        "sources": [
+          {
+            "id": "wechat",
+            "bytes": 810147416,
+            "paid": false
+          },
+          {
+            "id": "candidate-008",
+            "bytes": 562149715,
+            "paid": false
+          },
+          {
+            "id": "wechat",
+            "bytes": 820715096,
+            "paid": false
+          },
+          {
+            "id": "huawei",
+            "bytes": 0,
+            "paid": false
+          },
+          {
+            "id": "docker",
+            "bytes": 23772589,
+            "paid": true
+          }
+        ]
+      },
+      "sourceIds": [
+        "wechat",
+        "docker",
+        "candidate-008",
+        "huawei",
+        "candidate-001",
+        "chrome",
+        "nvidia",
+        "candidate-060",
+        "baidu",
+        "candidate-062",
+        "candidate-061",
+        "candidate-056",
+        "candidate-058",
+        "candidate-057"
+      ],
+      "pair": 5,
+      "downloadMbps": 905.995444
+    },
+    {
+      "catalogRevision": 5,
+      "label": "new",
+      "report": {
+        "bps": 908768271,
+        "totalBytes": 2251474532,
+        "stableBytes": 1363106956,
+        "stableSeconds": 11.999599884,
+        "elapsedSeconds": 20.000269285,
+        "dockerBytes": 336559533,
+        "dockerUsed": true,
+        "conclusion": "measured_lower_bound",
+        "sources": [
+          {
+            "id": "wechat",
+            "bytes": 1106793248,
+            "paid": false
+          },
+          {
+            "id": "candidate-008",
+            "bytes": 233130263,
+            "paid": false
+          },
+          {
+            "id": "huawei",
+            "bytes": 0,
+            "paid": false
+          },
+          {
+            "id": "candidate-001",
+            "bytes": 284819456,
+            "paid": false
+          },
+          {
+            "id": "chrome",
+            "bytes": 290172032,
+            "paid": false
+          },
+          {
+            "id": "docker",
+            "bytes": 336559533,
+            "paid": true
+          }
+        ]
+      },
+      "sourceIds": [
+        "wechat",
+        "docker",
+        "candidate-008",
+        "huawei",
+        "candidate-001",
+        "chrome",
+        "nvidia",
+        "candidate-060",
+        "baidu",
+        "candidate-062",
+        "candidate-061",
+        "candidate-056",
+        "candidate-058",
+        "candidate-057"
+      ],
+      "pair": 5,
+      "downloadMbps": 908.768271
+    }
+  ],
+  "windowsAcquisitionEnabled": false,
+  "sharedBandwidthFileLock": true,
+  "coreBefore": "967b486cebc8aa7337466e0a03d3ef55c7c3f572672d66945adca1ec0691ba40",
+  "old": {
+    "meanMbps": 873.7744184,
+    "medianMbps": 869.550531,
+    "populationCVPercent": 2.7830846064994317,
+    "fallbackMeanMB": 151.4989762
+  },
+  "new": {
+    "meanMbps": 894.0635526,
+    "medianMbps": 887.319672,
+    "populationCVPercent": 2.1580859504129473,
+    "fallbackMeanMB": 357.03625619999997
+  },
+  "coreAfter": "967b486cebc8aa7337466e0a03d3ef55c7c3f572672d66945adca1ec0691ba40",
+  "status": "completed"
+}

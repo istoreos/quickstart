@@ -1,0 +1,21 @@
+{
+  "version": "0.8.8",
+  "sourceCommit": "d5063d718233d723769271fb33455e046aff32b8",
+  "assets": {
+    "FastNet-0.8.8.amd64": "9ae01c5eeb955333b15930d431217bc56a39a6a5bbcc562207e4412ae62eb5c0",
+    "FastNet-0.8.8.arm64": "1326e392394d6e592be9fa3f3a853b1ee0a331839d57f374f39eac659b2708f8",
+    "FastNet-0.8.8.armv7": "b86a31cc9925d66a6987f9ac485ec97a0f629b9570bc68e9dfb5566996df064a",
+    "fastnet-binary-0.8.8.tar.gz": "c2ce53468e19876c92abdca33358476aeaa15404708e8f45d413c7664bf3fa94",
+    "fastnet-binary-raw-0.8.8.tar.gz": "0693efeec40c53cec44fa6600c17f4f0115d33438d7fb2f8f7a27ebb1a2f8d03",
+    "version.txt": "da25b08e16ec6ebc37135a2f061d571c6d0c74f89b2ca68d4e860a739913ea9d",
+    "SHA256SUMS": "09770cb5c874aa14ea7168bec5e84a18087d2b1c96a7eb488679f87acd710760"
+  },
+  "freshEmbeddedUiMatches": true,
+  "embeddedUi": {
+    "index.html": "df0fad214cc3af2fd427f83fc3a1cc0d31c82ba8b4912b7a440c4f28632c8eb0",
+    "assets/HistoryPanel-txqtCJui.css": "e12255bca701c6d79bbdb1deb7b68c37934799b56ef74ea8354a7c1e17ce9aed",
+    "assets/HistoryPanel-4f0VU79l.js": "cd0b02d48121da60b5eca126398d36483a3eb75a891b44bf82178a45a0345545",
+    "assets/index-BgjqtMjd.css": "ee25a52dd5d3c0056b2d94bf6c0bfa9e56f3d02f1022af11ca056989b5e88769",
+    "assets/index-D2OovwnB.js": "3e0e40b52722619a7b4f309ba7dad2518c55f4d83069f1a7c3f0d76de35b9fc3"
+  }
+}

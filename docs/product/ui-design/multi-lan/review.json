@@ -1,0 +1,12 @@
+{
+  "status": "passed",
+  "checks": [
+    "总览分别列出 7 条网络接入记录，跨网同 MAC 保留两条",
+    "LAN 筛选、URL、搜索及限速演示限定于 lan1；lan2 同 MAC 策略未改变",
+    "外部 DHCP 只读；本地 DHCP 预览提示共用服务，示例草稿和应用值按 LAN 分离",
+    "无默认 lan、lan1 服务异常、其他网络仍可操作、未知归属锁定和 Escape 关闭均通过",
+    "390px 总览/设置无页面横向溢出，保存桌面/移动/深色截图"
+  ],
+  "pageErrors": [],
+  "unexpectedRequests": []
+}

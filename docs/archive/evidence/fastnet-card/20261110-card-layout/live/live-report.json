@@ -1,0 +1,48 @@
+{
+  "status": "passed",
+  "checks": [
+    {
+      "theme": "light",
+      "geometry": {
+        "wan": {
+          "top": 650.46875,
+          "bottom": 859.46875
+        },
+        "lan": {
+          "top": 871.46875,
+          "bottom": 933.46875
+        },
+        "statuses": {
+          "top": 945.46875,
+          "bottom": 981.46875
+        },
+        "h": 409,
+        "scroll": 409
+      }
+    },
+    {
+      "theme": "dark",
+      "geometry": {
+        "wan": {
+          "top": 650.46875,
+          "bottom": 859.46875
+        },
+        "lan": {
+          "top": 871.46875,
+          "bottom": 933.46875
+        },
+        "statuses": {
+          "top": 945.46875,
+          "bottom": 981.46875
+        },
+        "h": 409,
+        "scroll": 409
+      }
+    },
+    {
+      "id": "existing-default-iframe-opens-without-changing-history-or-latest-results"
+    }
+  ],
+  "errors": [],
+  "historyCount": 32
+}

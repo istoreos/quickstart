@@ -1,0 +1,17 @@
+{
+  "status": "passed",
+  "compiledGoInputsUnchangedSinceFN10": {
+    "quickstart": true,
+    "fastnet": true
+  },
+  "quickstartRebuiltArchitectures": [
+    "amd64",
+    "arm64"
+  ],
+  "fastnetRebuiltArchitectures": [
+    "amd64",
+    "arm64",
+    "armv7"
+  ],
+  "result": "all five rebuilt binaries byte-identical to the device-tested candidates"
+}

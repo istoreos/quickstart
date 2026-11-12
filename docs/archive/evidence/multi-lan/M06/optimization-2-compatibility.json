@@ -1,0 +1,10 @@
+{
+  "host": "root@192.168.30.7",
+  "legacyQuickstartCommit": "66589b22f140615db97851b6c3b1eec7aad975d5",
+  "legacyEngineCommit": "54b5338ad8e03f46ba04387eb232aeb676ff68d2",
+  "checks": [
+    "new Quickstart registry/provider works with original main v1 engine"
+  ],
+  "newClientOldEngine": "=== RUN   TestMultiLANNativeLiveBinding\n    native_engine_registry_test.go:173: verified real registry/provider read, apply, verify and remove for lan on qscde64fa\n--- PASS: TestMultiLANNativeLiveBinding (0.01s)\nPASS\n",
+  "productionConfigUnchanged": true
+}

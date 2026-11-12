@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "scope": "local tested source candidate; no external publication",
+  "directory": "/config/.agentflow-workspaces/.agentflow-workspaces/quickstart-onu/579c-multi-lan/quickstart/bin/fastnet-card-candidate-0.8.2-20261109",
+  "archive": "/config/.agentflow-workspaces/.agentflow-workspaces/quickstart-onu/579c-multi-lan/quickstart/bin/fastnet-card-candidate-0.8.2-20261109.tar.gz",
+  "archiveSha256": "f7b9b80aa95e72088c06d08ca2a2d765ae2ece780b19bb6ff2b770f714c94997",
+  "archiveBytes": 35339071,
+  "verifiedFiles": 55,
+  "packages": 5
+}

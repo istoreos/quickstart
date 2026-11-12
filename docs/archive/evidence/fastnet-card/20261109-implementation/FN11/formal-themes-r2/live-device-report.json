@@ -1,0 +1,17 @@
+{
+  "milestone": "FN11",
+  "status": "failed",
+  "device": "x86_64",
+  "restored": true,
+  "checks": [],
+  "artifacts": {
+    "backend": "c327e870abb0ff5a4582a3fb79da353ece1fafaea64dfa999b61d3ff8829eec3",
+    "packages": [
+      "a6a89757fecad40ab965578eeb288642eebf9c69256ddd97a342a7750eac4479",
+      "490e8983b3ca66dbebd4e80cf0733a25c3e21aa9ae9c94e5a3c70b4990b13caa",
+      "7dd666aec0d71c1e1b6d35d7af682e65cd0ad3b8c5869ccdf7ca683ef5cf0d9d",
+      "e2bec6e8d917048041dfd68bc609c5ae18c91590bc6d1f4390725da182025c90"
+    ]
+  },
+  "failure": "locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-fastnet-card]') to be visible\u001b[22m\n\n"
+}

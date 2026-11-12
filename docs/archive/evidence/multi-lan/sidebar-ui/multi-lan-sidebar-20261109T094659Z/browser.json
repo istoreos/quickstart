@@ -1,0 +1,34 @@
+{
+  "status": "passed",
+  "url": "http://192.168.30.93/cgi-bin/luci/admin/quickstart/devicemanagement?network=all",
+  "options": [
+    {
+      "value": "all",
+      "label": "全部局域网"
+    },
+    {
+      "value": "lan",
+      "label": "lan"
+    },
+    {
+      "value": "lan1",
+      "label": "lan1"
+    },
+    {
+      "value": "lan2",
+      "label": "lan2"
+    }
+  ],
+  "reads": [
+    {
+      "url": "http://192.168.30.93/cgi-bin/luci/istore/lanctrl/v2/networks/",
+      "status": 200
+    }
+  ],
+  "errors": [],
+  "checks": [
+    "Real LuCI session and production bundle",
+    "All/lan/lan1/lan2 selector visible",
+    "Each network selection changes the URL without runtime errors"
+  ]
+}

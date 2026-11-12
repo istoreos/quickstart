@@ -1,0 +1,14 @@
+[
+  {
+    "label": "aarch64",
+    "returncode": 0,
+    "output": "aarch64\nDISTRIB_ID='iStoreOS'\nDISTRIB_RELEASE='24.10.8'\nDISTRIB_REVISION='2026073111'\nDISTRIB_TARGET='rockchip/armv8'\nDISTRIB_ARCH='aarch64_generic'\nDISTRIB_DESCRIPTION='iStoreOS 24.10.8 2026073111'\nDISTRIB_TAINTS='busybox'\na6cbb775d0ee1c4c9469631668bb176992bfe8c31ccdb3c6af5c8a20ad580eb5  /usr/sbin/quickstart\nf9860a376bd0f43e1fb4e6a9abb6d9848083f998c3ba57f149f856f484db4119  /usr/sbin/FastNet\ndb938ff02c84e55301df582f81c09fa900f7b2421b80c70cf24214d15f693eaf  /www/luci-static/quickstart/index.js\na8aacd35063e93bcac90e1b1a730a29f209eeb96a7b2a51f3bedff06b91e984e  /www/luci-static/quickstart/vendor.js\nMemTotal:        4022024 kB\nMemAvailable:    2253868 kB\nVmRSS:\t   32636 kB\nThreads:\t10\nPackage: fastnet\nVersion: 0.7.7-1\nDepends: libc\nStatus: install ok installed\nArchitecture: aarch64_cortex-a53\nConffiles:\n /etc/config/fastnet bc8a9c25a87179c78d0a8f721cc46421c7e2aee62482602d7d0a8efd5518d6a0\nInstalled-Time: 1789175487\n\n/usr/lib/lua/luci/controller/fastnet.lua\n",
+    "error": ""
+  },
+  {
+    "label": "x86_64",
+    "returncode": 0,
+    "output": "x86_64\nDISTRIB_ID='iStoreOS'\nDISTRIB_RELEASE='24.10.1'\nDISTRIB_REVISION='2025011019'\nDISTRIB_TARGET='x86/64'\nDISTRIB_ARCH='x86_64'\nDISTRIB_DESCRIPTION='iStoreOS 24.10.1 2025011019'\nDISTRIB_TAINTS='busybox'\n0aad508a0c96119f21a71260aa5da6706ec37b1653bde10f288b320528db339d  /usr/sbin/quickstart\nea3cb1c2945392c79cd6fea848b3265aaa47372c712583c2a148798a34846fe4  /usr/sbin/FastNet\n9906e228351a4e0a59ba6d3bfb004520f6934935a0141366c270ccd2a59b3c55  /www/luci-static/quickstart/index.js\na8aacd35063e93bcac90e1b1a730a29f209eeb96a7b2a51f3bedff06b91e984e  /www/luci-static/quickstart/vendor.js\nMemTotal:        4004076 kB\nMemAvailable:    2613816 kB\nVmRSS:\t   22976 kB\nThreads:\t9\n",
+    "error": ""
+  }
+]

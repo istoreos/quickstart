@@ -1,0 +1,12 @@
+{
+  "hostInitialGzipDeltaFromPreviousCandidate": 160,
+  "hostInitialGzipDeltaFromOriginalBaseline": 20425,
+  "hostBudget": 20480,
+  "externalAssetsGzip": {
+    "chunk.62c86bd5.js": 1859,
+    "card.5c2db3d6.js": 8042
+  },
+  "cardBudget": 8192,
+  "fullFrontendInitialRequests": 0,
+  "iframeLoad": "modal chunk and complete app load only after click; iframe removed on close; no idle polling"
+}

@@ -1,11 +1,13 @@
 package server
 
 import (
+	"github.com/istoreos/quickstart/backend/modules/homecards"
 	"github.com/istoreos/quickstart/backend/modules/homeconfig"
 	"github.com/julienschmidt/httprouter"
 )
 
 func registerHomeConfigRoutes(router *httprouter.Router) {
+	router.Handler("GET", "/cgi-bin/luci/istore/home/v1/cards/", homecards.Handler("/usr/share/quickstart/cards.d", homeconfig.RootAuthorizer(homeconfig.LocalSession)))
 	store := homeconfig.NewInitializedStore(homeconfig.NewStore("/etc/quickstart"), homeconfig.LocalLegacySettings)
 	registerHomeConfigRepository(router, store, homeconfig.RootAuthorizer(homeconfig.LocalSession))
 }
