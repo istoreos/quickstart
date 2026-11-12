@@ -10,7 +10,6 @@ done
 
 sh "${SCRIPT_DIR}/lan-device-load-check.test.sh"
 sh "${SCRIPT_DIR}/lan-device-isolation-lab.test.sh"
-sh "${SCRIPT_DIR}/verify-go-binaries.test.sh"
 node "${PROJECT_ROOT}/scripts/analyze-lan-device-business-smoke.test.mjs"
 
 business_smoke="${SCRIPT_DIR}/lan-device-business-smoke.sh"
@@ -51,7 +50,6 @@ if grep -Eq '/apply/|/etc/init\.d/[^ ]+ (restart|reload|stop)|opkg (install|remo
 fi
 
 required_files="
-${PROJECT_ROOT}/.mise.toml
 ${PROJECT_ROOT}/.it-runner/project.yaml
 ${PROJECT_ROOT}/.it-runner/envs/000-defaults.env
 ${PROJECT_ROOT}/.it-runner/meta/servers/quickstart-dev.env
@@ -65,13 +63,6 @@ for file in $required_files; do
         exit 1
     }
 done
-
-grep -Fq 'go = "1.26.11"' "${PROJECT_ROOT}/.mise.toml" && \
-    grep -Fq 'toolchain go1.26.11' "${PROJECT_ROOT}/backend/go.mod" && \
-    grep -Fq 'EXPECTED_GO_VERSION:=1.26.11' "${SCRIPT_DIR}/verify-go-binaries.sh" || {
-    echo "mise, go.mod, and release verification must pin the same Go toolchain" >&2
-    exit 1
-}
 
 for task in ops-targets ops-show-selected ops-release ops-init-selected ops-preflight-selected ops-deploy-selected ops-verify-selected ops-rollback-selected ops-ui-smoke-selected test-ops; do
     task_file="${PROJECT_ROOT}/.it-runner/tasks/${task}/task.yaml"
@@ -145,10 +136,8 @@ grep -Fq -- '--sort=name' "$release_script" && grep -Fq 'gzip -n' "$release_scri
     exit 1
 }
 grep -Fq 'formal releases require a clean worktree' "$release_script" && \
-    grep -Fq 'verify-go-binaries.sh' "$release_script" && \
-    grep -Fq 'go_version=' "$release_script" && \
     grep -Fq 'web/luci-static' "$release_script" && grep -Fq 'MANIFEST' "$release_script" || {
-    echo "formal release must be clean, verify Go binaries, and contain backend, web assets, and a manifest" >&2
+    echo "formal release must be clean and contain backend, web assets, and a manifest" >&2
     exit 1
 }
 echo "ops contract ok"

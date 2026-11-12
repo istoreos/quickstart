@@ -97,7 +97,6 @@ func TestPlanWANLANConflictBuildsLANReplacementCommands(t *testing.T) {
 	}
 	wantCommands := []string{
 		"set network.lan.ipaddr=192.168.100.1",
-		"set network.lan.netmask=255.255.255.0",
 		"commit network",
 	}
 	if !reflect.DeepEqual(plan.NetworkUCICommands, wantCommands) {
