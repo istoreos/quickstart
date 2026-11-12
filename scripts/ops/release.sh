@@ -23,6 +23,10 @@ export SOURCE_DATE_EPOCH="$source_date_epoch"
 "${SCRIPT_DIR}/build-backend.sh"
 GOARCH=arm64 "${SCRIPT_DIR}/build-backend.sh"
 GOARCH=arm GOARM=7 "${SCRIPT_DIR}/build-backend.sh"
+"${SCRIPT_DIR}/verify-go-binaries.sh" \
+    "${BUILD_DIR}/quickstart.amd64" \
+    "${BUILD_DIR}/quickstart.arm64" \
+    "${BUILD_DIR}/quickstart.armv7"
 npm --prefix "${PROJECT_ROOT}/web" run builds
 
 rm -rf "$release_dir"
@@ -36,6 +40,8 @@ cp -a "${PROJECT_ROOT}/web/dist/luci-static" "${release_dir}/web/luci-static"
 binary_amd64_sha="$(sha256sum "${release_dir}/quickstart.x86_64" | awk '{print $1}')"
 binary_arm64_sha="$(sha256sum "${release_dir}/quickstart.aarch64" | awk '{print $1}')"
 binary_arm_sha="$(sha256sum "${release_dir}/quickstart.arm" | awk '{print $1}')"
+go_version="$("$GO" version -m "${release_dir}/quickstart.x86_64" | sed -n '1s/.*: \(go[0-9][0-9.]*\)$/\1/p')"
+go_module="$("$GO" version -m "${release_dir}/quickstart.x86_64" | sed -n 's/^[[:space:]]*path[[:space:]]*//p')"
 index_sha="$(sha256sum "${release_dir}/web/luci-static/quickstart/index.js" | awk '{print $1}')"
 en_sha="$(sha256sum "${release_dir}/web/luci-static/quickstart/i18n/en.json" | awk '{print $1}')"
 style_sha="$(sha256sum "${release_dir}/web/luci-static/quickstart/style.css" | awk '{print $1}')"
@@ -44,6 +50,8 @@ asset_version="${version}-release-$(printf '%s%s%s%s' "$index_sha" "$en_sha" "$s
 printf '%s\n' \
     "version=${version}" \
     "git_sha=$(git -C "$PROJECT_ROOT" rev-parse HEAD)" \
+    "go_version=${go_version}" \
+    "go_module=${go_module}" \
     "asset_version=${asset_version}" \
     "quickstart.x86_64=${binary_amd64_sha}" \
     "quickstart.aarch64=${binary_arm64_sha}" \
