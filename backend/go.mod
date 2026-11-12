@@ -2,7 +2,7 @@ module github.com/istoreos/quickstart/backend
 
 go 1.26.0
 
-toolchain go1.26.10
+toolchain go1.26.11
 
 require (
 	github.com/bitly/go-simplejson v0.5.0
