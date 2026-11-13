@@ -4,7 +4,7 @@ import {homeModule} from './homeModule.mjs'
 test('FN03 card scope has live readonly theme/form and aborts only its own pending requests',async()=>{
  const saved=Object.fromEntries(['window','document','MutationObserver','CustomEvent','fetch'].map(k=>[k,globalThis[k]]))
  const attrs=new Map()
- globalThis.document={createElement:()=>({}),body:{dataset:{},getAttribute:k=>attrs.get(k)||null,setAttribute:(k,v)=>attrs.set(k,v)},documentElement:{dataset:{},style:{}}}
+ globalThis.document={createElement:()=>({}),createEvent:()=>({timeStamp:Date.now(),initEvent(){}}),body:{dataset:{},getAttribute:k=>attrs.get(k)||null,setAttribute:(k,v)=>attrs.set(k,v)},documentElement:{dataset:{},style:{}}}
  globalThis.MutationObserver=class{observe(){}}
  globalThis.CustomEvent=class{}
  globalThis.window={matchMedia:()=>({matches:false,addEventListener(){}}),localStorage:{getItem(){return null},setItem(){}},addEventListener(){},dispatchEvent(){}}

@@ -46,7 +46,7 @@ export function installFixtures() {
     const url = new URL(typeof input === 'string' ? input : input instanceof Request ? input.url : String(input), location.href)
     const method = (init?.method || (input instanceof Request ? input.method : 'GET')).toUpperCase()
     // Only same-origin static assets can leave this adapter. No router API fallback.
-    if (!url.pathname.startsWith('/cgi-bin/') && url.origin === location.origin) return realFetch(input, init)
+    if (!url.pathname.startsWith('/cgi-bin/') && url.origin === location.origin) return realFetch(input instanceof URL ? input.href : input, init)
     let status = 200, data: unknown
     const key = url.pathname.startsWith(base) ? url.pathname.slice(base.length) : url.pathname
     const cardReply=url.origin===location.origin?cardFixture(key,method,JSON.parse(String(init?.body||'{}'))):undefined
