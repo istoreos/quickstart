@@ -1,0 +1,74 @@
+{
+  "revision": "opening-v2",
+  "maxReviewRounds": 3,
+  "status": "passed",
+  "tasks": [
+    {
+      "id": "R01",
+      "status": "passed"
+    },
+    {
+      "id": "R02",
+      "status": "passed"
+    },
+    {
+      "id": "R03",
+      "status": "passed"
+    },
+    {
+      "id": "R04",
+      "status": "passed"
+    },
+    {
+      "id": "R05",
+      "status": "passed"
+    },
+    {
+      "id": "R06",
+      "status": "passed"
+    },
+    {
+      "id": "R07",
+      "status": "passed"
+    },
+    {
+      "id": "R08",
+      "status": "passed"
+    }
+  ],
+  "reviewRounds": [
+    {
+      "round": 1,
+      "status": "failed",
+      "stage": "browser_recording",
+      "finding": "Homepage rounds 921.4 Mbps to 921 Mbps; exact decimal assertion timed out.",
+      "layoutRestored": true
+    },
+    {
+      "round": 2,
+      "status": "failed",
+      "stage": "browser_recording",
+      "finding": "LuCI contains an additional empty dialog; narrowed locator to role dialog with exact name 外网测速.",
+      "layoutRestored": true
+    },
+    {
+      "round": 3,
+      "status": "passed",
+      "browser": "passed",
+      "layoutRestored": true,
+      "compilerAdjustment": "Duration gate now evaluates final overlap-adjusted duration rather than sum of scene lengths; regression test passes.",
+      "automatedChecks": 67,
+      "visual": "passed",
+      "fullDurationSeconds": 117.9,
+      "openingDurationSeconds": 23.066667
+    }
+  ],
+  "delivery": {
+    "videoSha256": "95b77015a62c090d3f45465d2946ee4c34e5c16f2df52e338b9e0641ae7f1e87",
+    "previewSha256": "2e37d43083331febbf6bf920221f085b599971e933bb4c99620bc6d595390587",
+    "originalPreserved": true,
+    "originalLayoutRestored": true,
+    "measurementUnchanged": true,
+    "localTimelineTests": 7
+  }
+}

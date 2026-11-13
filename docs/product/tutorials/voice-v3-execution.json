@@ -1,0 +1,32 @@
+{
+  "revision": "voice-v3",
+  "status": "awaiting_voice_feedback",
+  "userRequirements": {
+    "subtitles": false,
+    "voice": "gange-natural",
+    "speed": 1.0,
+    "priority": "natural rhythm; no arbitrary speed-up"
+  },
+  "auditions": [
+    {
+      "id": "01-style-a-continuous",
+      "duration": 7.6,
+      "status": "rejected",
+      "userFeedback": "语气太赶，需要更自然"
+    },
+    {
+      "id": "02-natural-sentences",
+      "duration": 9.68,
+      "status": "pending_user_listening",
+      "change": "sentence punctuation only"
+    },
+    {
+      "id": "03-unhurried-native",
+      "duration": 11.38,
+      "status": "pending_user_listening",
+      "change": "native Higgs speed_slow prosody tag in input"
+    }
+  ],
+  "fullVideoReplaced": false,
+  "oldDeliveriesPreserved": true
+}

@@ -1,0 +1,115 @@
+{
+  "schemaVersion": 1,
+  "id": "home-fastnet-card-voice-b-v5",
+  "title": "iStoreOS 首页测速卡片：FastNet 实测与安装",
+  "viewport": {
+    "width": 1920,
+    "height": 1080
+  },
+  "fps": 30,
+  "durationRange": [
+    60,
+    130
+  ],
+  "maxReviewRounds": 3,
+  "betaUrl": "https://fw.koolcenter.com/iStoreOS/alpha/quickstart/1113-0.17.1-rc20261028-r2/",
+  "voice": {
+    "endpointEnv": "TUTORIAL_TTS_ENDPOINT",
+    "model": "higgs",
+    "voice": "gange-natural",
+    "response_format": "wav",
+    "speed": 1.0,
+    "seed": 76421,
+    "temperature": 0.88,
+    "top_p": 0.95,
+    "top_k": 80,
+    "loudness": "video",
+    "instructions": "带一点笑意和生活气的中文口语，亲切随意，像刚泡好茶后和熟人聊天；停顿自然，句尾不要刻意上扬；不要播音腔。"
+  },
+  "scenes": [
+    {
+      "id": "opening-intro",
+      "narration": "iStoreOS 首页，现在也能看测速成绩了。用的就是刚更新的 FastNet。点一下，测测路由器的外网下载。"
+    },
+    {
+      "id": "opening-result",
+      "narration": "这次实测，外网下载跑到了九百多兆。"
+    },
+    {
+      "id": "opening-home-return",
+      "narration": "更新 Quickstart BETA，就能把成绩留在首页。下面带你装好，再跑一次。"
+    },
+    {
+      "id": "install",
+      "narration": "先在软件中心找到 FastNet，点安装或者更新。习惯用终端的朋友，也可以执行画面上这条命令。"
+    },
+    {
+      "id": "run",
+      "narration": "打开 FastNet，点开始全链路体检。测完先看路由器的外网下载和上传，再看浏览器到路由器的内网速度。"
+    },
+    {
+      "id": "parallel-note",
+      "narration": "新版用的是多来源并发下载，减少单个节点拖后腿，更容易看出线路现在能跑多少。"
+    },
+    {
+      "id": "results",
+      "narration": "外网和内网的速度，要分开看。旁边还有 NAT 和 IPv6 检测，这里保留的都是本次实际结果。"
+    },
+    {
+      "id": "beta",
+      "narration": "想把成绩放到首页，先打开简介里的 Quickstart BETA 更新页面。升级前做好完整系统备份，再按说明检查、更新，最后刷新首页。"
+    },
+    {
+      "id": "add-first",
+      "narration": "点右上角的自定义首页，再点添加模块。"
+    },
+    {
+      "id": "add-place",
+      "narration": "选外网测速，确认放置，然后点完成。"
+    },
+    {
+      "id": "add-finish",
+      "narration": "如果出现整理提示，确认就行。刷新首页，卡片和刚才的成绩都还在。"
+    },
+    {
+      "id": "outro",
+      "narration": "以后打开首页，就能看到最近的测速成绩了。家里网速不错的朋友，也来跑一次，晒晒你的成绩。"
+    },
+    {
+      "id": "closing",
+      "narration": "最后，视频下方有开源地址，教程等链接，记得我叫酷友社小宝，关注我。感谢大家的支持。"
+    }
+  ],
+  "compiler": "compile-voice.mjs",
+  "revision": "voice-b-v5",
+  "openingDurationRange": [
+    16,
+    30
+  ],
+  "parentOutputEnv": "TUTORIAL_PARENT_OUTPUT",
+  "subtitles": false,
+  "sample": {
+    "text": "iStoreOS 首页，现在也能看测速成绩了。用的就是刚更新的 FastNet，点一下，测测路由器的外网下载。",
+    "baselineScenes": [
+      "opening-home",
+      "opening-enter",
+      "opening-test"
+    ]
+  },
+  "voiceStyle": "b",
+  "pronunciations": {
+    "iStoreOS": "I Store OS"
+  },
+  "reviewer": "review-voice.py",
+  "previewFile": "fastnet-style-b-v5-preview.mp4",
+  "prepareScript": "prepare-voice.ps1",
+  "visualSourceFromParent": "parent-edit-plan.json",
+  "reuseParentScenes": true,
+  "endingFile": "fastnet-style-b-v5-ending.mp4",
+  "pronunciationControl": {
+    "word": "iStoreOS",
+    "spoken": "I Store OS",
+    "maxInternalPauseSeconds": 0.12,
+    "targetInternalPauseSeconds": 0.06
+  }
+}

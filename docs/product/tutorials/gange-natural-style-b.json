@@ -1,0 +1,12 @@
+{
+  "model": "higgs",
+  "voice": "gange-natural",
+  "response_format": "wav",
+  "speed": 1.0,
+  "seed": 76421,
+  "temperature": 0.88,
+  "top_p": 0.95,
+  "top_k": 80,
+  "loudness": "video",
+  "instructions": "带一点笑意和生活气的中文口语，亲切随意，像刚泡好茶后和熟人聊天；停顿自然，句尾不要刻意上扬；不要播音腔。"
+}

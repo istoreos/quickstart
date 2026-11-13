@@ -1,0 +1,11 @@
+{
+  "videoServer": "video-user@video-server",
+  "serverRoot": "<private absolute directory on Windows>",
+  "output": "<private media directory on Windows>",
+  "ffmpeg": "<absolute path to ffmpeg.exe>",
+  "ffprobe": "<absolute path to ffprobe.exe>",
+  "ttsEndpoint": "http://127.0.0.1:8797/v1/audio/speech",
+  "voiceReference": "<authorized voice WAV, used only for cache fingerprint>",
+  "homeDevice": {"ssh": "root@home-lab", "base": "http://home-lab:10000"},
+  "installDevice": {"ssh": "root@install-lab", "base": "http://install-lab"}
+}

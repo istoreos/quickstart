@@ -1,0 +1,12 @@
+{
+  "model": "higgs",
+  "voice": "gange-natural",
+  "response_format": "wav",
+  "speed": 1.0,
+  "seed": 38129,
+  "temperature": 0.72,
+  "top_p": 0.9,
+  "top_k": 50,
+  "loudness": "video",
+  "instructions": "自然、松弛的中文日常口语，像坐在朋友旁边聊天；语气温和，节奏有轻微快慢变化，保留自然停顿；不要播音腔，不要广告腔，不要过度强调。"
+}

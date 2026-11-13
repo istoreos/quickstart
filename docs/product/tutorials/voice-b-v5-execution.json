@@ -1,0 +1,57 @@
+{
+  "revision": "voice-b-v5",
+  "status": "accepted",
+  "userConfirmation": {
+    "message": "已经 OK。",
+    "scope": "voice-b-v5 最终成片；后续教程按此基线制作",
+    "evidence": "交付后用户明确确认；保留原媒体生成时的 manifest 与验收哈希"
+  },
+  "maxReviewRounds": 3,
+  "tasks": [
+    {
+      "id": "P01",
+      "status": "passed"
+    },
+    {
+      "id": "P02",
+      "status": "passed"
+    },
+    {
+      "id": "P03",
+      "status": "passed"
+    },
+    {
+      "id": "P04",
+      "status": "passed"
+    },
+    {
+      "id": "P05",
+      "status": "passed"
+    },
+    {
+      "id": "P06",
+      "status": "passed"
+    }
+  ],
+  "reviewRounds": [
+    {
+      "round": 1,
+      "status": "passed",
+      "checks": 197,
+      "visual": "passed"
+    }
+  ],
+  "brandEdit": {
+    "spoken": "I Store OS",
+    "removedSilenceSeconds": 0.145,
+    "longestRemainingQuietSeconds": 0.06,
+    "audioSpeed": 1.0,
+    "preserved": "all PCM outside silence cut"
+  },
+  "duration": 99.866667,
+  "openingDuration": 21.966667,
+  "closingSpeechDuration": 7.4,
+  "unmodifiedVoiceSegments": 11,
+  "reusedSilentVideoChapters": 10,
+  "videoSha256": "1dd1a99a84fcda7937163d92291a3040b68724251f5b4ee88dae0ad51cce7aa4"
+}

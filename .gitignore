@@ -85,6 +85,15 @@ bin/
 
 .agentflow
 
+# Tutorial media, local configuration and private browser evidence
+/tutorial-output/
+/scripts/tutorial-video/node_modules/
+/scripts/tutorial-video/.local/
+/scripts/tutorial-video/.cache/
+/scripts/tutorial-video/test-results/
+/scripts/tutorial-video/playwright-report/
+/scripts/tutorial-video/**/__pycache__/
+
 
 # Local FastNet package and SDK test artifacts follow the evidence policy.
 /docs/archive/evidence/**/*.ipk

@@ -1,0 +1,146 @@
+{
+  "schemaVersion": 1,
+  "id": "home-fastnet-card-opening-v2",
+  "title": "iStoreOS 首页测速卡片：FastNet 实测与安装",
+  "viewport": {
+    "width": 1920,
+    "height": 1080
+  },
+  "fps": 30,
+  "durationRange": [
+    90,
+    120
+  ],
+  "maxReviewRounds": 3,
+  "betaUrl": "https://fw.koolcenter.com/iStoreOS/alpha/quickstart/1113-0.17.1-rc20261028-r2/",
+  "voice": {
+    "endpointEnv": "TUTORIAL_TTS_ENDPOINT",
+    "model": "higgs",
+    "voice": "gange-natural",
+    "response_format": "wav",
+    "speed": 1.0,
+    "seed": 38129,
+    "temperature": 0.72,
+    "top_p": 0.9,
+    "top_k": 50,
+    "loudness": "video",
+    "instructions": "自然、松弛的中文日常口语，像坐在朋友旁边聊天；语气温和，保留自然停顿；不要播音腔，不要广告腔，不要过度强调。"
+  },
+  "scenes": [
+    {
+      "id": "opening-home",
+      "chapter": "iStoreOS 首页",
+      "narration": "iStoreOS 首页，现在也能看测速成绩了。",
+      "minSeconds": 3.8,
+      "source": "opening"
+    },
+    {
+      "id": "opening-enter",
+      "chapter": "FastNet 新版",
+      "narration": "这是刚更新的 FastNet。",
+      "minSeconds": 2.8,
+      "source": "opening"
+    },
+    {
+      "id": "opening-test",
+      "chapter": "跑一次真实测速",
+      "narration": "点一下，测测外网下载。",
+      "minSeconds": 3.7,
+      "source": "run"
+    },
+    {
+      "id": "opening-result",
+      "chapter": "本次外网下载",
+      "narration": "这次实测，跑到了九百多兆。",
+      "minSeconds": 3.0,
+      "source": "run"
+    },
+    {
+      "id": "opening-return",
+      "chapter": "把成绩留在首页",
+      "narration": "更新 Quickstart BETA，就能把成绩留在首页。",
+      "minSeconds": 4.5,
+      "source": "opening"
+    },
+    {
+      "id": "opening-next",
+      "chapter": "安装 · 测速 · 添加卡片",
+      "narration": "下面带你安装，再测一次。",
+      "minSeconds": 2.8,
+      "source": "opening"
+    },
+    {
+      "id": "install",
+      "chapter": "第一步 · 安装或更新 FastNet",
+      "minSeconds": 13,
+      "narration": "先在软件中心找到 FastNet，点安装或更新。也可以在终端执行这条命令。下载和安装的等待过程已经剪短。",
+      "segments": [
+        "先在软件中心找到 FastNet，点安装或更新。",
+        "也可以在终端执行这条命令。下载和安装的等待过程已经剪短。"
+      ],
+      "source": "install"
+    },
+    {
+      "id": "run",
+      "chapter": "第二步 · 跑一次真实测速",
+      "minSeconds": 12,
+      "narration": "打开 FastNet，点开始全链路体检。等它完成，先看路由器的外网下载和上传，再看浏览器到路由器的内网链路。",
+      "segments": [
+        "打开 FastNet，点开始全链路体检。",
+        "等它完成，先看路由器的外网下载和上传，再看浏览器到路由器的内网链路。"
+      ],
+      "source": "run"
+    },
+    {
+      "id": "parallel-note",
+      "chapter": "多来源 · 并发下载",
+      "narration": "新版多来源并发下载，减少单个节点拖后腿，更容易看出线路的下载能力。",
+      "minSeconds": 6.5,
+      "source": "run"
+    },
+    {
+      "id": "results",
+      "chapter": "外网、内网 · 分开看",
+      "minSeconds": 12,
+      "narration": "外网速度和内网速度，要分开看。旁边还有 NAT 和 IPv6 的检测结果。这些是本次测试的实际数据，测量时间也会一起保留。",
+      "source": "results"
+    },
+    {
+      "id": "beta",
+      "chapter": "第三步 · 更新 Quickstart BETA",
+      "minSeconds": 14,
+      "narration": "想把结果放到首页，先看简介里的 Quickstart BETA 更新页面。升级前做好完整系统备份，按说明检查和更新，再刷新首页。",
+      "source": "beta"
+    },
+    {
+      "id": "add",
+      "chapter": "把测速卡片放到首页",
+      "minSeconds": 16,
+      "narration": "点右上角的自定义首页。再点添加模块。选择外网测速。确认放置。最后点完成。如果出现整理提示，确认整理并完成。刷新一下，测速卡片还在，最近的结果也能直接看到。",
+      "segments": [
+        "点右上角的自定义首页。",
+        "再点添加模块。",
+        "选择外网测速。",
+        "确认放置。",
+        "最后点完成。",
+        "如果出现整理提示，确认整理并完成。",
+        "刷新一下，测速卡片还在，最近的结果也能直接看到。"
+      ],
+      "source": "add"
+    },
+    {
+      "id": "outro",
+      "chapter": "测一次 · 留在首页",
+      "minSeconds": 9,
+      "narration": "以后打开首页，就能看到最近的测速结果。家里网速不错的朋友，也来试一次，把你的测速成绩晒出来。",
+      "source": "card"
+    }
+  ],
+  "compiler": "compile-opening.mjs",
+  "revision": "opening-v2",
+  "openingDurationRange": [
+    20,
+    25
+  ],
+  "parentOutputEnv": "TUTORIAL_PARENT_OUTPUT"
+}

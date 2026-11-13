@@ -1,0 +1,86 @@
+{
+  "tutorial": "home-fastnet-card",
+  "goal": "90–120秒中文视频，覆盖FastNet安装或更新、真实测速、Quickstart BETA指引和首页卡片添加",
+  "status": "passed",
+  "maxRounds": 3,
+  "tasks": [
+    {
+      "id": "V01",
+      "name": "环境、版本和设备预检",
+      "status": "passed"
+    },
+    {
+      "id": "V02",
+      "name": "分镜和旁白",
+      "status": "passed"
+    },
+    {
+      "id": "V03",
+      "name": "脚本、配置、分段语音",
+      "status": "passed"
+    },
+    {
+      "id": "V04",
+      "name": "真实安装更新",
+      "status": "passed",
+      "result": "ARM64：0.7.7更新到0.8.9，包及界面版本已核对"
+    },
+    {
+      "id": "V05",
+      "name": "真实测速",
+      "status": "passed",
+      "result": "一次真实全链路检测；外网下载921.366451Mbps、上传65.620035Mbps；保留NAT超时和IPv6不可用状态"
+    },
+    {
+      "id": "V06",
+      "name": "BETA指引和首页卡片",
+      "status": "passed",
+      "result": "官方安装器只读检查匹配当前版本；卡片添加、保存、刷新通过，原布局已恢复"
+    },
+    {
+      "id": "V07",
+      "name": "剪辑、字幕、像素包装和MP4",
+      "status": "passed",
+      "result": "106.866667秒，1080p/30fps，中文旁白、字幕、像素包装和MP4"
+    },
+    {
+      "id": "V08",
+      "name": "最多三轮验收",
+      "status": "passed",
+      "result": "第3轮通过；35项成片自动检查、关键帧抽查；5项时间轴测试通过"
+    },
+    {
+      "id": "V09",
+      "name": "设备状态和交付检查",
+      "status": "passed",
+      "result": "原布局恢复；两台设备network/dhcp/firewall精确哈希核对通过；产物与私有配置被Git忽略"
+    }
+  ],
+  "rounds": [
+    {
+      "round": 1,
+      "status": "failed",
+      "findings": [
+        "卡片取景不完整，已修正滚动定位",
+        "原始短句操作延迟最高1033ms，改为按真实事件编译音频时间",
+        "首段组合滤镜编码停在0帧"
+      ]
+    },
+    {
+      "round": 2,
+      "status": "failed",
+      "findings": [
+        "单线程和有限输入仍无法解决当前FFmpeg组合音画滤镜调度停顿",
+        "隔离探针证明视频、字幕、运镜、音频各自处理正常；第三轮改为分别处理后封装"
+      ]
+    },
+    {
+      "round": 3,
+      "status": "passed",
+      "findings": [
+        "保留分离视频/音轨处理；AAC 128k/fast在相同输入下验证通过",
+        "35项成片检查通过，关键画面抽查通过；未进入第4轮"
+      ]
+    }
+  ]
+}
