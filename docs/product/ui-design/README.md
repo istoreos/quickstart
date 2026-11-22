@@ -36,6 +36,8 @@
 完整的[参考记录](../storage-interaction-references.md)保存来源、采用方式与不沿用的能力；
 [日常场景与实现边界](../storage-scenarios-and-implementation.md)逐项检查操作后的去向、失败恢复、
 quickstart 整合方式和正式接入前需要补齐的环节。原型演示通过不等于真实存储生命周期已经闭环。
+进一步对照成熟产品的[官方资料调研](../storage-third-party-research-20261122.md)和
+[差距与实施方案](../storage-gap-analysis-20261122.md)记录健康维护、恢复识别、告警及真实后端细节。
 
 - [DiskGenius 创建分区](https://www.diskgenius.com/manual/create-new-partition.php)：借鉴分区图和先规划、再保存；
   本原型不继承其无损移动、拆分或恢复分区等能力声明。

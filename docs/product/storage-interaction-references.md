@@ -3,6 +3,8 @@
 记录日期：2026-11-21。本文记录交互依据及本项目的取舍，不代表实现了参考产品的全部能力。
 配套设计见[日常场景与实现边界](storage-scenarios-and-implementation.md)，可运行原型见
 [预览说明](ui-design/README.md)。
+后续官方产品对比见[运维与故障恢复调研](storage-third-party-research-20261122.md)，
+具体交互缺口、本地代码依据和实施顺序见[差距评审](storage-gap-analysis-20261122.md)。
 
 ## 参考产品与采用方式
 
