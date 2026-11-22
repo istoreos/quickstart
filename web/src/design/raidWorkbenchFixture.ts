@@ -1,5 +1,6 @@
 // DESIGN ONLY: responses for the shipped RAID components, never disk commands.
 // Keep production request shapes and error handling; this adapter only updates example inventory.
+import {raidIssue,raidCreateIssue} from './storageCapabilitiesPrototype'
 import {workbench,raidDrive,type Raid,type Drive} from './storageWorkbenchPrototype'
 let activated=false
 const result=(value:unknown={})=>({status:200,data:{success:0,result:value,previewOnly:true}})
@@ -19,6 +20,8 @@ export function raidWorkbenchFixture(key:string,method:string,body:Record<string
  if(key==='/raid/create/list/'&&method==='GET')return result({members:candidates().map(d=>({name:d.id,path:'/dev/'+d.id,model:d.model,sizeStr:d.size+' GiB'}))})
  if(method!=='POST')return
  const raid=workbench.raids.find(r=>'/dev/'+r.id===body.path)
+ const issue=key==='/raid/create/'?raidCreateIssue(String(body.level)):raidIssue(raid?.level)
+ if(key!=='/raid/detail/'&&issue)return error(issue)
  if(key!=='/raid/detail/'&&workbench.readState!=='fresh')return error('库存已过期，请重新读取后操作')
  if(key!=='/raid/detail/'&&workbench.changes.length)return error('请先处理待执行布局，避免父子资源同时变更')
  if(key==='/raid/detail/')return raid?result({detail:`${body.path}:\n  Version : 1.2\n  Raid Level : ${serialize(raid).level}\n  Array Size : ${raid.size} GiB\n  State : ${serialize(raid).status}\n  Members : ${serialize(raid).members.join(' ')}\n\n产品交互示例；未读取真实 mdadm。`}):error('获取raid详情失败')

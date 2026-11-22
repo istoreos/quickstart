@@ -123,3 +123,7 @@ FastNet「外网测速」卡片见 [产品交互说明](../fastnet-card-design.m
 
 部分早期评审仍绑定历史规格版本，例如 `structure-spec-review.cjs` 要求布局规范 1.4，
 而归档规范已更新为 1.7。这些脚本供追溯，不是当前版本的验收入口。
+
+### 系统能力与操作限制
+
+已在当前布局加入 LVM、thin-pool、RAID 各级别、EXT4、SMART 与权限的能力示例。不可用的操作置灰并直接说明原因，已有记录保留可查看。说明与预览见 [存储能力与操作资格](../storage-capability-interaction.md)。全部为设计环境模拟，生产探测与执行时鉴权尚待接入。

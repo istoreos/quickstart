@@ -1,4 +1,5 @@
 import { createApp } from 'vue'
+import {setCapabilityProfile} from './storageCapabilitiesPrototype'
 import {initializeTheme,normalizeThemePreference,setThemePreference} from '../utils/theme'
 import { createPinia } from 'pinia'
 import { createRouter, createWebHistory } from 'vue-router'
@@ -37,6 +38,7 @@ import EditableSelect from '../components/editable-select/index.vue'
 
 export async function mount() {
   initializeTheme()
+  setCapabilityProfile(new URLSearchParams(location.search).get('capability')||'ready')
   const explicit=normalizeThemePreference(new URLSearchParams(location.search).get('theme'))
   if(explicit)setThemePreference(explicit)
   const app = createApp(DesignApp)
@@ -45,7 +47,7 @@ export async function mount() {
   app.use(installComponents).use(SmartActions).use(createPinia())
   const router=createRouter({ history:createWebHistory('/'),routes:[{path:'/design/external-card',component:ExternalCardPreview},{path:'/',component:HomePreview},{path:'/devicemanagement',component:DevicePreview},{path:'/design/multi-lan',component:MultiLanPreview},{path:'/design/fastnet',redirect:to=>({path:'/',query:to.query})},{path:'/:pathMatch(.*)*',component:DestinationPreview}] })
   router.beforeEach((to,from)=>{
-    const keys=['layout','variant','scenario','authority','theme','lang','tools','palette','presentation']
+    const keys=['layout','variant','scenario','authority','theme','lang','tools','palette','presentation','capability']
     const query={...to.query};let changed=false
     for(const key of keys)if(query[key]===undefined&&from.query[key]!==undefined){query[key]=from.query[key];changed=true}
     if(changed)return {path:to.path,query,replace:true}

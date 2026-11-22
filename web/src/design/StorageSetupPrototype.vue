@@ -8,9 +8,9 @@
         <button class="lh-purpose" :class="{selected:mode==='files'}" :aria-pressed="mode==='files'" @click="mode='files'"><span class="lh-choice-icon" aria-hidden="true">▤</span><strong>{{hasExistingFiles?'保留文件并继续使用':'普通文件存储'}}</strong><small>{{hasExistingFiles?'继续使用现有 EXT4，不清空文件，不改变分区。':'用于文件共享、下载和应用数据目录，沿用原有磁盘用法。'}}</small><span class="lh-choice-detail">{{hasExistingFiles?'推荐 · 只处理挂载与访问':'EXT4 · 不需要应用存储组件'}}</span></button>
         <button class="lh-purpose" :class="{selected:mode==='custom'}" :aria-pressed="mode==='custom'" @click="mode='custom'"><span class="lh-choice-icon" aria-hidden="true">＋</span><strong>{{hasExistingFiles?'重新规划这块空间':'按用途划分空间'}}</strong><small>{{hasExistingFiles?'清空后，重新安排普通文件、LightHost 主机或应用存储。':'运行 LightHost、创建应用卷，也可以留一部分普通文件存储。'}}</small><span class="lh-choice-detail">{{hasExistingFiles?'会清空所选空间 · 请先备份':'按需设置 · 下一步分配容量'}}</span></button>
       </div>
-      <template v-if="mode==='custom'"><h3 class="sp-subheading">需要哪些存储能力？</h3><div class="lh-choices sp-subchoices"><button v-for="item in purposes" :key="item.id" class="lh-purpose" :class="{selected:purpose===item.id}" :aria-pressed="purpose===item.id" @click="purpose=item.id"><strong>{{item.title}}</strong><small>{{item.description}}</small></button></div><p v-if="hasExistingFiles" class="lh-notice danger">这不是无损升级。所选空间中的现有文件会被清空；本流程不自动缩小已有文件系统。</p><p v-if="scene==='unsupported'" class="lh-notice">当前缺少应用存储组件。仍可以选择上面的普通文件存储。</p><details class="sp-technical"><summary>了解存储方式</summary><p>普通文件区直接使用 EXT4。LightHost 和系统应用分别使用独立 VG 与 thin-pool，应用卷内部也可以使用 EXT4。</p></details></template>
+      <template v-if="mode==='custom'"><h3 class="sp-subheading">需要哪些存储能力？</h3><div class="lh-choices sp-subchoices"><button v-for="item in purposes" :key="item.id" class="lh-purpose" :class="{selected:purpose===item.id&&!purposeIssue(item.id)&&scene!=='unsupported'}" :aria-pressed="purpose===item.id&&!purposeIssue(item.id)&&scene!=='unsupported'" :disabled="!!purposeIssue(item.id)||scene==='unsupported'" @click="purpose=item.id"><strong>{{item.title}}</strong><small>{{item.description}}</small><span v-if="purposeIssue(item.id)||scene==='unsupported'" class="sp-capability-reason">{{purposeIssue(item.id)||'缺少应用存储组件；可以继续使用普通文件存储。'}}</span></button></div><p v-if="hasExistingFiles" class="lh-notice danger">这不是无损升级。所选空间中的现有文件会被清空；本流程不自动缩小已有文件系统。</p><p v-if="scene==='unsupported'" class="lh-notice">当前缺少应用存储组件。仍可以选择上面的普通文件存储。</p><details class="sp-technical"><summary>了解存储方式</summary><p>普通文件区直接使用 EXT4。LightHost 和系统应用分别使用独立 VG 与 thin-pool，应用卷内部也可以使用 EXT4。</p></details></template>
       <p v-else class="lh-notice">普通 EXT4 仍可用于共享文件、下载，以及兼容的应用数据目录；它本身不提供 LVM 快照。</p>
-      <footer class="lh-flow-actions"><button @click="$emit('close')">取消</button><button class="primary" :disabled="mode==='custom'&&scene==='unsupported'" @click="stage=2">{{keepFiles?'查看挂载设置':mode==='files'?'查看文件存储方案':'分配容量'}}</button></footer>
+      <p v-if="currentIssue" class="lh-notice" role="status">{{currentIssue}}</p><footer class="lh-flow-actions"><button @click="$emit('close')">取消</button><button class="primary" :disabled="!!currentIssue" @click="stage=2">{{keepFiles?'查看挂载设置':mode==='files'?'查看文件存储方案':'分配容量'}}</button></footer>
     </template>
     <template v-else-if="stage===2">
       <h2 id="lh-flow-title">{{keepFiles?'保留现有文件存储':mode==='files'?'准备普通文件存储':'给不同用途分配空间'}}</h2><p class="lh-flow-description">{{target.label}} · {{target.capacity}} GiB</p>
@@ -27,7 +27,7 @@
         <dl class="lh-facts"><dt>本次影响</dt><dd>{{target.effect}}</dd><dt>保留内容</dt><dd>{{target.preserved}}</dd></dl>
         <p class="lh-footnote">容量均为演示值。正式预检需核算系统管理需求、元数据及余量。各区域已划分的容量不会自动互相借用。</p>
       </template>
-      <p v-if="!validPlan" class="lh-notice danger">请核对容量或挂载目录，当前设置无法继续。</p>
+      <p v-if="currentIssue" class="lh-notice" role="status">{{currentIssue}}</p><p v-if="!validPlan&&!currentIssue" class="lh-notice danger">请核对容量或挂载目录，当前设置无法继续。</p>
       <footer class="lh-flow-actions"><button @click="stage=1">上一步</button><button class="primary" :disabled="!validPlan" @click="keepFiles?mountExisting():stage=3">{{keepFiles?(planOnly?'加入待执行':'挂载并使用（演示）'):'核对并继续'}}</button></footer>
     </template>
     <template v-else-if="stage===3">
@@ -36,7 +36,7 @@
       <dl class="lh-facts"><dt>目标</dt><dd>{{target.label}}</dd><dt>完成后</dt><dd>{{summary}}</dd><dt>保留内容</dt><dd>{{keepFiles?'所选空间的原文件及其他分区':target.preserved}}</dd></dl>
       <label v-if="!keepFiles" class="lh-confirm-label"><span>输入 {{target.token}} 确认目标</span><input v-model="typed" :placeholder="target.token" aria-label="输入目标名称确认" autocomplete="off" /></label>
       <label class="lh-check"><input v-model="ack" type="checkbox" /><span>{{keepFiles?'我确认挂载此文件系统，保留原文件。':target.kind==='free'?'我确认只使用未分配范围，保留系统分区。':'我已备份所需文件，确认清空上面这块空间。'}}</span></label>
-      <footer class="lh-flow-actions"><button @click="stage=2">上一步</button><button :class="keepFiles||target.kind==='free'?'primary':'danger-button'" :disabled="!ack||(!keepFiles&&typed!==target.token)" @click="run">{{planOnly?'加入待执行':keepFiles?'挂载并使用（演示）':mode==='files'?'格式化为 EXT4 并使用（演示）':'准备存储（演示）'}}</button></footer>
+      <footer class="lh-flow-actions"><button @click="stage=2">上一步</button><button :class="keepFiles||target.kind==='free'?'primary':'danger-button'" :disabled="!validPlan||!ack||(!keepFiles&&typed!==target.token)" @click="run">{{planOnly?'加入待执行':keepFiles?'挂载并使用（演示）':mode==='files'?'格式化为 EXT4 并使用（演示）':'准备存储（演示）'}}</button></footer>
     </template>
     <template v-else-if="stage===4"><h2 id="lh-flow-title">{{keepFiles?'正在挂载文件存储':'正在准备存储'}}</h2><ol class="lh-progress"><li v-for="(name,i) in progressSteps" :key="name" :class="{done:progress>i,current:progress===i}"><b>{{progress>i?'✓':progress===i?'◌':'·'}}</b><span>{{name}}</span></li></ol><p class="lh-notice">只演示进度，不执行真实磁盘操作。刷新会重置示例。</p></template>
     <template v-else-if="failed"><h2 id="lh-flow-title">存储准备未完成</h2><p class="lh-notice danger">布局已经修改，原文件不能自动恢复。本次停在创建存储步骤，不会自动重新清空。</p><button @click="diagnostic=true">查看处理建议</button><p v-if="diagnostic" class="lh-notice">保留现场，检查任务记录与存储组件；从已完成步骤继续。</p></template>
@@ -45,6 +45,7 @@
 </template>
 <script setup lang="ts">
 import {computed,onUnmounted,ref,watch} from 'vue'
+import {purposeIssue,requireFeatures,planFeatures} from './storageCapabilitiesPrototype'
 import {purposes,type Purpose,type StoragePlan,type StorageTarget} from './storagePurposePrototype'
 const props=defineProps<{target:StorageTarget;scene:string;initialPurpose?:Purpose;planOnly?:boolean}>()
 const emit=defineEmits<{(e:'close'):void;(e:'busy',value:boolean):void;(e:'complete',plan:StoragePlan):void;(e:'volumes'):void;(e:'files'):void;(e:'continue'):void}>()
@@ -56,7 +57,8 @@ const managedCapacity=computed(()=>props.target.capacity-(reserveFiles.value?fil
 watch([managedCapacity,purpose],()=>{hostShare.value=Math.max(24,Math.min(hostShare.value,managedCapacity.value-24))})
 watch(reserveFiles,value=>{if(!value&&management.value==='files')management.value=props.scene==='no-management'?'separate':'existing'})
 const plan=computed<StoragePlan>(()=>mode.value==='files'?{purpose:'files',hosts:0,apps:0,files:props.target.capacity,management:'existing',managementSize:0,preserveExisting:keepFiles.value,fileMount:mountPath.value}:{purpose:purpose.value,hosts:purpose.value==='apps'?0:purpose.value==='both'?hostShare.value:managedCapacity.value-(management.value==='separate'?managementSize:0),apps:purpose.value==='hosts'?0:purpose.value==='both'?managedCapacity.value-hostShare.value:managedCapacity.value,files:reserveFiles.value?fileShare.value:0,management:purpose.value==='both'?'application':purpose.value==='apps'?'existing':management.value==='files'?'existing':management.value,managementSize:purpose.value==='apps'?0:managementSize,fileMount:reserveFiles.value?mountPath.value:undefined,managementInFiles:purpose.value==='hosts'&&management.value==='files'})
-const validPlan=computed(()=>keepFiles.value?/^\/mnt\/[A-Za-z0-9_-]+$/.test(mountPath.value):mode.value==='files'||((!reserveFiles.value||(Number.isInteger(fileShare.value)&&fileShare.value>=8&&fileShare.value<=maxFiles.value))&&plan.value.hosts>=0&&plan.value.apps>=0))
+const currentIssue=computed(()=>mode.value==='custom'?(props.scene==='unsupported'?'缺少应用存储组件；仍可选择普通文件存储。':purposeIssue(purpose.value)||requireFeatures(planFeatures(plan.value))):requireFeatures(keepFiles.value?['mount']:['partition','ext4','mount']))
+const validPlan=computed(()=>!currentIssue.value&&(keepFiles.value?/^\/mnt\/[A-Za-z0-9_-]+$/.test(mountPath.value):mode.value==='files'||((!reserveFiles.value||(Number.isInteger(fileShare.value)&&fileShare.value>=8&&fileShare.value<=maxFiles.value))&&plan.value.hosts>=0&&plan.value.apps>=0)))
 const summary=computed(()=>[plan.value.files?`普通文件存储 ${plan.value.files} GiB · EXT4`:'',plan.value.hosts?`主机存储 ${plan.value.hosts} GiB`:'',plan.value.apps?`应用存储 ${plan.value.apps} GiB`:'',plan.value.management==='separate'?`管理文件区 ${managementSize} GiB`:'',keepFiles.value?mountPath.value:''].filter(Boolean).join('，'))
 const progressSteps=computed(()=>keepFiles.value?['核对文件系统与挂载位置','挂载并验证访问']:mode.value==='files'?['核对目标与保留范围','准备 EXT4 文件系统','挂载并验证访问']:['再次核对目标与保留范围','划分所选空间','创建所需存储','准备管理文件位置','验证存储状态'])
 let timer:ReturnType<typeof setInterval>|undefined

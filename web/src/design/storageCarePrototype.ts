@@ -1,5 +1,6 @@
 // Design only. All maintenance, events and tasks are in-memory examples; no backend writes.
 import {computed, reactive, watch} from 'vue'
+import {requireFeatures} from './storageCapabilitiesPrototype'
 import {workbench, nextId, type Job} from './storageWorkbenchPrototype'
 
 export type CarePanel = 'health'|'capacity'|'readiness'|'discovery'|'maintenance'|'recovery'|'events'|'task'|'snapshots'|'support'
@@ -36,7 +37,7 @@ watch(careAlerts,alerts=>{
 export function healthFor(id:string){return care.health[id]??(care.health[id]={state:care.scene==='health-unknown'?'未知':'尚未测试',result:'没有近期测试结果；在线和温度正常不等于健康检查通过。',schedule:'未设置'})}
 export function maintenanceBusy(){return workbench.busy||workbench.raids.some(r=>r.status==='重建中'||r.nativeStatus?.includes('resync'))||care.tasks.some(t=>t.state==='执行中')}
 export function startCareTask(title:string,target:string,steps:string[]){
-  if(maintenanceBusy())return false
+  if(requireFeatures(title==='SMART 短测试'?['smart']:['raid'])||maintenanceBusy())return false
   const task:CareTask={id:nextId(),title,target,state:'执行中',started:now(),next:'等待示例结果；可关闭详情后继续查看任务。',stages:steps.map((name,i)=>({name,state:i?'等待':'执行中',detail:i?'尚未开始':'已提交演示任务'}))}
   care.tasks.unshift(task);return true
 }

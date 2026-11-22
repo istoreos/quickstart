@@ -3,14 +3,14 @@
  <div class="sc-shade" @click.self="$emit('close')">
   <section class="sc-drawer" role="dialog" aria-modal="true" :aria-label="title" tabindex="-1" ref="root">
    <header><div><small>硬盘与存储</small><h2>{{title}}</h2></div><button aria-label="关闭维护详情" @click="$emit('close')">×</button></header>
-   <div class="sc-body">
+   <div class="sc-body"><StorageCapabilityNoticePrototype v-if="capabilityFeatures.length" :features="capabilityFeatures" />
     <template v-if="panel==='health'">
      <h3>{{care.aliases[target]||disk?.model||target}} <small>{{disk?.id}}</small></h3>
      <dl><dt>当前连接</dt><dd>{{disk?.connected?'在线':'未连接'}}</dd><dt>物理身份</dt><dd>{{disk?.serial||'未知'}} · {{disk?.identityReliable===false?'身份不可靠，禁用写入':'示例稳定身份'}}</dd><dt>连接位置</dt><dd>{{disk?.id?.startsWith('md')?'阵列逻辑设备':'SATA / 演示插槽 '+(workbench.drives.findIndex(d=>d.id===target)+1)}}；本设备不提供定位灯</dd><dt>健康状态</dt><dd>{{health.state}}</dd><dt>上次测试</dt><dd>{{health.result}}</dd><dt>维护计划</dt><dd>{{health.schedule}}</dd></dl>
      <p class="sw-note">SMART 自检与文件内容校验不同。休眠、不支持和读取失败都不能显示成健康通过。</p>
      <p v-if="maintenanceBusy()" class="sw-note warning">正在进行存储维护，暂不启动另一项重 I/O 测试。可在任务记录查看。</p>
-     <button class="primary" :disabled="!disk?.connected||maintenanceBusy()||workbench.readState!=='fresh'" @click="startSmart">运行短测试（演示）</button>
-     <div class="sc-field"><label for="smart-plan">定期测试</label><select id="smart-plan" v-model="schedule"><option>未设置</option><option>每周日 03:00 · 短测试</option><option>每月首日 03:00 · 长测试</option></select><button @click="health.schedule=schedule;message='维护计划已保存（演示）；冲突时延后并记录原因。'">保存计划</button></div>
+     <button class="primary" :disabled="!!requireFeatures(['smart'])||!disk?.connected||maintenanceBusy()||workbench.readState!=='fresh'" @click="startSmart">运行短测试（演示）</button>
+     <div class="sc-field"><label for="smart-plan">定期测试</label><select id="smart-plan" v-model="schedule"><option>未设置</option><option>每周日 03:00 · 短测试</option><option>每月首日 03:00 · 长测试</option></select><button :disabled="!!requireFeatures(['smart'])" @click="health.schedule=schedule;message='维护计划已保存（演示）；冲突时延后并记录原因。'">保存计划</button></div>
      <details><summary>模拟健康状态</summary><select aria-label="健康状态示例" v-model="health.state"><option>未知</option><option>休眠</option><option>不支持</option><option>尚未测试</option><option>异常</option></select></details>
      <button @click="$emit('navigate','jobs')">查看测试结果与任务</button><p class="sc-muted"><router-link to="/smart">S.M.A.R.T. 全局设置、计划与日志 ›</router-link></p>
     </template>
@@ -22,23 +22,23 @@
      <button disabled>扩容此存储池 · 等待布局资格验证</button><p class="sc-muted">当前原型不提供任意扩池按钮。不能在线扩容时先备份，再迁移到新存储。</p>
     </template>
     <template v-else-if="panel==='readiness'">
-     <h3>{{appName}} · {{appState}}</h3><dl><dt>目标卷</dt><dd>{{volume?.name||'宿主 Docker 数据'}}</dd><dt>挂载目录</dt><dd>{{appName==='LightHost 管理文件'?'/mnt/lighthost-data':'/mnt/docker-data'}}</dd><dt>预期身份</dt><dd>{{target==='docker'?care.expectedUUID:'DEMO-FS-'+target}}</dd><dt>开机检查</dt><dd>阵列组装 → LVM 激活 → UUID 挂载核对 → 应用启动</dd></dl>
-     <p class="sw-note warning" v-if="appState!=='就绪'">目标文件系统尚未就绪，{{appName}} 保持停止。目录存在不能证明正确磁盘已经挂载；不回落到系统可写区。</p>
+     <h3>{{appName}} · {{requireFeatures(['lvm','thin'])?'就绪状态待核实':appState}}</h3><dl><dt>目标卷</dt><dd>{{volume?.name||'宿主 Docker 数据'}}</dd><dt>挂载目录</dt><dd>{{appName==='LightHost 管理文件'?'/mnt/lighthost-data':'/mnt/docker-data'}}</dd><dt>预期身份</dt><dd>{{target==='docker'?care.expectedUUID:'DEMO-FS-'+target}}</dd><dt>开机检查</dt><dd>阵列组装 → LVM 激活 → UUID 挂载核对 → 应用启动</dd></dl>
+     <p class="sw-note warning" v-if="requireFeatures(['lvm','thin'])">存储管理能力尚不可用。当前应用是否运行、目标是否挂载需分别读取；不能据此判断应用已停止。</p><p class="sw-note warning" v-else-if="appState!=='就绪'">目标文件系统尚未就绪，{{appName}} 保持停止。目录存在不能证明正确磁盘已经挂载；不回落到系统可写区。</p>
      <p v-else class="sw-note">示例已核对目标文件系统身份与可写状态，可启动应用。真实实现仍需目标机重启与缺盘验证。</p>
      <label class="sc-field">模拟挂载结果<select aria-label="挂载检查示例" v-model="appState"><option>未接入</option><option>等待存储</option><option>挂载失败</option><option>就绪</option></select></label><button @click="message='已重新核对示例状态；真实系统须核对 mountinfo、UUID、读写和容量，不能只检测目录。'">重新检查（演示）</button>
      <details><summary>接入和迁移的影响</summary><p>宿主 Docker 只有一个当前 data-root。先停服务、复制校验、切换、启动检查；验证前保留旧数据。切换后两边都有新写入时，不能直接回退。</p><p>LightHost 管理文件也须通过开机挂载守卫。LightHost 主机卷在 Incus 中管理；沙箱 LVM 尚未开放。</p></details>
     </template>
     <template v-else-if="panel==='discovery'">
      <p class="sw-note">先只读识别已有成员，不修改配置，不组装阵列，不重启服务。原“扫描恢复”仍是独立的有影响操作。</p>
-     <button class="primary" @click="care.discoveryState='found';message='只读识别完成（示例），未调用 Autofix。'">识别已有阵列（演示）</button>
+     <button class="primary" :disabled="!!requireFeatures(['raid'])" @click="care.discoveryState='found';message='只读识别完成（示例），未调用 Autofix。'">识别已有阵列（演示）</button>
      <div v-if="care.discoveryState==='found'" class="sc-resource"><h3>家庭文件镜像 · RAID 1</h3><dl><dt>阵列 UUID</dt><dd>DEMO-MD-001</dd><dt>识别成员</dt><dd>sdd1、sde1 · 序列号末位 004 / 005</dd><dt>缺失成员</dt><dd>无；识别不等于可直接使用</dd><dt>配置状态</dt><dd>尚未由本机接管</dd></dl><label><input type="checkbox" v-model="conflict" />模拟 UUID / 旧成员事件冲突</label><p v-if="conflict" class="sw-note warning">存在成员身份冲突。暂不能恢复；先导出诊断资料并核实来源，不强制组装。</p><button :disabled="conflict" @click="discoveryReview=true">核对恢复影响</button><template v-if="discoveryReview&&!conflict"><p class="sw-note warning">恢复会写入选定阵列配置并尝试组装，可能影响关联文件服务。新发现接口在生产接入前仍待实现；不会自动调用旧全量 Autofix。</p><button disabled>执行选定恢复 · 待新接口接入</button></template></div>
     </template>
     <template v-else-if="panel==='maintenance'">
      <h3>{{array?.name||'RAID 阵列'}}</h3><p class="sc-muted">状态：{{array?.status||'未发现'}} · 上次一致性检查：{{lastMdCheck}} · 下次：{{care.mdSchedule}}</p>
      <p class="sw-note">检查用于发现阵列层的一致性问题，不等于文件内容校验。不同 RAID 级别的 check 可能有不同写入行为；修复需单独确认，不能套用 ZFS 的自修复承诺。</p>
      <p v-if="maintenanceBusy()" class="sw-note warning">存在重建、同步或其他维护任务，请先等待完成。</p>
-     <button class="primary" :disabled="!array||maintenanceBusy()||workbench.readState!=='fresh'" @click="startCheck">开始一致性检查（演示）</button><button disabled>修复 · 需诊断结果与专项流程</button>
-     <label class="sc-field">检查计划<select aria-label="阵列检查计划" v-model="care.mdSchedule"><option>未设置</option><option>每月首个周日 04:00</option></select></label><button @click="message='阵列检查计划已保存（演示）；调度需避开重建与 SMART 长测试。'">保存检查计划</button>
+     <button class="primary" :disabled="!!requireFeatures(['raid'])||!array||maintenanceBusy()||workbench.readState!=='fresh'" @click="startCheck">开始一致性检查（演示）</button><button disabled>修复 · 需诊断结果与专项流程</button>
+     <label class="sc-field">检查计划<select aria-label="阵列检查计划" v-model="care.mdSchedule"><option>未设置</option><option>每月首个周日 04:00</option></select></label><button :disabled="!!requireFeatures(['raid'])" @click="message='阵列检查计划已保存（演示）；调度需避开重建与 SMART 长测试。'">保存检查计划</button>
      <button @click="$emit('open','recovery',array?.id||'md0')">核对换盘与重新加入</button><button @click="$emit('navigate','jobs')">查看维护结果</button>
     </template>
     <template v-else-if="panel==='recovery'">
@@ -70,9 +70,12 @@
 <script setup lang="ts">
 import {computed,nextTick,onMounted,onUnmounted,ref,watch} from 'vue'
 import {workbench} from './storageWorkbenchPrototype'
+import StorageCapabilityNoticePrototype from './StorageCapabilityNoticePrototype.vue'
+import {requireFeatures,type Feature} from './storageCapabilitiesPrototype'
 import {care,careAlerts,healthFor,maintenanceBusy,startCareTask,finishCareTask,jobAsTask,exportCareDiagnostics,type CarePanel} from './storageCarePrototype'
 const props=defineProps<{panel:CarePanel;target:string}>(),emit=defineEmits<{(e:'close'):void;(e:'navigate',tab:string):void;(e:'open',panel:CarePanel,target:string):void}>()
 const titles:Record<CarePanel,string>={health:'健康与物理身份',capacity:'处理存储空间',readiness:'应用存储就绪检查',discovery:'识别已有阵列',maintenance:'阵列健康与维护',recovery:'换盘与重新加入',events:'存储提醒与通知',task:'任务详情',snapshots:'恢复点与备份',support:'名称与诊断资料'}
+const capabilityFeatures=computed<Feature[]>(()=>props.panel==='health'?['smart']:['discovery','maintenance','recovery'].includes(props.panel)?['raid']:['capacity','snapshots','readiness'].includes(props.panel)?['lvm','thin']:[])
 const title=computed(()=>titles[props.panel]),root=ref<HTMLElement>(),message=ref(''),schedule=ref('未设置'),alias=ref(''),conflict=ref(false),discoveryReview=ref(false)
 const disk=computed(()=>workbench.drives.find(d=>d.id===props.target)),health=computed(()=>healthFor(props.target)),pool=computed(()=>workbench.pools.find(p=>p.id===props.target)||workbench.pools[1]),array=computed(()=>workbench.raids.find(r=>r.id===props.target)||workbench.raids[0])
 const volumePool=computed(()=>workbench.pools.find(p=>p.volumes.some(v=>v.id===props.target))),volume=computed(()=>volumePool.value?.volumes.find(v=>v.id===props.target))
