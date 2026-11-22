@@ -21,7 +21,7 @@ const { build, preview } = require(path.join(root, 'web/node_modules/vite'));
   fs.copyFileSync(path.join(root,'scripts/ui-design-fastnet-bridge.js'),path.join(fullOut,'preview-bridge.js'));
   fs.writeFileSync(html,fs.readFileSync(html,'utf8').replace('<head>',`<head><script>document.documentElement.dataset.previewVersion=${JSON.stringify(version)}</script><script src="./preview-bridge.js"></script>`));
   const server=await preview({configFile});
-  console.log('Quickstart Vue design: http://0.0.0.0:5180/');
+  console.log(`Quickstart Vue design: http://0.0.0.0:${server.config.preview.port}/`);
   console.log(`Design artifacts: ${server.config.build.outDir}`);
   for (const signal of ['SIGTERM', 'SIGINT']) process.on(signal, () => { server.httpServer.close(()=>process.exit(0)); });
 })().catch(error => { console.error(error); process.exit(1); });

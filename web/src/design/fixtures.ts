@@ -1,4 +1,5 @@
 import {cardFixture} from './cardFixture'
+import {raidWorkbenchFixture} from './raidWorkbenchFixture'
 // Synthetic fixtures, used exclusively by the independently loaded design entry.
 import { reactive } from 'vue'
 import { inventory } from './devices'
@@ -49,6 +50,7 @@ export function installFixtures() {
     if (!url.pathname.startsWith('/cgi-bin/') && url.origin === location.origin) return realFetch(input instanceof URL ? input.href : input, init)
     let status = 200, data: unknown
     const key = url.pathname.startsWith(base) ? url.pathname.slice(base.length) : url.pathname
+    const raidReply=url.origin===location.origin?raidWorkbenchFixture(key,method,JSON.parse(String(init?.body||'{}'))):undefined
     const cardReply=url.origin===location.origin?cardFixture(key,method,JSON.parse(String(init?.body||'{}'))):undefined
     const networkReply=url.origin===location.origin&&(demo.layout==='ordered'||!params.has('layout'))?networkFixture(key,method,JSON.parse(String(init?.body||'{}')),demo.scenario,demo.recovered):undefined
     if(method==='GET'&&key==='/u/network/status/'&&demo.scenario==='network-loading'&&!demo.recovered)await new Promise(resolve=>setTimeout(resolve,1800))
@@ -57,6 +59,7 @@ export function installFixtures() {
     const businessReply=url.origin===location.origin&&(demo.layout==='ordered'||!params.has('layout'))?businessFixture(key,method,JSON.parse(String(init?.body||'{}')),demo.scenario,demo.recovered):undefined
     const launcherReply=url.origin===location.origin?launcherFixture(key,method,JSON.parse(String(init?.body||'{}')),url.searchParams.has('launcher-retry')?'normal':demo.scenario):undefined
     if (url.origin !== location.origin) { status=403; data={error:'External requests are disabled in design mode'} }
+    else if(raidReply){status=raidReply.status;data=raidReply.data}
     else if(cardReply){status=cardReply.status;data=cardReply.data}
     else if(launcherReply){status=launcherReply.status;data=launcherReply.data}
     else if(networkReply){status=networkReply.status;data=networkReply.data}

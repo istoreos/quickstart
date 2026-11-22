@@ -1,0 +1,32 @@
+{
+  "status": "passed",
+  "checks": [
+    "复用正式 RAID 页面：列表字段、创建、扫描恢复以及五个阵列操作入口完整保留",
+    "原详情组件使用 Raid.Detail POST 并展示原始详情文本",
+    "已挂载阵列沿用原先卸载提示，不以使用量判定可删除",
+    "原去卸载和去挂载入口定位阵列文件存储，重复往返可用且列表挂载状态同步",
+    "扩充复用原组件、候选成员接口和 Raid.Add POST",
+    "移除复用 Raid.Remove；降级状态的扩充和移除禁用沿用正式页面判断",
+    "恢复成员保留独立 Raid.Recover POST，不混用扩充接口",
+    "resyncing 状态禁用条件保持原实现",
+    "未挂载且有示例数据的阵列仍走原双确认删除，不限制为空阵列，不进入布局计划",
+    "扫描恢复沿用原确认和 Raid.Autofix POST，示例成员签名可恢复列表",
+    "创建直接复用原向导：六级别、默认 RAID5、最少成员校验、两次确认及原 Create POST",
+    "失败和重新创建沿用原状态机，RAID0 的扩充和移除保持禁用",
+    "手机卡片化列表和原操作弹窗不横向溢出，深色主题保持一致"
+  ],
+  "errors": [],
+  "networkWrites": [],
+  "syntheticRequests": [
+    {
+      "path": "/raid/list/",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "path": "/raid/create/list/",
+      "method": "GET",
+      "status": 200
+    }
+  ]
+}

@@ -8,6 +8,8 @@ import DevicePreview from './DevicePreview.vue'
 import MultiLanPreview from './MultiLanPreview.vue'
 import DestinationPreview from './DestinationPreview.vue'
 import ExternalCardPreview from './ExternalCardPreview.vue'
+import LighthostStoragePrototype from './LighthostStoragePrototype.vue'
+import StorageWorkbenchPrototype from './StorageWorkbenchPrototype.vue'
 import { createI18n } from '../plugins/i18n'
 import installComponents from '../plugins/componnets'
 import '../style/root.scss'
@@ -43,6 +45,10 @@ export async function mount() {
     if(changed)return {path:to.path,query,replace:true}
     return true
   })
+  router.addRoute({path:'/design/storage-setup',component:LighthostStoragePrototype})
+  router.addRoute({path:'/storage',component:StorageWorkbenchPrototype})
+  router.addRoute({path:'/nas',redirect:to=>({path:'/storage',query:to.query})})
+  window.addEventListener('quickstart-storage-open',(event:Event)=>{const detail=(event as CustomEvent).detail||{};void router.push({path:'/storage',query:{tab:detail.tab||'disks',part:detail.part,variant:'A'}})})
   app.use(router)
   await createI18n(app)
   app.mount('#app')

@@ -31,7 +31,7 @@ const unregister=registerNativeActions((kind,props)=>{
  void nextTick(()=>{const element=document.querySelector<HTMLElement>(`[data-native-action="${kind}"]:last-of-type`);element?.focus({preventScroll:true})})
  return {Close:()=>close(id)}
 })
-function showDestination(value:{href:string;pkg?:string;installPkg?:string}){destination.value=value}
+function showDestination(value:{href:string;pkg?:string;installPkg?:string}){if(/^\/storage(?:\?|$)/.test(value.href)||/\/admin\/(system\/(diskman|mounts)|nas\/raid)/.test(value.href)){const url=new URL(value.href,location.origin);window.dispatchEvent(new CustomEvent('quickstart-storage-open',{detail:{tab:url.searchParams.get('tab')||(value.href.includes('/nas/raid')?'raid':'disks'),part:url.searchParams.get('part')}}));return}destination.value=value}
 function captureLink(event:MouseEvent){const anchor=(event.target as Element).closest('a[href]');if(!anchor)return;event.preventDefault();event.stopPropagation();showDestination({href:anchor.getAttribute('href')||''})}
 function external(event:Event){showDestination((event as CustomEvent).detail)}
 window.addEventListener('quickstart-business-destination',external)
