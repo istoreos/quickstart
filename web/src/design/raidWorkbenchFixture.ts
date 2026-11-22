@@ -5,7 +5,7 @@ let activated=false
 const result=(value:unknown={})=>({status:200,data:{success:0,result:value,previewOnly:true}})
 const error=(message:string)=>({status:200,data:{error:message,previewOnly:true}})
 const diskId=(path:string)=>path.replace(/^\/dev\//,'').replace(/\d+$/,'')
-const candidates=()=>workbench.drives.filter(d=>d.connected&&!d.parts.some(p=>p.protected||p.mount||['hosts','apps','raid'].includes(p.kind)))
+const candidates=()=>workbench.drives.filter(d=>workbench.readState==='fresh'&&d.connected&&d.identityReliable!==false&&!d.parts.some(p=>p.protected||p.mount||p.consumers?.length||['hosts','apps','raid','raw'].includes(p.kind)))
 const capacity=(drives:Drive[],level:string)=>{const n=drives.length,min=Math.min(...drives.map(d=>d.size));return level==='jbod'||level==='linear'?drives.reduce((s,d)=>s+d.size,0):min*(level==='raid1'?1:level==='raid5'?n-1:level==='raid6'?n-2:level==='raid10'?n/2:n)}
 const useMember=(disk:Drive,raid:Raid)=>{disk.parts=[{id:disk.id+'1',name:'RAID 成员',start:0,size:disk.size,kind:'raid',fs:'linux_raid_member',used:0,mount:'',owner:raid.id}]}
 function serialize(raid:Raid){
@@ -19,6 +19,8 @@ export function raidWorkbenchFixture(key:string,method:string,body:Record<string
  if(key==='/raid/create/list/'&&method==='GET')return result({members:candidates().map(d=>({name:d.id,path:'/dev/'+d.id,model:d.model,sizeStr:d.size+' GiB'}))})
  if(method!=='POST')return
  const raid=workbench.raids.find(r=>'/dev/'+r.id===body.path)
+ if(key!=='/raid/detail/'&&workbench.readState!=='fresh')return error('库存已过期，请重新读取后操作')
+ if(key!=='/raid/detail/'&&workbench.changes.length)return error('请先处理待执行布局，避免父子资源同时变更')
  if(key==='/raid/detail/')return raid?result({detail:`${body.path}:\n  Version : 1.2\n  Raid Level : ${serialize(raid).level}\n  Array Size : ${raid.size} GiB\n  State : ${serialize(raid).status}\n  Members : ${serialize(raid).members.join(' ')}\n\n产品交互示例；未读取真实 mdadm。`}):error('获取raid详情失败')
  if(workbench.failNext){workbench.failNext=false;return error('示例：RAID 操作失败；原操作组件显示此错误，设备未变化。')}
  if(key==='/raid/autofix/'){

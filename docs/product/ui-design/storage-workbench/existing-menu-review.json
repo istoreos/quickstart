@@ -1,0 +1,208 @@
+{
+  "status": "passed-with-known-legacy-issue",
+  "checks": [
+    "网络存储含硬盘与存储和 SMART，阵列不重复列为系统菜单",
+    "常规设置保留启用、电源和温度阈值及原保存请求",
+    "原设备详情保留属性、自检结果、扩展信息三个请求",
+    "原已配置单盘设置保存完整设备配置，首次配置分支缺陷已记录",
+    "计划任务保留四种测试类型和日程，按原 Config 保存",
+    "计划预览运行仍用原 Test 参数，关闭不宣称取消设备自检",
+    "查看日志可见示例保存和测试结果，旧 RAID 地址定位 RAID 页签",
+    "320/390/768/1600 明暗主题与设备弹窗无页面溢出"
+  ],
+  "contracts": [
+    {
+      "path": "/smart/config/",
+      "method": "POST",
+      "body": {
+        "global": {
+          "enable": false,
+          "powermode": "idle",
+          "tmpDiff": 3,
+          "tmpMax": 55
+        },
+        "devices": [],
+        "tasks": []
+      }
+    },
+    {
+      "path": "/smart/attribute/result/",
+      "method": "POST",
+      "body": {
+        "devicePath": "/dev/sda"
+      }
+    },
+    {
+      "path": "/smart/test/result/",
+      "method": "POST",
+      "body": {
+        "type": "selftest",
+        "devicePath": "/dev/sda"
+      }
+    },
+    {
+      "path": "/smart/extend/result/",
+      "method": "POST",
+      "body": {
+        "devicePath": "/dev/sda"
+      }
+    },
+    {
+      "path": "/smart/config/",
+      "method": "POST",
+      "body": {
+        "tasks": [],
+        "global": {
+          "enable": false,
+          "powermode": "idle",
+          "tmpDiff": 3,
+          "tmpMax": 55
+        },
+        "devices": [
+          {
+            "devicePath": "/dev/sda",
+            "tmpDiff": 3,
+            "tmpMax": 55
+          },
+          {
+            "devicePath": "/dev/sdb",
+            "tmpDiff": 3,
+            "tmpMax": 55
+          },
+          {
+            "devicePath": "/dev/sdc",
+            "tmpDiff": 3,
+            "tmpMax": 55
+          },
+          {
+            "devicePath": "/dev/sdd",
+            "tmpDiff": 3,
+            "tmpMax": 55
+          },
+          {
+            "devicePath": "/dev/sde",
+            "tmpDiff": 3,
+            "tmpMax": 55
+          },
+          {
+            "devicePath": "/dev/sdf",
+            "tmpDiff": 3,
+            "tmpMax": 55
+          }
+        ]
+      }
+    },
+    {
+      "path": "/smart/config/",
+      "method": "POST",
+      "body": {
+        "tasks": [],
+        "global": {
+          "enable": false,
+          "powermode": "idle",
+          "tmpDiff": 3,
+          "tmpMax": 55
+        },
+        "devices": [
+          {
+            "tmpDiff": 4,
+            "tmpMax": 60,
+            "devicePath": "/dev/sda"
+          },
+          {
+            "devicePath": "/dev/sdb",
+            "tmpDiff": 3,
+            "tmpMax": 55
+          },
+          {
+            "devicePath": "/dev/sdc",
+            "tmpDiff": 3,
+            "tmpMax": 55
+          },
+          {
+            "devicePath": "/dev/sdd",
+            "tmpDiff": 3,
+            "tmpMax": 55
+          },
+          {
+            "devicePath": "/dev/sde",
+            "tmpDiff": 3,
+            "tmpMax": 55
+          },
+          {
+            "devicePath": "/dev/sdf",
+            "tmpDiff": 3,
+            "tmpMax": 55
+          }
+        ]
+      }
+    },
+    {
+      "path": "/smart/config/",
+      "method": "POST",
+      "body": {
+        "tasks": [
+          {
+            "type": "long",
+            "devicePath": "/dev/sdb",
+            "month": "*",
+            "dayPerMonth": "1",
+            "hour": "3"
+          }
+        ],
+        "global": {
+          "enable": false,
+          "powermode": "idle",
+          "tmpDiff": 3,
+          "tmpMax": 55
+        },
+        "devices": [
+          {
+            "tmpDiff": 4,
+            "tmpMax": 60,
+            "devicePath": "/dev/sda"
+          },
+          {
+            "devicePath": "/dev/sdb",
+            "tmpDiff": 3,
+            "tmpMax": 55
+          },
+          {
+            "devicePath": "/dev/sdc",
+            "tmpDiff": 3,
+            "tmpMax": 55
+          },
+          {
+            "devicePath": "/dev/sdd",
+            "tmpDiff": 3,
+            "tmpMax": 55
+          },
+          {
+            "devicePath": "/dev/sde",
+            "tmpDiff": 3,
+            "tmpMax": 55
+          },
+          {
+            "devicePath": "/dev/sdf",
+            "tmpDiff": 3,
+            "tmpMax": 55
+          }
+        ]
+      }
+    },
+    {
+      "path": "/u/smart/test/",
+      "method": "POST",
+      "body": {
+        "type": "long",
+        "devicePath": "/dev/sdb"
+      }
+    }
+  ],
+  "knownLimitations": [
+    "复现原未配置设备分支缺陷：首次编辑会采用全局温度阈值；本轮未修生产代码。"
+  ],
+  "errors": [],
+  "networkWrites": [],
+  "scope": "preview only; original SMART/RAID production source unchanged"
+}

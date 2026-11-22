@@ -1,0 +1,26 @@
+{
+  "status": "failed",
+  "checks": [
+    "S1 普通 EXT4 保留、物理身份与健康入口",
+    "S4 SMART 启动和完成分开，结果与计划可再查看",
+    "S4 测试失败和中止有结果",
+    "S1 过期不等于无设备，写入口暂停，重读可恢复",
+    "S1 身份不可靠、外来结构、应用占用分别保护",
+    "S3 thin 数据/元数据/余量与恢复点归属有处理出口",
+    "S3 缺盘与挂载失败保持应用停止，不回落系统盘",
+    "S5 只读识别无 Autofix，冲突禁恢复",
+    "S4 重建冲突禁重 I/O，维护检查结果可查询",
+    "S5 原盘重新加入与新盘清空影响分开",
+    "S2 扩容部分完成：设备与文件系统容量分列，不能盲重试",
+    "S2 任务查询中断非执行失败，离开工作区可续看",
+    "S6 告警合并、已读不解决，通知测试失败可重试",
+    "S8 别名不改身份，诊断导出使用白名单脱敏",
+    "S1 确认目标变更后旧计划失效，拒绝写入",
+    "S3 新建 LightHost 管理卷完成后提供对应接入说明",
+    "S4 阵列检查结果和计划在重新打开后仍可查看",
+    "S6 告警恢复有记录，再次发生重新标为未读"
+  ],
+  "error": "Error: locator.click: Error: strict mode violation: getByRole('link', { name: '首页', exact: true }) resolved to 2 elements:\n    1) <a href=\"/\" class=\"\" data-v-6c233d39=\"\">首页</a> aka getByLabel('Quickstart 页面').getByRole('link', { name: '首页' })\n    2) <a href=\"/\" class=\"\">首页</a> aka locator('#main').getByRole('link', { name: '首页' })\n\nCall log:\n\u001b[2m  - waiting for getByRole('link', { name: '首页', exact: true })\u001b[22m\n",
+  "errors": [],
+  "networkWrites": []
+}

@@ -31,6 +31,56 @@
 `/storage?scene=raid-missing&tab=raid`、`/storage?scene=thin-full&tab=pools`。
 所有布局和容量均为示例，不调用真实磁盘、LVM、mdadm 或 Docker。
 
+### 现有网络存储入口
+
+“磁盘阵列”归并到 `/storage?tab=raid`；SMART 保留 `/smart`、`/smart/task`、`/smart/log`，
+复用原组件与业务处理，设计入口使用卡片和手机适配。菜单呈现“硬盘与存储 / S.M.A.R.T.”。
+[整合决策、只读真机核对与业务边界](../storage-existing-menu-integration.md)。
+
+### 桌面与手机导航
+
+完整效果版：首页 `/?presentation=1`，存储 `/storage?presentation=1`。
+按用户真机截图补了可操作的宿主评审外壳：品牌顶栏、系统侧栏、搜索、“网络存储 → 硬盘与存储”以及手机菜单收起。
+效果版隐藏评审工具，普通地址仍可选择演示场景。
+该外壳只在 design 入口运行，不改真机主题或菜单注册；详见下方规则文档。
+
+按真实 iStoreOS 手机截图修订：复用现有系统侧栏；删除原型额外的“首页 / 硬盘与存储”顶栏及存储局部左栏。
+页内使用横向工作区标签，桌面完整名称，手机简化为“硬盘 / 存储池 / RAID / 任务”。
+提醒置于标签行右端，任务仅在进行中时有角标；保持 `?tab=` 和浏览器前进/后退同步。
+[导航规则与真实宿主边界](../storage-responsive-navigation.md)、
+[桌面截图](storage-workbench/navigation-desktop.png)、[手机截图](storage-workbench/navigation-mobile.png)、
+[导航检查](storage-workbench/navigation-review.json)。
+
+### 日常维护与异常闭环（2026-11-22）
+
+[目标与任务树](../storage-implementation-goals-20261122.md)逐项追踪 S1–S9；
+[生产技术契约](../storage-production-contract-20261122.md)拆分 B01–B16 及 H1–H8 故障验收。
+新增入口保留在四个工作区和右侧抽屉中：
+
+- 硬盘详情 →「健康与物理身份」「名称与诊断资料」；支持 SMART 演示任务、结果、计划和用途别名。
+- 存储池 →「容量与空间处理」「应用接入与挂载检查」；卷行提供恢复点归属和新卷接入说明。
+- RAID →「识别已有阵列」「健康与维护」「换盘与重新加入」；识别只读，不调用旧 Autofix。
+- 顶部「存储提醒」→ 告警已读/恢复/复发、对象定位、模拟通知测试；首页沿用同源异常摘要。
+- 任务记录 → 阶段结果、部分完成、查询中断与续看；不把断网当任务失败，不虚构实时百分比。
+
+可直接选择页面顶部场景，或使用：
+`/storage?scene=read-error`、`/storage?scene=foreign`、`/storage?scene=identity-unknown`、
+`/storage?scene=app-inuse`、`/storage?scene=mount-failed&tab=pools`、
+`/storage?scene=partial-grow&tab=jobs`、`/storage?scene=resume-task&tab=jobs`。
+
+新交互全部使用内存示例。刷新重置；离开工作区/SPA 返回保留本次记录。
+恢复选定阵列、原盘专用重新加入、真实扩池、恢复点写入和备份接口未接入时明确禁用，
+不以旧 Autofix 或提示消息替代尚不存在的能力。后台持久任务、实际外发、开机守卫和真机故障验收仍待生产阶段实施。
+
+检查命令（预览先启动；Playwright 与浏览器路径按本机设置）：
+
+```bash
+rtk proxy /var/cache/build-cache/run.sh -- node scripts/review-storage-model.cjs
+rtk proxy env PLAYWRIGHT_MODULE=/path/to/playwright PLAYWRIGHT_CHROMIUM=/path/to/chromium node scripts/review-storage-care.cjs
+```
+
+最终结果及逐轮记录见目标文档，不用历史证据替代当前验收。
+
 ### 交互参考与取舍
 
 完整的[参考记录](../storage-interaction-references.md)保存来源、采用方式与不沿用的能力；

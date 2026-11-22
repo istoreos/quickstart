@@ -1,12 +1,7 @@
 <template>
-  <aside class="design-system-reserve" data-system-menu-reserve aria-label="系统菜单占位，不属于设计范围">
-    <strong>系统菜单</strong><span>保持原样</span>
-    <p>仅预留宿主空间<br>不是菜单设计</p>
-    <small>菜单项、顺序、样式及折叠行为均由系统提供。</small>
-  </aside>
+  <IStoreHostShellPrototype>
   <div class="design-content-region" data-quickstart-content @click.capture="storageLink">
-  <nav class="storage-product-nav" aria-label="Quickstart 页面"><router-link to="/">首页</router-link><router-link to="/storage" data-open-storage-workbench>硬盘与存储</router-link></nav>
-  <aside class="design-tools" v-if="legacy && tools">
+  <aside class="design-tools" v-if="legacy && tools && !presentation">
     <strong>Quickstart Vue 设计预览 · 示例数据</strong>
     <label>布局 <select aria-label="布局" :value="route.query.layout || 'baseline'" @change="change('layout',$event)"><option value="baseline">当前首页</option><option value="below-network">设备摘要：网络区下方（推荐）</option><option value="above-network">设备摘要：网络区上方</option></select></label>
     <label>场景 <select aria-label="场景" :value="demo.scenario" @change="change('scenario',$event)"><option v-for="item in scenarios" :key="item[0]" :value="item[0]">{{item[1]}}</option></select></label>
@@ -14,22 +9,25 @@
     <ThemeSelector/><button @click="language">{{english?'中文':'English'}}</button><button @click="tools=false">收起评审工具</button>
     <span>真实 Vue/CSS · 模拟 LuCI 外壳 · 操作仅作用于示例</span>
   </aside>
-  <button class="design-reopen" v-else-if="legacy && route.query.tools!=='0'" @click="tools=true">设计工具</button>
-  <details v-if="!legacy&&tools&&route.path==='/'" class="card-preview-tools home-semantic-colors" data-card-preview-tools><summary>设计预览 · FastNet</summary><label>卡片场景<select aria-label="FastNet 场景" :value="previewScene" @change="changeCardScene"><option v-for="scene in cardScenes" :key="scene[0]" :value="scene[0]">{{scene[1]}}</option></select></label><p>模拟接口，不执行真实安装或测速。</p><button @click="tools=false">收起工具</button></details>
-  <button v-if="!legacy&&!tools&&route.query.tools!=='0'" class="card-preview-reopen" @click="tools=true">设计工具</button>
-  <div class="qs-product" :class="{'studio-shell':!legacy && route.path==='/'}"><App /></div>
+  <button class="design-reopen" v-else-if="legacy && !presentation && route.query.tools!=='0'" @click="tools=true">设计工具</button>
+  <details v-if="!legacy&&!presentation&&tools&&route.path==='/'" class="card-preview-tools home-semantic-colors" data-card-preview-tools><summary>设计预览 · FastNet</summary><label>卡片场景<select aria-label="FastNet 场景" :value="previewScene" @change="changeCardScene"><option v-for="scene in cardScenes" :key="scene[0]" :value="scene[0]">{{scene[1]}}</option></select></label><p>模拟接口，不执行真实安装或测速。</p><button @click="tools=false">收起工具</button></details>
+  <button v-if="!legacy&&!presentation&&!tools&&route.query.tools!=='0'" class="card-preview-reopen" @click="tools=true">设计工具</button>
+  <div class="qs-product" :class="{'studio-shell':!legacy && route.path==='/', 'presentation-mode':presentation}"><App /></div>
   </div>
+  </IStoreHostShellPrototype>
 </template>
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import App from '../App.vue'
+import IStoreHostShellPrototype from './IStoreHostShellPrototype.vue'
 import ThemeSelector from '../home/ThemeSelector.vue'
 import { demo } from './fixtures'
 import { useNetworkStore } from '../plugins/store'
 const tools=ref(new URLSearchParams(location.search).get('tools')!=='0')
 const route=useRoute(),router=useRouter()
-function storageLink(event:MouseEvent){const href=(event.target as Element).closest('a[href]')?.getAttribute('href')||'';if(!/\/admin\/(system\/(diskman|mounts)|nas\/raid)/.test(href))return;event.preventDefault();event.stopPropagation();void router.push({path:'/storage',query:{tab:href.includes('/nas/raid')?'raid':'disks',variant:'A'}})}
+function storageLink(event:MouseEvent){const href=(event.target as Element).closest('a[href]')?.getAttribute('href')||'';if(!/\/admin\/(system\/(diskman|mounts)|nas\/(raid|smart))/.test(href))return;event.preventDefault();event.stopPropagation();if(href.includes('/nas/smart')){void router.push('/smart');return}void router.push({path:'/storage',query:{tab:href.includes('/nas/raid')?'raid':'disks',variant:'A'}})}
+const presentation=computed(()=>route.query.presentation==='1')
 const legacy=computed(()=>['baseline','above-network','below-network'].includes(String(route.query.layout||'studio')))
 const english=ref(window.vue_lang==='en')
 const cardScenes=[['uninstalled','未安装'],['ready','上次结果'],['empty','尚未测速'],['stale','旧结果'],['running','运行中'],['failed','测速失败'],['partial','部分检测异常'],['disabled','服务未启用'],['permission','登录/权限失败'],['poll-error','查询连续失败'],['install-error','安装失败'],['discovery-error','发现失败'],['incompatible','需要升级 Quickstart']]
@@ -42,6 +40,6 @@ watch(()=>route.query,()=>{demo.layout=String(route.query.layout||'studio');demo
 </script>
 
 <style scoped>
-.storage-product-nav{display:flex;gap:8px;align-items:center;padding:10px 18px;background:#fff;border-bottom:1px solid #e1e5ed;font:13px/1.5 system-ui}.storage-product-nav a{padding:5px 10px;border-radius:5px;color:#65708a;text-decoration:none}.storage-product-nav a.router-link-active{background:#eef0ff;color:#5768d8}.storage-product-nav a:first-child:not(.router-link-exact-active){background:none;color:#65708a}:global(body[theme=dark]) .storage-product-nav{background:#252b35;border-color:#3d4654}:global(body[theme=dark]) .storage-product-nav a{color:#c1cbe0}
+
 .card-preview-tools,.card-preview-reopen{position:fixed;bottom:12px;right:12px;z-index:120;background:var(--qs-card-panel);color:var(--qs-card-text);border:1px solid var(--qs-card-line);border-radius:8px;padding:8px 12px;font-size:12px}.card-preview-tools summary{cursor:pointer}.card-preview-tools label{display:grid;gap:6px;margin-top:12px}.card-preview-tools select{max-width:240px;background:var(--qs-card-panel);color:var(--qs-card-text);padding:6px;border:1px solid var(--qs-card-line)}.card-preview-tools p{color:var(--qs-card-muted);font-size:11px}.card-preview-tools button{background:var(--qs-card-soft);color:inherit;border:1px solid var(--qs-card-line);border-radius:4px}
 </style>

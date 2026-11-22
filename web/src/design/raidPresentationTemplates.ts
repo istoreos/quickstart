@@ -15,8 +15,8 @@ const pageTemplate=`<section class="rp" data-raid-presentation>
    <p v-if="item.status.includes('degraded')" class="rp-attention">阵列保护能力已降低。请核对硬盘连接，再通过“恢复成员”处理。</p><p v-else-if="item.rebuildStatus" class="rp-attention">{{rStatus(item)}} · {{item.rebuildStatus}}</p>
    <footer><span>{{rLevelDescription(item.level)}}</span><div><button v-if="item.status.includes('degraded')" class="primary" @click="onRecoverRaidItem(item)">恢复成员</button><button @click="rOpen(item)">查看与管理 <span>›</span></button></div></footer>
   </article>
-  <div v-if="!raid.disksList.length" class="rp-empty"><span class="rp-array-icon">${diskIcon}</span><h3>还没有可见的 RAID 阵列</h3><p>可以创建新阵列。已有阵列未显示时，尝试扫描恢复。</p><button class="primary" @click="onCreateRaid">创建阵列</button></div>
-  <details class="rp-help"><summary>了解 RAID 与使用须知</summary><p>RAID 使用多块硬盘组成存储；保护能力取决于所选级别，不能代替独立备份。</p><p>已有 RAID 功能仍处于公测阶段，操作前请确认重要文件已有备份。系统重置或重启后阵列未显示时，可使用扫描恢复。</p></details>
+  <div v-if="!raid.disksList.length" class="rp-empty"><span class="rp-array-icon">${diskIcon}</span><h3>还没有可见的 RAID 阵列</h3><p>可以创建新阵列。已有阵列未显示时，先识别已有阵列，再核对恢复影响。</p><button class="primary" @click="onCreateRaid">创建阵列</button></div>
+  <details class="rp-help"><summary>了解 RAID 与使用须知</summary><p>RAID 使用多块硬盘组成存储；保护能力取决于所选级别，不能代替独立备份。</p><p>已有 RAID 功能仍处于公测阶段，操作前请确认重要文件已有备份。系统重置或重启后阵列未显示时，请先只读识别；“扫描恢复”会改写配置并重启阵列服务，不是只读扫描。</p></details>
  </div>
  <Transition name="sw-detail"><div v-if="rSelected" class="rp-shade" @click.self="rClose"><aside class="rp-drawer" role="dialog" aria-modal="true" aria-label="RAID 阵列详情" tabindex="-1" ref="rDrawer">
   <header class="rp-drawer-header"><span>{{rView==='delete'?'删除阵列':'阵列详情'}}</span><button aria-label="关闭阵列详情" @click="rClose">×</button></header>

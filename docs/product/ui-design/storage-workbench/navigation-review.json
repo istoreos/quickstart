@@ -1,0 +1,15 @@
+{
+  "status": "passed",
+  "scope": "prototype page tabs; real LuCI system menu registration and modal coordination remain pending",
+  "checks": [
+    "首页无新增的全局导航，从原存储卡片进入工作台",
+    "工作区与 URL 同步，浏览器后退/前进恢复当前项",
+    "手机四个紧凑页签同时可见，没有新增左栏或下拉菜单",
+    "任务仅在进行中显示角标，提醒保留待处理数量",
+    "手机详情全宽、背景暂停、关闭后焦点返回对象",
+    "短名称依据内容宽度，桌面窄内容区也可适配",
+    "320/390/768/1100/1600 明暗主题，无页面溢出，四项均可切换"
+  ],
+  "errors": [],
+  "networkWrites": []
+}

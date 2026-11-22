@@ -1,0 +1,37 @@
+/* Design only. Existing LuCI sidebar owns global navigation; this is an in-page tab strip. */
+.sw{container:storage-workbench / inline-size}
+.sw-layout{display:block}
+.sw-content{min-width:0}
+.sw-workspace-navigation{position:sticky;top:0;z-index:40;display:flex;gap:12px;align-items:center;justify-content:space-between;border-bottom:1px solid var(--sw-line);background:var(--sw-panel);border-radius:9px 9px 0 0;padding:7px 10px 0;margin-bottom:22px;min-width:0}
+.sw-workspace-navigation nav{display:flex;gap:8px;min-width:0}
+.sw .sw-workspace-navigation nav button{display:flex;align-items:center;justify-content:center;gap:5px;min-height:46px;border:0;border-radius:0;border-bottom:2px solid transparent;background:none;color:var(--sw-muted);padding:10px 14px;white-space:nowrap;font-size:13px}
+.sw .sw-workspace-navigation nav button.active{border-bottom-color:var(--sw-accent);color:var(--sw-accent);font-weight:600}
+.sw .sw-workspace-notices{display:flex;align-items:center;justify-content:center;gap:7px;min-height:44px;border:0;background:none;white-space:nowrap;font-size:12px;margin-bottom:5px}
+.sw-workspace-notices svg{width:18px;height:18px;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.sw small.sw-nav-count{display:inline-flex;align-items:center;justify-content:center;min-width:19px;height:19px;padding:0 5px;border-radius:6px;background:var(--sw-tint);color:var(--sw-accent);font-size:10px;font-weight:600}
+.sw small.sw-nav-count.warning{background:var(--sw-warn);color:var(--sw-warn-text)}
+.sw-workspace-short{display:none}
+/* Resource selection stays inside its workspace instead of introducing a second sidebar. */
+.sw-pool-layout{grid-template-columns:1fr}
+.sw-pool-nav{display:flex;gap:9px;overflow-x:auto;padding-bottom:3px}
+.sw-pool-nav button{flex:0 0 auto;min-width:170px}
+.sw-workspace.focused{display:block}
+.sw-drive-nav{display:flex;overflow-x:auto;gap:8px;margin-bottom:16px;padding-bottom:3px}
+.sw-drive-nav button{min-width:150px;flex-shrink:0}
+@container storage-workbench (max-width:600px){
+ .sw-workspace-navigation{gap:4px;padding:2px 3px 0;margin-bottom:18px}
+ .sw-workspace-navigation nav{gap:0;flex:1}
+ .sw .sw-workspace-navigation nav button{flex:1;padding:10px 5px;font-size:14px;min-width:0;min-height:46px}
+ .sw-workspace-full{display:none}
+ .sw-workspace-short{display:inline}
+ .sw .sw-workspace-notices{padding:6px;gap:3px;min-width:44px;min-height:44px;margin-bottom:0}
+ .sw-workspace-notices>span{display:none}
+ .sw .sw-section-title{margin-top:20px}
+}
+@media(max-width:760px){
+ .sw-heading{margin-bottom:20px}
+ .sw-heading h1{font-size:25px}
+ .sw-pool-nav button{min-width:160px;padding:12px}
+}
+
+.sw-smart-entry{color:var(--sw-accent);text-decoration:none;white-space:nowrap}

@@ -1,4 +1,5 @@
 import {cardRuntimePlugin} from './cardRuntimePlugin'
+import {smartPresentation} from './src/design/smartPresentationTemplates'
 import {raidPresentation} from './src/design/raidPresentationTemplates'
 // Design entry only: production vite.config.ts never imports this configuration.
 import { defineConfig } from 'vite'
@@ -17,6 +18,7 @@ const actionBridge={
   },
   load(id:string){if(!id.startsWith('\0design-native-action:'))return;const kind=id.slice('\0design-native-action:'.length);return `import {dispatchNativeAction} from ${JSON.stringify(path.resolve(__dirname,'src/design/nativeActionBridge.ts'))};import original from ${JSON.stringify(path.resolve(__dirname,'src/components',kind,'index.ts')+'?native-original')};export default (props={})=>dispatchNativeAction(${JSON.stringify(kind)},props,original);`},
   transform(code:string,id:string){
+    const smartView=smartPresentation(code,path.relative(path.resolve(__dirname,'src'),id).split(path.sep).join('/'));if(smartView!==undefined)return smartView
     const raidView=raidPresentation(code,path.relative(path.resolve(__dirname,'src'),id).split(path.sep).join('/'))
     if(raidView!==undefined){
       if(id===path.resolve(__dirname,'src/pages/raid/index/index.vue'))return raidView.replace('"/@/components/action-confirm"',JSON.stringify(path.resolve(__dirname,'src/components/action-confirm/index.ts')+'?native-original')).replace('location.href = `/cgi-bin/luci/admin/system/mounts`',"window.dispatchEvent(new CustomEvent('quickstart-storage-open',{detail:{tab:'disks',part:item.name}}))")

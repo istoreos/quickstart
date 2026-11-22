@@ -10,6 +10,12 @@ import DestinationPreview from './DestinationPreview.vue'
 import ExternalCardPreview from './ExternalCardPreview.vue'
 import LighthostStoragePrototype from './LighthostStoragePrototype.vue'
 import StorageWorkbenchPrototype from './StorageWorkbenchPrototype.vue'
+import SmartManagement from '../pages/smart/index.vue'
+import SmartSettings from '../pages/smart/index/index.vue'
+import SmartTasks from '../pages/smart/task/index.vue'
+import SmartLogs from '../pages/smart/log/index.vue'
+import SmartActions from '../components/smart'
+import './smartWorkbenchPreview.css'
 import { createI18n } from '../plugins/i18n'
 import installComponents from '../plugins/componnets'
 import '../style/root.scss'
@@ -36,10 +42,10 @@ export async function mount() {
   const app = createApp(DesignApp)
   const components = { 'svg-menu':SvgMenu,'svg-system':SvgSystem,'svg-download':SvgDownload,'svg-store':SvgStore,'svg-info':SvgInfo,'svg-disk':SvgDisk,'svg-nav':SvgNav,'progress-item':Progress,'switch-box':SwitchBox,'svg-view-show':SvgShow,'svg-view-hidden':SvgHidden,'article-item':ArticleItem,'editable-select':EditableSelect }
   Object.entries(components).forEach(([name,component])=>app.component(name,component))
-  app.use(installComponents).use(createPinia())
+  app.use(installComponents).use(SmartActions).use(createPinia())
   const router=createRouter({ history:createWebHistory('/'),routes:[{path:'/design/external-card',component:ExternalCardPreview},{path:'/',component:HomePreview},{path:'/devicemanagement',component:DevicePreview},{path:'/design/multi-lan',component:MultiLanPreview},{path:'/design/fastnet',redirect:to=>({path:'/',query:to.query})},{path:'/:pathMatch(.*)*',component:DestinationPreview}] })
   router.beforeEach((to,from)=>{
-    const keys=['layout','variant','scenario','authority','theme','lang','tools','palette']
+    const keys=['layout','variant','scenario','authority','theme','lang','tools','palette','presentation']
     const query={...to.query};let changed=false
     for(const key of keys)if(query[key]===undefined&&from.query[key]!==undefined){query[key]=from.query[key];changed=true}
     if(changed)return {path:to.path,query,replace:true}
@@ -47,6 +53,8 @@ export async function mount() {
   })
   router.addRoute({path:'/design/storage-setup',component:LighthostStoragePrototype})
   router.addRoute({path:'/storage',component:StorageWorkbenchPrototype})
+  router.addRoute({path:'/raid',redirect:to=>({path:'/storage',query:{...to.query,tab:'raid'}})})
+  router.addRoute({path:'/smart',component:SmartManagement,children:[{path:'',component:SmartSettings},{path:'task',component:SmartTasks},{path:'log',component:SmartLogs}]})
   router.addRoute({path:'/nas',redirect:to=>({path:'/storage',query:to.query})})
   window.addEventListener('quickstart-storage-open',(event:Event)=>{const detail=(event as CustomEvent).detail||{};void router.push({path:'/storage',query:{tab:detail.tab||'disks',part:detail.part,variant:'A'}})})
   app.use(router)

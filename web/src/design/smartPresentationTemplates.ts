@@ -1,0 +1,21 @@
+// Preview-only presentation replacement. All shipped SMART request/save handlers remain intact.
+const page=`<main class="sw smart-workbench"><nav class="sw-breadcrumb"><router-link to="/storage">硬盘与存储</router-link><span>›</span><span>硬盘健康</span></nav><header class="sw-heading"><div><h1 tabindex="-1">硬盘健康 <small>S.M.A.R.T.</small></h1><p>查看硬盘状态、安排自检并保留结果。自检不能替代备份，也不保证自动修复硬盘。</p></div></header><nav class="sm-tabs" aria-label="健康管理工作区"><router-link v-for="item in menus" :key="item.to" :to="item.to" :class="{active:$route.path===item.to}">{{item.name}}</router-link></nav><router-view v-slot="{Component,route}" v-if="ok"><Suspense><component :is="Component" :key="route.path" :config="config" :saveData="saveData" /></Suspense></router-view></main>`
+const devices=`<section class="sm-device-section"><header><h2>全部硬盘</h2><span>示例数据 · 未读取真实设备</span></header><div class="sm-device-grid"><article v-for="(item,i) in disks" :key="item.path" class="sm-device-card"><header><strong>{{item.model}}</strong><span>{{item.temp}}</span></header><p>{{item.path}} · {{item.sizeStr}}</p><dl><dt>序列号</dt><dd>{{item.serial}}</dd><dt>连接</dt><dd>{{item.status}}</dd><dt>健康</dt><dd>{{item.health}}</dd></dl><footer><button @click="onDiskInfo(item)">查看详情与结果</button><button @click="onEditDisk(item,i)">监测设置</button></footer></article></div><p v-if="!disks.length" class="sw-note">尚未取得设备列表。没有返回健康结果时不判断为正常。</p></section>`
+const formScript=`
+import {ref as smRef,onMounted as smMounted,onUnmounted as smUnmounted,nextTick as smTick} from 'vue'
+const smRoot=smRef<HTMLElement>();let smTrigger:HTMLElement|null=null,smOverflow=''
+function smClose(){smRoot.value?.querySelector<HTMLElement>('.actioner-container_footer .close')?.click()}
+function smKey(event:KeyboardEvent){if(event.key==='Escape'){event.preventDefault();event.stopImmediatePropagation();smClose();return}if(event.key!=='Tab'||!smRoot.value)return;const nodes=Array.from(smRoot.value.querySelectorAll<HTMLElement>('button:not(:disabled),input,select,textarea,a[href]')).filter(e=>e.getClientRects().length);const first=nodes[0],last=nodes[nodes.length-1];if(event.shiftKey&&(document.activeElement===first||document.activeElement===smRoot.value)){event.preventDefault();last?.focus()}else if(!event.shiftKey&&(document.activeElement===last||document.activeElement===smRoot.value)){event.preventDefault();first?.focus()}}
+smMounted(async()=>{smTrigger=document.activeElement as HTMLElement;smOverflow=document.body.style.overflow;document.body.style.overflow='hidden';await smTick();smRoot.value?.focus();document.addEventListener('keydown',smKey,true)});smUnmounted(()=>{document.body.style.overflow=smOverflow;document.removeEventListener('keydown',smKey,true);if(smTrigger?.isConnected)smTrigger.focus({preventScroll:true})})
+`
+function replaceTemplate(code:string,template:string){const start=code.indexOf('<script'),end=code.lastIndexOf('</template>',start);return '<template>'+template+'</template>'+code.slice(end+11).replace(/<style\b[^>]*>[\s\S]*?<\/style>/g,'')}
+export function smartPresentation(code:string,relative:string){
+ if(relative==='components/smart/index.ts')return code.replaceAll('el.remove()','render(null, el); el.remove()') // Dispose preview modal polling/scroll locks.
+ if(relative==='pages/smart/index.vue')return replaceTemplate(code,page)
+ if(relative==='pages/smart/index/index.vue'){
+  const start=code.indexOf('<fieldset'),end=code.indexOf('</fieldset>')+11
+  return replaceTemplate(code,devices+'<details class="sm-global-settings"><summary>全局监测设置</summary>'+code.slice(start,end)+'<footer><button class="primary" @click="onSubimtSave">保存并应用</button></footer></details>')
+ }
+ if(relative==='components/smart/app.vue')return replaceTemplate(code,'<div class="smart-modal-shade" @click.self="smClose"><section class="smart-modal" role="dialog" aria-modal="true" aria-label="磁盘健康操作" tabindex="-1" ref="smRoot"><slot /></section></div>').replace('</script>',formScript+'\n</script>')
+ if(['components/smart/disk-info.vue','components/smart/test-task.vue'].includes(relative))return code.replace(/<div class="(close|next)"([^>]*)>([\s\S]*?)<\/div>/g,(_all,kind,attrs,text)=>'<button type="button" class="'+kind+'"'+(kind==='close'?attrs.replace(':disabled="disabled"',''):attrs)+'>'+text+'</button>')
+}

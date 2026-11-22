@@ -1,0 +1,81 @@
+{
+  "status": "passed",
+  "checks": [
+    "卡片展示状态、容量、成员和文件位置，完整业务操作集中在右侧详情",
+    "技术详情沿用原 Detail POST，关闭返回原详情侧栏",
+    "已挂载阵列保留先卸载要求，定位阵列文件存储且不发送删除请求",
+    "扩充新向导使用原候选与 Add 参数，不与恢复混用",
+    "移除成员保留原 Remove 参数和降级后禁用规则",
+    "恢复成员仍调用 Recover，保留原成员选择并解释加入不等于重建完成",
+    "原 resyncing 禁用规则保留，显示同步中而不伪报正常",
+    "删除改为统一影响确认和目标名称核对；原 Delete 参数及非空阵列删除能力保留",
+    "扫描恢复使用新确认样式和原 Autofix 回调",
+    "创建保留默认 RAID5、六个级别及原最少成员规则；向导可返回修改，最终发送原 Create 参数",
+    "保留原错误与重试处理；失败不虚报成功",
+    "RAID0 原成员变更限制保留，新界面不新增可执行能力",
+    "390/768/1600px 及明暗主题通过，复选框统一 16px，弹窗独立滚动且 Escape 可关闭"
+  ],
+  "contracts": [
+    {
+      "path": "/raid/detail/",
+      "method": "POST",
+      "body": {
+        "path": "/dev/md0"
+      }
+    },
+    {
+      "path": "/raid/add/",
+      "method": "POST",
+      "body": {
+        "path": "/dev/md0",
+        "memberPath": "/dev/sdf"
+      }
+    },
+    {
+      "path": "/raid/remove/",
+      "method": "POST",
+      "body": {
+        "path": "/dev/md0",
+        "memberPath": "/dev/sde1"
+      }
+    },
+    {
+      "path": "/raid/recover/",
+      "method": "POST",
+      "body": {
+        "path": "/dev/md0",
+        "memberPath": "/dev/sdf"
+      }
+    },
+    {
+      "path": "/raid/delete/",
+      "method": "POST",
+      "body": {
+        "path": "/dev/md0",
+        "members": [
+          "/dev/sdd1",
+          "/dev/sde1"
+        ]
+      }
+    },
+    {
+      "path": "/raid/autofix/",
+      "method": "POST",
+      "body": {}
+    },
+    {
+      "path": "/raid/create/",
+      "method": "POST",
+      "body": {
+        "level": "raid1",
+        "devicePaths": [
+          "/dev/sdd",
+          "/dev/sde"
+        ]
+      }
+    }
+  ],
+  "errors": [],
+  "networkWrites": [],
+  "nativeDialogs": []
+}

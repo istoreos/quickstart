@@ -4,6 +4,8 @@
 </template>
 <script setup lang="ts">
 import {markRaw,nextTick,onUnmounted,ref} from 'vue'
+import {useRouter} from 'vue-router'
+const router=useRouter()
 import appUtils from '../utils/app'
 import {registerNativeActions} from './nativeActionBridge'
 import NetworkWidgetDialog from './NetworkWidgetDialog.vue'
@@ -31,7 +33,7 @@ const unregister=registerNativeActions((kind,props)=>{
  void nextTick(()=>{const element=document.querySelector<HTMLElement>(`[data-native-action="${kind}"]:last-of-type`);element?.focus({preventScroll:true})})
  return {Close:()=>close(id)}
 })
-function showDestination(value:{href:string;pkg?:string;installPkg?:string}){if(/^\/storage(?:\?|$)/.test(value.href)||/\/admin\/(system\/(diskman|mounts)|nas\/raid)/.test(value.href)){const url=new URL(value.href,location.origin);window.dispatchEvent(new CustomEvent('quickstart-storage-open',{detail:{tab:url.searchParams.get('tab')||(value.href.includes('/nas/raid')?'raid':'disks'),part:url.searchParams.get('part')}}));return}destination.value=value}
+function showDestination(value:{href:string;pkg?:string;installPkg?:string}){if(/^\/smart(?:\/|\?|$)/.test(value.href)||/\/admin\/nas\/smart/.test(value.href)){for(const entry of [...entries.value])close(entry.id);void nextTick(()=>router.push('/smart'));return}if(/^\/storage(?:\?|$)/.test(value.href)||/\/admin\/(system\/(diskman|mounts)|nas\/raid)/.test(value.href)){const url=new URL(value.href,location.origin);window.dispatchEvent(new CustomEvent('quickstart-storage-open',{detail:{tab:url.searchParams.get('tab')||(value.href.includes('/nas/raid')?'raid':'disks'),part:url.searchParams.get('part')}}));return}destination.value=value}
 function captureLink(event:MouseEvent){const anchor=(event.target as Element).closest('a[href]');if(!anchor)return;event.preventDefault();event.stopPropagation();showDestination({href:anchor.getAttribute('href')||''})}
 function external(event:Event){showDestination((event as CustomEvent).detail)}
 window.addEventListener('quickstart-business-destination',external)
