@@ -18,9 +18,6 @@ func listenUnix(socketPath string) (*net.UnixListener, error) {
 	if err := os.MkdirAll(dir, 0750); err != nil {
 		return nil, err
 	}
-	if err := os.Chmod(dir, 0750); err != nil {
-		return nil, err
-	}
 	if info, err := os.Lstat(socketPath); err == nil {
 		if info.Mode()&os.ModeSocket == 0 {
 			return nil, fmt.Errorf("refusing to replace non-socket %s", socketPath)

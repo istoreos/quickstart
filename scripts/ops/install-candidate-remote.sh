@@ -28,6 +28,8 @@ config_root="$7"
 keep_path="${config_root%/}/lib/upgrade/keep.d/quickstart-state"
 expected_style_sha="${8:-}"
 expected_vendor_sha="${9:-}"
+http_socket="${config_root%/}/var/run/quickstart/http.sock"
+controller="${config_root%/}/usr/lib/lua/luci/controller/istore_backend.lua"
 
 case "$release_id:$asset_version" in
     *[!A-Za-z0-9._:-]*) echo "invalid release or asset version" >&2; exit 2 ;;
@@ -43,17 +45,9 @@ rollback_active=0
 install_complete=0
 
 health_probe() {
-    probe_url="$1"
-    if command -v curl >/dev/null 2>&1; then
-        curl -fsS --max-time 3 -H 'X-Forwarded-Sid: deploy-smoke' "$probe_url" >/dev/null 2>&1
-    elif command -v uclient-fetch >/dev/null 2>&1; then
-        uclient-fetch --quiet --timeout=3 --header='X-Forwarded-Sid: deploy-smoke' -O /dev/null "$probe_url" >/dev/null 2>&1
-    elif command -v wget >/dev/null 2>&1; then
-        wget -q -T 3 -O /dev/null --header='X-Forwarded-Sid: deploy-smoke' "$probe_url" >/dev/null 2>&1
-    else
-        echo 'no supported HTTP client for candidate health check' >&2
-        return 127
-    fi
+    # Transport liveness only: the API intentionally rejects requests without
+    # a valid session. Do not forge a SID or relax authentication for deployment.
+    curl -fsS --max-time 3 --unix-socket "$http_socket" "$1" >/dev/null 2>&1
 }
 
 restore_release() {
@@ -87,6 +81,22 @@ test -f "$web_zip_tmp"
 test -f "$remote_template"
 test -d "$remote_web_dir"
 test -x "$remote_service"
+# This installer does not own the separately packaged LuCI controller. Require
+# an already migrated pair so automatic rollback also keeps the same transport.
+if ! grep -Fq '/var/run/quickstart/http.sock' "$controller" || ! grep -Fq 'nixio.socket' "$controller"; then
+    echo 'update the backend and LuCI controller together for the initial Unix socket migration' >&2
+    exit 1
+fi
+if ! "$remote_binary" serve --help 2>/dev/null | grep -Fq -- '--http-unix'; then
+    echo 'installed backend uses legacy TCP; migrate backend and LuCI together before candidate deployment' >&2
+    exit 1
+fi
+if [ "$health_url" != - ]; then
+    command -v curl >/dev/null || {
+        echo 'Unix socket health checks require curl on the target' >&2
+        exit 1
+    }
+fi
 [ ! -e "$backup_dir" ] || {
     echo "release backup already exists: ${backup_dir}" >&2
     exit 1
