@@ -12,7 +12,6 @@ import (
 	"net"
 	"net/http"
 	"os"
-	"path"
 	"time"
 
 	"github.com/istoreos/quickstart/backend/dhns"
@@ -27,66 +26,54 @@ var (
 	BuildDate    string
 )
 
-func startMain(laddr, unixAddr string) error {
-	l.Debugln("start serve at", laddr, "unix at", unixAddr)
+func startMain(httpAddr, unixAddr string) error {
+	l.Debugln("start HTTP socket at", httpAddr, "internal socket at", unixAddr)
 
-	serviceBackend := service.NewServiceBackend()
-	httpRouter := server.RouterInit(serviceBackend)
-	unixRouter := server.UnixRouterInit(serviceBackend)
-
-	lis, err := net.Listen("tcp", laddr)
+	lis, err := listenUnix(httpAddr)
 	if err != nil {
 		return err
 	}
 	defer lis.Close()
+
+	// Bind both sockets before starting any background work. A failed listener
+	// must stop the process so procd can restart the whole service.
+	var local *net.UnixListener
+	if unixAddr != "" {
+		local, err = listenUnix(unixAddr)
+		if err != nil {
+			return err
+		}
+		defer local.Close()
+	}
+
+	serviceBackend := service.NewServiceBackend()
 	policyContext, stopPolicies := context.WithCancel(context.Background())
 	defer stopPolicies()
 	serviceBackend.StartLANPolicyReconciliation(policyContext)
 
-	if unixAddr != "" {
-		go func() {
-			if _, err := os.Stat(path.Dir(unixAddr)); err != nil && os.IsNotExist(err) {
-				if err := os.MkdirAll(path.Dir(unixAddr), 0750); err != nil {
-					l.Warnln("create unix socket directory failed, err=", err)
-					return
-				}
-			}
-			if err := os.Chmod(path.Dir(unixAddr), 0750); err != nil {
-				l.Warnln("secure unix socket directory failed, err=", err)
-				return
-			}
-			os.Remove(unixAddr)
-			lis, err := net.Listen("unix", unixAddr)
-			if err != nil {
-				l.Warnln("listen unix addr failed, err=", err)
-				return
-			}
-			defer lis.Close()
-			if err := os.Chmod(unixAddr, 0600); err != nil {
-				l.Warnln("secure unix socket failed, err=", err)
-				return
-			}
-			s := http.Server{
-				Handler:           unixRouter,
-				ReadHeaderTimeout: 5 * time.Second,
-				IdleTimeout:       30 * time.Second,
-				MaxHeaderBytes:    32 * 1024,
-			}
-			//s.SetKeepAlivesEnabled(false)
-			s.Serve(lis)
-		}()
+	serveErr := make(chan error, 2)
+	if local != nil {
+		s := &http.Server{
+			Handler:           server.UnixRouterInit(serviceBackend),
+			ReadHeaderTimeout: 5 * time.Second,
+			IdleTimeout:       30 * time.Second,
+			MaxHeaderBytes:    32 * 1024,
+		}
+		defer s.Close()
+		go func() { serveErr <- s.Serve(local) }()
 	}
 
 	s := http.Server{
-		Handler:           httpRouter,
+		Handler:           server.RouterInit(serviceBackend),
 		ReadHeaderTimeout: 5 * time.Second,
 		ReadTimeout:       30 * time.Second,
 		IdleTimeout:       30 * time.Second,
 		MaxHeaderBytes:    32 * 1024,
 	}
+	defer s.Close()
 	s.SetKeepAlivesEnabled(false)
-	s.Serve(lis)
-	return nil
+	go func() { serveErr <- s.Serve(lis) }()
+	return <-serveErr
 }
 
 func main() {
@@ -119,8 +106,9 @@ func main() {
 				Name: "serve",
 				Flags: []cli.Flag{
 					&cli.StringFlag{
-						Name:  "addr",
-						Value: "127.0.0.1:3038",
+						Name:  "http-unix",
+						Usage: "Unix socket for the authenticated LuCI HTTP API",
+						Value: "/var/run/quickstart/http.sock",
 					},
 					&cli.StringFlag{
 						Name:  "unix",
@@ -128,7 +116,7 @@ func main() {
 					},
 				},
 				Action: func(c *cli.Context) error {
-					return startMain(c.String("addr"), c.String("unix"))
+					return startMain(c.String("http-unix"), c.String("unix"))
 				},
 			},
 			{
@@ -334,6 +322,7 @@ func main() {
 	err := cliApp.Run(os.Args)
 	if err != nil {
 		fmt.Println("run command failed, err=", err)
+		os.Exit(1)
 	}
 	return
 }

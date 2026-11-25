@@ -13,8 +13,8 @@ import (
 
 const maxRequestBody = 1024 * 1024
 
-// Protect the assembled TCP router, including legacy handlers which only check
-// that a forwarded session header exists. The local Unix protocol is separate.
+// Protect the assembled LuCI HTTP router, including legacy handlers which only
+// check that a forwarded session header exists. The internal protocol is separate.
 func secureHTTP(next http.Handler, authorize homeconfig.Authorize) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Cache-Control", "no-store")
@@ -52,9 +52,9 @@ func secureHTTP(next http.Handler, authorize homeconfig.Authorize) http.Handler 
 
 func drainRejectedBody(r *http.Request) {
 	// The legacy LuCI proxy uploads the entire request before reading the
-	// response. Closing TCP with unread bytes produces a reset and a LuCI 500
+	// response. Closing the socket with unread bytes produces a reset and a LuCI 500
 	// instead of the intended denial. Consume only a bounded amount of input;
-	// the TCP server's ReadTimeout also bounds slow rejected uploads.
+	// the HTTP server's ReadTimeout also bounds slow rejected uploads.
 	if r.Body != nil {
 		_, _ = io.Copy(io.Discard, io.LimitReader(r.Body, maxRequestBody))
 	}
