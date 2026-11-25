@@ -91,6 +91,36 @@ func TestUnixListenerPreservesNonSockets(t *testing.T) {
 	}
 }
 
+func TestUnixListenerPreservesExistingDirectoryMode(t *testing.T) {
+	dir := socketTestDir(t)
+	want := os.FileMode(0777) | os.ModeSticky
+	if err := os.Chmod(dir, want); err != nil {
+		t.Fatal(err)
+	}
+	checkMode := func() {
+		t.Helper()
+		info, err := os.Stat(dir)
+		if err != nil || info.Mode()&(os.ModePerm|os.ModeSticky) != want {
+			t.Fatalf("changed existing parent directory mode: %v, %v", info, err)
+		}
+	}
+	socketPath := filepath.Join(dir, "http.sock")
+	lis, err := listenUnix(socketPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	lis.Close()
+	checkMode()
+	if err := os.WriteFile(socketPath, []byte("keep"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	if lis, err := listenUnix(socketPath); err == nil {
+		lis.Close()
+		t.Fatal("replaced non-socket")
+	}
+	checkMode()
+}
+
 func TestUnixHTTPKeepsAuthentication(t *testing.T) {
 	dir := socketTestDir(t)
 	// Exercise the assembled HTTP router with a deterministic rpcd response.

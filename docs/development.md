@@ -62,6 +62,9 @@ Vite 配置端口为 `8301`，将 `/cgi-bin/luci/istore/` 代理至 `http://127.
 设备原有的 `--unix /var/run/quickstart/local.sock` 继续提供 DHCP/DHNS、LCD 内部接口。
 后端与 LuCI 控制器需要配套更新；原来直连 3038 的运维脚本应改走 LuCI，
 或使用 `curl --unix-socket /var/run/quickstart/http.sock http://localhost/...` 并提供有效鉴权头。
+标准部署通过 Unix socket 检查 HTTP 服务是否可达，不使用伪造的登录态；目标设备需要支持
+Unix socket 的 curl。部署前会检查设备已有的后端和 Lua 控制器均使用 socket，确保失败时
+可以安全回滚。首次从 TCP 迁移需要成对更新后端与 Lua；标准回滚也会拒绝恢复 TCP 版后端。
 
 正式前端还依赖 LuCI 宿主提供的登录态、`window.vue_base`、`window.vue_lang` 和
 `window.vue_lang_data`。单独打开 Vite 页面不能替代完整设备联调；LuCI 挂载模板位于
