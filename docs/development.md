@@ -56,7 +56,15 @@ npm --prefix web run dev
 
 Vite 配置端口为 `8301`，将 `/cgi-bin/luci/istore/` 代理至 `http://127.0.0.1:8300`。
 该代理目标需另行接入测试设备的 LuCI/API 链路；它不是后端默认监听地址。
-后端 `quickstart serve` 默认监听 `127.0.0.1:3038`。
+后端 `quickstart serve` 默认通过 `/var/run/quickstart/http.sock` 提供 HTTP API，
+不再监听 TCP 3038；可通过 `--http-unix` 指定其他 socket 路径。LuCI 的
+`istore_backend.lua` 连接该 socket，浏览器的 API 地址及 SID/token 鉴权保持不变。
+设备原有的 `--unix /var/run/quickstart/local.sock` 继续提供 DHCP/DHNS、LCD 内部接口。
+后端与 LuCI 控制器需要配套更新；原来直连 3038 的运维脚本应改走 LuCI，
+或使用 `curl --unix-socket /var/run/quickstart/http.sock http://localhost/...` 并提供有效鉴权头。
+标准部署通过 Unix socket 检查 HTTP 服务是否可达，不使用伪造的登录态；目标设备需要支持
+Unix socket 的 curl。部署前会检查设备已有的后端和 Lua 控制器均使用 socket，确保失败时
+可以安全回滚。首次从 TCP 迁移需要成对更新后端与 Lua；标准回滚也会拒绝恢复 TCP 版后端。
 
 正式前端还依赖 LuCI 宿主提供的登录态、`window.vue_base`、`window.vue_lang` 和
 `window.vue_lang_data`。单独打开 Vite 页面不能替代完整设备联调；LuCI 挂载模板位于

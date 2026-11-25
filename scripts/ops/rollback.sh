@@ -15,6 +15,19 @@ fi
 remote_shell "
 set -eu
 backup='${REMOTE_BACKUP_DIR}/${ROLLBACK_RELEASE}'
+# Keep the installed Unix controller paired with a compatible backend. Legacy
+# backups need their matching controller restored through a paired migration.
+if [ -d \"\${backup}\" ]; then
+    rollback_binary=\"\${backup}/quickstart\"
+else
+    rollback_binary=\"\${backup}\"
+fi
+if ! grep -Fq '/var/run/quickstart/http.sock' /usr/lib/lua/luci/controller/istore_backend.lua || \\
+   ! grep -Fq 'nixio.socket' /usr/lib/lua/luci/controller/istore_backend.lua || \\
+   ! \"\${rollback_binary}\" serve --help 2>/dev/null | grep -Fq -- '--http-unix'; then
+    echo 'rollback requires matching Unix socket backend and LuCI; restore legacy TCP pairs manually' >&2
+    exit 1
+fi
 if [ -d \"\${backup}\" ]; then
     test -f \"\${backup}/quickstart\"
     test -d \"\${backup}/web\"

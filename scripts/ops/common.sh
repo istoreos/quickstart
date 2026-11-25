@@ -70,7 +70,7 @@ load_target_env() {
     : "${REMOTE_WEB_DIR:=/www/luci-static/quickstart}"
     : "${REMOTE_TEMPLATE:=/usr/lib/lua/luci/view/quickstart/main.htm}"
     : "${REMOTE_STAGE_ROOT:=/tmp/quickstart-candidates}"
-    : "${REMOTE_HEALTH_URL:=http://127.0.0.1:3038/cgi-bin/luci/istore/lanctrl/v2/router-context/}"
+    : "${REMOTE_HEALTH_URL:=http://localhost/cgi-bin/luci/istore/lanctrl/v2/router-context/}"
     : "${REMOTE_LOG_COMMAND:=logread -e quickstart}"
     : "${LOCAL_BINARY:=${BUILD_DIR}/quickstart.amd64}"
     : "${LOCAL_WEB_ZIP:=${PROJECT_ROOT}/web/dist/quickstart_web.zip}"
