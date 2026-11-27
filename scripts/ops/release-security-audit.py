@@ -29,6 +29,7 @@ args.output.mkdir(parents=True, exist_ok=True)
 context = ssl._create_unverified_context()  # Appliance's existing self-signed TLS.
 base = 'https://' + args.host
 prefix = '/cgi-bin/luci/istore/'
+http_socket = '/var/run/quickstart/http.sock'
 report = {'host': args.host, 'at': datetime.datetime.now(datetime.timezone.utc).isoformat(),
           'checks': [], 'businessReads': [], 'passwordLoginVerified': False,
           'tlsCertificateTrusted': False, 'temporarySessionsDestroyed': False}
@@ -122,21 +123,22 @@ try:
         check(name, write, method='POST', sid=root, headers=headers, body=b'{', expected=expected)
     check('same-origin JSON reaches parser', write, method='POST', sid=root,
           headers={'Origin': base, 'Content-Type': 'application/json'}, body=b'{', expected=200)
-    # TCP listener is localhost-only; test defense in depth through SSH.
+    # The HTTP API is Unix-only; test its authentication directly through SSH.
     for name, hdr in [('direct forged session', {'X-Forwarded-Sid': '1'*32, 'X-Forwarded-Token': 'forged'}),
                       ('direct wrong token', {'X-Forwarded-Sid': root, 'X-Forwarded-Token': 'wrong'})]:
-        command = ['curl', '-fsS', '--max-time', '10']
+        command = ['curl', '-fsS', '--max-time', '10', '--unix-socket', http_socket]
         for k, v in hdr.items():
             command += ['-H', k + ': ' + v]
-        command += ['http://127.0.0.1:3038' + prefix + 'system/version/']
+        command += ['http://localhost' + prefix + 'system/version/']
         value = json.loads(remote(shlex.join(command)))
         report['checks'].append({'name': name, 'passed': value.get('success') == -1001})
-    # Send only the oversized Content-Length over loopback: exercise the
+    # Send only the oversized Content-Length over the HTTP socket: exercise the
     # backend limit independently of LuCI's smaller 100 KiB upload limit.
-    command = ['curl', '-sS', '--max-time', '10', '-o', '/dev/null', '-w', '%{http_code}', '-X', 'POST',
+    command = ['curl', '-sS', '--max-time', '10', '--unix-socket', http_socket,
+               '-o', '/dev/null', '-w', '%{http_code}', '-X', 'POST',
                '-H', 'X-Forwarded-Sid: '+root, '-H', 'X-Forwarded-Token: '+token,
                '-H', 'Content-Type: application/json', '-H', 'Content-Length: 1048577',
-               'http://127.0.0.1:3038'+write]
+               'http://localhost'+write]
     result = remote(shlex.join(command)).strip()
     report['checks'].append({'name':'direct oversized Content-Length', 'passed':result=='413'})
     # Literal public-path inventory, plus generated home paths. This is a
